@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fh-service-directory-api.api", "src\fh-service-directory-api.api\fh-service-directory-api.api.csproj", "{CC5903B6-913F-4500-8387-CBFEEFC3A364}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fh-service-directory-api.core", "src\fh-service-directory-api.core\fh-service-directory-api.core.csproj", "{D38C4458-BF60-4F17-99B1-20861054A4BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "fh-service-directory-api.infrastructure", "src\fh-service-directory-api.infrastructure\fh-service-directory-api.infrastructure.csproj", "{B28C97CE-C80B-4E53-B4FB-5E5A7C074615}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests", "tests\FunctionalTests\FunctionalTests.csproj", "{3DBAE65A-F5D6-4EEA-87CF-9EA050913639}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{EA3BA57A-F8BD-49BA-A10F-EB2115888041}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{33D2ABD2-F742-4574-A100-05B592997331}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC5903B6-913F-4500-8387-CBFEEFC3A364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC5903B6-913F-4500-8387-CBFEEFC3A364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC5903B6-913F-4500-8387-CBFEEFC3A364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC5903B6-913F-4500-8387-CBFEEFC3A364}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D38C4458-BF60-4F17-99B1-20861054A4BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D38C4458-BF60-4F17-99B1-20861054A4BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D38C4458-BF60-4F17-99B1-20861054A4BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D38C4458-BF60-4F17-99B1-20861054A4BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B28C97CE-C80B-4E53-B4FB-5E5A7C074615}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B28C97CE-C80B-4E53-B4FB-5E5A7C074615}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B28C97CE-C80B-4E53-B4FB-5E5A7C074615}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B28C97CE-C80B-4E53-B4FB-5E5A7C074615}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DBAE65A-F5D6-4EEA-87CF-9EA050913639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DBAE65A-F5D6-4EEA-87CF-9EA050913639}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DBAE65A-F5D6-4EEA-87CF-9EA050913639}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DBAE65A-F5D6-4EEA-87CF-9EA050913639}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA3BA57A-F8BD-49BA-A10F-EB2115888041}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA3BA57A-F8BD-49BA-A10F-EB2115888041}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA3BA57A-F8BD-49BA-A10F-EB2115888041}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA3BA57A-F8BD-49BA-A10F-EB2115888041}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33D2ABD2-F742-4574-A100-05B592997331}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33D2ABD2-F742-4574-A100-05B592997331}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33D2ABD2-F742-4574-A100-05B592997331}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33D2ABD2-F742-4574-A100-05B592997331}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {595459F6-7C3F-4CDE-B354-B39494D33BDA}
+	EndGlobalSection
+EndGlobal
