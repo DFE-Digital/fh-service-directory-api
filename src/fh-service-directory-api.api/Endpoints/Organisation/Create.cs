@@ -1,6 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
-using fh_service_directory_api.core.Concretions.Features.Organisations.Commands.Create;
-using fh_service_directory_api.core.Interfaces.Entities.Aggregates;
+using fh_service_directory_api.core.Aggregates.Organisations.Entities;
+using fh_service_directory_api.core.Concretions.Entities.Aggregates.Organisatons.Commands.Create;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

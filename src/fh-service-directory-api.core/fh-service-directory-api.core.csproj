@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
@@ -6,12 +6,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-
-    <ItemGroup>
-      <Compile Remove="Concretions\Aggregates\OrOrganisations\**" />
-      <EmbeddedResource Remove="Concretions\Aggregates\OrOrganisations\**" />
-      <None Remove="Concretions\Aggregates\OrOrganisations\**" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Autofac" Version="6.4.0" />
@@ -26,10 +20,36 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Concretions\Services\Infrastructure\" />
-        <Folder Include="Interfaces\Services\Infrastructure\CloudServices\Identity\" />
-        <Folder Include="Interfaces\Services\Ui\ViewModels\" />
-        <Folder Include="Concretions\Services\Ui\ViewModels\" />
-        <Folder Include="MappingProfiles\" />
+        <Folder Include="Aggregates\Locations\Commands\" />
+        <Folder Include="Aggregates\Locations\Entities\" />
+        <Folder Include="Aggregates\Locations\Events\" />
+        <Folder Include="Aggregates\Locations\Exceptions\" />
+        <Folder Include="Aggregates\Locations\Handlers\" />
+        <Folder Include="Aggregates\Locations\Mappings\" />
+        <Folder Include="Aggregates\Locations\Queries\" />
+        <Folder Include="Aggregates\Locations\Services\" />
+        <Folder Include="Aggregates\Locations\Specifications\" />
+        <Folder Include="Aggregates\Organisations\Exceptions\" />
+        <Folder Include="Aggregates\Organisations\Mappings\" />
+        <Folder Include="Aggregates\Organisations\Handlers\" />
+        <Folder Include="Aggregates\Organisations\Services\" />
+        <Folder Include="Aggregates\Organisations\Specifications\" />
+        <Folder Include="Aggregates\Organisations\Queries\" />
+        <Folder Include="Aggregates\Services\Commands\" />
+        <Folder Include="Aggregates\Services\Events\" />
+        <Folder Include="Aggregates\Services\Exceptions\" />
+        <Folder Include="Aggregates\Services\Handlers\" />
+        <Folder Include="Aggregates\Services\Mappings\" />
+        <Folder Include="Aggregates\Services\Specifications\" />
+        <Folder Include="Aggregates\Services\Services\" />
+        <Folder Include="Aggregates\Services\Queries\" />
+        <Folder Include="Common\Services\Domain\Identity\" />
+        <Folder Include="Common\Services\Infrastructure\" />
+        <Folder Include="Concretions\Entities\Aggregates\Organisatons\" />
+        <Folder Include="Common\Interfaces\Services\Domain\Identity\" />
+        <Folder Include="Common\Interfaces\Services\Infrastructure\CloudServices\" />
+        <Folder Include="Common\Interfaces\Services\Ui\ViewModels\" />
+        <Folder Include="Common\Services\Ui\ViewModels\" />
+        <Folder Include="Interfaces\Entities\Aggregates\Organisations\" />
     </ItemGroup>
 </Project>

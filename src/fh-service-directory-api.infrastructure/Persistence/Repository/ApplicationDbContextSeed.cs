@@ -1,7 +1,6 @@
-﻿using fh_service_directory_api.core.Concretions.Entities;
-using fh_service_directory_api.core.Concretions.Entities.Aggregates;
+﻿using fh_service_directory_api.core.Aggregates.Organisations.Entities;
+using fh_service_directory_api.core.Concretions.Entities;
 using fh_service_directory_api.core.Interfaces.Entities;
-using fh_service_directory_api.core.Interfaces.Entities.Aggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

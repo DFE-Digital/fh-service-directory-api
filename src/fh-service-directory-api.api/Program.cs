@@ -1,5 +1,5 @@
 using Autofac.Extensions.DependencyInjection;
-using fh_service_directory_api.core.Concretions.Entities.Aggregates;
+using fh_service_directory_api.core.Aggregates.Organisations.Entities;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.OpenApi.Models;

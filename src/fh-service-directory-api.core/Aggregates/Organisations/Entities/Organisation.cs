@@ -1,8 +1,9 @@
-﻿using fh_service_directory_api.core.Interfaces.Entities.Aggregates;
+﻿using fh_service_directory_api.core.Aggregates.Services.Entities;
+using fh_service_directory_api.core.Interfaces.Entities.Aggregates;
 using LocalAuthorityInformationServices.SharedKernel;
 using LocalAuthorityInformationServices.SharedKernel.Interfaces;
 
-namespace fh_service_directory_api.core.Concretions.Entities.Aggregates;
+namespace fh_service_directory_api.core.Aggregates.Organisations.Entities;
 
 /// <summary>
 /// The organization record is used to provide basic description and details about each organization delivering or reviewing services.
@@ -15,7 +16,7 @@ namespace fh_service_directory_api.core.Concretions.Entities.Aggregates;
 ///     "voluntary group"
 ///     "local authority"
 /// </summary>
-public class Organisation:
+public class Organisation :
     EntityBase<string>,
     IOrganisation,
     IAggregateRoot

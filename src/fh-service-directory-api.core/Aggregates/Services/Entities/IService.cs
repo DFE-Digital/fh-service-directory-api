@@ -1,6 +1,7 @@
 ﻿using fh_service_directory_api.core.Interfaces.Entities;
+using fh_service_directory_api.core.Interfaces.Entities.Aggregates;
 
-namespace fh_service_directory_api.core.Interfaces.Entities.Aggregates
+namespace fh_service_directory_api.core.Aggregates.Services.Entities
 {
     public interface IService
     {

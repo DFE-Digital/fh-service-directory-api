@@ -2,7 +2,7 @@
 using fh_service_directory_api.core.Interfaces.Entities.Aggregates;
 using LocalAuthorityInformationServices.SharedKernel;
 
-namespace fh_service_directory_api.core.Concretions.Entities.Aggregates;
+namespace fh_service_directory_api.core.Aggregates.Services.Entities;
 
 public class Service : EntityBase<string>, IService
 {

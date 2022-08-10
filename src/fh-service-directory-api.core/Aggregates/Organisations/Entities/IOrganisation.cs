@@ -1,4 +1,6 @@
-﻿namespace fh_service_directory_api.core.Interfaces.Entities.Aggregates
+﻿using fh_service_directory_api.core.Interfaces.Entities.Aggregates;
+
+namespace fh_service_directory_api.core.Aggregates.Organisations.Entities
 {
     public interface IOrganisation
     {

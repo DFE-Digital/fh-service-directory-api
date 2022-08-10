@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using fh_service_directory_api.core.Concretions.Entities.Aggregates;
+using fh_service_directory_api.core.Aggregates.Organisations.Entities;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace fh_service_directory_api.core.Concretions.Features.Organisations.Commands.Create;
+namespace fh_service_directory_api.core.Concretions.Entities.Aggregates.Organisatons.Commands.Create;
 
 
 public class CreateValidator : AbstractValidator<Create>

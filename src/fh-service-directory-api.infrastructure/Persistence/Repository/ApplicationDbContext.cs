@@ -1,4 +1,4 @@
-﻿using fh_service_directory_api.core.Concretions.Entities.Aggregates;
+﻿using fh_service_directory_api.core.Aggregates.Organisations.Entities;
 using LocalAuthorityInformationServices.SharedKernel;
 using LocalAuthorityInformationServices.SharedKernel.Interfaces;
 using Microsoft.EntityFrameworkCore;

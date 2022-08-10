@@ -1,6 +1,6 @@
-﻿using fh_service_directory_api.core.Interfaces.Services.Domain;
+﻿using fh_service_directory_api.core.Interfaces.Services.Domain.Postcode;
 
-namespace fh_service_directory_api.core.Concretions.Services.Domain
+namespace fh_service_directory_api.core.Concretions.Services.Domain.Postcode
 {
     public class PostcodeLocationClientService : /* ApiService, */ IPostcodeLocationClientService
     {

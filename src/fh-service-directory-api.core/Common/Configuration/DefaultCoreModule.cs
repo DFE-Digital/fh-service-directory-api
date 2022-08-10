@@ -1,6 +1,6 @@
 ﻿using Autofac;
-using fh_service_directory_api.core.Concretions.Services.Domain;
-using fh_service_directory_api.core.Interfaces.Services.Domain;
+using fh_service_directory_api.core.Concretions.Services.Domain.Postcode;
+using fh_service_directory_api.core.Interfaces.Services.Domain.Postcode;
 
 namespace fh_service_directory_api.core.Configuration;
 

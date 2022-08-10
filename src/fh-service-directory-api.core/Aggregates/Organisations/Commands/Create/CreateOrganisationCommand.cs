@@ -1,9 +1,10 @@
-﻿using fh_service_directory_api.core.Interfaces.Entities.Aggregates;
+﻿using fh_service_directory_api.core.Aggregates.Organisations.Commands.Create;
+using fh_service_directory_api.core.Aggregates.Organisations.Entities;
 using MediatR;
 
-namespace fh_service_directory_api.core.Concretions.Features.Organisations.Commands.Create;
+namespace fh_service_directory_api.core.Concretions.Entities.Aggregates.Organisatons.Commands.Create;
 
-public class CreateOrganisationCommand : IRequest<string>
+public class CreateOrganisationCommand : IRequest<string>, ICreateOrganisationCommand
 {
     public IOrganisation Organisation { get; init; }
 
