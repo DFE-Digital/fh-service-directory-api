@@ -1,5 +1,5 @@
 ﻿using Ardalis.Specification;
-using LocalAuthorityInformationServices.SharedKernel.Interfaces;
+using FamilyHubs.SharedKernel.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 

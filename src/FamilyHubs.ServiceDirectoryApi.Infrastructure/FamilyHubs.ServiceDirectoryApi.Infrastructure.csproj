@@ -11,7 +11,6 @@
 		<PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="6.1.0" />
 		<PackageReference Include="Autofac" Version="6.4.0" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
-		<PackageReference Include="LocalAuthorityInformationServices.SharedKernel" Version="1.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.7" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.7" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.7" />
@@ -26,9 +25,8 @@
 		<PackageReference Include="SQLite" Version="3.13.0" />
 	</ItemGroup>
 
-
 	<ItemGroup>
-    <ProjectReference Include="..\fh-service-directory-api.core\fh-service-directory-api.core.csproj" />
-  </ItemGroup>
+	  <ProjectReference Include="..\FamilyHubs.ServiceDirectoryApi.Core\FamilyHubs.ServiceDirectoryApi.Core.csproj" />
+	</ItemGroup>
 
 </Project>

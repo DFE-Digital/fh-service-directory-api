@@ -1,27 +1,58 @@
-﻿using fh_service_directory_api.core.OrganisationAggregate.Entities;
-using LocalAuthorityInformationServices.SharedKernel;
-using LocalAuthorityInformationServices.SharedKernel.Interfaces;
+﻿using FamilyHubs.SharedKernel;
+using FamilyHubs.SharedKernel.Interfaces;
+using fh_service_directory_api.core.Entities;
+using fh_service_directory_api.core.Interfaces.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Repository
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         private readonly IDomainEventDispatcher _dispatcher;
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IDomainEventDispatcher dispatcher)
-            : base(options)
+        public ApplicationDbContext
+        (
+            DbContextOptions<ApplicationDbContext> options,
+            IDomainEventDispatcher dispatcher
+        )
+        : base(options)
         {
             _dispatcher = dispatcher;
         }
 
-        public DbSet<Organisation>? Organizations { get; private set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<OpenReferralServiceDelivery>().HasEnum(e => e.ServiceDelivery);
 
-        //public DbSet<Contact>? Contacts { get; private set; }
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        //public DbSet<Location>? Locations { get; private set; }
+            base.OnModelCreating(modelBuilder);
+        }
 
-        //public DbSet<Service>? Services { get; private set; }
+        #region Open Referral Entities
+        public DbSet<Accessibility_For_Disabilities> Accessibility_For_Disabilities => Set<Accessibility_For_Disabilities>();
+        public DbSet<OpenReferralContact> OpenReferralContacts => Set<OpenReferralContact>();
+        public DbSet<OpenReferralCost_Option> OpenReferralCost_Options => Set<OpenReferralCost_Option>();
+        public DbSet<OpenReferralEligibility> OpenReferralEligibilities => Set<OpenReferralEligibility>();
+        public DbSet<OpenReferralFunding> OpenReferralFundings => Set<OpenReferralFunding>();
+        public DbSet<OpenReferralHoliday_Schedule> OpenReferralHoliday_Schedules => Set<OpenReferralHoliday_Schedule>();
+        public DbSet<OpenReferralLanguage> OpenReferralLanguages => Set<OpenReferralLanguage>();
+        public DbSet<OpenReferralLinktaxonomycollection> OpenReferralLinktaxonomycollections => Set<OpenReferralLinktaxonomycollection>();
+        public DbSet<OpenReferralLocation> OpenReferralLocations => Set<OpenReferralLocation>();
+        public DbSet<OpenReferralOrganisation> OpenReferralOrganisations => Set<OpenReferralOrganisation>();
+        public DbSet<OpenReferralParent> OpenReferralParents => Set<OpenReferralParent>();
+        public DbSet<OpenReferralPhone> OpenReferralPhones => Set<OpenReferralPhone>();
+        public DbSet<OpenReferralPhysical_Address> OpenReferralPhysical_Addresses => Set<OpenReferralPhysical_Address>();
+        public DbSet<OpenReferralRegular_Schedule> OpenReferralRegular_Schedules => Set<OpenReferralRegular_Schedule>();
+        public DbSet<OpenReferralReview> OpenReferralReviews => Set<OpenReferralReview>();
+        public DbSet<OpenReferralService> OpenReferralServices => Set<OpenReferralService>();
+        public DbSet<OpenReferralService_Area> OpenReferralService_Areas => Set<OpenReferralService_Area>();
+        public DbSet<OpenReferralService_Taxonomy> OpenReferralService_Taxonomies => Set<OpenReferralService_Taxonomy>();
+        public DbSet<OpenReferralServiceAtLocation> OpenReferralServiceAtLocations => Set<OpenReferralServiceAtLocation>();
+        public DbSet<OpenReferralTaxonomy> OpenReferralTaxonomies => Set<OpenReferralTaxonomy>();
+        public DbSet<OpenReferralServiceDelivery> OpenReferralServiceDeliveries => Set<OpenReferralServiceDelivery>();
+        #endregion///
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

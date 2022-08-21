@@ -1,5 +1,5 @@
 ﻿using Ardalis.Specification.EntityFrameworkCore;
-using LocalAuthorityInformationServices.SharedKernel.Interfaces;
+using FamilyHubs.SharedKernel.Interfaces;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Repository
 {

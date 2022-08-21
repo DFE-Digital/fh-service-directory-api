@@ -1,52 +1,52 @@
-﻿using AutoFixture;
-using fh_service_directory_api.core.OrganisationAggregate.Entities;
-using Microsoft.EntityFrameworkCore;
-using Xunit;
+﻿//using AutoFixture;
+//using fh_service_directory_api.core.OpenReferralOrganisationAggregate.Entities;
+//using Microsoft.EntityFrameworkCore;
+//using Xunit;
 
-namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence.Organisations;
+//namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence.OpenReferralOrganisations;
 
-public class EfRepositoryUpdate : BaseEfRepositoryTestFixture
-{
-    private readonly Fixture _fixture = new Fixture();
+//public class EfRepositoryUpdate : BaseEfRepositoryTestFixture
+//{
+//    private readonly Fixture _fixture = new Fixture();
 
-    [Fact]
-    public async Task UpdatesOrganisationAfterAddingIt()
-    {
-        // Arrange
-        var organisation = _fixture.Create<Organisation>();
-        ArgumentNullException.ThrowIfNull(organisation, nameof(organisation));
+//    [Fact]
+//    public async Task UpdatesOpenReferralOrganisationAfterAddingIt()
+//    {
+//        // Arrange
+//        var OpenReferralOrganisation = _fixture.Create<OpenReferralOrganisation>();
+//        ArgumentNullException.ThrowIfNull(OpenReferralOrganisation, nameof(OpenReferralOrganisation));
 
-        var repository = GetRepository<Organisation>();
-        ArgumentNullException.ThrowIfNull(repository, nameof(repository));
-        await repository.AddAsync(organisation);
+//        var repository = GetRepository<OpenReferralOrganisation>();
+//        ArgumentNullException.ThrowIfNull(repository, nameof(repository));
+//        await repository.AddAsync(OpenReferralOrganisation);
 
-        DbContext.Entry(organisation).State = EntityState.Detached;             // detach the item so we get a different instance
+//        DbContext.Entry(OpenReferralOrganisation).State = EntityState.Detached;             // detach the item so we get a different instance
 
-        var addedOrganisation = await repository.GetByIdAsync(organisation.Id); // fetch the organisation and update its name
-        if (addedOrganisation == null)
-        {
-            Assert.NotNull(addedOrganisation);
-            return;
-        }
+//        var addedOpenReferralOrganisation = await repository.GetByIdAsync(OpenReferralOrganisation.Id); // fetch the OpenReferralOrganisation and update its name
+//        if (addedOpenReferralOrganisation == null)
+//        {
+//            Assert.NotNull(addedOpenReferralOrganisation);
+//            return;
+//        }
 
-        Assert.NotSame(organisation, addedOrganisation);
+//        Assert.NotSame(OpenReferralOrganisation, addedOpenReferralOrganisation);
 
-        // Act
-        addedOrganisation.UpdateOrganisation
-        (
-            "Brum Council",
-            addedOrganisation.Description,
-            addedOrganisation.Logo,
-            addedOrganisation.Uri,
-            addedOrganisation.Url,
-            addedOrganisation.OrganisationContacts
-        );
-        await repository.UpdateAsync(addedOrganisation);
-        var updatedOrganisation = await repository.GetByIdAsync(addedOrganisation.Id);
+//        // Act
+//        addedOpenReferralOrganisation.UpdateOpenReferralOrganisation
+//        (
+//            "Brum Council",
+//            addedOpenReferralOrganisation.Description,
+//            addedOpenReferralOrganisation.Logo,
+//            addedOpenReferralOrganisation.Uri,
+//            addedOpenReferralOrganisation.Url,
+//            addedOpenReferralOrganisation.OpenReferralOrganisationContacts
+//        );
+//        await repository.UpdateAsync(addedOpenReferralOrganisation);
+//        var updatedOpenReferralOrganisation = await repository.GetByIdAsync(addedOpenReferralOrganisation.Id);
 
-        // Assert
-        Assert.NotNull(updatedOrganisation);
-        Assert.NotEqual(organisation.Name, updatedOrganisation?.Name);
-        Assert.Equal(organisation.Id, updatedOrganisation?.Id);
-    }
-}
+//        // Assert
+//        Assert.NotNull(updatedOpenReferralOrganisation);
+//        Assert.NotEqual(OpenReferralOrganisation.Name, updatedOpenReferralOrganisation?.Name);
+//        Assert.Equal(OpenReferralOrganisation.Id, updatedOpenReferralOrganisation?.Id);
+//    }
+//}

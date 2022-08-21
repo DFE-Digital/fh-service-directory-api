@@ -1,33 +1,33 @@
-﻿using AutoFixture;
-using fh_service_directory_api.core.OrganisationAggregate.Entities;
-using Xunit;
+﻿//using AutoFixture;
+//using fh_service_directory_api.core.OpenReferralOrganisationAggregate.Entities;
+//using Xunit;
 
-namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence.Organisations;
+//namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence.OpenReferralOrganisations;
 
-public class EfRepositoryAdd : BaseEfRepositoryTestFixture
-{
-    private readonly Fixture _fixture = new Fixture();
+//public class EfRepositoryAdd : BaseEfRepositoryTestFixture
+//{
+//    private readonly Fixture _fixture = new Fixture();
 
-    [Fact]
-    public async Task AddsOrOrganisation()
-    {
-        // Arrange
-        var organisation = _fixture.Create<Organisation>();
-        ArgumentNullException.ThrowIfNull(organisation, nameof(organisation));
+//    [Fact]
+//    public async Task AddsOrOpenReferralOrganisation()
+//    {
+//        // Arrange
+//        var OpenReferralOrganisation = _fixture.Create<OpenReferralOrganisation>();
+//        ArgumentNullException.ThrowIfNull(OpenReferralOrganisation, nameof(OpenReferralOrganisation));
 
-        var repository = GetRepository<Organisation>();
-        ArgumentNullException.ThrowIfNull(repository, nameof(repository));
+//        var repository = GetRepository<OpenReferralOrganisation>();
+//        ArgumentNullException.ThrowIfNull(repository, nameof(repository));
 
-        // Act
-        await repository.AddAsync(organisation);
+//        // Act
+//        await repository.AddAsync(OpenReferralOrganisation);
 
-        var addedOrganisation = await repository.GetByIdAsync(organisation.Id);
-        ArgumentNullException.ThrowIfNull(addedOrganisation, nameof(addedOrganisation));
+//        var addedOpenReferralOrganisation = await repository.GetByIdAsync(OpenReferralOrganisation.Id);
+//        ArgumentNullException.ThrowIfNull(addedOpenReferralOrganisation, nameof(addedOpenReferralOrganisation));
 
-        await repository.SaveChangesAsync();
+//        await repository.SaveChangesAsync();
 
-        // Assert
-        Assert.Equal(organisation, addedOrganisation);
-        Assert.True(!string.IsNullOrEmpty(addedOrganisation.Id));
-    }
-}
+//        // Assert
+//        Assert.Equal(OpenReferralOrganisation, addedOpenReferralOrganisation);
+//        Assert.True(!string.IsNullOrEmpty(addedOpenReferralOrganisation.Id));
+//    }
+//}

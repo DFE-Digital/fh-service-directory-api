@@ -1,5 +1,5 @@
 using Autofac.Extensions.DependencyInjection;
-using fh_service_directory_api.core.OrganisationAggregate.Entities;
+using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.OpenApi.Models;
@@ -34,7 +34,7 @@ static void ConfigurWebApplicationBuilderServices(WebApplicationBuilder builder)
           {
         typeof(Program).Assembly,
         typeof(ApplicationDbContext).Assembly,
-        typeof(Organisation).Assembly
+        typeof(IOpenReferralOrganisation).Assembly
           };
     builder.Services.AddMediatR(assemblies);
 }
