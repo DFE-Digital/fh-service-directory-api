@@ -1,9 +1,10 @@
 ﻿using FamilyHubs.SharedKernel;
+using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class OpenReferralReview : EntityBase<string>, IOpenReferralReview
+public class OpenReferralReview : EntityBase<string>, IOpenReferralReview, IAggregateRoot
 {
     private OpenReferralReview() { }
 

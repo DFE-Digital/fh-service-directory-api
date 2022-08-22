@@ -1,9 +1,10 @@
 ﻿using FamilyHubs.SharedKernel;
+using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class OpenReferralPhysical_Address : EntityBase<string>, IOpenReferralPhysical_Address
+public class OpenReferralPhysical_Address : EntityBase<string>, IOpenReferralPhysical_Address, IAggregateRoot
 {
     private OpenReferralPhysical_Address() { }
     public OpenReferralPhysical_Address(string id, string address_1, string? city, string postal_code, string? country, string? state_province)

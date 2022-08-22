@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace fh_service_directory_api.core.Commands.GetOpenReferralService;
+namespace fh_service_directory_api.core.Queries.GetOpenReferralService;
 
 public class GetOpenReferralServiceByIdCommandValidator : AbstractValidator<GetOpenReferralServiceByIdCommand>
 {

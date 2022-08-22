@@ -1,9 +1,10 @@
 ﻿using FamilyHubs.SharedKernel;
+using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class OpenReferralCost_Option : EntityBase<string>, IOpenReferralCost_Option
+public class OpenReferralCost_Option : EntityBase<string>, IOpenReferralCost_Option, IAggregateRoot
 {
     private OpenReferralCost_Option() { }
     public OpenReferralCost_Option(string id, string amount_description, decimal amount, string? linkId, string? option, DateTime? valid_from

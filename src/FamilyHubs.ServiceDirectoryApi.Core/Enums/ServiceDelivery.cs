@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace fh_service_directory_api.core.Entities;
+namespace fh_service_directory_api.core.Enums;
 
 public enum ServiceDelivery : byte
 {

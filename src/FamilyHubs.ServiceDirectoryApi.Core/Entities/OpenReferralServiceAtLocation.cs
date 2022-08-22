@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.SharedKernel;
+using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Interfaces.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class OpenReferralServiceAtLocation : EntityBase<string>, IOpenReferralServiceAtLocation
+public class OpenReferralServiceAtLocation : EntityBase<string>, IOpenReferralServiceAtLocation, IAggregateRoot
 {
     private OpenReferralServiceAtLocation() { }
     public OpenReferralServiceAtLocation(string id,

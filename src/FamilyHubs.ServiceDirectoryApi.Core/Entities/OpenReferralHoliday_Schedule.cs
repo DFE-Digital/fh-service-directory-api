@@ -1,9 +1,10 @@
 ﻿using FamilyHubs.SharedKernel;
+using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class OpenReferralHoliday_Schedule : EntityBase<string>, IOpenReferralHoliday_Schedule
+public class OpenReferralHoliday_Schedule : EntityBase<string>, IOpenReferralHoliday_Schedule, IAggregateRoot
 {
     private OpenReferralHoliday_Schedule() { }
     public OpenReferralHoliday_Schedule(string id, bool closed, DateTime? closes_at, DateTime? start_date, DateTime? end_date, DateTime? opens_at

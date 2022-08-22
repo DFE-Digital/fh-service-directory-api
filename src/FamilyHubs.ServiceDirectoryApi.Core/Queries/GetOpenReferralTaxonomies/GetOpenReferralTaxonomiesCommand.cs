@@ -4,7 +4,7 @@ using fh_service_directory_api.core.RecordEntities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.core.Commands.GetOpenReferralTaxonomies;
+namespace fh_service_directory_api.core.Queries.GetOpenReferralTaxonomies;
 
 public class GetOpenReferralTaxonomiesCommand : IRequest<PaginatedList<OpenReferralTaxonomyRecord>>
 {

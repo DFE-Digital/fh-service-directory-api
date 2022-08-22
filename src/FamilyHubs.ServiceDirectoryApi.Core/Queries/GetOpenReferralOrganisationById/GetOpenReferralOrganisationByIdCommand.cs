@@ -6,7 +6,7 @@ using fh_service_directory_api.core.RecordEntities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.core.Commands.GetOpenReferralOrganisationById;
+namespace fh_service_directory_api.core.Queries.GetOpenReferralOrganisationById;
 
 
 public class GetOpenReferralOrganisationByIdCommand : IRequest<OpenReferralOrganisationWithServicesRecord>

@@ -1,9 +1,10 @@
 ﻿using FamilyHubs.SharedKernel;
+using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class OpenReferralLocation : EntityBase<string>, IOpenReferralLocation
+public class OpenReferralLocation : EntityBase<string>, IOpenReferralLocation, IAggregateRoot
 {
     private OpenReferralLocation() { }
     public OpenReferralLocation(string id, string name, string? description, double latitude, double longitude

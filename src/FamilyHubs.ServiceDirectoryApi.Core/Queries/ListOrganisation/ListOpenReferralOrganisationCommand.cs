@@ -3,7 +3,7 @@ using fh_service_directory_api.core.RecordEntities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.core.Commands.ListOrganisation;
+namespace fh_service_directory_api.core.Queries.ListOrganisation;
 
 public class ListOpenReferralOrganisationCommand : IRequest<List<OpenReferralOrganisationRecord>>
 {
