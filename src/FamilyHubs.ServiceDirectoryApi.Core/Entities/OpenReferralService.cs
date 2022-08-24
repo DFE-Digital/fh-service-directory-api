@@ -1,11 +1,11 @@
-﻿using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.ServiceDirectory.Shared.Models.OpenReferralService;
+using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.core.Interfaces.Entities;
 using System.Collections.ObjectModel;
 
-namespace fh_service_directory_api.core.Entities;
+namespace FamilyHubs.ServiceDirectory.Shared.Entities;
 
-public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAggregateRoot
+public class OpenReferralService : EntityBase<string>, IOpenReferralServiceDto, IAggregateRoot
 {
     private OpenReferralService() { }
 

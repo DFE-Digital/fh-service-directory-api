@@ -1,5 +1,5 @@
 ﻿using Ardalis.GuardClauses;
-using fh_service_directory_api.core.Entities;
+using FamilyHubs.ServiceDirectory.Shared.Entities;
 using fh_service_directory_api.core.Events;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
 using MediatR;
@@ -10,15 +10,15 @@ namespace fh_service_directory_api.core.Commands.UpdateOpenReferralOrganisation;
 
 public class UpdateOpenReferralOrganisationCommand : IRequest<string>
 {
-    public UpdateOpenReferralOrganisationCommand(string id, OpenReferralOrganisation openReferralOrganisation)
+    public UpdateOpenReferralOrganisationCommand(string id, IOpenReferralOrganisation openReferralOrganisation)
     {
         Id = id;
         OpenReferralOrganisation = openReferralOrganisation;
     }
 
-    public OpenReferralOrganisation OpenReferralOrganisation { get; init; }
+    public IOpenReferralOrganisation OpenReferralOrganisation { get; init; }
 
-    public string Id { get; set; } = default!;
+    public string Id { get; set; }
 }
 
 public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<UpdateOpenReferralOrganisationCommand, string>
@@ -32,16 +32,15 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
     public async Task<string> Handle(UpdateOpenReferralOrganisationCommand request, CancellationToken cancellationToken)
     {
-        if (request == null || request.OpenReferralOrganisation == null)
-            return string.Empty;
+        ArgumentNullException.ThrowIfNull(request, nameof(request));
 
-        var entity = await _context.OpenReferralOrganisations
+        var entity = (OpenReferralOrganisation) await _context.OpenReferralOrganisations
           .Include(x => x.Services)
           .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
 
         if (entity == null)
         {
-            throw new NotFoundException(nameof(OpenReferralOrganisation), request.Id);
+            throw new NotFoundException(nameof(IOpenReferralOrganisation), request.Id);
         }
 
         try

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Linq.Expressions;
 
-namespace fh_service_directory_api.core.Entities;
+namespace FamilyHubs.ServiceDirectory.Shared.Entities;
 
 public static class EntityBuilderExtensions
 {

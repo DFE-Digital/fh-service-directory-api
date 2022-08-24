@@ -1,5 +1,5 @@
-﻿using FamilyHubs.SharedKernel;
-using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Shared.Entities;
+using FamilyHubs.SharedKernel;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
 using fh_service_directory_api.core.RecordEntities;
 using MediatR;

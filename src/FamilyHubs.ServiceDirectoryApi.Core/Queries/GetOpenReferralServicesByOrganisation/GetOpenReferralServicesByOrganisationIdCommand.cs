@@ -1,9 +1,10 @@
 ﻿using Ardalis.GuardClauses;
-using fh_service_directory_api.core.Entities;
+using FamilyHubs.ServiceDirectory.Shared.Entities;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
 using fh_service_directory_api.core.RecordEntities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace fh_service_directory_api.core.Queries.GetOpenReferralServicesByOrganisation;
 

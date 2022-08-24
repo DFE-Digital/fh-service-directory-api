@@ -1,14 +1,14 @@
-﻿using FamilyHubs.SharedKernel;
-using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Shared.Interfaces.Entities;
+using FamilyHubs.SharedKernel;
 
 namespace fh_service_directory_api.core.Events;
 
 public class OpenReferralReviewCreatedEvent : DomainEventBase
 {
-    public OpenReferralReviewCreatedEvent(OpenReferralReview item)
+    public OpenReferralReviewCreatedEvent(IOpenReferralReview item)
     {
         Item = item;
     }
 
-    public OpenReferralReview Item { get; }
+    public IOpenReferralReview Item { get; }
 }

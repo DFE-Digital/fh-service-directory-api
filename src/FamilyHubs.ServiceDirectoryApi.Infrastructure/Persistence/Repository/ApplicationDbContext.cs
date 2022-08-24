@@ -1,6 +1,6 @@
-﻿using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.ServiceDirectory.Shared.Entities;
+using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;

@@ -1,21 +1,20 @@
 ﻿using AutoMapper;
-using fh_service_directory_api.core.Entities;
+using FamilyHubs.ServiceDirectory.Shared.Entities;
+using FamilyHubs.ServiceDirectory.Shared.Models.OpenReferralOrganisation;
 using fh_service_directory_api.core.Events;
-using fh_service_directory_api.core.Interfaces.Commands;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
-using fh_service_directory_api.core.RecordEntities;
 using MediatR;
 
 namespace fh_service_directory_api.core.Commands.CreateOpenReferralOrganisation;
 
-public class CreateOpenReferralOrganisationCommand : IRequest<string>, ICreateOpenReferralOrganisationCommand
+public class CreateOpenReferralOrganisationCommand : IRequest<string>
 {
-    public CreateOpenReferralOrganisationCommand(OpenReferralOrganisationWithServicesRecord openReferralOrganisation)
+    public CreateOpenReferralOrganisationCommand(IOpenReferralOrganisationWithServicesDto openReferralOrganisation)
     {
         OpenReferralOrganisation = openReferralOrganisation;
     }
 
-    public OpenReferralOrganisationWithServicesRecord OpenReferralOrganisation { get; init; }
+    public IOpenReferralOrganisationWithServicesDto OpenReferralOrganisation { get; init; }
 }
 
 public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<CreateOpenReferralOrganisationCommand, string>
@@ -34,6 +33,7 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
         try
         {
             var entity = _mapper.Map<OpenReferralOrganisation>(request.OpenReferralOrganisation);
+            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             entity.RegisterDomainEvent(new OpenReferralOrganisationCreatedEvent(entity));
 
