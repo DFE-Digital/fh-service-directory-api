@@ -7,6 +7,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhones;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

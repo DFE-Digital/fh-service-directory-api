@@ -1,6 +1,6 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Interfaces.Entities;
-using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
+using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace FamilyHubs.ServiceDirectory.Shared.Entities;
 

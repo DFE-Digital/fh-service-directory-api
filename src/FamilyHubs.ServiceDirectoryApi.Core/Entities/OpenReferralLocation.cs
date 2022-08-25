@@ -1,6 +1,6 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Interfaces.Entities;
-using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
+using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace FamilyHubs.ServiceDirectory.Shared.Entities;
 
@@ -27,5 +27,10 @@ public class OpenReferralLocation : EntityBase<string>, IOpenReferralLocation, I
     public double Longitude { get; init; }
     public virtual ICollection<OpenReferralPhysical_Address>? Physical_addresses { get; init; }
     public virtual ICollection<Accessibility_For_Disabilities>? Accessibility_for_disabilities { get; init; }
+    //ICollection<Accessibility_For_Disabilities>? IOpenReferralLocation.Accessibility_for_disabilities { get => throw new NotImplementedException(); init => throw new NotImplementedException(); }
+    //ICollection<OpenReferralPhysical_Address>? IOpenReferralLocation.Physical_addresses { get => throw new NotImplementedException(); init => throw new NotImplementedException(); }
+    //ICollection<Accessibility_For_Disabilities>? IOpenReferralLocation.Accessibility_for_disabilities { get => throw new NotImplementedException(); init => throw new NotImplementedException(); }
+    //ICollection<OpenReferralPhysical_Address>? IOpenReferralLocation.Physical_addresses { get => throw new NotImplementedException(); init => throw new NotImplementedException(); }
     //public virtual ICollection<OpenReferralServiceAtLocation>? Service_at_locations { get; init; }
 }
+*/

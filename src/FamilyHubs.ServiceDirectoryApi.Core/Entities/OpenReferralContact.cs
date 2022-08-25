@@ -1,13 +1,13 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Interfaces.Entities;
-using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
+using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace FamilyHubs.ServiceDirectory.Shared.Entities;
 
 public class OpenReferralContact : EntityBase<string>, IOpenReferralContact, IAggregateRoot
 {
     private OpenReferralContact() { }
-    public OpenReferralContact(string id, string title, string name, ICollection<OpenReferralPhoneDto>? phones)
+    public OpenReferralContact(string id, string title, string name, ICollection<IOpenReferralPhone>? phones)
     {
         Id = id;
         Title = title;
@@ -16,6 +16,5 @@ public class OpenReferralContact : EntityBase<string>, IOpenReferralContact, IAg
     }
     public string Title { get; init; } = default!;
     public string Name { get; init; } = default!;
-    public virtual ICollection<OpenReferralPhoneDto>? Phones { get; init; }
-
+    public virtual ICollection<IOpenReferralPhone>? Phones { get; init; }
 }
