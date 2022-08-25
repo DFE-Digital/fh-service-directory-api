@@ -1,5 +1,10 @@
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
+using fh_service_directory_api.api.Endpoints;
+using fh_service_directory_api.core;
 using fh_service_directory_api.core.Interfaces.Entities;
+using fh_service_directory_api.infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.OpenApi.Models;
@@ -9,8 +14,55 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigurWebApplicationBuilderHost(builder);
 ConfigurWebApplicationBuilderServices(builder);
 
+var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+{
+    containerBuilder.RegisterModule(new DefaultCoreModule());
+    //containerBuilder.RegisterModule(new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development"));
+    containerBuilder.RegisterType<MinimalOrganisationEndPoints>();
+    containerBuilder.RegisterType<MinimalGeneralEndPoints>();
+    containerBuilder.RegisterType<MinimalServiceEndPoints>();
+    containerBuilder.RegisterType<MinimalTaxonomyEndPoints>();
+
+    containerBuilder.Register(c => new MapperConfiguration(cfg =>
+    {
+        cfg.AddProfile(new AutoMappingProfiles());
+
+    })).AsSelf().SingleInstance();
+
+    containerBuilder.Register(c =>
+    {
+        //This resolves a new context that can be used later.
+        var context = c.Resolve<IComponentContext>();
+        var config = context.Resolve<MapperConfiguration>();
+        return config.CreateMapper(context.Resolve);
+    })
+        .As<IMapper>()
+        .InstancePerLifetimeScope();
+
+});
+
 var webApplication = builder.Build();
 ConfigureWebApplication(webApplication);
+
+using (var scope = webApplication.Services.CreateScope())
+{
+    var orgservice = scope.ServiceProvider.GetService<MinimalOrganisationEndPoints>();
+    if (orgservice != null)
+        orgservice.RegisterOrganisationEndPoints(webApplication);
+
+    var serservice = scope.ServiceProvider.GetService<MinimalServiceEndPoints>();
+    if (serservice != null)
+        serservice.RegisterServiceEndPoints(webApplication);
+
+    var taxonyservice = scope.ServiceProvider.GetService<MinimalTaxonomyEndPoints>();
+    if (taxonyservice != null)
+        taxonyservice.RegisterTaxonomyEndPoints(webApplication);
+
+    var genservice = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
+    if (genservice != null)
+        genservice.RegisterMinimalGeneralEndPoints(webApplication);
+}
+
 webApplication.Run();
 
 static void ConfigurWebApplicationBuilderHost(WebApplicationBuilder builder)
