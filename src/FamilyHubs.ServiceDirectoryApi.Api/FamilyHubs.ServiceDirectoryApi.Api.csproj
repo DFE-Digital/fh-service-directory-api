@@ -33,6 +33,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\FamilyHubs.ServiceDirectoryApi.Core\FamilyHubs.ServiceDirectoryApi.Core.csproj" />
+	  <ProjectReference Include="..\FamilyHubs.ServiceDirectoryApi.Infrastructure\FamilyHubs.ServiceDirectoryApi.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

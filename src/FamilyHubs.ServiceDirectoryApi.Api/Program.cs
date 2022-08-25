@@ -1,5 +1,5 @@
 using Autofac.Extensions.DependencyInjection;
-using FamilyHubs.ServiceDirectory.Shared.Interfaces.Entities;
+using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.OpenApi.Models;
