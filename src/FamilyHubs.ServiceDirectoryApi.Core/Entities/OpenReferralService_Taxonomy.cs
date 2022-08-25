@@ -11,8 +11,8 @@ public class OpenReferralService_Taxonomy : EntityBase<string>, IOpenReferralSer
     {
         Id = id;
         LinkId = linkId;
-        Taxonomy = taxonomy;
+        Taxonomy = taxonomy as OpenReferralTaxonomy;
     }
     public string? LinkId { get; init; }
-    public IOpenReferralTaxonomy? Taxonomy { get; set; }
+    public OpenReferralTaxonomy? Taxonomy { get; set; }
 }

@@ -12,9 +12,9 @@ public class OpenReferralContact : EntityBase<string>, IOpenReferralContact, IAg
         Id = id;
         Title = title;
         Name = name;
-        Phones = phones;
+        Phones = phones as ICollection<OpenReferralPhone>;
     }
     public string Title { get; init; } = default!;
     public string Name { get; init; } = default!;
-    public virtual ICollection<IOpenReferralPhone>? Phones { get; init; }
+    public virtual ICollection<OpenReferralPhone>? Phones { get; init; }
 }

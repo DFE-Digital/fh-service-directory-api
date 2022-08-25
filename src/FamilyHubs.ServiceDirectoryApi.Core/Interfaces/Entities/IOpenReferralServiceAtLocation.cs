@@ -1,9 +1,11 @@
-﻿namespace fh_service_directory_api.core.Interfaces.Entities
+﻿using FamilyHubs.ServiceDirectory.Shared.Entities;
+
+namespace fh_service_directory_api.core.Interfaces.Entities
 {
     public interface IOpenReferralServiceAtLocation : IEntityBase<string>
     {
-        ICollection<IOpenReferralHoliday_Schedule>? HolidayScheduleCollection { get; init; }
-        IOpenReferralLocation Location { get; init; }
-        ICollection<IOpenReferralRegular_Schedule>? Regular_schedule { get; init; }
+        ICollection<OpenReferralHoliday_Schedule>? HolidayScheduleCollection { get; init; }
+        OpenReferralLocation Location { get; init; }
+        ICollection<OpenReferralRegular_Schedule>? Regular_schedule { get; init; }
     }
 }

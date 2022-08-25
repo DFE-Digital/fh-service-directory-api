@@ -12,11 +12,11 @@ public class OpenReferralParent : EntityBase<string>, IOpenReferralParent, IAggr
         Id = id;
         Name = name;
         Vocabulary = vocabulary;
-        ServiceTaxonomyCollection = serviceTaxonomyCollection;
-        LinkTaxonomyCollection = linkTaxonomyCollection;
+        ServiceTaxonomyCollection = serviceTaxonomyCollection as ICollection<OpenReferralService_Taxonomy>;
+        LinkTaxonomyCollection = linkTaxonomyCollection as ICollection<OpenReferralLinktaxonomycollection>;
     }
     public string Name { get; init; } = default!;
     public string? Vocabulary { get; init; }
-    public virtual ICollection<IOpenReferralService_Taxonomy>? ServiceTaxonomyCollection { get; init; }
-    public virtual ICollection<IOpenReferralLinktaxonomycollection>? LinkTaxonomyCollection { get; init; }
+    public virtual ICollection<OpenReferralService_Taxonomy>? ServiceTaxonomyCollection { get; init; }
+    public virtual ICollection<OpenReferralLinktaxonomycollection>? LinkTaxonomyCollection { get; init; }
 }

@@ -17,9 +17,6 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
         string? url = default!,
         ICollection<OpenReferralReview>? reviews = default!,
         ICollection<OpenReferralService>? services = default!
-    // TODO: Lock down the access to the collections
-    //IEnumerable<IOpenReferralReview>? reviews = default,
-    //IEnumerable<IOpenReferralService>? services = default
     )
     {
         Id = id;
@@ -28,8 +25,8 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
         Logo = logo ?? string.Empty;
         Uri = uri ?? string.Empty;
         Url = url ?? string.Empty;
-        Reviews = (ICollection<IOpenReferralReview>)(reviews ?? default!);
-        Services = (ICollection<IOpenReferralService>)(services ?? default!);
+        Reviews = (ICollection<OpenReferralReview>)(reviews ?? default!);
+        Services = (ICollection<OpenReferralService>)(services ?? default!);
         //_reviews = (IList<IOpenReferralReview>)(reviews ?? new List<IOpenReferralReview>());
         //_services = (IList<IOpenReferralService>)(services ?? new List<IOpenReferralService>());
     }
@@ -39,10 +36,8 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
     public string? Logo { get; private set; } = string.Empty;
     public string? Uri { get; private set; } = string.Empty;
     public string? Url { get; private set; } = string.Empty;
-    public virtual ICollection<IOpenReferralReview>? Reviews { get; set; } = new List<IOpenReferralReview>();
-    public virtual ICollection<IOpenReferralService>? Services { get; set; } = new List<IOpenReferralService>();
-    // public IEnumerable<IOpenReferralReview> Reviews => _reviews;
-    // public IEnumerable<IOpenReferralService> Services => _services;
+    public virtual ICollection<OpenReferralReview>? Reviews { get; set; } = new List<OpenReferralReview>();
+    public virtual ICollection<OpenReferralService>? Services { get; set; } = new List<OpenReferralService>();
 
     public void Update(IOpenReferralOrganisation openReferralOpenReferralOrganisation)
     {
@@ -52,10 +47,5 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
         Uri = openReferralOpenReferralOrganisation.Uri;
         Url = openReferralOpenReferralOrganisation.Url;
     }
-
-    //private readonly IList<IOpenReferralReview> _reviews = new List<IOpenReferralReview>();
-
-    //private readonly IList<IOpenReferralService> _services = new List<IOpenReferralService>();
-
 }
 

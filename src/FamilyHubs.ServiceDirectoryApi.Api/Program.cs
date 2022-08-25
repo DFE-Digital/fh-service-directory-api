@@ -79,12 +79,12 @@ using (var scope = webApplication.Services.CreateScope())
     {
         // Seed Database
 
-        //var services = scope.ServiceProvider;
-        //var context = services.GetRequiredService<ApplicationDbContext>();
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<ApplicationDbContext>();
         ////                    context.Database.Migrate();
-        //context.Database.EnsureCreated();
+        context.Database.EnsureCreated();
         ////new OpenReferralOrganisationSeedData().SeedOpenReferralOrganistions();
-        
+
     }
     catch (Exception ex)
     {

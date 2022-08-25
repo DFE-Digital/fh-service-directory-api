@@ -1,4 +1,6 @@
-﻿namespace fh_service_directory_api.core.Interfaces.Entities
+﻿using FamilyHubs.ServiceDirectory.Shared.Entities;
+
+namespace fh_service_directory_api.core.Interfaces.Entities
 {
     public interface IOpenReferralEligibility : IEntityBase<string>
     {
@@ -6,6 +8,6 @@
         string? LinkId { get; init; }
         int Maximum_age { get; init; }
         int Minimum_age { get; init; }
-        ICollection<IOpenReferralTaxonomy>? Taxonomys { get; init; }
+        ICollection<OpenReferralTaxonomy>? Taxonomys { get; set; }
     }
 }

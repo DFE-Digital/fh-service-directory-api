@@ -14,11 +14,11 @@ public class OpenReferralServiceAtLocation : EntityBase<string>, IOpenReferralSe
     {
         Id = id;
         Location = location;
-        HolidayScheduleCollection = holidayScheduleCollection;
-        Regular_schedule = regular_schedule;
+        HolidayScheduleCollection = holidayScheduleCollection as ICollection<OpenReferralHoliday_Schedule>;
+        Regular_schedule = regular_schedule as ICollection<OpenReferralRegular_Schedule>;
     }
 
-    public IOpenReferralLocation Location { get; init; } = default!;
-    public virtual ICollection<IOpenReferralHoliday_Schedule>? HolidayScheduleCollection { get; init; }
-    public virtual ICollection<IOpenReferralRegular_Schedule>? Regular_schedule { get; init; }
+    public OpenReferralLocation Location { get; init; } = default!;
+    public virtual ICollection<OpenReferralHoliday_Schedule>? HolidayScheduleCollection { get; init; }
+    public virtual ICollection<OpenReferralRegular_Schedule>? Regular_schedule { get; init; }
 }

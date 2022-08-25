@@ -14,11 +14,11 @@ public class OpenReferralEligibility : EntityBase<string>, IOpenReferralEligibil
         LinkId = linkId;
         Maximum_age = maximum_age;
         Minimum_age = minimum_age;
-        taxonomys = Taxonomys;
+        Taxonomys = taxonomys as ICollection<OpenReferralTaxonomy>;
     }
     public string Eligibility { get; init; } = default!;
     public string? LinkId { get; init; }
     public int Maximum_age { get; init; }
     public int Minimum_age { get; init; }
-    public ICollection<IOpenReferralTaxonomy>? Taxonomys { get => throw new NotImplementedException(); init => throw new NotImplementedException(); }
+    public ICollection<OpenReferralTaxonomy>? Taxonomys { get; set; }
 }
