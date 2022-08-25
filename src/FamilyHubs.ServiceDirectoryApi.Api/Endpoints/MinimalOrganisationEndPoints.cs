@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
-using FamilyHubs.ServiceDirectory.Shared.Models.OpenReferralOrganisation;
+using FamilyHubs.ServiceDirectory.Shared.Entities;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using fh_service_directory_api.core.Commands.CreateOpenReferralOrganisation;
+using fh_service_directory_api.core.Commands.UpdateOpenReferralOrganisation;
+using fh_service_directory_api.core.Queries.GetOpenReferralOrganisationById;
+using fh_service_directory_api.core.Queries.ListOrganisation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -59,7 +63,7 @@ public class MinimalOrganisationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Organisations", "List Organisations") { Tags = new[] { "Organisations" } });
 
-        app.MapPut("api/organizations/{id}", async (string id, [FromBody] OpenReferralOrganisationWithServicesRecord request, CancellationToken cancellationToken, ISender _mediator, IMapper mapper) =>
+        app.MapPut("api/organizations/{id}", async (string id, [FromBody] OpenReferralOrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, IMapper mapper) =>
         {
             try
             {

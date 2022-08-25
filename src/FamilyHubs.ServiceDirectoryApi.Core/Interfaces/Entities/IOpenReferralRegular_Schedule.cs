@@ -1,6 +1,6 @@
 ﻿namespace fh_service_directory_api.core.Interfaces.Entities
 {
-    public interface IOpenReferralRegular_Schedule
+    public interface IOpenReferralRegular_Schedule : IEntityBase<string>
     {
         string? Byday { get; init; }
         string? Bymonthday { get; init; }

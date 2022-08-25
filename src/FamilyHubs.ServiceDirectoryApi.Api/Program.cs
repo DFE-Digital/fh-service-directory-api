@@ -1,5 +1,8 @@
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using FamilyHubs.ServiceDirectory.Shared.Interfaces.Entities;
+using fh_service_directory_api.core;
+using fh_service_directory_api.core.Interfaces.Entities;
+using fh_service_directory_api.infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.OpenApi.Models;
@@ -8,6 +11,12 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 ConfigurWebApplicationBuilderHost(builder);
 ConfigurWebApplicationBuilderServices(builder);
+
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+{
+    containerBuilder.RegisterModule(new DefaultCoreModule());
+    containerBuilder.RegisterModule(new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development"));
+});
 
 var webApplication = builder.Build();
 ConfigureWebApplication(webApplication);

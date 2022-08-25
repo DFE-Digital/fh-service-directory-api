@@ -4,10 +4,10 @@ using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace FamilyHubs.ServiceDirectory.Shared.Entities;
 
-public class OpenReferralCost_Option : EntityBase<string>, IOpenReferralCost_Option, IAggregateRoot
+public class OpenReferralCostOption : EntityBase<string>, IOpenReferralCostOption, IAggregateRoot
 {
-    private OpenReferralCost_Option() { }
-    public OpenReferralCost_Option(string id, string amount_description, decimal amount, string? linkId, string? option, DateTime? valid_from
+    private OpenReferralCostOption() { }
+    public OpenReferralCostOption(string id, string amount_description, decimal amount, string? linkId, string? option, DateTime? valid_from
         , DateTime? valid_to
         )
     {

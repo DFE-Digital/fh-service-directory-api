@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="1.0.3" />
+		<PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="1.0.4" />
 		<PackageReference Include="FamilyHubs.SharedKernel" Version="1.0.3" />
 		<PackageReference Include="Ardalis.ApiEndpoints" Version="4.0.1" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
@@ -33,6 +33,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\FamilyHubs.ServiceDirectoryApi.Core\FamilyHubs.ServiceDirectoryApi.Core.csproj" />
+	  <ProjectReference Include="..\FamilyHubs.ServiceDirectoryApi.Infrastructure\FamilyHubs.ServiceDirectoryApi.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

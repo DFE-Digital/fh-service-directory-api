@@ -1,11 +1,11 @@
-﻿using fh_service_directory_api.core.Interfaces.Infrastructure;
-using fh_service_directory_api.core.RecordEntities;
+﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
+using fh_service_directory_api.core.Interfaces.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace fh_service_directory_api.core.Queries.ListOrganisation;
 
-public class ListOpenReferralOrganisationCommand : IRequest<List<OpenReferralOrganisationRecord>>
+public class ListOpenReferralOrganisationCommand : IRequest<List<OpenReferralOrganisationDto>>
 {
     public ListOpenReferralOrganisationCommand()
     {
@@ -13,7 +13,7 @@ public class ListOpenReferralOrganisationCommand : IRequest<List<OpenReferralOrg
     }
 }
 
-public class ListOpenReferralOrganisationCommandHandler : IRequestHandler<ListOpenReferralOrganisationCommand, List<OpenReferralOrganisationRecord>>
+public class ListOpenReferralOrganisationCommandHandler : IRequestHandler<ListOpenReferralOrganisationCommand, List<OpenReferralOrganisationDto>>
 {
     private readonly IApplicationDbContext _context;
 
@@ -22,9 +22,9 @@ public class ListOpenReferralOrganisationCommandHandler : IRequestHandler<ListOp
         _context = context;
     }
 
-    public async Task<List<OpenReferralOrganisationRecord>> Handle(ListOpenReferralOrganisationCommand request, CancellationToken cancellationToken)
+    public async Task<List<OpenReferralOrganisationDto>> Handle(ListOpenReferralOrganisationCommand request, CancellationToken cancellationToken)
     {
-        var organisations = await _context.OpenReferralOrganisations.Select(org => new OpenReferralOrganisationRecord(
+        var organisations = await _context.OpenReferralOrganisations.Select(org => new OpenReferralOrganisationDto(
             org.Id,
             org.Name,
             org.Description,

@@ -1,6 +1,6 @@
 ﻿namespace fh_service_directory_api.core.Interfaces.Entities
 {
-    public interface IOpenReferralCost_Option : IEntityBase<string>
+    public interface IOpenReferralCostOption
     {
         decimal Amount { get; init; }
         string Amount_description { get; init; }

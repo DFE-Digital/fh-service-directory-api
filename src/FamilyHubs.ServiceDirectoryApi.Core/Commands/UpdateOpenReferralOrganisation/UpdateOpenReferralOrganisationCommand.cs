@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using FamilyHubs.ServiceDirectory.Shared.Entities;
 using fh_service_directory_api.core.Events;
+using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -91,7 +92,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                         if (childModel != null)
                         {
                             entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(childModel));
-                            _context.OpenReferralServices.Add(childModel);
+                            _context.OpenReferralServices.Add(childModel as OpenReferralService);
                         }
 
 
@@ -105,7 +106,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                 foreach (var existingChild in entity.Reviews)
                 {
                     if (!request.OpenReferralOrganisation.Reviews.Any(c => c.Id == existingChild.Id))
-                        _context.OpenReferralReviews.Remove(existingChild);
+                        _context.OpenReferralReviews.Remove(existingChild as OpenReferralReview);
                 }
 
                 foreach (var childModel in request.OpenReferralOrganisation.Reviews)
@@ -120,7 +121,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                     {
                         entity.RegisterDomainEvent(new OpenReferralReviewCreatedEvent(childModel));
 
-                        _context.OpenReferralReviews.Add(childModel);
+                        _context.OpenReferralReviews.Add(childModel as OpenReferralReview);
 
                     }
                 }
