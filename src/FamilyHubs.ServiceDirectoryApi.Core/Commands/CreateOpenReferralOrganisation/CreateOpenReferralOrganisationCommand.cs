@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Entities;
-using FamilyHubs.ServiceDirectory.Shared.Models.OpenReferralOrganisation;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using fh_service_directory_api.core.Events;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
 using MediatR;
