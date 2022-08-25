@@ -7,6 +7,7 @@ using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -17,7 +18,19 @@ ConfigurWebApplicationBuilderServices(builder);
 var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     containerBuilder.RegisterModule(new DefaultCoreModule());
-    //containerBuilder.RegisterModule(new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development"));
+    containerBuilder.RegisterModule(new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development"));
+
+
+    // Register Entity Framework
+    var dbContextOptionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlServer("DefaultConnection");
+
+    containerBuilder.RegisterType<ApplicationDbContext>()
+        .WithParameter("options", dbContextOptionsBuilder.Options)
+        .InstancePerLifetimeScope();
+
+    
+
+
     containerBuilder.RegisterType<MinimalOrganisationEndPoints>();
     containerBuilder.RegisterType<MinimalGeneralEndPoints>();
     containerBuilder.RegisterType<MinimalServiceEndPoints>();
@@ -61,9 +74,28 @@ using (var scope = webApplication.Services.CreateScope())
     var genservice = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
     if (genservice != null)
         genservice.RegisterMinimalGeneralEndPoints(webApplication);
+
+    try
+    {
+        // Seed Database
+
+        //var services = scope.ServiceProvider;
+        //var context = services.GetRequiredService<ApplicationDbContext>();
+        ////                    context.Database.Migrate();
+        //context.Database.EnsureCreated();
+        ////new OpenReferralOrganisationSeedData().SeedOpenReferralOrganistions();
+        
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
+    }
 }
 
+
 webApplication.Run();
+
 
 static void ConfigurWebApplicationBuilderHost(WebApplicationBuilder builder)
 {
