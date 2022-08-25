@@ -1,11 +1,6 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Interfaces.Entities;
-using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace FamilyHubs.ServiceDirectory.Shared.Entities;
 
@@ -14,7 +9,7 @@ public class OpenReferralServiceAtLocation : EntityBase<string>, IOpenReferralSe
     private OpenReferralServiceAtLocation() { }
     public OpenReferralServiceAtLocation(string id,
         OpenReferralLocation location,
-        ICollection<OpenReferralHoliday_Schedule>? holidayScheduleCollection, ICollection<OpenReferralRegular_Schedule>? regular_schedule
+        ICollection<IOpenReferralHoliday_Schedule>? holidayScheduleCollection, ICollection<IOpenReferralRegular_Schedule>? regular_schedule
         )
     {
         Id = id;
@@ -23,7 +18,7 @@ public class OpenReferralServiceAtLocation : EntityBase<string>, IOpenReferralSe
         Regular_schedule = regular_schedule;
     }
 
-    public OpenReferralLocation Location { get; init; } = default!;
-    public virtual ICollection<OpenReferralHoliday_Schedule>? HolidayScheduleCollection { get; init; }
-    public virtual ICollection<OpenReferralRegular_Schedule>? Regular_schedule { get; init; }
+    public IOpenReferralLocation Location { get; init; } = default!;
+    public virtual ICollection<IOpenReferralHoliday_Schedule>? HolidayScheduleCollection { get; init; }
+    public virtual ICollection<IOpenReferralRegular_Schedule>? Regular_schedule { get; init; }
 }

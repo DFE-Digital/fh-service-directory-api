@@ -1,6 +1,6 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Interfaces.Entities;
-using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
+using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace FamilyHubs.ServiceDirectory.Shared.Entities;
 
@@ -8,8 +8,6 @@ public class OpenReferralRegular_Schedule : EntityBase<string>, IOpenReferralReg
 {
     private OpenReferralRegular_Schedule() { }
     public OpenReferralRegular_Schedule(string id, string description, DateTime? opens_at, DateTime? closes_at, string? byday, string? bymonthday, string? dtstart, string? freq, string? interval, DateTime? valid_from, DateTime? valid_to
-        //, OpenReferralServiceAtLocation? service_at_location
-
         )
     {
         Id = id;
@@ -23,7 +21,6 @@ public class OpenReferralRegular_Schedule : EntityBase<string>, IOpenReferralReg
         Interval = interval;
         Valid_from = valid_from;
         Valid_to = valid_to;
-        //Service_at_location = service_at_location;
     }
     public string Description { get; init; } = default!;
     public DateTime? Opens_at { get; init; }
@@ -35,5 +32,4 @@ public class OpenReferralRegular_Schedule : EntityBase<string>, IOpenReferralReg
     public string? Interval { get; init; }
     public DateTime? Valid_from { get; init; }
     public DateTime? Valid_to { get; init; }
-    //public OpenReferralServiceAtLocation? Service_at_location { get; init; }
 }

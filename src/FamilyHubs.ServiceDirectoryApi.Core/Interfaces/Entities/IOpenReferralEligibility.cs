@@ -1,6 +1,6 @@
 ﻿namespace fh_service_directory_api.core.Interfaces.Entities
 {
-    public interface IOpenReferralEligibility
+    public interface IOpenReferralEligibility : IEntityBase<string>
     {
         string Eligibility { get; init; }
         string? LinkId { get; init; }

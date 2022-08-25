@@ -1,6 +1,6 @@
 ﻿namespace fh_service_directory_api.core.Interfaces.Entities;
 
-public interface IOpenReferralOrganisation
+public interface IOpenReferralOrganisation : IEntityBase<string>
 {
     string? Description { get; }
     string? Logo { get; }

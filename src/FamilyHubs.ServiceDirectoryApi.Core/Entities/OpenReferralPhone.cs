@@ -1,13 +1,13 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Interfaces.Entities;
-using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
+using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace FamilyHubs.ServiceDirectory.Shared.Entities;
 
-public class OpenReferralPhoneDto : EntityBase<string>, IOpenReferralPhone, IAggregateRoot
+public class OpenReferralPhone : EntityBase<string>, IOpenReferralPhone, IAggregateRoot
 {
-    private OpenReferralPhoneDto() { }
-    public OpenReferralPhoneDto(string id, string number)
+    private OpenReferralPhone() { }
+    public OpenReferralPhone(string id, string number)
     {
         Id = id;
         Number = number;

@@ -1,6 +1,6 @@
 ﻿namespace fh_service_directory_api.core.Interfaces.Entities
 {
-    public interface IOpenReferralHoliday_Schedule
+    public interface IOpenReferralHoliday_Schedule : IEntityBase<string>
     {
         bool Closed { get; init; }
         DateTime? Closes_at { get; init; }

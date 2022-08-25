@@ -1,6 +1,6 @@
 ﻿namespace fh_service_directory_api.core.Interfaces.Entities
 {
-    public interface IOpenReferralLocation
+    public interface IOpenReferralLocation : IEntityBase<string>
     {
         ICollection<IAccessibility_For_Disabilities>? Accessibility_for_disabilities { get; init; }
         string? Description { get; init; }

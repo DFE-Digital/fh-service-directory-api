@@ -1,13 +1,25 @@
 ﻿using Ardalis.GuardClauses;
 using FamilyHubs.ServiceDirectory.Shared.Entities;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContacts;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhones;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAreas;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAtLocations;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
-using fh_service_directory_api.core.RecordEntities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace fh_service_directory_api.core.Queries.GetOpenReferralService;
 
-public class GetOpenReferralServiceByIdCommand : IRequest<OpenReferralServiceRecord>
+public class GetOpenReferralServiceByIdCommand : IRequest<OpenReferralServiceDto>
 {
     public GetOpenReferralServiceByIdCommand(string id)
     {
@@ -17,7 +29,7 @@ public class GetOpenReferralServiceByIdCommand : IRequest<OpenReferralServiceRec
     public string Id { get; set; }
 }
 
-public class GetOpenReferralServiceByIdCommandHandler : IRequestHandler<GetOpenReferralServiceByIdCommand, OpenReferralServiceRecord>
+public class GetOpenReferralServiceByIdCommandHandler : IRequestHandler<GetOpenReferralServiceByIdCommand, OpenReferralServiceDto>
 {
     private readonly IApplicationDbContext _context;
 
@@ -26,7 +38,7 @@ public class GetOpenReferralServiceByIdCommandHandler : IRequestHandler<GetOpenR
         _context = context;
     }
 
-    public async Task<OpenReferralServiceRecord> Handle(GetOpenReferralServiceByIdCommand request, CancellationToken cancellationToken)
+    public async Task<OpenReferralServiceDto> Handle(GetOpenReferralServiceByIdCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.OpenReferralServices
             .Include(x => x.ServiceDelivery)
@@ -47,7 +59,7 @@ public class GetOpenReferralServiceByIdCommandHandler : IRequestHandler<GetOpenR
             throw new NotFoundException(nameof(OpenReferralService), request.Id);
         }
 
-        var result = new OpenReferralServiceRecord(
+        var result = new OpenReferralServiceDto(
             entity.Id,
             entity.Name,
             entity.Description,
@@ -60,14 +72,14 @@ public class GetOpenReferralServiceByIdCommandHandler : IRequestHandler<GetOpenR
             entity.Url,
             entity.Email,
             entity.Fees,
-            entity.ServiceDelivery.Select(x => new OpenReferralServiceDeliveryRecord(x.Id, x.ServiceDelivery)).ToList(),
-            entity.Eligibilitys.Select(x => new OpenReferralEligibilityRecord(x.Id, x.Eligibility, x.Maximum_age, x.Minimum_age)).ToList(),
-            entity.Contacts.Select(x => new OpenReferralContactRecord(x.Id, x.Title, x.Name, x.Phones?.Select(x => new OpenReferralPhoneRecord(x.Id, x.Number)).ToList())).ToList(),
-            entity.Cost_options.Select(x => new OpenReferralCost_OptionRecord(x.Id, x.Amount_description, x.Amount, x.LinkId, x.Option, x.Valid_from, x.Valid_to)).ToList(),
-            entity.Languages.Select(x => new OpenReferralLanguageRecord(x.Id, x.Language)).ToList(),
-            entity.Service_areas.Select(x => new OpenReferralService_AreaRecord(x.Id, x.Service_area, x.Extent, x.Uri)).ToList(),
-            entity.Service_at_locations.Select(x => new OpenReferralServiceAtLocationRecord(x.Id, new OpenReferralLocationRecord(x.Location.Id, x.Location.Name, x.Location.Description, x.Location.Latitude, x.Location.Longitude, x.Location?.Physical_addresses?.Select(x => new OpenReferralPhysical_AddressRecord(x.Id, x.Address_1, x.City, x.Postal_code, x.Country, x.State_province)).ToList()))).ToList(),
-            entity.Service_taxonomys.Select(x => new OpenReferralService_TaxonomyRecord(x.Id, x.Taxonomy != null ? new OpenReferralTaxonomyRecord(x.Taxonomy.Id, x.Taxonomy.Name, x.Taxonomy.Vocabulary, x.Taxonomy.Parent) : null)).ToList()
+            new List<IOpenReferralServiceDeliveryExDto>(entity.ServiceDelivery.Select(x => new OpenReferralServiceDeliveryExDto(x.Id, x.ServiceDelivery)).ToList()),
+            new List<IOpenReferralEligibilityDto>(entity.Eligibilitys.Select(x => new OpenReferralEligibilityDto(x.Id, x.Eligibility, x.Maximum_age, x.Minimum_age)).ToList()),
+            new List<IOpenReferralContactDto>(entity.Contacts.Select(x => new OpenReferralContactDto(x.Id, x.Title, x.Name, new List<IOpenReferralPhoneDto>(x.Phones?.Select(x => new OpenReferralPhoneDto(x.Id, x.Number)).ToList()))).ToList()),
+            new List<IOpenReferralCostOptionDto>(entity.Cost_options.Select(x => new OpenReferralCostOptionDto(x.Id, x.Amount_description, x.Amount, x.LinkId, x.Option, x.Valid_from, x.Valid_to)).ToList()),
+            new List<IOpenReferralLanguageDto>(entity.Languages.Select(x => new OpenReferralLanguageDto(x.Id, x.Language)).ToList()),
+            new List<IOpenReferralServiceAreaDto>(entity.Service_areas.Select(x => new OpenReferralServiceAreaDto(x.Id, x.Service_area, x.Extent, x.Uri)).ToList()),
+            new List<IOpenReferralServiceAtLocationDto>(entity.Service_at_locations.Select(x => new OpenReferralServiceAtLocationDto(x.Id, new OpenReferralLocationDto(x.Location.Id, x.Location.Name, x.Location.Description, x.Location.Latitude, x.Location.Longitude, new List<IOpenReferralPhysicalAddressDto>(x.Location?.Physical_addresses?.Select(x => new OpenReferralPhysicalAddressDto(x.Id, x.Address_1, x.City, x.Postal_code, x.Country, x.State_province)).ToList())))).ToList()),
+            new List<IOpenReferralServiceTaxonomyDto>(entity.Service_taxonomys.Select(x => new OpenReferralServiceTaxonomyDto(x.Id, x.Taxonomy != null ? new OpenReferralTaxonomyDto(x.Taxonomy.Id, x.Taxonomy.Name, x.Taxonomy.Vocabulary, x.Taxonomy.Parent) : null)).ToList())
             );
 
         return result;
