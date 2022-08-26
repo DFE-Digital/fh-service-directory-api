@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\FamilyHubs.ServiceDirectoryApi.Api\FamilyHubs.ServiceDirectoryApi.Api.csproj" />
-    <ProjectReference Include="..\..\src\FamilyHubs.ServiceDirectoryApi.Infrastructure\FamilyHubs.ServiceDirectoryApi.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
