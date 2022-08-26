@@ -99,7 +99,8 @@ using (var scope = webApplication.Services.CreateScope())
     catch (Exception ex)
     {
         var logger = scope.ServiceProvider.GetService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
+        if (logger != null)
+            logger.LogError(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
     }
 }
 

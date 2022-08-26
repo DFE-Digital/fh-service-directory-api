@@ -37,18 +37,18 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
         Url = url;
         Email = email;
         Fees = fees;
-        Eligibilitys = eligibilitys as ICollection<OpenReferralEligibility>;
-        Fundings = fundings as ICollection<OpenReferralFunding>;
-        Holiday_schedules = holiday_schedules as ICollection<OpenReferralHoliday_Schedule>;
-        Languages = languages as ICollection<OpenReferralLanguage>;
-        Regular_schedules = regular_schedules as ICollection<OpenReferralRegular_Schedule>;
-        Reviews = reviews as ICollection<OpenReferralReview>;
-        Contacts = contacts as ICollection<OpenReferralContact>;
-        Cost_options = cost_options as ICollection<OpenReferralCost_Option>;
-        Service_areas = service_areas as ICollection<OpenReferralService_Area>;
-        Service_at_locations = service_at_locations as ICollection<OpenReferralServiceAtLocation>;
-        Service_taxonomys = service_taxonomys as ICollection<OpenReferralService_Taxonomy>;
-        ServiceDelivery = serviceDelivery as ICollection<OpenReferralServiceDelivery>;
+        Eligibilitys = eligibilitys as ICollection<OpenReferralEligibility> ?? new Collection<OpenReferralEligibility>();
+        Fundings = fundings as ICollection<OpenReferralFunding> ?? new Collection<OpenReferralFunding>();
+        Holiday_schedules = holiday_schedules as ICollection<OpenReferralHoliday_Schedule> ?? new Collection<OpenReferralHoliday_Schedule>();
+        Languages = languages as ICollection<OpenReferralLanguage> ?? new Collection<OpenReferralLanguage>();
+        Regular_schedules = regular_schedules as ICollection<OpenReferralRegular_Schedule> ?? new Collection<OpenReferralRegular_Schedule>();
+        Reviews = reviews as ICollection<OpenReferralReview> ?? new Collection<OpenReferralReview>();
+        Contacts = contacts as ICollection<OpenReferralContact> ?? new Collection<OpenReferralContact>();
+        Cost_options = cost_options as ICollection<OpenReferralCost_Option> ?? new Collection<OpenReferralCost_Option>();
+        Service_areas = service_areas as ICollection<OpenReferralService_Area> ?? new Collection<OpenReferralService_Area>();
+        Service_at_locations = service_at_locations as ICollection<OpenReferralServiceAtLocation> ?? new Collection<OpenReferralServiceAtLocation>();
+        Service_taxonomys = service_taxonomys as ICollection<OpenReferralService_Taxonomy> ?? new Collection<OpenReferralService_Taxonomy>();
+        ServiceDelivery = serviceDelivery as ICollection<OpenReferralServiceDelivery> ?? new Collection<OpenReferralServiceDelivery>();
     }
 
     public string OpenReferralOrganisationId { get; set; } = default!;

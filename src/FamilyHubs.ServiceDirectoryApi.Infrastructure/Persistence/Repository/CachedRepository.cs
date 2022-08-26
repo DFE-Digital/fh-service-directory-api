@@ -69,7 +69,8 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
             throw new NotImplementedException();
         }
 
-        public Task<T> GetByIdAsync<TId>(TId id, CancellationToken cancellationToken = default)
+        public Task<T?> GetByIdAsync<TId>(TId id, CancellationToken cancellationToken = default)
+
         {
             string? key = $"{typeof(T).Name}-{id}";
             _logger.LogInformation("Checking cache for " + key);
@@ -91,7 +92,7 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
             throw new NotImplementedException();
         }
 
-        public Task<T> GetBySpecAsync<Spec>(Spec specification,
+        public Task<T?> GetBySpecAsync<Spec>(Spec specification,
           CancellationToken cancellationToken = default) where Spec : ISingleResultSpecification, ISpecification<T>
         {
             if (specification.CacheEnabled)
