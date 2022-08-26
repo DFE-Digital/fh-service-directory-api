@@ -1,4 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Entities;
+﻿using fh_service_directory_api.core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

@@ -31,9 +31,6 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
        .AsSelf()
        .WithParameter("options", options);
 
-    containerBuilder.RegisterType<ApplicationDbContext>()
-            .As<IApplicationDbContext>().InstancePerLifetimeScope();
-
     containerBuilder.RegisterType<MinimalOrganisationEndPoints>();
     containerBuilder.RegisterType<MinimalGeneralEndPoints>();
     containerBuilder.RegisterType<MinimalServiceEndPoints>();
@@ -96,6 +93,8 @@ using (var scope = webApplication.Services.CreateScope())
         await initialiser.InitialiseAsync(builder.Configuration);
         await initialiser.SeedAsync();
 
+        var cont = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
+
     }
     catch (Exception ex)
     {
@@ -132,8 +131,6 @@ static void ConfigurWebApplicationBuilderServices(WebApplicationBuilder builder)
         typeof(IOpenReferralOrganisation).Assembly
           };
     builder.Services.AddMediatR(assemblies);
-
-    //builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 }
 
 static void ConfigureWebApplication(WebApplication webApplication)

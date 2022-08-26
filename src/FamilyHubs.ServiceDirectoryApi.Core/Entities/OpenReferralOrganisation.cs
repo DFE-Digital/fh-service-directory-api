@@ -2,7 +2,7 @@
 using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Interfaces.Entities;
 
-namespace FamilyHubs.ServiceDirectory.Shared.Entities;
+namespace fh_service_directory_api.core.Entities;
 
 public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganisation, IAggregateRoot
 {
@@ -25,8 +25,8 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
         Logo = logo ?? string.Empty;
         Uri = uri ?? string.Empty;
         Url = url ?? string.Empty;
-        Reviews = (ICollection<OpenReferralReview>)(reviews ?? default!);
-        Services = (ICollection<OpenReferralService>)(services ?? default!);
+        Reviews = reviews ?? default!;
+        Services = services ?? default!;
         //_reviews = (IList<IOpenReferralReview>)(reviews ?? new List<IOpenReferralReview>());
         //_services = (IList<IOpenReferralService>)(services ?? new List<IOpenReferralService>());
     }

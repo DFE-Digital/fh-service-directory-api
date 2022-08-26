@@ -3,7 +3,7 @@ using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Interfaces.Entities;
 using System.Collections.ObjectModel;
 
-namespace FamilyHubs.ServiceDirectory.Shared.Entities;
+namespace fh_service_directory_api.core.Entities;
 
 public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAggregateRoot
 {
@@ -75,7 +75,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
     public virtual ICollection<OpenReferralService_Area> Service_areas { get; init; } = new Collection<OpenReferralService_Area>();
     public virtual ICollection<OpenReferralServiceAtLocation> Service_at_locations { get; init; } = new Collection<OpenReferralServiceAtLocation>();
     public virtual ICollection<OpenReferralService_Taxonomy> Service_taxonomys { get; init; } = new Collection<OpenReferralService_Taxonomy>();
-    
+
     public void Update(IOpenReferralService openReferralService)
     {
         Name = openReferralService.Name;

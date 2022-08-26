@@ -2,7 +2,7 @@
 using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Interfaces.Entities;
 
-namespace FamilyHubs.ServiceDirectory.Shared.Entities;
+namespace fh_service_directory_api.core.Entities;
 
 public class OpenReferralService_Area : EntityBase<string>, IOpenReferralService_Area, IAggregateRoot
 {

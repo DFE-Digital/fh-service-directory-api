@@ -1,6 +1,6 @@
-﻿using fh_service_directory_api.core.Queries.GetOpenReferralService;
-using fh_service_directory_api.core.Queries.GetOpenReferralServicesByOrganisation;
-using fh_service_directory_api.core.Queries.GetServices;
+﻿using fh_service_directory_api.api.Queries.GetOpenReferralService;
+using fh_service_directory_api.api.Queries.GetOpenReferralServicesByOrganisation;
+using fh_service_directory_api.api.Queries.GetServices;
 using MediatR;
 using Swashbuckle.AspNetCore.Annotations;
 

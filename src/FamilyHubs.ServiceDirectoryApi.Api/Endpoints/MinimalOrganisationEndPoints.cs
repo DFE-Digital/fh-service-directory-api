@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using FamilyHubs.ServiceDirectory.Shared.Entities;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using fh_service_directory_api.core.Commands.CreateOpenReferralOrganisation;
-using fh_service_directory_api.core.Commands.UpdateOpenReferralOrganisation;
-using fh_service_directory_api.core.Queries.GetOpenReferralOrganisationById;
-using fh_service_directory_api.core.Queries.ListOrganisation;
+using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
+using fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
+using fh_service_directory_api.api.Queries.GetOpenReferralOrganisationById;
+using fh_service_directory_api.api.Queries.ListOrganisation;
+using fh_service_directory_api.core.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

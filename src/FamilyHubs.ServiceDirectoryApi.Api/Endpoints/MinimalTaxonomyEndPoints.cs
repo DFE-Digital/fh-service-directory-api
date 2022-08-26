@@ -1,4 +1,4 @@
-﻿using fh_service_directory_api.core.Queries.GetOpenReferralTaxonomies;
+﻿using fh_service_directory_api.api.Queries.GetOpenReferralTaxonomies;
 using MediatR;
 using Swashbuckle.AspNetCore.Annotations;
 

@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
-using FamilyHubs.ServiceDirectory.Shared.Entities;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
+using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
+using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 
-namespace fh_service_directory_api.core.Commands.CreateOpenReferralOrganisation;
+namespace fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 
 public class CreateOpenReferralOrganisationCommand : IRequest<string>
 {
@@ -19,10 +20,10 @@ public class CreateOpenReferralOrganisationCommand : IRequest<string>
 
 public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<CreateOpenReferralOrganisationCommand, string>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
 
-    public CreateOpenReferralOrganisationCommandHandler(IApplicationDbContext context, IMapper mapper)
+    public CreateOpenReferralOrganisationCommandHandler(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;

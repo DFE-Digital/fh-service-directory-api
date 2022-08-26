@@ -1,4 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Entities;
+﻿using fh_service_directory_api.core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace fh_service_directory_api.core.Interfaces.Infrastructure

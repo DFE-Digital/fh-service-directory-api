@@ -1,6 +1,5 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
-using FamilyHubs.ServiceDirectory.Shared.Entities;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContacts;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
@@ -15,12 +14,14 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverys
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
+using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
+using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.core.Queries.GetOpenReferralOrganisationById;
+namespace fh_service_directory_api.api.Queries.GetOpenReferralOrganisationById;
 
 
 public class GetOpenReferralOrganisationByIdCommand : IRequest<IOpenReferralOrganisationWithServicesDto>
@@ -30,10 +31,10 @@ public class GetOpenReferralOrganisationByIdCommand : IRequest<IOpenReferralOrga
 
 public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenReferralOrganisationByIdCommand, IOpenReferralOrganisationWithServicesDto>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
 
-    public GetOpenReferralOrganisationByIdHandler(IApplicationDbContext context, IMapper mapper)
+    public GetOpenReferralOrganisationByIdHandler(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;

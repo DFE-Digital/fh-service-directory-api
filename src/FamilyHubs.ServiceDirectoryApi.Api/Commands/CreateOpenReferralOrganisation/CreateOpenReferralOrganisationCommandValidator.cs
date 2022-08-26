@@ -1,7 +1,7 @@
 ﻿using fh_service_directory_api.core.Interfaces.Commands;
 using FluentValidation;
 
-namespace fh_service_directory_api.core.Commands.CreateOpenReferralOrganisation;
+namespace fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 
 public class CreateOpenReferralOrganisationCommandValidator : AbstractValidator<ICreateOpenReferralOrganisationCommand>
 {

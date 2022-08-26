@@ -2,7 +2,7 @@
 using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Interfaces.Entities;
 
-namespace FamilyHubs.ServiceDirectory.Shared.Entities;
+namespace fh_service_directory_api.core.Entities;
 
 public class OpenReferralLocation : EntityBase<string>, IOpenReferralLocation, IAggregateRoot
 {
@@ -24,5 +24,5 @@ public class OpenReferralLocation : EntityBase<string>, IOpenReferralLocation, I
     public double Latitude { get; init; }
     public double Longitude { get; init; }
     public virtual ICollection<OpenReferralPhysical_Address>? Physical_addresses { get; init; }
-    public virtual ICollection<Accessibility_For_Disabilities>? Accessibility_for_disabilities { get; init; }   
+    public virtual ICollection<Accessibility_For_Disabilities>? Accessibility_for_disabilities { get; init; }
 }

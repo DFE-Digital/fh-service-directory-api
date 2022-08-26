@@ -1,12 +1,13 @@
 ﻿using Ardalis.GuardClauses;
-using FamilyHubs.ServiceDirectory.Shared.Entities;
+using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
 using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
+using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.core.Commands.UpdateOpenReferralOrganisation;
+namespace fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
 
 
 public class UpdateOpenReferralOrganisationCommand : IRequest<string>
@@ -24,9 +25,9 @@ public class UpdateOpenReferralOrganisationCommand : IRequest<string>
 
 public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<UpdateOpenReferralOrganisationCommand, string>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public UpdateOpenReferralOrganisationCommandHandler(IApplicationDbContext context)
+    public UpdateOpenReferralOrganisationCommandHandler(ApplicationDbContext context)
     {
         _context = context;
     }
@@ -35,7 +36,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
 
-        var entity = (OpenReferralOrganisation) await _context.OpenReferralOrganisations
+        var entity = await _context.OpenReferralOrganisations
           .Include(x => x.Services)
           .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
 
@@ -64,7 +65,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                 foreach (var childModel in request.OpenReferralOrganisation.Services)
                 {
                     var existingChild = entity.Services
-                        .Where(c => c.Id == childModel.Id && c.Id != default(string))
+                        .Where(c => c.Id == childModel.Id && c.Id != default)
                         .SingleOrDefault();
 
                     if (existingChild != null)
@@ -112,7 +113,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                 foreach (var childModel in request.OpenReferralOrganisation.Reviews)
                 {
                     var existingChild = entity.Reviews
-                        .Where(c => c.Id == childModel.Id && c.Id != default(string))
+                        .Where(c => c.Id == childModel.Id && c.Id != default)
                         .SingleOrDefault();
 
                     if (existingChild != null)

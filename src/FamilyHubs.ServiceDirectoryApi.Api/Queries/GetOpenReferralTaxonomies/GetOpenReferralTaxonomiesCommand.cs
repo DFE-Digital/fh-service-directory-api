@@ -1,10 +1,11 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using FamilyHubs.SharedKernel;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
+using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.core.Queries.GetOpenReferralTaxonomies;
+namespace fh_service_directory_api.api.Queries.GetOpenReferralTaxonomies;
 
 public class GetOpenReferralTaxonomiesCommand : IRequest<PaginatedList<OpenReferralTaxonomyDto>>
 {
@@ -22,9 +23,9 @@ public class GetOpenReferralTaxonomiesCommand : IRequest<PaginatedList<OpenRefer
 
 public class GetOpenReferralTaxonomiesCommandHandler : IRequestHandler<GetOpenReferralTaxonomiesCommand, PaginatedList<OpenReferralTaxonomyDto>>
 {
-    private readonly IApplicationDbContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public GetOpenReferralTaxonomiesCommandHandler(IApplicationDbContext context)
+    public GetOpenReferralTaxonomiesCommandHandler(ApplicationDbContext context)
     {
         _context = context;
     }
