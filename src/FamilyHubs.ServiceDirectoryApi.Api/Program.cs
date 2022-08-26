@@ -4,6 +4,7 @@ using AutoMapper;
 using fh_service_directory_api.api.Endpoints;
 using fh_service_directory_api.core;
 using fh_service_directory_api.core.Interfaces.Entities;
+using fh_service_directory_api.core.Interfaces.Infrastructure;
 using fh_service_directory_api.infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
@@ -22,19 +23,32 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
 
 
     // Register Entity Framework
-    var dbContextOptionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlServer("DefaultConnection");
+    var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                         .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+                         .Options;
 
     containerBuilder.RegisterType<ApplicationDbContext>()
-        .WithParameter("options", dbContextOptionsBuilder.Options)
-        .InstancePerLifetimeScope();
+       .AsSelf()
+       .WithParameter("options", options);
 
-    
-
+    containerBuilder.RegisterType<ApplicationDbContext>()
+            .As<IApplicationDbContext>().InstancePerLifetimeScope();
 
     containerBuilder.RegisterType<MinimalOrganisationEndPoints>();
     containerBuilder.RegisterType<MinimalGeneralEndPoints>();
     containerBuilder.RegisterType<MinimalServiceEndPoints>();
     containerBuilder.RegisterType<MinimalTaxonomyEndPoints>();
+    containerBuilder.RegisterType<ApplicationDbContextInitialiser>();
+
+    containerBuilder
+    .RegisterAssemblyTypes(typeof(IRequest<>).Assembly)
+    .Where(t => t.IsClosedTypeOf(typeof(IRequest<>)))
+    .AsImplementedInterfaces();
+
+    containerBuilder
+        .RegisterAssemblyTypes(typeof(IRequestHandler<>).Assembly)
+        .Where(t => t.IsClosedTypeOf(typeof(IRequestHandler<>)))
+        .AsImplementedInterfaces();
 
     containerBuilder.Register(c => new MapperConfiguration(cfg =>
     {
@@ -78,12 +92,9 @@ using (var scope = webApplication.Services.CreateScope())
     try
     {
         // Seed Database
-
-        var services = scope.ServiceProvider;
-        var context = services.GetRequiredService<ApplicationDbContext>();
-        ////                    context.Database.Migrate();
-        context.Database.EnsureCreated();
-        ////new OpenReferralOrganisationSeedData().SeedOpenReferralOrganistions();
+        var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
+        await initialiser.InitialiseAsync(builder.Configuration);
+        await initialiser.SeedAsync();
 
     }
     catch (Exception ex)
@@ -121,6 +132,8 @@ static void ConfigurWebApplicationBuilderServices(WebApplicationBuilder builder)
         typeof(IOpenReferralOrganisation).Assembly
           };
     builder.Services.AddMediatR(assemblies);
+
+    //builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 }
 
 static void ConfigureWebApplication(WebApplication webApplication)
