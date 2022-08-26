@@ -147,3 +147,6 @@ static void ConfigureWebApplication(WebApplication webApplication)
     webApplication.UseAuthorization();
     webApplication.MapControllers();
 }
+
+
+public partial class Program { }
