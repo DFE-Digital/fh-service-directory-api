@@ -1,152 +1,80 @@
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using AutoMapper;
-using fh_service_directory_api.api.Endpoints;
-using fh_service_directory_api.core;
-using fh_service_directory_api.core.Interfaces.Entities;
-using fh_service_directory_api.core.Interfaces.Infrastructure;
-using fh_service_directory_api.infrastructure;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
+using FamilyHubs.ServiceDirectoryApi.Api;
+using FamilyHubs.ServiceDirectoryApi.Api.Endpoints;
+using FamilyHubs.ServiceDirectoryApi.Core;
+using FamilyHubs.ServiceDirectoryApi.Core.Infrastructure.Security.Identity;
+using FamilyHubs.ServiceDirectoryApi.Infrastructure;
+using FamilyHubs.ServiceDirectoryApi.Infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectoryApi.Infrastructure.Security.Identity;
+using FamilyHubs.SharedKernel;
+using FamilyHubs.SharedKernel.Interfaces;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-ConfigurWebApplicationBuilderHost(builder);
-ConfigurWebApplicationBuilderServices(builder);
 
-var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
-{
-    containerBuilder.RegisterModule(new DefaultCoreModule());
-    containerBuilder.RegisterModule(new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development"));
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
 
+// Add services to the container.
+builder.Services.AddControllers();
 
-    // Register Entity Framework
-    var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                         .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-                         .Options;
+builder.Services.AddEndpointsApiExplorer()
+                .AddInfrastructureServices(builder.Configuration)
+                .AddCoreServices();
 
-    containerBuilder.RegisterType<ApplicationDbContext>()
-       .AsSelf()
-       .WithParameter("options", options);
+builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<MinimalOrganisationEndPoints>();
+builder.Services.AddScoped<MinimalGeneralEndPoints>();
+builder.Services.AddScoped<MinimalServiceEndPoints>();
+builder.Services.AddScoped<MinimalTaxonomyEndPoints>();
 
-    containerBuilder.RegisterType<MinimalOrganisationEndPoints>();
-    containerBuilder.RegisterType<MinimalGeneralEndPoints>();
-    containerBuilder.RegisterType<MinimalServiceEndPoints>();
-    containerBuilder.RegisterType<MinimalTaxonomyEndPoints>();
-    containerBuilder.RegisterType<ApplicationDbContextInitialiser>();
-
-    containerBuilder
-    .RegisterAssemblyTypes(typeof(IRequest<>).Assembly)
-    .Where(t => t.IsClosedTypeOf(typeof(IRequest<>)))
-    .AsImplementedInterfaces();
-
-    containerBuilder
-        .RegisterAssemblyTypes(typeof(IRequestHandler<>).Assembly)
-        .Where(t => t.IsClosedTypeOf(typeof(IRequestHandler<>)))
-        .AsImplementedInterfaces();
-
-    containerBuilder.Register(c => new MapperConfiguration(cfg =>
-    {
-        cfg.AddProfile(new AutoMappingProfiles());
-
-    })).AsSelf().SingleInstance();
-
-    containerBuilder.Register(c =>
-    {
-        //This resolves a new context that can be used later.
-        var context = c.Resolve<IComponentContext>();
-        var config = context.Resolve<MapperConfiguration>();
-        return config.CreateMapper(context.Resolve);
-    })
-        .As<IMapper>()
-        .InstancePerLifetimeScope();
-
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddSwaggerGen(c => {
+    c.SwaggerDoc("v1.00", new OpenApiInfo { Title = "Service Directory API", Version = "v1.00" });
+    c.EnableAnnotations();
+    c.OperationFilter<ReApplyOptionalRouteParameterOperationFilter>();
 });
 
-var webApplication = builder.Build();
-ConfigureWebApplication(webApplication);
+var app = builder.Build();
 
-using (var scope = webApplication.Services.CreateScope())
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var initialiser = scope.ServiceProvider.GetRequiredService<ServiceDirectoryDbContextInitialiser>();
+        await initialiser.InitialiseAsync(builder.Configuration);
+        await initialiser.SeedAsync();
+    }
+}
+
+using (var scope = app.Services.CreateScope())
 {
     var orgservice = scope.ServiceProvider.GetService<MinimalOrganisationEndPoints>();
     if (orgservice != null)
-        orgservice.RegisterOrganisationEndPoints(webApplication);
+        orgservice.RegisterOrganisationEndPoints(app);
 
     var serservice = scope.ServiceProvider.GetService<MinimalServiceEndPoints>();
     if (serservice != null)
-        serservice.RegisterServiceEndPoints(webApplication);
+        serservice.RegisterServiceEndPoints(app);
 
     var taxonyservice = scope.ServiceProvider.GetService<MinimalTaxonomyEndPoints>();
     if (taxonyservice != null)
-        taxonyservice.RegisterTaxonomyEndPoints(webApplication);
+        taxonyservice.RegisterTaxonomyEndPoints(app);
 
     var genservice = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
     if (genservice != null)
-        genservice.RegisterMinimalGeneralEndPoints(webApplication);
-
-    try
-    {
-        // Seed Database
-        var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-        await initialiser.InitialiseAsync(builder.Configuration);
-        await initialiser.SeedAsync();
-
-        var cont = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
-
-    }
-    catch (Exception ex)
-    {
-        var logger = scope.ServiceProvider.GetService<ILogger<Program>>();
-        if (logger != null)
-            logger.LogError(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
-    }
+        genservice.RegisterMinimalGeneralEndPoints(app);
 }
 
+app.UseHttpsRedirection();
 
-webApplication.Run();
+app.UseAuthorization();
 
+app.MapControllers();
 
-static void ConfigurWebApplicationBuilderHost(WebApplicationBuilder builder)
-{
-    builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-}
-
-static void ConfigurWebApplicationBuilderServices(WebApplicationBuilder builder)
-{
-    // Add services to the container.
-    builder.Services.AddControllers();
-    builder.Services.AddEndpointsApiExplorer();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddSwaggerGen(c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "fh-service-directory-api.api", Version = "v1" });
-        c.EnableAnnotations();
-    });
-
-    var assemblies = new Assembly[]
-          {
-        typeof(Program).Assembly,
-        typeof(ApplicationDbContext).Assembly,
-        typeof(IOpenReferralOrganisation).Assembly
-          };
-    builder.Services.AddMediatR(assemblies);
-}
-
-static void ConfigureWebApplication(WebApplication webApplication)
-{
-    // Configure the HTTP request pipeline.
-    if (webApplication.Environment.IsDevelopment())
-    {
-        webApplication.UseSwagger();
-        webApplication.UseSwaggerUI();
-    }
-
-    webApplication.UseHttpsRedirection();
-    webApplication.UseAuthorization();
-    webApplication.MapControllers();
-}
-
+app.Run();
 
 public partial class Program { }

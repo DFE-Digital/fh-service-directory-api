@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace fh_service_directory_api.api.Endpoints;
+namespace FamilyHubs.ServiceDirectoryApi.Api.Endpoints;
 
 public class MinimalGeneralEndPoints
 {

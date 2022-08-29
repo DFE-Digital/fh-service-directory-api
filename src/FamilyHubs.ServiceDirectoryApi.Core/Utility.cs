@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 
-namespace fh_service_directory_api.core;
+namespace FamilyHubs.ServiceDirectoryApi.Core;
 
 public static class Utility
 {

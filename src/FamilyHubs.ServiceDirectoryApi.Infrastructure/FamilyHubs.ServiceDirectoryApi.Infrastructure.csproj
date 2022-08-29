@@ -1,34 +1,35 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>fh_service_directory_api.infrastructure</RootNamespace>
+    <RootNamespace>FamilyHubs.ServiceDirectoryApi.Infrastructure</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Ardalis.Specification.EntityFrameworkCore" Version="6.1.0" />
-		<PackageReference Include="Autofac" Version="6.4.0" />
-		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
 		<PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="1.0.4" />
 		<PackageReference Include="FamilyHubs.SharedKernel" Version="1.0.3" />
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.7" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.7" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.7" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.7" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.7">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="NETStandard.Library" Version="2.0.3" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.6" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
-		<PackageReference Include="SQLite" Version="3.13.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.8">
+			<PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>		
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\FamilyHubs.ServiceDirectoryApi.Core\FamilyHubs.ServiceDirectoryApi.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Security\Authorisation\" />
 	</ItemGroup>
 
 </Project>

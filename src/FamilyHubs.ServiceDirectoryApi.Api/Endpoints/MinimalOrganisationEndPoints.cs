@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
-using fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
-using fh_service_directory_api.api.Queries.GetOpenReferralOrganisationById;
-using fh_service_directory_api.api.Queries.ListOrganisation;
-using fh_service_directory_api.core.Entities;
+using FamilyHubs.ServiceDirectoryApi.Api.Commands.CreateOpenReferralOrganisation;
+using FamilyHubs.ServiceDirectoryApi.Api.Commands.UpdateOpenReferralOrganisation;
+using FamilyHubs.ServiceDirectoryApi.Api.Queries.GetOpenReferralOrganisationById;
+using FamilyHubs.ServiceDirectoryApi.Api.Queries.ListOpenReferralOrganisation;
+using FamilyHubs.ServiceDirectoryApi.Core.Entities.OpenReferralOrganisations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace fh_service_directory_api.api.Endpoints;
+namespace FamilyHubs.ServiceDirectoryApi.Api.Endpoints;
 
 public class MinimalOrganisationEndPoints
 {
@@ -34,7 +34,7 @@ public class MinimalOrganisationEndPoints
         {
             try
             {
-                GetOpenReferralOrganisationByIdCommand request = new()
+                GetOpenReferralOrganisationByIdQuery request = new()
                 {
                     Id = id
                 };
@@ -52,7 +52,7 @@ public class MinimalOrganisationEndPoints
         {
             try
             {
-                ListOpenReferralOrganisationCommand request = new();
+                ListOpenReferralOrganisationQuery request = new();
                 var result = await _mediator.Send(request, cancellationToken);
                 return result;
             }

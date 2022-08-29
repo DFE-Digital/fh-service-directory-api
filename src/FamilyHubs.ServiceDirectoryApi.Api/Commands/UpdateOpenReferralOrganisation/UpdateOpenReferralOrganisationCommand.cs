@@ -1,13 +1,11 @@
 ﻿using Ardalis.GuardClauses;
-using fh_service_directory_api.core.Entities;
-using fh_service_directory_api.core.Events;
-using fh_service_directory_api.core.Interfaces.Entities;
-using fh_service_directory_api.core.Interfaces.Infrastructure;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectoryApi.Core.Entities.OpenReferralOrganisations;
+using FamilyHubs.ServiceDirectoryApi.Core.Events;
+using FamilyHubs.ServiceDirectoryApi.Infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
+namespace FamilyHubs.ServiceDirectoryApi.Api.Commands.UpdateOpenReferralOrganisation;
 
 
 public class UpdateOpenReferralOrganisationCommand : IRequest<string>
@@ -25,9 +23,9 @@ public class UpdateOpenReferralOrganisationCommand : IRequest<string>
 
 public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<UpdateOpenReferralOrganisationCommand, string>
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ServiceDirectoryDbContext _context;
 
-    public UpdateOpenReferralOrganisationCommandHandler(ApplicationDbContext context)
+    public UpdateOpenReferralOrganisationCommandHandler(ServiceDirectoryDbContext context)
     {
         _context = context;
     }
@@ -65,8 +63,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                 foreach (var childModel in request.OpenReferralOrganisation.Services)
                 {
                     var existingChild = entity.Services
-                        .Where(c => c.Id == childModel.Id && c.Id != default)
-                        .SingleOrDefault();
+.SingleOrDefault(c => c.Id == childModel.Id && c.Id != default);
 
                     if (existingChild != null)
                         existingChild.Update(childModel);
@@ -93,7 +90,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                         if (childModel != null)
                         {
                             entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(childModel));
-                            _context.OpenReferralServices.Add(childModel as OpenReferralService);
+                            _context.OpenReferralServices.Add(childModel);
                         }
 
 
@@ -107,7 +104,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                 foreach (var existingChild in entity.Reviews)
                 {
                     if (!request.OpenReferralOrganisation.Reviews.Any(c => c.Id == existingChild.Id))
-                        _context.OpenReferralReviews.Remove(existingChild as OpenReferralReview);
+                        _context.OpenReferralReviews.Remove(existingChild);
                 }
 
                 foreach (var childModel in request.OpenReferralOrganisation.Reviews)
@@ -122,7 +119,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                     {
                         entity.RegisterDomainEvent(new OpenReferralReviewCreatedEvent(childModel));
 
-                        _context.OpenReferralReviews.Add(childModel as OpenReferralReview);
+                        _context.OpenReferralReviews.Add(childModel);
 
                     }
                 }

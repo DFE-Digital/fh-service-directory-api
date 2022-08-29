@@ -11,10 +11,13 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverys
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
-using fh_service_directory_api.core.Entities;
+using FamilyHubs.ServiceDirectoryApi.Core.Entities.OpenReferralContacts;
+using FamilyHubs.ServiceDirectoryApi.Core.Entities.OpenReferralLocations;
+using FamilyHubs.ServiceDirectoryApi.Core.Entities.OpenReferralPhones;
+using FamilyHubs.ServiceDirectoryApi.Core.Entities.OpenReferralServices;
 using System.Collections.ObjectModel;
 
-namespace fh_service_directory_api.api.Helper;
+namespace FamilyHubs.ServiceDirectoryApi.Api.Helper;
 
 public class OpenReferralDtoHelper
 {
@@ -68,7 +71,7 @@ public class OpenReferralDtoHelper
             new List<IOpenReferralCostOptionDto>(service.Cost_options.Select(x => new OpenReferralCostOptionDto(x.Id, x.Amount_description, x.Amount, x.LinkId, x.Option, x.Valid_from, x.Valid_to)).ToList()),
             new List<IOpenReferralLanguageDto>(service.Languages.Select(x => new OpenReferralLanguageDto(x.Id, x.Language)).ToList()),
             new List<IOpenReferralServiceAreaDto>(service.Service_areas.Select(x => new OpenReferralServiceAreaDto(x.Id, x.Service_area, x.Extent, x.Uri)).ToList()),
-            new List<IOpenReferralServiceAtLocationDto>(service.Service_at_locations.Select(x => new OpenReferralServiceAtLocationDto(x.Id, new OpenReferralLocationDto(x.Location.Id, x.Location.Name, x.Location.Description, x.Location.Latitude, x.Location.Longitude, GetAddresses(x.Location) ))).ToList()),
+            new List<IOpenReferralServiceAtLocationDto>(service.Service_at_locations.Select(x => new OpenReferralServiceAtLocationDto(x.Id, new OpenReferralLocationDto(x.Location.Id, x.Location.Name, x.Location.Description, x.Location.Latitude, x.Location.Longitude, GetAddresses(x.Location)))).ToList()),
             new List<IOpenReferralServiceTaxonomyDto>(service.Service_taxonomys.Select(x => new OpenReferralServiceTaxonomyDto(x.Id, x.Taxonomy != null ? new OpenReferralTaxonomyDto(x.Taxonomy.Id, x.Taxonomy.Name, x.Taxonomy.Vocabulary, x.Taxonomy.Parent) : null)).ToList())
             );
 

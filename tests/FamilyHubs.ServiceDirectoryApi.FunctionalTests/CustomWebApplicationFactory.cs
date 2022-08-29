@@ -1,4 +1,4 @@
-﻿using fh_service_directory_api.infrastructure.Persistence.Repository;
+﻿using FamilyHubs.ServiceDirectoryApi.Infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace FunctionalTests;
+namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
 public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
 {
@@ -30,7 +30,7 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
         using (var scope = serviceProvider.CreateScope())
         {
             var scopedServices = scope.ServiceProvider;
-            var db = scopedServices.GetRequiredService<ApplicationDbContext>();
+            var db = scopedServices.GetRequiredService<ServiceDirectoryDbContext>();
 
             var logger = scopedServices
                 .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
@@ -64,21 +64,21 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
         builder
             .ConfigureServices(services =>
             {
-            // Remove the app's ApplicationDbContext registration.
+                // Remove the app's ApplicationDbContext registration.
                 var descriptor = services.SingleOrDefault(
             d => d.ServiceType ==
-                typeof(DbContextOptions<ApplicationDbContext>));
+                typeof(DbContextOptions<ServiceDirectoryDbContext>));
 
                 if (descriptor != null)
                 {
                     services.Remove(descriptor);
                 }
 
-            // This should be set for each individual test run
+                // This should be set for each individual test run
                 string inMemoryCollectionName = Guid.NewGuid().ToString();
 
-            // Add ApplicationDbContext using an in-memory database for testing.
-                services.AddDbContext<ApplicationDbContext>(options =>
+                // Add ApplicationDbContext using an in-memory database for testing.
+                services.AddDbContext<ServiceDirectoryDbContext>(options =>
                 {
                     options.UseInMemoryDatabase(inMemoryCollectionName);
                 });

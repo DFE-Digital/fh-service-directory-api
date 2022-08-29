@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Repository
+namespace FamilyHubs.ServiceDirectoryApi.Infrastructure.Persistence.Repository
 {
     public static class DatabaseProviderHelpers
     {

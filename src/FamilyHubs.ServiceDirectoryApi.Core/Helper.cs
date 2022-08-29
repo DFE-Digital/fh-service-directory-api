@@ -2,7 +2,7 @@
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 
-namespace fh_service_directory_api.core;
+namespace FamilyHubs.ServiceDirectoryApi.Core;
 
 public class Helper
 {

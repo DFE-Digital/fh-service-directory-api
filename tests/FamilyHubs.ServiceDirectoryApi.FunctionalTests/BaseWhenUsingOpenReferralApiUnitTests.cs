@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿//using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace FunctionalTests;
+//namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
-public abstract class BaseWhenUsingOpenReferralApiUnitTests
-{
-    protected readonly HttpClient _client;
+//public abstract class BaseWhenUsingOpenReferralApiUnitTests
+//{
+//    protected readonly HttpClient _client;
 
-    public BaseWhenUsingOpenReferralApiUnitTests()
-    {
-        var webAppFactory = new WebApplicationFactory<Program>();
+//    public BaseWhenUsingOpenReferralApiUnitTests()
+//    {
+//        var webAppFactory = new WebApplicationFactory<Program>();
 
-        _client = webAppFactory.CreateDefaultClient();
-        _client.BaseAddress = new Uri("https://localhost:7128/");
+//        _client = webAppFactory.CreateDefaultClient();
+//        _client.BaseAddress = new Uri("https://localhost:7128/");
 
-    }
-}
+//    }
+//}

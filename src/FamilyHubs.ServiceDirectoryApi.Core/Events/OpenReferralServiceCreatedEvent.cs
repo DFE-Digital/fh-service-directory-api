@@ -1,7 +1,7 @@
-﻿using FamilyHubs.SharedKernel;
-using fh_service_directory_api.core.Interfaces.Entities;
+﻿using FamilyHubs.ServiceDirectoryApi.Core.Entities.OpenReferralServices;
+using FamilyHubs.SharedKernel;
 
-namespace fh_service_directory_api.core.Events;
+namespace FamilyHubs.ServiceDirectoryApi.Core.Events;
 
 public class OpenReferralServiceCreatedEvent : DomainEventBase
 {

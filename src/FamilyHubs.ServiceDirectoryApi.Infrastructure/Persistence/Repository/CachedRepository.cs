@@ -3,7 +3,7 @@ using FamilyHubs.SharedKernel.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Repository
+namespace FamilyHubs.ServiceDirectoryApi.Infrastructure.Persistence.Repository
 {
     public class CachedRepository<T> : IReadRepository<T> where T : class, IAggregateRoot
     {

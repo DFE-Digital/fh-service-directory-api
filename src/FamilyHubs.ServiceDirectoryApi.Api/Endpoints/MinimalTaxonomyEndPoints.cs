@@ -1,8 +1,8 @@
-﻿using fh_service_directory_api.api.Queries.GetOpenReferralTaxonomies;
+﻿using FamilyHubs.ServiceDirectoryApi.Api.Queries.GetOpenReferralTaxonomies;
 using MediatR;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace fh_service_directory_api.api.Endpoints;
+namespace FamilyHubs.ServiceDirectoryApi.Api.Endpoints;
 
 public class MinimalTaxonomyEndPoints
 {
@@ -12,7 +12,7 @@ public class MinimalTaxonomyEndPoints
         {
             try
             {
-                GetOpenReferralTaxonomiesCommand command = new(pageNumber, pageSize, text);
+                GetOpenReferralTaxonomiesQuery command = new(pageNumber, pageSize, text);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }

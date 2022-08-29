@@ -1,0 +1,3 @@
+﻿-- RUN THIS FROM Api project folder
+-- TODO: Get this migration script working
+dotnet ef migrations add InitialCreate --verbose -c applicationdbcontext -p ..\FamilyHubs.ServiceDirectoryApi.FamilyHubs.ServiceDirectoryApi.Api.csproj -s ..\FamilyHubs.ServiceDirectoryApi.Infrastructure.csproj -o Data/Migrations

@@ -4,10 +4,11 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<RootNamespace>fh_service_directory_api.api</RootNamespace>
+		<RootNamespace>FamilyHubs.ServiceDirectoryApi.Api</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Ardalis.ListStartupServices" Version="1.1.4" />
 		<PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="1.0.4" />
 		<PackageReference Include="FamilyHubs.SharedKernel" Version="1.0.3" />
 		<PackageReference Include="Ardalis.ApiEndpoints" Version="4.0.1" />
@@ -15,6 +16,7 @@
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
 		<PackageReference Include="MediatR" Version="10.0.1" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.8" />
@@ -25,14 +27,16 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.6" />
+		<PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+		<PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\FamilyHubs.ServiceDirectoryApi.Core\FamilyHubs.ServiceDirectoryApi.Core.csproj" />
 	  <ProjectReference Include="..\FamilyHubs.ServiceDirectoryApi.Infrastructure\FamilyHubs.ServiceDirectoryApi.Infrastructure.csproj" />
 	</ItemGroup>
 

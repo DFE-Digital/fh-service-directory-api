@@ -1,10 +1,10 @@
-﻿using fh_service_directory_api.api.Queries.GetOpenReferralService;
-using fh_service_directory_api.api.Queries.GetOpenReferralServicesByOrganisation;
-using fh_service_directory_api.api.Queries.GetServices;
+﻿using FamilyHubs.ServiceDirectoryApi.Api.Queries.GetOpenReferralService;
+using FamilyHubs.ServiceDirectoryApi.Api.Queries.GetOpenReferralServicesByOrganisation;
+using FamilyHubs.ServiceDirectoryApi.Api.Queries.GetServices;
 using MediatR;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace fh_service_directory_api.api.Endpoints;
+namespace FamilyHubs.ServiceDirectoryApi.Api.Endpoints;
 
 public class MinimalServiceEndPoints
 {
@@ -16,7 +16,7 @@ public class MinimalServiceEndPoints
         {
             try
             {
-                GetOpenReferralServicesCommand command = new(status, minimum_age, maximum_age, latitude, longtitude, proximity, pageNumber, pageSize, text);
+                GetOpenReferralServicesQuery command = new(status, minimum_age, maximum_age, latitude, longtitude, proximity, pageNumber, pageSize, text);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -31,7 +31,7 @@ public class MinimalServiceEndPoints
         {
             try
             {
-                GetOpenReferralServiceByIdCommand command = new(id);
+                GetOpenReferralServiceByIdQuery command = new(id);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -46,7 +46,7 @@ public class MinimalServiceEndPoints
         {
             try
             {
-                GetOpenReferralServicesByOrganisationIdCommand command = new(id);
+                GetOpenReferralServicesByOrganisationIdQuery command = new(id);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
