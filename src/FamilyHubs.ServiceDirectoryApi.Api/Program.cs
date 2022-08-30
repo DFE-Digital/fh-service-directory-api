@@ -24,9 +24,25 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
 
 
     // Register Entity Framework
-    var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+    DbContextOptions<ApplicationDbContext> options;
+
+    if (builder.Configuration.GetValue<bool>("UseInMemoryDatabase"))
+    {
+        options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                        .UseInMemoryDatabase("FH-LAHubDb").Options;
+    }
+    else if (builder.Configuration.GetValue<bool>("UseSqlServerDatabase"))
+    {
+        options = new DbContextOptionsBuilder<ApplicationDbContext>()
                          .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
                          .Options;
+    }
+    else
+    {
+        options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                         .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+                         .Options;
+    }
 
     containerBuilder.RegisterType<ApplicationDbContext>()
        .AsSelf()

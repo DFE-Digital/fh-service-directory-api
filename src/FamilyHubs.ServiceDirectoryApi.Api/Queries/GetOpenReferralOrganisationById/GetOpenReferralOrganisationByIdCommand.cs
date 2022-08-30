@@ -59,32 +59,7 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
         {
             foreach (OpenReferralService openReferralService in entity.Services)
             {
-
                 openReferralServices.Add(OpenReferralDtoHelper.GetOpenReferralServiceDto(openReferralService));
-                /*
-                openReferralServices.Add(new OpenReferralServiceDto(
-                    openReferralService.Id,
-                    openReferralService.Name,
-                    openReferralService.Description,
-                    openReferralService.Accreditations,
-                    openReferralService.Assured_date,
-                    openReferralService.Attending_access,
-                    openReferralService.Attending_type,
-                    openReferralService.Deliverable_type,
-                    openReferralService.Status,
-                    openReferralService.Url,
-                    openReferralService.Email,
-                    openReferralService.Fees,
-                    new List<IOpenReferralServiceDeliveryExDto>(openReferralService.ServiceDelivery.Select(x => new OpenReferralServiceDeliveryExDto(x.Id, x.ServiceDelivery)).ToList()),
-                    new List<IOpenReferralEligibilityDto>(openReferralService.Eligibilitys.Select(x => new OpenReferralEligibilityDto(x.Id, x.Eligibility, x.Maximum_age, x.Minimum_age)).ToList()),
-                    new List<IOpenReferralContactDto>(openReferralService.Contacts.Select(x => new OpenReferralContactDto(x.Id, x.Title, x.Name, new List<IOpenReferralPhoneDto>(x.Phones?.Select(x => new OpenReferralPhoneDto(x.Id, x.Number)).ToList()))).ToList()),
-                    new List<IOpenReferralCostOptionDto>(openReferralService.Cost_options.Select(x => new OpenReferralCostOptionDto(x.Id, x.Amount_description, x.Amount, x.LinkId, x.Option, x.Valid_from, x.Valid_to)).ToList()),
-                    new List<IOpenReferralLanguageDto>(openReferralService.Languages.Select(x => new OpenReferralLanguageDto(x.Id, x.Language)).ToList()),
-                    new List<IOpenReferralServiceAreaDto>(openReferralService.Service_areas.Select(x => new OpenReferralServiceAreaDto(x.Id, x.Service_area, x.Extent, x.Uri)).ToList()),
-                    new List<IOpenReferralServiceAtLocationDto>(openReferralService.Service_at_locations.Select(x => new OpenReferralServiceAtLocationDto(x.Id, new OpenReferralLocationDto(x.Location.Id, x.Location.Name, x.Location.Description, x.Location.Latitude, x.Location.Longitude, new List<IOpenReferralPhysicalAddressDto>(x.Location?.Physical_addresses?.Select(x => new OpenReferralPhysicalAddressDto(x.Id, x.Address_1, x.City, x.Postal_code, x.Country, x.State_province)).ToList())))).ToList()),
-                    new List<IOpenReferralServiceTaxonomyDto>(openReferralService.Service_taxonomys.Select(x => new OpenReferralServiceTaxonomyDto(x.Id, x.Taxonomy != null ? new OpenReferralTaxonomyDto(x.Taxonomy.Id, x.Taxonomy.Name, x.Taxonomy.Vocabulary, x.Taxonomy.Parent) : null)).ToList())
-                    ));
-                */
             }
         }
 

@@ -22,6 +22,5 @@ public class MinimalTaxonomyEndPoints
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get All Taxonomies", "Get All Taxonomies") { Tags = new[] { "Services" } });
-
     }
 }
