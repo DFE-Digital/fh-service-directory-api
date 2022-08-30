@@ -27,8 +27,6 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
         Url = url ?? string.Empty;
         Reviews = reviews ?? default!;
         Services = services ?? default!;
-        //_reviews = (IList<IOpenReferralReview>)(reviews ?? new List<IOpenReferralReview>());
-        //_services = (IList<IOpenReferralService>)(services ?? new List<IOpenReferralService>());
     }
 
     public string Name { get; private set; } = string.Empty;

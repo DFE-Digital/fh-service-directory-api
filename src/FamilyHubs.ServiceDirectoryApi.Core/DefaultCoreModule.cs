@@ -8,8 +8,6 @@ public class DefaultCoreModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {
-        //builder.RegisterType<EntityBase<string>>()
-        //    .As<IEntityBase<string>>().InstancePerLifetimeScope();
         builder.RegisterType<OpenReferralContact>()
             .As<IOpenReferralContact>().InstancePerLifetimeScope();
         builder.RegisterType<OpenReferralCost_Option>()

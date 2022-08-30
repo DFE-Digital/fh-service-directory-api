@@ -41,5 +41,6 @@
         <Folder Include="Old-Common\Interfaces\Services\Domain\Identity\" />
         <Folder Include="Old-Common\Interfaces\Services\Ui\ViewModels\" />
         <Folder Include="Old-Common\Services\Ui\ViewModels\" />
+        <Folder Include="Services\Domain\" />
     </ItemGroup>
 </Project>
