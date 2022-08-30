@@ -9,7 +9,7 @@ public class OpenReferralServiceAtLocation : EntityBase<string>, IOpenReferralSe
     private OpenReferralServiceAtLocation() { }
     public OpenReferralServiceAtLocation(string id,
         OpenReferralLocation location,
-        ICollection<IOpenReferralHoliday_Schedule>? holidayScheduleCollection, ICollection<IOpenReferralRegular_Schedule>? regular_schedule
+        ICollection<OpenReferralHoliday_Schedule>? holidayScheduleCollection, ICollection<OpenReferralRegular_Schedule>? regular_schedule
         )
     {
         Id = id;

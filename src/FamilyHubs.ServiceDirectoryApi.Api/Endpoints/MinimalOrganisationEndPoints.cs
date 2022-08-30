@@ -15,7 +15,7 @@ public class MinimalOrganisationEndPoints
 {
     public void RegisterOrganisationEndPoints(WebApplication app)
     {
-        app.MapPost("api/organizations", async ([FromBody] IOpenReferralOrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator) =>
+        app.MapPost("api/organizations", async ([FromBody] OpenReferralOrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator) =>
         {
             try
             {

@@ -12,12 +12,12 @@ using Microsoft.EntityFrameworkCore;
 namespace fh_service_directory_api.api.Queries.GetOpenReferralOrganisationById;
 
 
-public class GetOpenReferralOrganisationByIdCommand : IRequest<IOpenReferralOrganisationWithServicesDto>
+public class GetOpenReferralOrganisationByIdCommand : IRequest<OpenReferralOrganisationWithServicesDto>
 {
     public string Id { get; set; } = default!;
 }
 
-public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenReferralOrganisationByIdCommand, IOpenReferralOrganisationWithServicesDto>
+public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenReferralOrganisationByIdCommand, OpenReferralOrganisationWithServicesDto>
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -27,7 +27,7 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
         _context = context;
         _mapper = mapper;
     }
-    public async Task<IOpenReferralOrganisationWithServicesDto> Handle(GetOpenReferralOrganisationByIdCommand request, CancellationToken cancellationToken)
+    public async Task<OpenReferralOrganisationWithServicesDto> Handle(GetOpenReferralOrganisationByIdCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.OpenReferralOrganisations
            .Include(x => x.Services!)
@@ -51,10 +51,10 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
 
         if (entity == null)
         {
-            throw new NotFoundException(nameof(IOpenReferralOrganisation), request.Id);
+            throw new NotFoundException(nameof(OpenReferralOrganisation), request.Id);
         }
 
-        List<IOpenReferralServiceDto> openReferralServices = new();
+        List<OpenReferralServiceDto> openReferralServices = new();
         if (entity.Services != null)
         {
             foreach (OpenReferralService openReferralService in entity.Services)

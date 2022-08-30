@@ -8,7 +8,7 @@ public class OpenReferralLocation : EntityBase<string>, IOpenReferralLocation, I
 {
     private OpenReferralLocation() { }
     public OpenReferralLocation(string id, string name, string? description, double latitude, double longitude
-        , ICollection<IOpenReferralPhysical_Address>? physical_addresses, ICollection<IAccessibility_For_Disabilities>? accessibility_for_disabilities
+        , ICollection<OpenReferralPhysical_Address>? physical_addresses, ICollection<Accessibility_For_Disabilities>? accessibility_for_disabilities
         )
     {
         Id = id;

@@ -29,6 +29,6 @@ namespace fh_service_directory_api.core.Interfaces.Entities
         string? Status { get; }
         string? Url { get; }
 
-        void Update(IOpenReferralService openReferralService);
+        void Update(OpenReferralService openReferralService);
     }
 }

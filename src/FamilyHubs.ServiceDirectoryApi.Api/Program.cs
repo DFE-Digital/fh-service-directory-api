@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using fh_service_directory_api.api.Endpoints;
 using fh_service_directory_api.core;
+using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
 using fh_service_directory_api.infrastructure;
@@ -129,7 +130,7 @@ static void ConfigurWebApplicationBuilderServices(WebApplicationBuilder builder)
           {
         typeof(Program).Assembly,
         typeof(ApplicationDbContext).Assembly,
-        typeof(IOpenReferralOrganisation).Assembly
+        typeof(OpenReferralOrganisation).Assembly
           };
     builder.Services.AddMediatR(assemblies);
 }

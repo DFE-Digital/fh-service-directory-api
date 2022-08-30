@@ -39,7 +39,7 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
     public virtual ICollection<OpenReferralReview>? Reviews { get; set; } = new List<OpenReferralReview>();
     public virtual ICollection<OpenReferralService>? Services { get; set; } = new List<OpenReferralService>();
 
-    public void Update(IOpenReferralOrganisation openReferralOpenReferralOrganisation)
+    public void Update(OpenReferralOrganisation openReferralOpenReferralOrganisation)
     {
         Name = openReferralOpenReferralOrganisation.Name;
         Description = openReferralOpenReferralOrganisation.Description;

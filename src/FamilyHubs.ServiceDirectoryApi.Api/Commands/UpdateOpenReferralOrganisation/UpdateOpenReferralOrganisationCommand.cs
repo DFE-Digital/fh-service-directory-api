@@ -12,13 +12,13 @@ namespace fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
 
 public class UpdateOpenReferralOrganisationCommand : IRequest<string>
 {
-    public UpdateOpenReferralOrganisationCommand(string id, IOpenReferralOrganisation openReferralOrganisation)
+    public UpdateOpenReferralOrganisationCommand(string id, OpenReferralOrganisation openReferralOrganisation)
     {
         Id = id;
         OpenReferralOrganisation = openReferralOrganisation;
     }
 
-    public IOpenReferralOrganisation OpenReferralOrganisation { get; init; }
+    public OpenReferralOrganisation OpenReferralOrganisation { get; init; }
 
     public string Id { get; set; }
 }
@@ -42,7 +42,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
         if (entity == null)
         {
-            throw new NotFoundException(nameof(IOpenReferralOrganisation), request.Id);
+            throw new NotFoundException(nameof(OpenReferralOrganisation), request.Id);
         }
 
         try

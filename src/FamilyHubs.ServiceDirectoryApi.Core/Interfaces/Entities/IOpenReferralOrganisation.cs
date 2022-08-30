@@ -12,5 +12,5 @@ public interface IOpenReferralOrganisation : IEntityBase<string>
     string? Uri { get; }
     string? Url { get; }
 
-    void Update(IOpenReferralOrganisation openReferralOpenReferralOrganisation);
+    void Update(OpenReferralOrganisation openReferralOpenReferralOrganisation);
 }

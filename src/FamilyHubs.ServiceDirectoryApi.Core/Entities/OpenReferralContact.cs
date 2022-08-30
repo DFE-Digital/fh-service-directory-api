@@ -7,7 +7,7 @@ namespace fh_service_directory_api.core.Entities;
 public class OpenReferralContact : EntityBase<string>, IOpenReferralContact, IAggregateRoot
 {
     private OpenReferralContact() { }
-    public OpenReferralContact(string id, string title, string name, ICollection<IOpenReferralPhone>? phones)
+    public OpenReferralContact(string id, string title, string name, ICollection<OpenReferralPhone>? phones)
     {
         Id = id;
         Title = title;

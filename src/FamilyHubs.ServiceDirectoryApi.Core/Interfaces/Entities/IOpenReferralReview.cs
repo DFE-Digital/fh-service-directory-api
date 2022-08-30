@@ -1,4 +1,6 @@
-﻿namespace fh_service_directory_api.core.Interfaces.Entities
+﻿using fh_service_directory_api.core.Entities;
+
+namespace fh_service_directory_api.core.Interfaces.Entities
 {
     public interface IOpenReferralReview : IEntityBase<string>
     {
@@ -9,6 +11,6 @@
         string? Url { get; }
         string? Widget { get; }
         string OpenReferralServiceId { get; }
-        void Update(IOpenReferralReview openReferralReview);
+        void Update(OpenReferralReview openReferralReview);
     }
 }

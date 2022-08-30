@@ -29,7 +29,7 @@ public class OpenReferralReview : EntityBase<string>, IOpenReferralReview, IAggr
     public string? Widget { get; private set; }
     public string OpenReferralServiceId { get; private set; } = default!;
 
-    public void Update(IOpenReferralReview openReferralReview)
+    public void Update(OpenReferralReview openReferralReview)
     {
         Title = openReferralReview.Title;
         Description = openReferralReview.Description;

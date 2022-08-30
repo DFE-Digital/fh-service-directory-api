@@ -49,40 +49,40 @@ public class OpenReferralOrganisationSeedData
                 "www.actfortrachykids.com",
                 "support@ACTfortrachykids.com",
                 null,
-                new List<IOpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
+                new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("9db7f878-be53-4a45-ac47-472568dfeeea",ServiceDelivery.Online)
                 }),
-                new List<IOpenReferralEligibility>(new List<OpenReferralEligibility>
+                new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
                 {
-                    new OpenReferralEligibility("9109Children","",null,0,13,new List<IOpenReferralTaxonomy>())
+                    new OpenReferralEligibility("9109Children","",null,0,13,new List<OpenReferralTaxonomy>())
                 }),
-                new List<IOpenReferralFunding>(),
-                new List<IOpenReferralHoliday_Schedule>(),
-                new List<IOpenReferralLanguage>()
+                new List<OpenReferralFunding>(),
+                new List<OpenReferralHoliday_Schedule>(),
+                new List<OpenReferralLanguage>()
                 {
                     new OpenReferralLanguage("724630f7-4c8b-4864-96be-bc74891f2b4a","English")
                 },
-                new List<IOpenReferralRegular_Schedule>(),
-                new List<IOpenReferralReview>(),
-                new List<IOpenReferralContact>(new List<OpenReferralContact>()
+                new List<OpenReferralRegular_Schedule>(),
+                new List<OpenReferralReview>(),
+                new List<OpenReferralContact>(new List<OpenReferralContact>()
                 {
                     new OpenReferralContact(
                         "1567",
                         "Mr",
                         "John Smith",
-                        new List<IOpenReferralPhone>(new List<OpenReferralPhone>()
+                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
                         {
                             new OpenReferralPhone("1567", "01827 65778")
                         }
                         ))
                 }),
-                new List<IOpenReferralCost_Option>(),
-                new List<IOpenReferralService_Area>()
+                new List<OpenReferralCost_Option>(),
+                new List<OpenReferralService_Area>()
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<IOpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
                 {
                     new OpenReferralServiceAtLocation(
                         "1749",
@@ -92,7 +92,7 @@ public class OpenReferralOrganisationSeedData
                             "",
                             52.6312,
                             -1.66526,
-                            new List<IOpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
+                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
@@ -103,14 +103,14 @@ public class OpenReferralOrganisationSeedData
                                     null
                                     )
                             }),
-                            new List<IAccessibility_For_Disabilities>()
+                            new List<Accessibility_For_Disabilities>()
                             ),
-                        new List<IOpenReferralHoliday_Schedule>(),
-                        new List<IOpenReferralRegular_Schedule>()
+                        new List<OpenReferralHoliday_Schedule>(),
+                        new List<OpenReferralRegular_Schedule>()
                         )
 
                 }),
-                new List<IOpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
                 {
                     new OpenReferralService_Taxonomy
                     ("9107",

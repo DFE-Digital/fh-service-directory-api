@@ -10,18 +10,18 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
     private OpenReferralService() { }
 
     public OpenReferralService(string id, string parentId, string name, string? description, string? accreditations, DateTime? assured_date, string? attending_access, string? attending_type, string? deliverable_type, string? status, string? url, string? email, string? fees
-        , ICollection<IOpenReferralServiceDelivery> serviceDelivery
-        , ICollection<IOpenReferralEligibility> eligibilitys
-        , ICollection<IOpenReferralFunding> fundings
-        , ICollection<IOpenReferralHoliday_Schedule> holiday_schedules
-        , ICollection<IOpenReferralLanguage> languages
-        , ICollection<IOpenReferralRegular_Schedule> regular_schedules
-        , ICollection<IOpenReferralReview> reviews
-        , ICollection<IOpenReferralContact> contacts
-        , ICollection<IOpenReferralCost_Option> cost_options
-        , ICollection<IOpenReferralService_Area> service_areas
-        , ICollection<IOpenReferralServiceAtLocation> service_at_locations
-        , ICollection<IOpenReferralService_Taxonomy> service_taxonomys
+        , ICollection<OpenReferralServiceDelivery> serviceDelivery
+        , ICollection<OpenReferralEligibility> eligibilitys
+        , ICollection<OpenReferralFunding> fundings
+        , ICollection<OpenReferralHoliday_Schedule> holiday_schedules
+        , ICollection<OpenReferralLanguage> languages
+        , ICollection<OpenReferralRegular_Schedule> regular_schedules
+        , ICollection<OpenReferralReview> reviews
+        , ICollection<OpenReferralContact> contacts
+        , ICollection<OpenReferralCost_Option> cost_options
+        , ICollection<OpenReferralService_Area> service_areas
+        , ICollection<OpenReferralServiceAtLocation> service_at_locations
+        , ICollection<OpenReferralService_Taxonomy> service_taxonomys
         )
     {
         Id = id;
@@ -76,7 +76,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
     public virtual ICollection<OpenReferralServiceAtLocation> Service_at_locations { get; init; } = new Collection<OpenReferralServiceAtLocation>();
     public virtual ICollection<OpenReferralService_Taxonomy> Service_taxonomys { get; init; } = new Collection<OpenReferralService_Taxonomy>();
 
-    public void Update(IOpenReferralService openReferralService)
+    public void Update(OpenReferralService openReferralService)
     {
         Name = openReferralService.Name;
         Description = openReferralService.Description;

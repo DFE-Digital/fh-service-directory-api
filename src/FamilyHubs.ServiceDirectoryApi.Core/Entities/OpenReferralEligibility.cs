@@ -7,7 +7,7 @@ namespace fh_service_directory_api.core.Entities;
 public class OpenReferralEligibility : EntityBase<string>, IOpenReferralEligibility, IAggregateRoot
 {
     private OpenReferralEligibility() { }
-    public OpenReferralEligibility(string id, string eligibility, string? linkId, int maximum_age, int minimum_age, ICollection<IOpenReferralTaxonomy>? taxonomys)
+    public OpenReferralEligibility(string id, string eligibility, string? linkId, int maximum_age, int minimum_age, ICollection<OpenReferralTaxonomy>? taxonomys)
     {
         Id = id;
         Eligibility = eligibility;

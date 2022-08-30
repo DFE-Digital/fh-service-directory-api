@@ -158,7 +158,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
             null,
             new Uri("https://www.test.gov.uk/").ToString(),
             "https://www.test.gov.uk/",
-            new List<IOpenReferralServiceDto>
+            new List<OpenReferralServiceDto>
             {
                  GetTestCountyCouncilServicesRecord()
             }
@@ -167,12 +167,12 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         return bristolCountyCouncil;
     }
 
-    private IOpenReferralServiceDto GetTestCountyCouncilServicesRecord()
+    private OpenReferralServiceDto GetTestCountyCouncilServicesRecord()
     {
         var contactId = Guid.NewGuid().ToString();
 
         ServicesDtoBuilder builder = new ServicesDtoBuilder();
-        IOpenReferralServiceDto service = builder.WithMainProperties("c1b5dd80-7506-4424-9711-fe175fa13eb8",
+        OpenReferralServiceDto service = builder.WithMainProperties("c1b5dd80-7506-4424-9711-fe175fa13eb8",
                 "Test Organisation for Children with Tracheostomies",
                 @"Test Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
                 null,
@@ -184,36 +184,36 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                 "www.testservice.com",
                 "support@testservice.com",
                 null)
-            .WithServiceDelivery(new List<IOpenReferralServiceDeliveryExDto>
+            .WithServiceDelivery(new List<OpenReferralServiceDeliveryExDto>
                 {
                     new OpenReferralServiceDeliveryExDto(Guid.NewGuid().ToString(),ServiceDelivery.Online)
                 })
-            .WithEligibility(new List<IOpenReferralEligibilityDto>
+            .WithEligibility(new List<OpenReferralEligibilityDto>
                 {
                     new OpenReferralEligibilityDto("Test9109Children","",0,13) 
                 })
-            .WithContact(new List<IOpenReferralContactDto>()
+            .WithContact(new List<OpenReferralContactDto>()
             {
                 new OpenReferralContactDto(
                     contactId,
                     "Service",
                     string.Empty,
-                    new List<IOpenReferralPhoneDto>()
+                    new List<OpenReferralPhoneDto>()
                     {
                         new OpenReferralPhoneDto("1568", "01827 65779")
                     }
                     )
             })
-            .WithCostOption(new List<IOpenReferralCostOptionDto>())
-            .WithLanguages(new List<IOpenReferralLanguageDto>()
+            .WithCostOption(new List<OpenReferralCostOptionDto>())
+            .WithLanguages(new List<OpenReferralLanguageDto>()
                 {
                     new OpenReferralLanguageDto("442a06cd-aa14-4ea3-9f11-b45c1bc4861f", "English")
                 })
-            .WithServiceAreas(new List<IOpenReferralServiceAreaDto>()
+            .WithServiceAreas(new List<OpenReferralServiceAreaDto>()
                 {
                     new OpenReferralServiceAreaDto(Guid.NewGuid().ToString(), "National", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 })
-            .WithServiceAtLocations(new List<IOpenReferralServiceAtLocationDto>()
+            .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>()
                 {
                     new OpenReferralServiceAtLocationDto(
                         "Test1749",
@@ -223,7 +223,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                             "",
                             52.6312,
                             -1.66526,
-                            new List<IOpenReferralPhysicalAddressDto>()
+                            new List<OpenReferralPhysicalAddressDto>()
                             {
                                 new OpenReferralPhysicalAddressDto(
                                     Guid.NewGuid().ToString(),
@@ -241,7 +241,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                         )
 
                 })
-            .WithServiceTaxonomies(new List<IOpenReferralServiceTaxonomyDto>()
+            .WithServiceTaxonomies(new List<OpenReferralServiceTaxonomyDto>()
                 {
                     new OpenReferralServiceTaxonomyDto
                     ("Test9107",
@@ -317,37 +317,37 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                 "www.testservice.com",
                 "support@testservice.com",
                 null,
-                new List<IOpenReferralServiceDelivery>
+                new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery(Guid.NewGuid().ToString(),ServiceDelivery.Online)
                 },
-                new List<IOpenReferralEligibility>
+                new List<OpenReferralEligibility>
                 {
-                    new OpenReferralEligibility("Test9109Children","",null,0,13,new List<IOpenReferralTaxonomy>())
+                    new OpenReferralEligibility("Test9109Children","",null,0,13,new List<OpenReferralTaxonomy>())
                 },
-                new List<IOpenReferralFunding>(),
-                new List<IOpenReferralHoliday_Schedule>(),
-                new List<IOpenReferralLanguage>(),
-                new List<IOpenReferralRegular_Schedule>(),
-                new List<IOpenReferralReview>(),
-                new List<IOpenReferralContact>()
+                new List<OpenReferralFunding>(),
+                new List<OpenReferralHoliday_Schedule>(),
+                new List<OpenReferralLanguage>(),
+                new List<OpenReferralRegular_Schedule>(),
+                new List<OpenReferralReview>(),
+                new List<OpenReferralContact>()
                 {
                     new OpenReferralContact(
                         "Test1567",
                         "",
                         "",
-                        new List<IOpenReferralPhone>()
+                        new List<OpenReferralPhone>()
                         {
                             new OpenReferralPhone("1568", "01827 65779")
                         }
                         )
                 },
-                new List<IOpenReferralCost_Option>(),
-                new List<IOpenReferralService_Area>()
+                new List<OpenReferralCost_Option>(),
+                new List<OpenReferralService_Area>()
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<IOpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>()
                 {
                     new OpenReferralServiceAtLocation(
                         "Test1749",
@@ -357,7 +357,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                             "",
                             52.6312,
                             -1.66526,
-                            new List<IOpenReferralPhysical_Address>()
+                            new List<OpenReferralPhysical_Address>()
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
@@ -368,14 +368,14 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                                     null
                                     )
                             },
-                            new List<IAccessibility_For_Disabilities>()
+                            new List<Accessibility_For_Disabilities>()
                             ),
-                        new List<IOpenReferralHoliday_Schedule>(),
-                        new List<IOpenReferralRegular_Schedule>()
+                        new List<OpenReferralHoliday_Schedule>(),
+                        new List<OpenReferralRegular_Schedule>()
                         )
 
                 },
-                new List<IOpenReferralService_Taxonomy>()
+                new List<OpenReferralService_Taxonomy>()
                 {
                     new OpenReferralService_Taxonomy
                     ("Test9107",

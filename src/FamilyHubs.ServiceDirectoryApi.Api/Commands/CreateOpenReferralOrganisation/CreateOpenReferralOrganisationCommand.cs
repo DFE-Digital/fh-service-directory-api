@@ -2,7 +2,6 @@
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
-using fh_service_directory_api.core.Interfaces.Infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 
@@ -10,12 +9,12 @@ namespace fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 
 public class CreateOpenReferralOrganisationCommand : IRequest<string>
 {
-    public CreateOpenReferralOrganisationCommand(IOpenReferralOrganisationWithServicesDto openReferralOrganisation)
+    public CreateOpenReferralOrganisationCommand(OpenReferralOrganisationWithServicesDto openReferralOrganisation)
     {
         OpenReferralOrganisation = openReferralOrganisation;
     }
 
-    public IOpenReferralOrganisationWithServicesDto OpenReferralOrganisation { get; init; }
+    public OpenReferralOrganisationWithServicesDto OpenReferralOrganisation { get; init; }
 }
 
 public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<CreateOpenReferralOrganisationCommand, string>
