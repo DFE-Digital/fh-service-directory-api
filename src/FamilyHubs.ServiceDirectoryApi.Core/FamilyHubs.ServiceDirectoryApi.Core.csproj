@@ -10,13 +10,10 @@
     <ItemGroup>
       <Compile Remove="LocationAggregate\**" />
       <Compile Remove="Services\Domain\Identity\**" />
-      <Compile Remove="Services\Infrastructure\CloudServices\**" />
       <EmbeddedResource Remove="LocationAggregate\**" />
       <EmbeddedResource Remove="Services\Domain\Identity\**" />
-      <EmbeddedResource Remove="Services\Infrastructure\CloudServices\**" />
       <None Remove="LocationAggregate\**" />
       <None Remove="Services\Domain\Identity\**" />
-      <None Remove="Services\Infrastructure\CloudServices\**" />
     </ItemGroup>
 
     <ItemGroup>

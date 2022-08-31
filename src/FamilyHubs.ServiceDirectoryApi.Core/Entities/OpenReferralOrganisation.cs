@@ -29,11 +29,11 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
         Services = services ?? default!;
     }
 
-    public string Name { get; private set; } = string.Empty;
-    public string? Description { get; private set; } = string.Empty;
-    public string? Logo { get; private set; } = string.Empty;
-    public string? Uri { get; private set; } = string.Empty;
-    public string? Url { get; private set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; } = string.Empty;
+    public string? Logo { get; set; } = string.Empty;
+    public string? Uri { get; set; } = string.Empty;
+    public string? Url { get; set; } = string.Empty;
     public virtual ICollection<OpenReferralReview>? Reviews { get; set; } = new List<OpenReferralReview>();
     public virtual ICollection<OpenReferralService>? Services { get; set; } = new List<OpenReferralService>();
 

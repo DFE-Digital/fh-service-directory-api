@@ -33,7 +33,6 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            //RequestUri = new Uri(_client.BaseAddress + "organizations"),
             RequestUri = new Uri(_client.BaseAddress + "api/organizations"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };

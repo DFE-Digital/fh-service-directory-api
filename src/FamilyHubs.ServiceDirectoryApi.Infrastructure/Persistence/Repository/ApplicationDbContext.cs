@@ -2,6 +2,7 @@
 using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
+using fh_service_directory_api.infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -10,15 +11,18 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         private readonly IDomainEventDispatcher _dispatcher;
+        private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
 
         public ApplicationDbContext
         (
             DbContextOptions<ApplicationDbContext> options,
-            IDomainEventDispatcher dispatcher
+            IDomainEventDispatcher dispatcher,
+            AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor
         )
         : base(options)
         {
             _dispatcher = dispatcher;
+            _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,6 +32,12 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+            optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
         }
 
         #region Open Referral Entities

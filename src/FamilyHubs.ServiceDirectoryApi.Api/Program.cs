@@ -1,13 +1,17 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using FamilyHubs.SharedKernel.Interfaces;
+using fh_service_directory_api.api;
 using fh_service_directory_api.api.Endpoints;
 using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
-using fh_service_directory_api.core.Interfaces.Entities;
+using fh_service_directory_api.core.Interfaces;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
 using fh_service_directory_api.infrastructure;
+using fh_service_directory_api.infrastructure.Persistence.Interceptors;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
+using fh_service_directory_api.infrastructure.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -22,6 +26,14 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
     containerBuilder.RegisterModule(new DefaultCoreModule());
     containerBuilder.RegisterModule(new DefaultInfrastructureModule(builder.Environment.EnvironmentName == "Development"));
 
+    containerBuilder.RegisterType<HttpContextAccessor>()
+            .As<IHttpContextAccessor>().SingleInstance();
+
+    containerBuilder.RegisterType<DateTimeService>()
+            .As<IDateTime>().InstancePerLifetimeScope();
+    containerBuilder.RegisterType<CurrentUserService>()
+            .As<ICurrentUserService>().InstancePerLifetimeScope();
+    containerBuilder.RegisterType<AuditableEntitySaveChangesInterceptor>();
 
     // Register Entity Framework
     DbContextOptions<ApplicationDbContext> options;
