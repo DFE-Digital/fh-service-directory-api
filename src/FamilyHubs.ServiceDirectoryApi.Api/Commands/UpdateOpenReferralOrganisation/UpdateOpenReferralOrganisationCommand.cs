@@ -1,8 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
-using fh_service_directory_api.core.Interfaces.Entities;
-using fh_service_directory_api.core.Interfaces.Infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
