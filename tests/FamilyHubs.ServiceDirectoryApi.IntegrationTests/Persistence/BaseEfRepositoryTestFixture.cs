@@ -41,10 +41,6 @@ public abstract class BaseEfRepositoryTestFixture
         return builder.Options;
     }
 
-    //protected EfRepository<OpenReferralOrganisation> GetRepository()
-    //{
-    //    return new EfRepository<OpenReferralOrganisation>(DbContext);
-    //}
     protected EfRepository<T> GetRepository<T>() where T : class, IAggregateRoot
     {
         return new EfRepository<T>(DbContext);
