@@ -64,6 +64,7 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
     containerBuilder.RegisterType<MinimalGeneralEndPoints>();
     containerBuilder.RegisterType<MinimalServiceEndPoints>();
     containerBuilder.RegisterType<MinimalTaxonomyEndPoints>();
+    containerBuilder.RegisterType<MinimalUICacheEndPoints>();
     containerBuilder.RegisterType<ApplicationDbContextInitialiser>();
 
     containerBuilder
@@ -110,6 +111,10 @@ using (var scope = webApplication.Services.CreateScope())
     var taxonyservice = scope.ServiceProvider.GetService<MinimalTaxonomyEndPoints>();
     if (taxonyservice != null)
         taxonyservice.RegisterTaxonomyEndPoints(webApplication);
+
+    var uiCacheservice = scope.ServiceProvider.GetService<MinimalUICacheEndPoints>();
+    if (uiCacheservice != null)
+        uiCacheservice.RegisterUICacheEndPoints(webApplication);
 
     var genservice = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
     if (genservice != null)
