@@ -15,6 +15,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using fh_service_directory_api.core.Entities;
+using fh_service_directory_api.core.Interfaces.Entities;
 using FluentAssertions;
 using System.Text;
 using System.Text.Json;

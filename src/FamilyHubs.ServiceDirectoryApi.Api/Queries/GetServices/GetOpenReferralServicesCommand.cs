@@ -80,7 +80,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         {
             dbservices = entities.ToList();
             if (dbservices == null)
-                dbservices = new List<OpenReferralService>();
+            dbservices = new List<OpenReferralService>();
         }
 
         var filteredServices = OpenReferralDtoHelper.GetOpenReferralServicesDto(dbservices);
