@@ -37,7 +37,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
         Url = url;
         Email = email;
         Fees = fees;
-        Eligibilitys = eligibilitys as ICollection<OpenReferralEligibility> ?? new Collection<OpenReferralEligibility>();
+        Eligibilities = eligibilitys as ICollection<OpenReferralEligibility> ?? new Collection<OpenReferralEligibility>();
         Fundings = fundings as ICollection<OpenReferralFunding> ?? new Collection<OpenReferralFunding>();
         Holiday_schedules = holiday_schedules as ICollection<OpenReferralHoliday_Schedule> ?? new Collection<OpenReferralHoliday_Schedule>();
         Languages = languages as ICollection<OpenReferralLanguage> ?? new Collection<OpenReferralLanguage>();
@@ -64,7 +64,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
     public string? Email { get; set; }
     public string? Fees { get; set; }
     public virtual ICollection<OpenReferralServiceDelivery> ServiceDelivery { get; set; } = new Collection<OpenReferralServiceDelivery>();
-    public virtual ICollection<OpenReferralEligibility> Eligibilitys { get; set; } = new Collection<OpenReferralEligibility>();
+    public virtual ICollection<OpenReferralEligibility> Eligibilities { get; set; } = new Collection<OpenReferralEligibility>();
     public virtual ICollection<OpenReferralFunding> Fundings { get; set; } = new Collection<OpenReferralFunding>();
     public virtual ICollection<OpenReferralHoliday_Schedule> Holiday_schedules { get; set; } = new Collection<OpenReferralHoliday_Schedule>();
     public virtual ICollection<OpenReferralLanguage> Languages { get; set; } = new Collection<OpenReferralLanguage>();

@@ -7,7 +7,10 @@ public class UpdateUICacheCommandValidator : AbstractValidator<UpdateUICacheComm
     public UpdateUICacheCommandValidator()
     {
         RuleFor(v => v.Id)
-            .NotNull();
+            .MinimumLength(1)
+            .MaximumLength(50)
+            .NotNull()
+            .NotEmpty();
 
         RuleFor(v => v.UICacheDto)
             .NotNull();

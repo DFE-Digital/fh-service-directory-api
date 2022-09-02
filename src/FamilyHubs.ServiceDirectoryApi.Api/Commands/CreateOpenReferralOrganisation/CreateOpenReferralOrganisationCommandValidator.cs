@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 
-public class CreateOpenReferralOrganisationCommandValidator : AbstractValidator<ICreateOpenReferralOrganisationCommand>
+public class CreateOpenReferralOrganisationCommandValidator : AbstractValidator<CreateOpenReferralOrganisationCommand>
 {
     public CreateOpenReferralOrganisationCommandValidator()
     {

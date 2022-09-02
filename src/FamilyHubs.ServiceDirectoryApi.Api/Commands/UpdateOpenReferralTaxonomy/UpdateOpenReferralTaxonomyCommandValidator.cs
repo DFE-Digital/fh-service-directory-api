@@ -10,7 +10,10 @@ public class UpdateOpenReferralTaxonomyCommandValidator : AbstractValidator<Upda
             .NotNull();
 
         RuleFor(v => v.Id)
-            .NotNull();
+            .MinimumLength(1)
+            .MaximumLength(50)
+            .NotNull()
+            .NotEmpty();
 
         RuleFor(v => v.OpenReferralTaxonomy.Id)
             .MinimumLength(1)

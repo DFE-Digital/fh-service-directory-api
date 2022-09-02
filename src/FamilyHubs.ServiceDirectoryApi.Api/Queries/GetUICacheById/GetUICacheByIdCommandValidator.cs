@@ -7,6 +7,7 @@ public class GetUICacheByIdCommandValidator : AbstractValidator<GetUICacheByIdCo
     public GetUICacheByIdCommandValidator()
     {
         RuleFor(v => v.Id)
+            .MinimumLength(1)
             .NotNull()
             .NotEmpty();
     }

@@ -38,7 +38,7 @@ public class ServicesBuilder
     public ServicesBuilder WithEligibility(ICollection<OpenReferralEligibility>? eligibilities)
     {
         if (eligibilities != null && eligibilities.Any())
-            _openReferralService.Eligibilitys = eligibilities;
+            _openReferralService.Eligibilities = eligibilities;
         return this;
     }
 
