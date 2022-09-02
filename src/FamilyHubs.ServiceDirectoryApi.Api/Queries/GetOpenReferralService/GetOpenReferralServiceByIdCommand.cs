@@ -31,7 +31,7 @@ public class GetOpenReferralServiceByIdCommandHandler : IRequestHandler<GetOpenR
     {
         var entity = await _context.OpenReferralServices
             .Include(x => x.ServiceDelivery)
-            .Include(x => x.Eligibilitys)
+            .Include(x => x.Eligibilities)
             .Include(x => x.Contacts)
             .ThenInclude(x => x.Phones)
             .Include(x => x.Languages)

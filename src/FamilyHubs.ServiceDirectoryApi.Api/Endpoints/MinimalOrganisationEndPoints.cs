@@ -77,6 +77,6 @@ public class MinimalOrganisationEndPoints
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 throw;
             }
-        }).WithMetadata(new SwaggerOperationAttribute("Update Organisation", "Update Organisation") { Tags = new[] { "Organisations" } });
+        }).WithMetadata(new SwaggerOperationAttribute("Update Organisation", "Update Organisation By Id") { Tags = new[] { "Organisations" } });
     }
 }

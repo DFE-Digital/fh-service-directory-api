@@ -1,6 +1,7 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using FamilyHubs.SharedKernel;
 using FluentAssertions;
+using System.Text;
 using System.Text.Json;
 
 namespace FunctionalTests;
@@ -28,5 +29,64 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
         ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
         retVal.Should().NotBeNull();
         retVal.Items.Count.Should().BeGreaterThan(3);
+    }
+
+    [Fact]
+    public async Task ThenTheTaxonomyIsCreated()
+    {
+        var commandtaxonomy = new OpenReferralTaxonomyDto(Guid.NewGuid().ToString(), "Test-AddTaxonomy", "Test-AddVocab", null);
+        
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri(_client.BaseAddress + "api/taxonomies"),
+            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(commandtaxonomy), Encoding.UTF8, "application/json"),
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var stringResult = await response.Content.ReadAsStringAsync();
+
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        stringResult.ToString().Should().Be(commandtaxonomy.Id);
+    }
+
+    [Fact]
+    public async Task ThenTheTaxonomyIsUpdated()
+    {
+        var commandtaxonomy = new OpenReferralTaxonomyDto(Guid.NewGuid().ToString(), "Test-UpdateTaxonomy", "Test-UpDateVocab", null);
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri(_client.BaseAddress + "api/taxonomies"),
+            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(commandtaxonomy), Encoding.UTF8, "application/json"),
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var stringResult = await response.Content.ReadAsStringAsync();
+
+        var updatedtaxonomy = new OpenReferralTaxonomyDto(commandtaxonomy.Id, "Test-IsUpdateTaxonomy", "Test-IsUpDateVocab", null);
+
+        var updaterequest = new HttpRequestMessage
+        {
+            Method = HttpMethod.Put,
+            RequestUri = new Uri(_client.BaseAddress + $"api/taxonomies/{commandtaxonomy.Id}"),
+            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(updatedtaxonomy), Encoding.UTF8, "application/json"),
+        };
+
+        using var updateresponse = await _client.SendAsync(updaterequest);
+
+        updateresponse.EnsureSuccessStatusCode();
+
+        var updateStringResult = await updateresponse.Content.ReadAsStringAsync();
+
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        updateStringResult.ToString().Should().Be(updatedtaxonomy.Id);
     }
 }

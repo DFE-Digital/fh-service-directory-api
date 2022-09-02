@@ -51,7 +51,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
         var entities = await _context.OpenReferralServices
            .Include(x => x.ServiceDelivery)
-           .Include(x => x.Eligibilitys)
+           .Include(x => x.Eligibilities)
            .Include(x => x.Contacts)
            .ThenInclude(x => x.Phones)
            .Include(x => x.Languages)
@@ -66,10 +66,10 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             dbservices = entities.Where(x => fh_service_directory_api.core.Helper.GetDistance(request.Latitude, request.Longtitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Latitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Longitude, x?.Name) < request.Meters);
 
         if (request?.MaximumAge != null)
-            dbservices = dbservices.Where(x => x.Eligibilitys.Any(x => x.Maximum_age <= request.MaximumAge.Value));
+            dbservices = dbservices.Where(x => x.Eligibilities.Any(x => x.Maximum_age <= request.MaximumAge.Value));
 
         if (request?.MinimumAge != null)
-            dbservices = dbservices.Where(x => x.Eligibilitys.Any(x => x.Minimum_age >= request.MinimumAge.Value));
+            dbservices = dbservices.Where(x => x.Eligibilities.Any(x => x.Minimum_age >= request.MinimumAge.Value));
 
         if (request?.Text != null)
         {
@@ -78,6 +78,8 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
         if (dbservices == null)
         {
+            dbservices = entities.ToList();
+            if (dbservices == null)
             dbservices = new List<OpenReferralService>();
         }
 

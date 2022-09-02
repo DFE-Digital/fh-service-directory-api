@@ -40,6 +40,8 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
             optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
         }
 
+        public DbSet<UICache> UICaches => Set<UICache>();
+
         #region Open Referral Entities
         public DbSet<Accessibility_For_Disabilities> Accessibility_For_Disabilities => Set<Accessibility_For_Disabilities>();
         public DbSet<OpenReferralContact> OpenReferralContacts => Set<OpenReferralContact>();

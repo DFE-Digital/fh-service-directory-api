@@ -36,8 +36,8 @@ public class OpenReferralData
             bristolCountyCouncil.Services.ElementAt(0).Created = DateTime.Now;
             bristolCountyCouncil.Services.ElementAt(0).ServiceDelivery.ElementAt(0).CreatedBy = "TestSystem";
             bristolCountyCouncil.Services.ElementAt(0).ServiceDelivery.ElementAt(0).Created = DateTime.Now;
-            bristolCountyCouncil.Services.ElementAt(0).Eligibilitys.ElementAt(0).CreatedBy = "TestSystem";
-            bristolCountyCouncil.Services.ElementAt(0).Eligibilitys.ElementAt(0).Created = DateTime.Now;
+            bristolCountyCouncil.Services.ElementAt(0).Eligibilities.ElementAt(0).CreatedBy = "TestSystem";
+            bristolCountyCouncil.Services.ElementAt(0).Eligibilities.ElementAt(0).Created = DateTime.Now;
             bristolCountyCouncil.Services.ElementAt(0).Languages.ElementAt(0).CreatedBy = "TestSystem";
             bristolCountyCouncil.Services.ElementAt(0).Languages.ElementAt(0).Created = DateTime.Now;
             bristolCountyCouncil.Services.ElementAt(0).Contacts.ElementAt(0).CreatedBy = "TestSystem";

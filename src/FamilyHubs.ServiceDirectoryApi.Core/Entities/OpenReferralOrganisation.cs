@@ -6,7 +6,7 @@ namespace fh_service_directory_api.core.Entities;
 
 public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganisation, IAggregateRoot
 {
-    private OpenReferralOrganisation() { }
+    public OpenReferralOrganisation() { }
 
     public OpenReferralOrganisation(
         string id,
