@@ -16,8 +16,20 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
+
+Log.Information("Starting up");
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((ctx, lc) => lc
+        .WriteTo.Console()
+        .ReadFrom.Configuration(ctx.Configuration));
+
 ConfigurWebApplicationBuilderHost(builder);
 ConfigurWebApplicationBuilderServices(builder);
 
@@ -96,6 +108,7 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
 });
 
 var webApplication = builder.Build();
+webApplication.UseSerilogRequestLogging();
 ConfigureWebApplication(webApplication);
 
 using (var scope = webApplication.Services.CreateScope())
@@ -126,8 +139,6 @@ using (var scope = webApplication.Services.CreateScope())
         var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
         await initialiser.InitialiseAsync(builder.Configuration);
         await initialiser.SeedAsync();
-
-        var cont = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
 
     }
     catch (Exception ex)

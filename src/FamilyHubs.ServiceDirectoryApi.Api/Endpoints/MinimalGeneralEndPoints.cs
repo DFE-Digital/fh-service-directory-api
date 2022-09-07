@@ -6,7 +6,7 @@ public class MinimalGeneralEndPoints
 {
     public void RegisterMinimalGeneralEndPoints(WebApplication app)
     {
-        app.MapGet("api/info", () =>
+        app.MapGet("api/info", (ILogger<MinimalGeneralEndPoints> logger) =>
         {
             try
             {
@@ -19,6 +19,7 @@ public class MinimalGeneralEndPoints
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "An error occurred getting info (api). {exceptionMessage}", ex.Message);
                 Debug.WriteLine(ex.Message);
                 throw;
             }

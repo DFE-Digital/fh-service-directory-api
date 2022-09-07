@@ -12,11 +12,7 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
     [Fact]
     public async Task ThenTheUICacheIsCreated()
     {
-        var command = new UICacheDto
-        {
-            Id = Guid.NewGuid().ToString(), 
-            Value = GetTestViewModel()
-        };
+        var command = new UICacheDto(Guid.NewGuid().ToString(), GetTestViewModel());
 
         var request = new HttpRequestMessage
         {
@@ -48,12 +44,8 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
 
         var value = Newtonsoft.Json.JsonConvert.SerializeObject(testViewModel);
 
-        var command = new UICacheDto
-        {
-            Id = id,
-            Value = value
-        };
-
+        var command = new UICacheDto(id, value);
+        
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Put,
@@ -96,11 +88,7 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
 
     private async Task<string> CreateUICache()
     {
-        var command = new UICacheDto
-        {
-            Id = Guid.NewGuid().ToString(),
-            Value = GetTestViewModel()
-        };
+        var command = new UICacheDto(Guid.NewGuid().ToString(), GetTestViewModel());
 
         var request = new HttpRequestMessage
         {

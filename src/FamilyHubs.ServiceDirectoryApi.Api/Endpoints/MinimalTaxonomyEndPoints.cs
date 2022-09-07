@@ -13,7 +13,7 @@ public class MinimalTaxonomyEndPoints
 {
     public void RegisterTaxonomyEndPoints(WebApplication app)
     {
-        app.MapPost("api/taxonomies", async ([FromBody] OpenReferralTaxonomyDto request, CancellationToken cancellationToken, ISender _mediator) =>
+        app.MapPost("api/taxonomies", async ([FromBody] OpenReferralTaxonomyDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
             {
@@ -23,12 +23,13 @@ public class MinimalTaxonomyEndPoints
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "An error occurred creating taxonomy. {exceptionMessage}", ex.Message);
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Taxonomy", "Create Taxonomy") { Tags = new[] { "Taxonomies" } });
 
-        app.MapPut("api/taxonomies/{id}", async (string id, [FromBody] OpenReferralTaxonomyDto request, CancellationToken cancellationToken, ISender _mediator, IMapper mapper) =>
+        app.MapPut("api/taxonomies/{id}", async (string id, [FromBody] OpenReferralTaxonomyDto request, CancellationToken cancellationToken, ISender _mediator, IMapper mapper, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
             {
@@ -38,12 +39,13 @@ public class MinimalTaxonomyEndPoints
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "An error occurred updating taxonomy. {exceptionMessage}", ex.Message);
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Update Taxonomy", "Update Taxonomy") { Tags = new[] { "Taxonomies" } });
 
-        app.MapGet("api/taxonomies", async (int? pageNumber, int? pageSize, string? text, CancellationToken cancellationToken, ISender _mediator) =>
+        app.MapGet("api/taxonomies", async (int? pageNumber, int? pageSize, string? text, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
             {
@@ -53,6 +55,7 @@ public class MinimalTaxonomyEndPoints
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "An error occurred getting taxonomies. {exceptionMessage}", ex.Message);
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 throw;
             }

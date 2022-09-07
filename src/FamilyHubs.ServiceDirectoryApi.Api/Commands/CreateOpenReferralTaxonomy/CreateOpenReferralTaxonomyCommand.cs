@@ -17,15 +17,17 @@ public class CreateOpenReferralTaxonomyCommand : IRequest<string>
     public OpenReferralTaxonomyDto OpenReferralTaxonomy { get; init; }
 }
 
-public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<CreateOpenReferralTaxonomyCommand, string>
+public class CreateOpenReferralTaxonomyCommandHandler : IRequestHandler<CreateOpenReferralTaxonomyCommand, string>
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
+    private readonly ILogger<CreateOpenReferralTaxonomyCommandHandler> _logger;
 
-    public CreateOpenReferralOrganisationCommandHandler(ApplicationDbContext context, IMapper mapper)
+    public CreateOpenReferralTaxonomyCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<CreateOpenReferralTaxonomyCommandHandler> logger)
     {
         _context = context;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<string> Handle(CreateOpenReferralTaxonomyCommand request, CancellationToken cancellationToken)
@@ -43,6 +45,7 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "An error occurred creating taxonomy. {exceptionMessage}", ex.Message);
             throw new Exception(ex.Message, ex);
         }
 

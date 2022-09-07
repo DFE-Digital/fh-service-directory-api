@@ -2,12 +2,13 @@
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
+using fh_service_directory_api.core.Interfaces.Commands;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 
 namespace fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 
-public class CreateOpenReferralOrganisationCommand : IRequest<string>
+public class CreateOpenReferralOrganisationCommand : IRequest<string>, ICreateOpenReferralOrganisationCommand
 {
     public CreateOpenReferralOrganisationCommand(OpenReferralOrganisationWithServicesDto openReferralOrganisation)
     {
@@ -21,11 +22,13 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
+    private readonly ILogger<CreateOpenReferralOrganisationCommandHandler> _logger;
 
-    public CreateOpenReferralOrganisationCommandHandler(ApplicationDbContext context, IMapper mapper)
+    public CreateOpenReferralOrganisationCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<CreateOpenReferralOrganisationCommandHandler> logger)
     {
         _context = context;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<string> Handle(CreateOpenReferralOrganisationCommand request, CancellationToken cancellationToken)
@@ -43,6 +46,7 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "An error occurred creating organisation. {exceptionMessage}", ex.Message);
             throw new Exception(ex.Message, ex);
         }
 

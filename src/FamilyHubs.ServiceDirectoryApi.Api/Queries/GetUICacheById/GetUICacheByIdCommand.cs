@@ -36,11 +36,8 @@ public class GetUICacheByIdCommandHandler : IRequestHandler<GetUICacheByIdComman
             throw new NotFoundException(nameof(UICache), request.Id);
         }
 
-        var result = new UICacheDto
-        {
-            Id = entity.Id,
-            Value = entity.Value
-        };
+        var result = new UICacheDto(entity.Id, entity.Value);
+        
 
         return result;
     }

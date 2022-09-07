@@ -4,6 +4,8 @@ using fh_service_directory_api.api.Commands.UpdateUICache;
 using fh_service_directory_api.api.Queries.GetUICacheById;
 using fh_service_directory_api.core.Entities;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.UICaches;
 
@@ -15,8 +17,9 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
     {
         //Arange
         var mockApplicationDbContext = GetApplicationDbContext();
-        CreateUICacheCommand command = new(new UICacheDto { Id = "6e23bc85-fff9-49f9-99e4-98160a9a2b56", Value = TestViewModel.GetTestViewModel() });
-        CreateUICacheCommandHandler handler = new(mockApplicationDbContext);
+        var logger = new Mock<ILogger<CreateUICacheCommandHandler>>();
+        CreateUICacheCommand command = new(new UICacheDto("6e23bc85-fff9-49f9-99e4-98160a9a2b56", TestViewModel.GetTestViewModel() ));
+        CreateUICacheCommandHandler handler = new(mockApplicationDbContext, logger.Object);
 
         //Act
         var result = await handler.Handle(command, new System.Threading.CancellationToken());
@@ -30,6 +33,7 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
     {
         //Arange
         const string id = "9ae3237d-73fd-46fc-afa3-f178250e0c09";
+        var logger = new Mock<ILogger<UpdateUICacheCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         mockApplicationDbContext.UICaches.Add(new UICache(id, TestViewModel.GetTestViewModel()));
         mockApplicationDbContext.SaveChanges();
@@ -42,8 +46,8 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
 
         var newViewModel = Newtonsoft.Json.JsonConvert.SerializeObject(testViewModel);
 
-        UpdateUICacheCommand command = new(id, new UICacheDto { Id = id, Value = newViewModel });
-        UpdateUICacheCommandHandler handler = new(mockApplicationDbContext);
+        UpdateUICacheCommand command = new(id, new UICacheDto(id, newViewModel ));
+        UpdateUICacheCommandHandler handler = new(mockApplicationDbContext, logger.Object);
 
         //Act
         var result = await handler.Handle(command, new System.Threading.CancellationToken());

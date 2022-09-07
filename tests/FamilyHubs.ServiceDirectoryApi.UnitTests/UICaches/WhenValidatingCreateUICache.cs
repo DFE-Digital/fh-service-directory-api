@@ -11,7 +11,7 @@ public class WhenValidatingCreateUICache
     {
         //Arrange
         var validator = new CreateUICacheCommandValidator();
-        var testModel = new CreateUICacheCommand(new UICacheDto { Id = "Id", Value = "Value" });
+        var testModel = new CreateUICacheCommand(new UICacheDto("Id","Value"));
         
         //Act
         var result = validator.Validate(testModel);
@@ -25,7 +25,7 @@ public class WhenValidatingCreateUICache
     {
         //Arrange
         var validator = new CreateUICacheCommandValidator();
-        var testModel = new CreateUICacheCommand(new UICacheDto { Value = "Value" });
+        var testModel = new CreateUICacheCommand(new UICacheDto(string.Empty,"Value"));
 
         //Act
         var result = validator.Validate(testModel);
@@ -39,7 +39,7 @@ public class WhenValidatingCreateUICache
     {
         //Arrange
         var validator = new CreateUICacheCommandValidator();
-        var testModel = new CreateUICacheCommand(new UICacheDto { Id = "Id" });
+        var testModel = new CreateUICacheCommand(new UICacheDto("Id", string.Empty));
 
         //Act
         var result = validator.Validate(testModel);

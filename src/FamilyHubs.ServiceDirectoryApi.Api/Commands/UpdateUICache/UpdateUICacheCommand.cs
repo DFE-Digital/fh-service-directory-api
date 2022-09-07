@@ -23,10 +23,12 @@ public class UpdateUICacheCommand : IRequest<string>
 public class UpdateUICacheCommandHandler : IRequestHandler<UpdateUICacheCommand, string>
 {
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<UpdateUICacheCommandHandler> _logger;
 
-    public UpdateUICacheCommandHandler(ApplicationDbContext context)
+    public UpdateUICacheCommandHandler(ApplicationDbContext context, ILogger<UpdateUICacheCommandHandler> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task<string> Handle(UpdateUICacheCommand request, CancellationToken cancellationToken)
@@ -49,6 +51,7 @@ public class UpdateUICacheCommandHandler : IRequestHandler<UpdateUICacheCommand,
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "An error occurred updating UICache. {exceptionMessage}", ex.Message);
             throw new Exception(ex.Message, ex);
         }
 
