@@ -19,10 +19,11 @@ public class CreateUICacheCommand : IRequest<string>
 public class CreateUICacheCommandHandler : IRequestHandler<CreateUICacheCommand, string>
 {
     private readonly ApplicationDbContext _context;
-
-    public CreateUICacheCommandHandler(ApplicationDbContext context)
+    private readonly ILogger<CreateUICacheCommandHandler> _logger;
+    public CreateUICacheCommandHandler(ApplicationDbContext context, ILogger<CreateUICacheCommandHandler> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task<string> Handle(CreateUICacheCommand request, CancellationToken cancellationToken)
@@ -40,6 +41,7 @@ public class CreateUICacheCommandHandler : IRequestHandler<CreateUICacheCommand,
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "An error occurred creating UICache. {exceptionMessage}", ex.Message);
             throw new Exception(ex.Message, ex);
         }
 

@@ -12,7 +12,7 @@ public class MinimalUICacheEndPoints
 {
     public void RegisterUICacheEndPoints(WebApplication app)
     {
-        app.MapPost("api/uicaches", async ([FromBody] UICacheDto request, CancellationToken cancellationToken, ISender _mediator) =>
+        app.MapPost("api/uicaches", async ([FromBody] UICacheDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalUICacheEndPoints> logger) =>
         {
             try
             {
@@ -22,12 +22,13 @@ public class MinimalUICacheEndPoints
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "An error occurred creating UICache. {exceptionMessage}", ex.Message);
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("UICaches", "Create UICache") { Tags = new[] { "UICaches" } });
 
-        app.MapGet("api/uicaches/{id}", async (string id, CancellationToken cancellationToken, ISender _mediator) =>
+        app.MapGet("api/uicaches/{id}", async (string id, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalUICacheEndPoints> logger) =>
         {
             try
             {
@@ -37,12 +38,13 @@ public class MinimalUICacheEndPoints
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "An error occurred getting UICache by Id. {exceptionMessage}", ex.Message);
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get UICache", "Get UICache By Id") { Tags = new[] { "UICaches" } });
 
-        app.MapPut("api/uicaches/{id}", async (string id, [FromBody] UICacheDto request, CancellationToken cancellationToken, ISender _mediator) =>
+        app.MapPut("api/uicaches/{id}", async (string id, [FromBody] UICacheDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalUICacheEndPoints> logger) =>
         {
             try
             {
@@ -52,6 +54,7 @@ public class MinimalUICacheEndPoints
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, "An error occurred updating UICache. {exceptionMessage}", ex.Message);
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 throw;
             }

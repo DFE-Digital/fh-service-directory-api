@@ -4,6 +4,8 @@ using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 using fh_service_directory_api.api.Queries.GetServices;
 using fh_service_directory_api.core;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Services;
 
@@ -16,10 +18,11 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
         CreateOpenReferralOrganisationCommand createcommand = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler createhandler = new(mockApplicationDbContext, mapper);
+        CreateOpenReferralOrganisationCommandHandler createhandler = new(mockApplicationDbContext, mapper, logger.Object);
         var id = await createhandler.Handle(createcommand, new System.Threading.CancellationToken());
 
 

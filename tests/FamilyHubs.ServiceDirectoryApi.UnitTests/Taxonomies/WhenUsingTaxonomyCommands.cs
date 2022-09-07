@@ -6,6 +6,8 @@ using fh_service_directory_api.api.Queries.GetOpenReferralTaxonomies;
 using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Taxonomies;
 
@@ -18,10 +20,11 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralTaxonomyCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         var testTaxonomy = GetTestTaxonomyDto();
         CreateOpenReferralTaxonomyCommand command = new(testTaxonomy);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper);
+        CreateOpenReferralTaxonomyCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
         var result = await handler.Handle(command, new System.Threading.CancellationToken());
@@ -39,9 +42,10 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         mockApplicationDbContext.OpenReferralTaxonomies.Add(dbTaxonomy);
         mockApplicationDbContext.SaveChanges();
         var testTaxonomy = GetTestTaxonomyDto();
+        var logger = new Mock<ILogger<UpdateOpenReferralTaxonomyCommandHandler>>();
 
         UpdateOpenReferralTaxonomyCommand command = new("a3226044-5c89-4257-8b07-f29745a22e2c", testTaxonomy);
-        UpdateOpenReferralTaxonomyCommandHandler handler = new(mockApplicationDbContext);
+        UpdateOpenReferralTaxonomyCommandHandler handler = new(mockApplicationDbContext, logger.Object);
 
         //Act
         var result = await handler.Handle(command, new System.Threading.CancellationToken());

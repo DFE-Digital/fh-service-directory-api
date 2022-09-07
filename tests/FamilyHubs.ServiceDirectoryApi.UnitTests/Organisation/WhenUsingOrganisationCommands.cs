@@ -23,6 +23,8 @@ using fh_service_directory_api.api.Queries.ListOrganisation;
 using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
 using System.Collections.ObjectModel;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
@@ -36,10 +38,11 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         var testOrganisation = GetTestCountyCouncilDto();
         CreateOpenReferralOrganisationCommand command = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper);
+        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
         var result = await handler.Handle(command, new System.Threading.CancellationToken());
@@ -56,10 +59,12 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         var testOrganisation = GetTestCountyCouncilDto();
+        var updatelogger = new Mock<ILogger<UpdateOpenReferralOrganisationCommandHandler>>();
         CreateOpenReferralOrganisationCommand command = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper);
+        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
         var id = await handler.Handle(command, new System.Threading.CancellationToken());
 
 
@@ -67,7 +72,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         updateTestOrganisation.Name = "Unit Test B County Council";
         updateTestOrganisation.Description = "Unit Test B County Council Descrition";
         UpdateOpenReferralOrganisationCommand updatecommand = new(updateTestOrganisation.Id, updateTestOrganisation);
-        UpdateOpenReferralOrganisationCommandHandler updatehandler = new(mockApplicationDbContext);
+        UpdateOpenReferralOrganisationCommandHandler updatehandler = new(mockApplicationDbContext, updatelogger.Object);
 
         //Act
         var result = await updatehandler.Handle(updatecommand, new System.Threading.CancellationToken());
@@ -84,10 +89,11 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         var testOrganisation = GetTestCountyCouncilDto();
         CreateOpenReferralOrganisationCommand command = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper);
+        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
         var id = await handler.Handle(command, new System.Threading.CancellationToken());
 
         GetOpenReferralOrganisationByIdCommand getcommand = new() { Id = testOrganisation.Id };
@@ -109,10 +115,11 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         var testOrganisation = GetTestCountyCouncilDto();
         CreateOpenReferralOrganisationCommand command = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper);
+        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
         var id = await handler.Handle(command, new System.Threading.CancellationToken());
 
         ListOpenReferralOrganisationCommand getcommand = new();

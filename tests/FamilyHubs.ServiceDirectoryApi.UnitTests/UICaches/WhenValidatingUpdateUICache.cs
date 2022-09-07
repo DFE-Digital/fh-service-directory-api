@@ -11,7 +11,7 @@ public class WhenValidatingUpdateUICache
     {
         //Arrange
         var validator = new UpdateUICacheCommandValidator();
-        var testModel = new UpdateUICacheCommand("Id", new UICacheDto { Id = "Id", Value = "Value" });
+        var testModel = new UpdateUICacheCommand("Id", new UICacheDto("Id", "Value"));
 
         //Act
         var result = validator.Validate(testModel);
@@ -25,7 +25,7 @@ public class WhenValidatingUpdateUICache
     {
         //Arrange
         var validator = new UpdateUICacheCommandValidator();
-        var testModel = new UpdateUICacheCommand("", new UICacheDto { Id = "Id", Value = "Value" });
+        var testModel = new UpdateUICacheCommand("", new UICacheDto("Id", "Value"));
 
         //Act
         var result = validator.Validate(testModel);
@@ -39,7 +39,7 @@ public class WhenValidatingUpdateUICache
     {
         //Arrange
         var validator = new UpdateUICacheCommandValidator();
-        var testModel = new UpdateUICacheCommand("Id", new UICacheDto { Value = "Value" });
+        var testModel = new UpdateUICacheCommand("Id", new UICacheDto(string.Empty, "Value"));
 
         //Act
         var result = validator.Validate(testModel);
@@ -53,7 +53,7 @@ public class WhenValidatingUpdateUICache
     {
         //Arrange
         var validator = new UpdateUICacheCommandValidator();
-        var testModel = new UpdateUICacheCommand("Id", new UICacheDto { Id = "Id" });
+        var testModel = new UpdateUICacheCommand("Id", new UICacheDto("Id", string.Empty));
 
         //Act
         var result = validator.Validate(testModel);

@@ -24,10 +24,12 @@ public class UpdateOpenReferralTaxonomyCommand : IRequest<string>
 public class UpdateOpenReferralTaxonomyCommandHandler : IRequestHandler<UpdateOpenReferralTaxonomyCommand, string>
 {
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<UpdateOpenReferralTaxonomyCommandHandler> _logger;
 
-    public UpdateOpenReferralTaxonomyCommandHandler(ApplicationDbContext context)
+    public UpdateOpenReferralTaxonomyCommandHandler(ApplicationDbContext context, ILogger<UpdateOpenReferralTaxonomyCommandHandler> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task<string> Handle(UpdateOpenReferralTaxonomyCommand request, CancellationToken cancellationToken)
@@ -52,6 +54,7 @@ public class UpdateOpenReferralTaxonomyCommandHandler : IRequestHandler<UpdateOp
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "An error occurred updating taxonomy. {exceptionMessage}", ex.Message);
             throw new Exception(ex.Message, ex);
         }
 

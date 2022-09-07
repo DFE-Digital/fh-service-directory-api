@@ -24,10 +24,12 @@ public class UpdateOpenReferralOrganisationCommand : IRequest<string>
 public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<UpdateOpenReferralOrganisationCommand, string>
 {
     private readonly ApplicationDbContext _context;
+    private readonly ILogger<UpdateOpenReferralOrganisationCommandHandler> _logger;
 
-    public UpdateOpenReferralOrganisationCommandHandler(ApplicationDbContext context)
+    public UpdateOpenReferralOrganisationCommandHandler(ApplicationDbContext context, ILogger<UpdateOpenReferralOrganisationCommandHandler> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task<string> Handle(UpdateOpenReferralOrganisationCommand request, CancellationToken cancellationToken)
@@ -130,6 +132,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "An error occurred updating organisation. {exceptionMessage}", ex.Message);
             throw new Exception(ex.Message, ex);
         }
 
