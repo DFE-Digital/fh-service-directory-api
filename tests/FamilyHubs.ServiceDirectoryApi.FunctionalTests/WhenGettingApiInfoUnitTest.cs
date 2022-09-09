@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace FunctionalTests;
+namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
 [Collection("Sequential")]
 public class WhenGettingApiInfoUnitTest

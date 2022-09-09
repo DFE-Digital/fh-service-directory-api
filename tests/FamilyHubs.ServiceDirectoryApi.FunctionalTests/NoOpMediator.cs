@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System.Runtime.CompilerServices;
 
-namespace FunctionalTests;
+namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
 public class NoOpMediator : IMediator
 {

@@ -4,7 +4,7 @@ using FluentAssertions;
 using System.Text;
 using System.Text.Json;
 
-namespace FunctionalTests;
+namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
 
 [Collection("Sequential")]

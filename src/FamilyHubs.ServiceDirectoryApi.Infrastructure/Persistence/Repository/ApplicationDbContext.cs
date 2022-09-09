@@ -74,7 +74,7 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
             if (_dispatcher == null) return result;
 
             // dispatch events only if save was successful
-            var entitiesWithEvents = ChangeTracker.Entries<EntityBase<Guid>>()
+            var entitiesWithEvents = ChangeTracker.Entries<EntityBase<string>>()
                 .Select(e => e.Entity)
                 .Where(e => e.DomainEvents.Any())
                 .ToArray();
