@@ -26,7 +26,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var id = await createhandler.Handle(createcommand, new System.Threading.CancellationToken());
 
 
-        GetOpenReferralServicesCommand command = new("active", null, null, null, null, null, 1, 10, null);
+        GetOpenReferralServicesCommand command = new("active", null, null, null, null, null, 1, 10, null, null, null);
         GetOpenReferralServicesCommandHandler handler = new(mockApplicationDbContext);
 
         //Act

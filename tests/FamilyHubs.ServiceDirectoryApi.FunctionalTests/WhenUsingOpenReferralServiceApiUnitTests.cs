@@ -3,7 +3,7 @@ using FamilyHubs.SharedKernel;
 using FluentAssertions;
 using System.Text.Json;
 
-namespace FunctionalTests;
+namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
 [Collection("Sequential")]
 public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferralApiUnitTests
@@ -11,10 +11,18 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
     [Fact]
     public async Task ThenTheOpenReferralServicesAreRetrieved()
     {
+        GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
+        string url = getServicesUrlBuilder
+                    .WithStatus("active")
+                    .WithEligibility(0,99)
+                    .WithProximity(52.6312, -1.66526, 1609.34)
+                    .WithPage(1, 10)
+                    .Build();
+
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(_client.BaseAddress + "api/services?status=active&minimum_age=0&maximum_age=99&latitude=52.6312&longtitude=-1.66526&proximity=1609.34&pageNumber=1&pageSize=10&text="),
+            RequestUri = new Uri(_client.BaseAddress + $"api/services{url}")
         };
 
         using var response = await _client.SendAsync(request);
@@ -33,7 +41,129 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
     }
 
     [Fact]
-    public async Task ThenTheOpenReferralServiceIsRetrieved()
+    public async Task ThenTheOpenReferralServicesWithEligabiltyAreRetrieved()
+    {
+        GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
+        string url = getServicesUrlBuilder
+                    .WithStatus("active")
+                    .WithEligibility(0, 99)
+                    .WithPage(1, 10)
+                    .Build();
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(_client.BaseAddress + $"api/services{url}")
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var item = retVal?.Items.FirstOrDefault(x => x.Id == "4591d551-0d6a-4c0d-b109-002e67318231");
+
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        retVal.Should().NotBeNull();
+        item.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
+    }
+
+    [Fact]
+    public async Task ThenTheOpenReferralServicesWithProximityAreRetrieved()
+    {
+        GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
+        string url = getServicesUrlBuilder
+                    .WithStatus("active")
+                    .WithProximity(52.6312, -1.66526, 1609.34)
+                    .WithPage(1, 10)
+                    .Build();
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(_client.BaseAddress + $"api/services{url}")
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var item = retVal?.Items.FirstOrDefault(x => x.Id == "4591d551-0d6a-4c0d-b109-002e67318231");
+
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        retVal.Should().NotBeNull();
+        item.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
+    }
+
+    [Fact]
+    public async Task ThenTheOpenReferralServicesWithServiceDeliveryAreRetrieved()
+    {
+        GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
+        string url = getServicesUrlBuilder
+                    .WithStatus("active")
+                    .WithDelimitedSearchDeliveries("online")
+                    .WithPage(1, 10)
+                    .Build();
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(_client.BaseAddress + $"api/services{url}")
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var item = retVal?.Items.FirstOrDefault(x => x.Id == "4591d551-0d6a-4c0d-b109-002e67318231");
+
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        retVal.Should().NotBeNull();
+        item.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
+    }
+
+    [Fact]
+    public async Task ThenTheOpenReferralServicesWithTaxonomiesAreRetrieved()
+    {
+        GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
+        string url = getServicesUrlBuilder
+                    .WithStatus("active")
+                    .WithDelimitedTaxonomies("bccprimaryservicetype:38,bccagegroup:37")
+                    .WithPage(1, 10)
+                    .Build();
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(_client.BaseAddress + $"api/services{url}")
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var item = retVal?.Items.FirstOrDefault(x => x.Id == "4591d551-0d6a-4c0d-b109-002e67318231");
+
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        retVal.Should().NotBeNull();
+        item.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
+    }
+
+    [Fact]
+    public async Task ThenTheOpenReferralServiceByIdIsRetrieved()
     {
         var request = new HttpRequestMessage
         {

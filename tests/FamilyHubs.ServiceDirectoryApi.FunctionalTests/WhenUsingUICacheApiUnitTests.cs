@@ -1,6 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api;
 using FluentAssertions;
-using FunctionalTests;
 using System.Text;
 using System.Text.Json;
 
