@@ -22,6 +22,7 @@ public class OpenReferralDtoHelper
     {
         var dtoServices = dbservices.Select(x => new OpenReferralServiceDto(
             x.Id,
+            x.OpenReferralOrganisationId,
             x.Name,
             x.Description,
             x.Accreditations,
@@ -51,6 +52,7 @@ public class OpenReferralDtoHelper
     {
         var dtoService = new OpenReferralServiceDto(
             service.Id,
+            service.OpenReferralOrganisationId,
             service.Name,
             service.Description,
             service.Accreditations,
