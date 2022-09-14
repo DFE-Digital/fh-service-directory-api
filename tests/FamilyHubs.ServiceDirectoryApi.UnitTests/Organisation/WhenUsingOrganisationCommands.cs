@@ -145,19 +145,20 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             "https://www.unittest.gov.uk/",
             new List<OpenReferralServiceDto>
             {
-                 GetTestCountyCouncilServicesDto()
+                 GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc")
             }
             );
 
         return bristolCountyCouncil;
     }
 
-    public static OpenReferralServiceDto GetTestCountyCouncilServicesDto()
+    public static OpenReferralServiceDto GetTestCountyCouncilServicesDto(string parentId)
     {
         var contactId = Guid.NewGuid().ToString();
 
         ServicesDtoBuilder builder = new ServicesDtoBuilder();
         OpenReferralServiceDto service = builder.WithMainProperties("3010521b-6e0a-41b0-b610-200edbbeeb14",
+                parentId,
                 "Unit Test Service",
                 @"Unit Test Service Description",
                 null,
