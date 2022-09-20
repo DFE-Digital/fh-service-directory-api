@@ -9,6 +9,25 @@ namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferralApiUnitTests
 {
     [Fact]
+    public async Task ThenTheOpenReferralServicesIsDeleted()
+    {
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Delete,
+            RequestUri = new Uri(_client.BaseAddress + $"api/services/96781fd9-95a2-4196-8db6-0f083f1c38fc")
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var retVal = await JsonSerializer.DeserializeAsync<bool>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        retVal.Should().Be(true);
+    }
+
+    [Fact]
     public async Task ThenTheOpenReferralServicesAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();

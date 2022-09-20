@@ -66,7 +66,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
            .ThenInclude(x => x.Taxonomy)
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
-           .Where(x => x.Status == request.Status).ToListAsync();
+           .Where(x => x.Status == request.Status && x.Status != "Deleted").ToListAsync();
 
         IEnumerable<OpenReferralService> dbservices = entities;
         if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
