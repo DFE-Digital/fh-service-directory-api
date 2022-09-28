@@ -4,6 +4,41 @@ using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
+public class OpenReferralOrganisationEx : OpenReferralOrganisation
+{
+    public OpenReferralOrganisationEx() { }
+
+    public OpenReferralOrganisationEx(
+        string id,
+        string parentId,
+        string name = default!,
+        string? description = default!,
+        string? logo = default!,
+        string? uri = default!,
+        string? url = default!,
+        string? contactName = default!,
+        string? contactPhone = default!,
+        ICollection<OpenReferralReview>? reviews = default!,
+        ICollection<OpenReferralService>? services = default!
+    )
+    {
+        Id = id;
+        Name = name ?? default!;
+        Description = description ?? string.Empty;
+        Logo = logo ?? string.Empty;
+        Uri = uri ?? string.Empty;
+        Url = url ?? string.Empty;
+        Reviews = reviews ?? default!;
+        Services = services ?? default!;
+        ContactName = contactName;
+        ContactPhone = contactPhone;
+    }
+
+    public string ParentId { get; set; } = default!;
+    public string? ContactName { get; set; } = default!;
+    public string? ContactPhone { get; set; } = default!;
+}
+
 public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganisation, IAggregateRoot
 {
     public OpenReferralOrganisation() { }
