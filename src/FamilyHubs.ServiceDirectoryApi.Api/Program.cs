@@ -182,11 +182,9 @@ static void ConfigurWebApplicationBuilderServices(WebApplicationBuilder builder)
 static void ConfigureWebApplication(WebApplication webApplication)
 {
     // Configure the HTTP request pipeline.
-    if (webApplication.Environment.IsDevelopment())
-    {
-        webApplication.UseSwagger();
-        webApplication.UseSwaggerUI();
-    }
+    webApplication.UseSwagger();
+    webApplication.UseSwaggerUI();
+    
 
     webApplication.UseHttpsRedirection();
     webApplication.UseAuthorization();

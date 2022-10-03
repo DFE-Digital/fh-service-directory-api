@@ -1,4 +1,5 @@
-﻿using fh_service_directory_api.api.Queries.GetOpenReferralService;
+﻿using fh_service_directory_api.api.Commands.DeleteOpenReferralService;
+using fh_service_directory_api.api.Queries.GetOpenReferralService;
 using fh_service_directory_api.api.Queries.GetOpenReferralServicesByOrganisation;
 using fh_service_directory_api.api.Queries.GetServices;
 using MediatR;
@@ -10,11 +11,11 @@ public class MinimalServiceEndPoints
 {
     public void RegisterServiceEndPoints(WebApplication app)
     {
-        app.MapGet("api/services", async (string? status, int? minimum_age, int? maximum_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, string? taxonmyIds, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalServiceEndPoints> logger) =>
+        app.MapGet("api/services", async (string? status, int? minimum_age, int? maximum_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
             {
-                GetOpenReferralServicesCommand command = new(status, minimum_age, maximum_age, latitude, longtitude, proximity, pageNumber, pageSize, text, serviceDeliveries, taxonmyIds);
+                GetOpenReferralServicesCommand command = new(status, minimum_age, maximum_age, latitude, longtitude, proximity, pageNumber, pageSize, text, serviceDeliveries, isPaidFor, taxonmyIds);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -41,6 +42,22 @@ public class MinimalServiceEndPoints
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Service by Id", "Get Service by Id") { Tags = new[] { "Services" } });
+
+        app.MapDelete("api/services/{id}", async (string id, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalServiceEndPoints> logger) =>
+        {
+            try
+            {
+                DeleteOpenReferralServiceByIdCommand command = new(id);
+                var result = await _mediator.Send(command, cancellationToken);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred deleting open referral service by id. {exceptionMessage}", ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                throw;
+            }
+        }).WithMetadata(new SwaggerOperationAttribute("Delete Service by Id", "Delete Service by Id") { Tags = new[] { "Services" } });
 
         app.MapGet("api/organisationservices/{id}", async (string id, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {

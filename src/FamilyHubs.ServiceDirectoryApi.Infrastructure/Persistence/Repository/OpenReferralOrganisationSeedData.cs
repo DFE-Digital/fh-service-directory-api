@@ -152,6 +152,95 @@ public class OpenReferralOrganisationSeedData
                         null
                         ))
                 }
+                )),
+
+            new OpenReferralService(
+                "96781fd9-95a2-4196-8db6-0f083f1c38fc",
+                parentId,
+                "Test Service",
+                @"This is a test service.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                "www.test1.com",
+                "support@test1.com",
+                null,
+                new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
+                {
+                    new OpenReferralServiceDelivery("b2518131-90fc-4149-bbd1-1c9992cd92ac",ServiceDelivery.Online)
+                }),
+                new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
+                {
+                    new OpenReferralEligibility("9109T1Children","",null,0,13,new List<OpenReferralTaxonomy>())
+                }),
+                new List<OpenReferralFunding>(),
+                new List<OpenReferralHoliday_Schedule>(),
+                new List<OpenReferralLanguage>()
+                {
+                    new OpenReferralLanguage("c3b81a2c-14c7-43f3-8ed0-a8fc2087b942","English")
+                },
+                new List<OpenReferralRegular_Schedule>(),
+                new List<OpenReferralReview>(),
+                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                {
+                    new OpenReferralContact(
+                        "1561",
+                        "Mr",
+                        "John Smith",
+                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
+                        {
+                            new OpenReferralPhone("1561", "01827 65711")
+                        }
+                        ))
+                }),
+                new List<OpenReferralCost_Option>(),
+                new List<OpenReferralService_Area>()
+                {
+                    new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                {
+                    new OpenReferralServiceAtLocation(
+                        "1849",
+                        new OpenReferralLocation(
+                            "9181c5c1-b55a-41d6-aaf4-f4fc9f0bc644",
+                            "",
+                            "",
+                            52.6312,
+                            -1.66526,
+                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
+                            {
+                                new OpenReferralPhysical_Address(
+                                    Guid.NewGuid().ToString(),
+                                    "71 Sheepcote Lane",
+                                    ", Stathe, Tamworth, Staffordshire, ",
+                                    "B77 3JN",
+                                    "England",
+                                    null
+                                    )
+                            }),
+                            new List<Accessibility_For_Disabilities>()
+                            ),
+                        new List<OpenReferralHoliday_Schedule>(),
+                        new List<OpenReferralRegular_Schedule>()
+                        )
+
+                }),
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
+                {
+                    new OpenReferralService_Taxonomy
+                    ("9110TestDelete",
+                    null,
+                    new OpenReferralTaxonomy(
+                        "bccusergroupTestDelete:56",
+                        "Test Conditions",
+                        "BCC User Groups",
+                        null
+                        ))
+                }
                 ))
 
         };

@@ -12,7 +12,7 @@ namespace fh_service_directory_api.api.Queries.GetServices;
 public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferralServiceDto>>
 {
     public GetOpenReferralServicesCommand() { }
-    public GetOpenReferralServicesCommand(string? status, int? minimum_age, int? maximum_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, string? taxonmyIds)
+    public GetOpenReferralServicesCommand(string? status, int? minimum_age, int? maximum_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds)
     {
         Status = status;
         MaximumAge = maximum_age;
@@ -24,6 +24,7 @@ public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferra
         PageSize = pageSize != null ? pageSize.Value : 1;
         Text = text;
         ServiceDeliveries = serviceDeliveries;
+        IsPaidFor = isPaidFor;
         TaxonmyIds = taxonmyIds;
     }
 
@@ -37,6 +38,7 @@ public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferra
     public int PageSize { get; set; } = 10;
     public string? Text { get; set; }
     public string? ServiceDeliveries { get; set; }
+    public bool? IsPaidFor { get; set; }
     public string? TaxonmyIds { get; set; }
 
 
@@ -66,7 +68,8 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
            .ThenInclude(x => x.Taxonomy)
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
-           .Where(x => x.Status == request.Status).ToListAsync();
+           .Include(x => x.Cost_options)
+           .Where(x => x.Status == request.Status && x.Status != "Deleted").ToListAsync();
 
         IEnumerable<OpenReferralService> dbservices = entities;
         if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
@@ -88,10 +91,22 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             string[] parts = request.ServiceDeliveries.Split(',');
             foreach (string part in parts)
             {
-                if (Enum.TryParse("part", out ServiceDelivery serviceDelivery))
+                if (Enum.TryParse(part, out ServiceDelivery serviceDelivery))
                 {
                     dbservices = dbservices.Where(x => x.ServiceDelivery.Any(x => x.ServiceDelivery == serviceDelivery));
                 }   
+            }
+        }
+
+        if (request?.IsPaidFor != null)
+        {
+            if (request?.IsPaidFor.Value == true)
+            {
+                dbservices = dbservices.Where(x => x.Cost_options.Any() == true);
+            }
+            if (request?.IsPaidFor.Value == false)
+            {
+                dbservices = dbservices.Where(x => x.Cost_options.Any() == false);
             }
         }
 
