@@ -8,7 +8,11 @@ namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 [Collection("Sequential")]
 public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTests
 {
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheUICacheIsCreated()
     {
         var command = new UICacheDto(Guid.NewGuid().ToString(), GetTestViewModel());
@@ -30,7 +34,11 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
         stringResult.ToString().Should().Be(command.Id);
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheUICacheIsUpdated()
     {
         string id = await CreateUICache();
@@ -62,7 +70,11 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
         stringResult.ToString().Should().Be(command.Id);
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenGetUICacheById()
     {
         string id = await CreateUICache();
