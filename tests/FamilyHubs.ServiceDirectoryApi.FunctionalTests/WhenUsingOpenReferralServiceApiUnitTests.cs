@@ -8,7 +8,11 @@ namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 [Collection("Sequential")]
 public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferralApiUnitTests
 {
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralServicesIsDeleted()
     {
         var request = new HttpRequestMessage
@@ -27,7 +31,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         retVal.Should().Be(true);
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralServicesAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -59,7 +67,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralServicesWithEligabiltyAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -90,7 +102,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralServicesWithProximityAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -121,7 +137,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralServicesWithServiceDeliveryAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -151,7 +171,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralServicesWithTaxonomiesAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -181,7 +205,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralServiceByIdIsRetrieved()
     {
         var request = new HttpRequestMessage
@@ -203,7 +231,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         retVal.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralServicesWithinTheOrganisationAreRetrieved()
     {
         var request = new HttpRequestMessage

@@ -24,7 +24,11 @@ namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 [Collection("Sequential")]
 public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenReferralApiUnitTests
 {
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralOrganisationIsCreated()
     {
         var command = GetTestCountyCouncilRecord();
@@ -46,7 +50,11 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         stringResult.ToString().Should().Be("ba1cca90-b02a-4a0b-afa0-d8aed1083c0d");
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralOrganisationIsRetrieved()
     {
         var request = new HttpRequestMessage
@@ -70,7 +78,11 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         retVal.Id.Should().Be("72e653e8-1d05-4821-84e9-9177571a6013");
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenListOpenReferralOrganisationsIsRetrieved()
     {
         var request = new HttpRequestMessage
@@ -92,7 +104,11 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         retVal.Count.Should().BeGreaterThan(0);
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralOrganisationIsUpdated()
     {
         var request = new HttpRequestMessage
