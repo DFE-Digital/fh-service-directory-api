@@ -10,7 +10,57 @@ public class OpenReferralOrganisationSeedData
     {
         List<OpenReferralOrganisation> openReferralOrganistions = new()
         {
-            GetBristolCountyCouncil()
+            GetBristolCountyCouncil(),
+            new OpenReferralOrganisation(
+            "fc51795e-ea95-4af0-a0b2-4c06d5463678",
+            "Lancashire County Council",
+            "Lancashire County Council",
+            null,
+            new Uri("https://www.lancashire.gov.uk/").ToString(),
+            "https://www.lancashire.gov.uk/",
+            new List<OpenReferralReview>(),
+            new List<OpenReferralService>()
+            ),
+            new OpenReferralOrganisation(
+            "1229cb45-0dc0-4f8a-81bd-2cd74c7cc9cc",
+            "London Borough of Redbridge",
+            "London Borough of Redbridge",
+            null,
+            new Uri("https://www.redbridge.gov.uk/").ToString(),
+            "https://www.redbridge.gov.uk/",
+            new List<OpenReferralReview>(),
+            new List<OpenReferralService>()
+            ),
+            new OpenReferralOrganisation(
+            "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066",
+            "Salford City Council",
+            "Salford City Council",
+            null,
+            new Uri("https://www.salford.gov.uk/").ToString(),
+            "https://www.salford.gov.uk/",
+            new List<OpenReferralReview>(),
+            new List<OpenReferralService>()
+            ),
+            new OpenReferralOrganisation(
+            "6dc1c3ad-d077-46ff-9e0d-04fb263f0637",
+            "Suffolk County Council",
+            "Suffolk County Council",
+            null,
+            new Uri("https://www.suffolk.gov.uk/").ToString(),
+            "https://www.suffolk.gov.uk/",
+            new List<OpenReferralReview>(),
+            new List<OpenReferralService>()
+            ),
+            new OpenReferralOrganisation(
+            "88e0bffd-ed0b-48ea-9a70-5f6ef729fc21",
+            "Tower Hamlets Council",
+            "Tower Hamlets Council",
+            null,
+            new Uri("https://www.towerhamlets.gov.uk/").ToString(),
+            "https://www.towerhamlets.gov.uk/",
+            new List<OpenReferralReview>(),
+            new List<OpenReferralService>()
+            )
         };
 
         return openReferralOrganistions;
