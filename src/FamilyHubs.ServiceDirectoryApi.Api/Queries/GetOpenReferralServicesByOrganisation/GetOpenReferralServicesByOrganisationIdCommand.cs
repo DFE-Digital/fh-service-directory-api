@@ -52,6 +52,7 @@ public class GetOpenReferralServicesByOrganisationIdCommandHandler : IRequestHan
             .Include(x => x.Eligibilities)
             .Include(x => x.Contacts)
             .ThenInclude(x => x.Phones)
+            .Include(x => x.Cost_options)
             .Include(x => x.Languages)
             .Include(x => x.Service_areas)
             .Include(x => x.Service_at_locations)
