@@ -85,6 +85,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                         UpdateContacts(existingChild, childModel);
                         UpdateLanguages(existingChild, childModel);
                         UpdateTaxonomies(existingChild, childModel);
+                        UpdateCostOptions(existingChild, childModel);
                     }
 
                     else
@@ -154,6 +155,21 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
         }
 
         return entity.Id;
+    }
+
+    private void UpdateCostOptions(OpenReferralService existingService, OpenReferralService updatedService)
+    {
+        //DEBUG
+        var changedEntities = TrackDbContextChanges();
+
+        _context.OpenReferralCost_Options.RemoveRange(existingService.Cost_options);
+
+        changedEntities = TrackDbContextChanges();
+
+
+        existingService.Cost_options = updatedService.Cost_options;
+
+        changedEntities = TrackDbContextChanges();
     }
 
     private void UpdateTaxonomies(OpenReferralService existingService, OpenReferralService updatedService)
