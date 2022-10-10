@@ -160,22 +160,16 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
     private void UpdateCostOptions(OpenReferralService existingService, OpenReferralService updatedService)
     {
         //DEBUG
-        var changedEntities = TrackDbContextChanges();
+        //var changedEntities = TrackDbContextChanges();
 
         _context.OpenReferralCost_Options.RemoveRange(existingService.Cost_options);
-
-        changedEntities = TrackDbContextChanges();
-
-
         existingService.Cost_options = updatedService.Cost_options;
-
-        changedEntities = TrackDbContextChanges();
     }
 
     private void UpdateTaxonomies(OpenReferralService existingService, OpenReferralService updatedService)
     {
         //DEBUG
-        var changedEntities = TrackDbContextChanges();
+        //var changedEntities = TrackDbContextChanges();
 
         existingService.Service_taxonomys = null;
         
@@ -202,59 +196,28 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
     private void UpdateLanguages(OpenReferralService existingService, OpenReferralService updatedService)
     {
         //DEBUG
-        var changedEntities = TrackDbContextChanges();
+        //var changedEntities = TrackDbContextChanges();
 
         _context.OpenReferralLanguages.RemoveRange(existingService.Languages);
-
-        changedEntities = TrackDbContextChanges();
-
-
         existingService.Languages = updatedService.Languages;
-
-        changedEntities = TrackDbContextChanges();
     }
 
     private void UpdateContacts(OpenReferralService existingService, OpenReferralService updatedService)
     {
         //DEBUG
-        var changedEntities = TrackDbContextChanges();
+        //var changedEntities = TrackDbContextChanges();
 
         _context.OpenReferralContacts.RemoveRange(existingService.Contacts);
-
-        changedEntities = TrackDbContextChanges();
-
-
         existingService.Contacts = updatedService.Contacts;
-
-        changedEntities = TrackDbContextChanges();
     }
 
     private void UpdateServiceDeliveryTypes(OpenReferralService existingService, OpenReferralService updatedService)
     {
         //DEBUG
-        var changedEntities = TrackDbContextChanges();
+        //var changedEntities = TrackDbContextChanges();
 
         _context.OpenReferralServiceDeliveries.RemoveRange(existingService.ServiceDelivery);
-
-        changedEntities = TrackDbContextChanges();
-
-
         existingService.ServiceDelivery = updatedService.ServiceDelivery;
-
-        changedEntities = TrackDbContextChanges();
-
-        //foreach (var serviceDelivery in existingService.ServiceDelivery)
-        //{
-        //    var existingChild = entity.Services
-        //        .Where(c => c.Id == childModel.Id && c.Id != default)
-        //        .SingleOrDefault();
-
-        //    if (existingChild != null)
-        //    {
-        //        existingChild.Update(childModel);
-        //        UpdateServiceDeliveryTypes(childModel);
-        //    }
-        //}
     }
 
     private List<EntityEntry> TrackDbContextChanges()
@@ -262,11 +225,8 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
         _context.ChangeTracker.DetectChanges();
 
         if (!_context.ChangeTracker.HasChanges())
-        {
             return null;
-        }
 
-        //TEMP
         return _context.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged && e.State != EntityState.Detached).ToList();
 
         //return _dbContext.ChangeTracker.DebugView.LongView;
