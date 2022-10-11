@@ -82,9 +82,9 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                     {
                         existingChild.Update(childModel);
                         UpdateServiceDeliveryTypes(existingChild, childModel);
-                        UpdateContacts(existingChild, childModel);
+                        //UpdateContacts(existingChild, childModel);
                         UpdateLanguages(existingChild, childModel);
-                        UpdateTaxonomies(existingChild, childModel);
+                        //UpdateTaxonomies(existingChild, childModel);
                         UpdateCostOptions(existingChild, childModel);
                     }
 
