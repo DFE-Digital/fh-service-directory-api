@@ -10,7 +10,11 @@ namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 [Collection("Sequential")]
 public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitTests
 {
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralTaxonomiesAreRetrieved()
     {
         var request = new HttpRequestMessage
@@ -31,7 +35,11 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
         retVal.Items.Count.Should().BeGreaterThan(3);
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheTaxonomyIsCreated()
     {
         var commandtaxonomy = new OpenReferralTaxonomyDto(Guid.NewGuid().ToString(), "Test-AddTaxonomy", "Test-AddVocab", null);
@@ -53,7 +61,11 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
         stringResult.ToString().Should().Be(commandtaxonomy.Id);
     }
 
+#if DEBUG
     [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheTaxonomyIsUpdated()
     {
         var commandtaxonomy = new OpenReferralTaxonomyDto(Guid.NewGuid().ToString(), "Test-UpdateTaxonomy", "Test-UpDateVocab", null);
