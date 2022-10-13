@@ -1,25 +1,12 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Enums;
 using fh_service_directory_api.core.Entities;
-using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Repository;
 
 public class OpenReferralOrganisationSeedData
 {
-    public IReadOnlyCollection<ServiceType> SeedServiceTypes()
-    {
-        List<ServiceType> serviceTypes = new()
-        {
-            new ServiceType("1", "Family Experience","Family Experience"),
-            new ServiceType("2", "Family Information","Family Experience")
-        };
-
-        return serviceTypes;
-    }
     public IReadOnlyCollection<OpenReferralOrganisation> SeedOpenReferralOrganistions()
     {
-        
-
         List<OpenReferralOrganisation> openReferralOrganistions = new()
         {
             GetBristolCountyCouncil()
@@ -49,7 +36,6 @@ public class OpenReferralOrganisationSeedData
         {
             new OpenReferralService(
                 "4591d551-0d6a-4c0d-b109-002e67318231",
-                SeedServiceTypes().ElementAt(1),
                 parentId,
                 "Aid for Children with Tracheostomies",
                 @"Aid for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
@@ -169,7 +155,6 @@ public class OpenReferralOrganisationSeedData
 
             new OpenReferralService(
                 "96781fd9-95a2-4196-8db6-0f083f1c38fc",
-                SeedServiceTypes().ElementAt(1),
                 parentId,
                 "Test Service",
                 @"This is a test service.",

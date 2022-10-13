@@ -62,30 +62,11 @@ public class ApplicationDbContextInitialiser
 
         var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData();
 
-        if (!_context.ServiceTypes.Any())
-        {
-            _context.ServiceTypes.AddRange(openReferralOrganisationSeedData.SeedServiceTypes());
-            await _context.SaveChangesAsync();
-        }
-
         IReadOnlyCollection<OpenReferralOrganisation> openReferralOrganisations = openReferralOrganisationSeedData.SeedOpenReferralOrganistions();
 
-        
-        var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == "2");
-        if (serviceType != null)
+        foreach (var openReferralOrganisation in openReferralOrganisations)
         {
-            foreach (var openReferralOrganisation in openReferralOrganisations)
-            {
-                if (openReferralOrganisation == null || openReferralOrganisation.Services == null)
-                    continue;
-
-                foreach (var service in openReferralOrganisation.Services)
-                {
-                    service.ServiceType = serviceType;
-                }
-
-                _context.OpenReferralOrganisations.Add(openReferralOrganisation);
-            }
+            _context.OpenReferralOrganisations.Add(openReferralOrganisation);
         }
 
         await _context.SaveChangesAsync();

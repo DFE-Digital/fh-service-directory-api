@@ -163,17 +163,6 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         return openReferralOrganistions;
     }
 
-    private IReadOnlyCollection<ServiceType> GetServiceTypes()
-    {
-        List<ServiceType> serviceTypes = new()
-        {
-            new ServiceType("1", "Family Experience","Family Experience"),
-            new ServiceType("2", "Family Information","Family Experience")
-        };
-
-        return serviceTypes;
-    }
-
     private OpenReferralOrganisationWithServicesDto GetTestCountyCouncilRecord()
     {
         var bristolCountyCouncil = new OpenReferralOrganisationWithServicesDto(
@@ -331,7 +320,6 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         {
             new OpenReferralService(
                 "c1b5dd80-7506-4424-9711-fe175fa13eb8",
-                GetServiceTypes().ElementAt(1),
                 "ba1cca90-b02a-4a0b-afa0-d8aed1083c0d",
                 "Test Organisation for Children with Tracheostomies",
                 @"Test Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
