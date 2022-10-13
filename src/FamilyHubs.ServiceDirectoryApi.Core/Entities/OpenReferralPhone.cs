@@ -13,5 +13,5 @@ public class OpenReferralPhone : EntityBase<string>, IOpenReferralPhone, IAggreg
         Number = number;
     }
 
-    public string Number { get; init; } = default!;
+    public string Number { get; set; } = default!;
 }

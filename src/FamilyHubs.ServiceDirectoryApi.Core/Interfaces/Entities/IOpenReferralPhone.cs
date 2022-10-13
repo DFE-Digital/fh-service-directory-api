@@ -2,6 +2,6 @@
 {
     public interface IOpenReferralPhone : IEntityBase<string>
     {
-        string Number { get; init; }
+        string Number { get; set; }
     }
 }
