@@ -27,6 +27,7 @@ namespace fh_service_directory_api.core.Interfaces.Infrastructure
         DbSet<OpenReferralServiceDelivery> OpenReferralServiceDeliveries { get; }
         DbSet<OpenReferralService> OpenReferralServices { get; }
         DbSet<OpenReferralTaxonomy> OpenReferralTaxonomies { get; }
+        DbSet<ServiceType> ServiceTypes { get; }
 
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

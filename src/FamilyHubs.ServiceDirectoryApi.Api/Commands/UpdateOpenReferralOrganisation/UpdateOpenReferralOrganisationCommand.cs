@@ -1,14 +1,14 @@
 ﻿using Ardalis.GuardClauses;
 using Ardalis.Specification;
+using fh_service_directory_api.api.Helper;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Collections.ObjectModel;
 
 namespace fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
-
 
 public class UpdateOpenReferralOrganisationCommand : IRequest<string>
 {
@@ -81,11 +81,20 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                     if (existingChild != null)
                     {
                         existingChild.Update(childModel);
-                        UpdateServiceDeliveryTypes(existingChild, childModel);
-                        UpdateContacts(existingChild, childModel);
-                        UpdateLanguages(existingChild, childModel);
-                        UpdateTaxonomies(existingChild, childModel);
-                        UpdateCostOptions(existingChild, childModel);
+
+                        var one = childModel.ServiceDelivery.Serialize();
+                        var two = existingChild.ServiceDelivery.Serialize();
+
+                        if (childModel.ServiceDelivery.Serialize() != existingChild.ServiceDelivery.Serialize())
+                            UpdateServiceDelivery(existingChild.ServiceDelivery, childModel.ServiceDelivery);
+                        if (childModel.Contacts.Serialize() != existingChild.Contacts.Serialize())
+                            UpdateContacts(existingChild.Contacts, childModel.Contacts);
+                        if (childModel.Languages.Serialize() != existingChild.Languages.Serialize())
+                            UpdateLanguages(existingChild.Languages, childModel.Languages);
+                        if (childModel?.Service_taxonomys?.Serialize() != existingChild.Service_taxonomys.Serialize())
+                            UpdateTaxonomies(existingChild.Service_taxonomys, childModel?.Service_taxonomys ?? new Collection<OpenReferralService_Taxonomy>());
+                        if (childModel?.Cost_options?.Serialize() != existingChild.Cost_options.Serialize())
+                            UpdateCostOptions(existingChild.Cost_options, childModel?.Cost_options ?? new Collection<OpenReferralCost_Option>());
                     }
 
                     else
@@ -94,8 +103,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
                         if (childModel != null && childModel.Service_taxonomys != null)
                         {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                            for (int i = 0; i < childModel.Service_taxonomys.Count; i++)
+                            for (int i = 0; i < childModel?.Service_taxonomys.Count; i++)
                             {
                                 if (childModel.Service_taxonomys.ElementAt(i) != null && childModel.Service_taxonomys.ElementAt(i).Taxonomy != null)
                                 {
@@ -105,7 +113,6 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                                         childModel.Service_taxonomys.ElementAt(i).Taxonomy = tx;
                                 }
                             }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
                         }
 
                         if (childModel != null)
@@ -113,8 +120,6 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                             entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(childModel));
                             _context.OpenReferralServices.Add(childModel as OpenReferralService);
                         }
-
-
                     }
                 }
             }
@@ -157,120 +162,92 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
         return entity.Id;
     }
 
-    private void UpdateCostOptions(OpenReferralService existingService, OpenReferralService updatedService)
+    private void UpdateCostOptions(ICollection<OpenReferralCost_Option> existing, ICollection<OpenReferralCost_Option> updated)
     {
-        //DEBUG
-        var changedEntities = TrackDbContextChanges();
-
-        _context.OpenReferralCost_Options.RemoveRange(existingService.Cost_options);
-
-        changedEntities = TrackDbContextChanges();
-
-
-        existingService.Cost_options = updatedService.Cost_options;
-
-        changedEntities = TrackDbContextChanges();
-    }
-
-    private void UpdateTaxonomies(OpenReferralService existingService, OpenReferralService updatedService)
-    {
-        //DEBUG
-        var changedEntities = TrackDbContextChanges();
-
-        existingService.Service_taxonomys = null;
-        
-        //_context.OpenReferralTaxonomies.RemoveRange(existingService.Service_taxonomys);
-
-        if (updatedService != null && updatedService.Service_taxonomys != null)
+        foreach (var updatedCostOption in updated)
         {
-            existingService.Service_taxonomys = updatedService.Service_taxonomys;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            for (int i = 0; i < updatedService.Service_taxonomys.Count; i++)
+            var current = existing.FirstOrDefault(x => x.Id == updatedCostOption.Id);
+            if (current == null)
             {
-                if (updatedService.Service_taxonomys.ElementAt(i) != null && updatedService.Service_taxonomys.ElementAt(i).Taxonomy != null)
-                {
-                    string id = updatedService?.Service_taxonomys?.ElementAt(i)?.Taxonomy?.Id ?? string.Empty;
-                    var tx = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == id);
-                    if (existingService != null)
-                        existingService.Service_taxonomys.ElementAt(i).Taxonomy = tx;
-                }
+                _context.OpenReferralCost_Options.Add(updatedCostOption);
             }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            else
+            {
+                current.LinkId = updatedCostOption.LinkId;
+                current.Amount = updatedCostOption.Amount;
+                current.Amount_description = updatedCostOption.Amount_description;
+                current.Option = updatedCostOption.Option;
+                current.Valid_from = updatedCostOption.Valid_from;
+                current.Valid_to = updatedCostOption.Valid_to;
+            }
         }
     }
 
-    private void UpdateLanguages(OpenReferralService existingService, OpenReferralService updatedService)
+    private void UpdateTaxonomies(ICollection<OpenReferralService_Taxonomy> existing, ICollection<OpenReferralService_Taxonomy> updated)
     {
-        //DEBUG
-        var changedEntities = TrackDbContextChanges();
-
-        _context.OpenReferralLanguages.RemoveRange(existingService.Languages);
-
-        changedEntities = TrackDbContextChanges();
-
-
-        existingService.Languages = updatedService.Languages;
-
-        changedEntities = TrackDbContextChanges();
-    }
-
-    private void UpdateContacts(OpenReferralService existingService, OpenReferralService updatedService)
-    {
-        //DEBUG
-        var changedEntities = TrackDbContextChanges();
-
-        _context.OpenReferralContacts.RemoveRange(existingService.Contacts);
-
-        changedEntities = TrackDbContextChanges();
-
-
-        existingService.Contacts = updatedService.Contacts;
-
-        changedEntities = TrackDbContextChanges();
-    }
-
-    private void UpdateServiceDeliveryTypes(OpenReferralService existingService, OpenReferralService updatedService)
-    {
-        //DEBUG
-        var changedEntities = TrackDbContextChanges();
-
-        _context.OpenReferralServiceDeliveries.RemoveRange(existingService.ServiceDelivery);
-
-        changedEntities = TrackDbContextChanges();
-
-
-        existingService.ServiceDelivery = updatedService.ServiceDelivery;
-
-        changedEntities = TrackDbContextChanges();
-
-        //foreach (var serviceDelivery in existingService.ServiceDelivery)
-        //{
-        //    var existingChild = entity.Services
-        //        .Where(c => c.Id == childModel.Id && c.Id != default)
-        //        .SingleOrDefault();
-
-        //    if (existingChild != null)
-        //    {
-        //        existingChild.Update(childModel);
-        //        UpdateServiceDeliveryTypes(childModel);
-        //    }
-        //}
-    }
-
-    private List<EntityEntry> TrackDbContextChanges()
-    {
-        _context.ChangeTracker.DetectChanges();
-
-        if (!_context.ChangeTracker.HasChanges())
+        foreach (var updatedServiceTaxonomy in updated)
         {
-            return null;
+            var current = existing.FirstOrDefault(x => x.Id == updatedServiceTaxonomy.Id);
+            if (current == null)
+            {
+                _context.OpenReferralService_Taxonomies.Add(updatedServiceTaxonomy);
+            }
+            else
+            {
+                current.LinkId = updatedServiceTaxonomy.LinkId;
+                current.Taxonomy = updatedServiceTaxonomy.Taxonomy;
+            }
         }
+    }
 
-        //TEMP
-        return _context.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged && e.State != EntityState.Detached).ToList();
+    private void UpdateLanguages(ICollection<OpenReferralLanguage> existing, ICollection<OpenReferralLanguage> updated)
+    {
+        foreach (var updatedLanguage in updated)
+        {
+            var current = existing.FirstOrDefault(x => x.Id == updatedLanguage.Id);
+            if (current == null)
+            {
+                _context.OpenReferralLanguages.Add(updatedLanguage);
+            }
+            else
+            {
+                current.Language = updatedLanguage.Language;
+            }
+        }
+    }
 
-        //return _dbContext.ChangeTracker.DebugView.LongView;
+    private void UpdateContacts(ICollection<OpenReferralContact> existing, ICollection<OpenReferralContact> updated)
+    {
+        foreach (var updatedContact in updated)
+        {
+            var current = existing.FirstOrDefault(x => x.Id == updatedContact.Id);
+            if (current == null)
+            {
+                _context.OpenReferralContacts.Add(updatedContact);
+            }
+            else
+            {
+                current.Title = updatedContact.Title;
+                current.Name = updatedContact.Name;
+                current.Phones = updatedContact.Phones;
+            }
+        }
+    }
 
+    private void UpdateServiceDelivery(ICollection<OpenReferralServiceDelivery> existing, ICollection<OpenReferralServiceDelivery> updated)
+    {
+        foreach(var updatedServiceDelivery in updated)
+        {
+            var current = existing.FirstOrDefault(x => x.Id == updatedServiceDelivery.Id);
+            if (current == null)
+            {
+                _context.OpenReferralServiceDeliveries.Add(updatedServiceDelivery);
+            }
+            else
+            {
+                current.ServiceDelivery = updatedServiceDelivery.ServiceDelivery;
+            }
+        }
     }
 }
 

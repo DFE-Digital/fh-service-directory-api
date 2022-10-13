@@ -2,11 +2,11 @@
 {
     public interface IOpenReferralCost_Option : IEntityBase<string>
     {
-        decimal Amount { get; init; }
-        string Amount_description { get; init; }
-        string? LinkId { get; init; }
-        string? Option { get; init; }
-        DateTime? Valid_from { get; init; }
-        DateTime? Valid_to { get; init; }
+        decimal Amount { get; set; }
+        string Amount_description { get; set; }
+        string? LinkId { get; set; }
+        string? Option { get; set; }
+        DateTime? Valid_from { get; set; }
+        DateTime? Valid_to { get; set; }
     }
 }

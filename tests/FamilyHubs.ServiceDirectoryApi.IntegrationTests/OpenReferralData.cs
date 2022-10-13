@@ -59,12 +59,24 @@ public class OpenReferralData
         return bristolCountyCouncil;
     }
 
+    private IReadOnlyCollection<ServiceType> GetServiceTypes()
+    {
+        List<ServiceType> serviceTypes = new()
+        {
+            new ServiceType("1", "Family Experience","Family Experience"),
+            new ServiceType("2", "Family Information","Family Experience")
+        };
+
+        return serviceTypes;
+    }
+
     private List<OpenReferralService> GetBristolCountyCouncilServices(string parentId)
     {
         return new()
         {
             new OpenReferralService(
                 "9f01190b-429c-41fd-ba38-936d2995398b",
+                 GetServiceTypes().ElementAt(1),
                 parentId,
                 "Test Service",
                 @"Test Service Description",
