@@ -19,10 +19,10 @@ public class OpenReferralLocation : EntityBase<string>, IOpenReferralLocation, I
         Physical_addresses = physical_addresses as ICollection<OpenReferralPhysical_Address>;
         Accessibility_for_disabilities = accessibility_for_disabilities as ICollection<Accessibility_For_Disabilities>;
     }
-    public string Name { get; init; } = default!;
-    public string? Description { get; init; }
-    public double Latitude { get; init; }
-    public double Longitude { get; init; }
-    public virtual ICollection<OpenReferralPhysical_Address>? Physical_addresses { get; init; }
-    public virtual ICollection<Accessibility_For_Disabilities>? Accessibility_for_disabilities { get; init; }
+    public string Name { get; set; } = default!;
+    public string? Description { get; set; }
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
+    public virtual ICollection<OpenReferralPhysical_Address>? Physical_addresses { get; set; }
+    public virtual ICollection<Accessibility_For_Disabilities>? Accessibility_for_disabilities { get; set; }
 }

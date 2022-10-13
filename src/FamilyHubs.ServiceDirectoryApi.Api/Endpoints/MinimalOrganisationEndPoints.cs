@@ -66,12 +66,11 @@ public class MinimalOrganisationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Organisations", "List Organisations") { Tags = new[] { "Organisations" } });
 
-        app.MapPut("api/organizations/{id}", async (string id, [FromBody] OpenReferralOrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, IMapper mapper, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPut("api/organizations/{id}", async (string id, [FromBody] OpenReferralOrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
-                OpenReferralOrganisation openReferralOrganisation = mapper.Map<OpenReferralOrganisation>(request);
-                UpdateOpenReferralOrganisationCommand command = new(id, openReferralOrganisation);
+                UpdateOpenReferralOrganisationCommand command = new(id, request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
