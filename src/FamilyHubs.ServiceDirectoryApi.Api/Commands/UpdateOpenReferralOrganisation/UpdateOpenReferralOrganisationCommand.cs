@@ -48,14 +48,6 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
         var entity = await _context.OpenReferralOrganisations
           .Include(x => x.Services!)
-          //  .ThenInclude(sd => sd.ServiceDelivery)
-          //.Include(x => x.Services!)
-          //  .ThenInclude(x => x.Contacts).ThenInclude(x => x.Phones)
-          //.Include(x => x.Services!)
-          //  .ThenInclude(x => x.Languages)
-          //.Include(x => x.Services!)
-          //  .ThenInclude(x => x.Service_taxonomys)
-          //  .ThenInclude(x => x.Taxonomy)
           .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
 
         if (entity == null)
