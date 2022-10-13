@@ -2,10 +2,10 @@
 {
     public interface IOpenReferralPhysical_Address : IEntityBase<string>
     {
-        string Address_1 { get; init; }
-        string? City { get; init; }
-        string? Country { get; init; }
-        string Postal_code { get; init; }
-        string? State_province { get; init; }
+        string Address_1 { get; set; }
+        string? City { get; set; }
+        string? Country { get; set; }
+        string Postal_code { get; set; }
+        string? State_province { get; set; }
     }
 }

@@ -17,9 +17,9 @@ public class OpenReferralHoliday_Schedule : EntityBase<string>, IOpenReferralHol
         End_date = end_date;
         Opens_at = opens_at;
     }
-    public bool Closed { get; init; }
-    public DateTime? Closes_at { get; init; }
-    public DateTime? Start_date { get; init; }
-    public DateTime? End_date { get; init; }
-    public DateTime? Opens_at { get; init; }
+    public bool Closed { get; set; }
+    public DateTime? Closes_at { get; set; }
+    public DateTime? Start_date { get; set; }
+    public DateTime? End_date { get; set; }
+    public DateTime? Opens_at { get; set; }
 }

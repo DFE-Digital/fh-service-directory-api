@@ -1,24 +1,28 @@
 ﻿using Ardalis.GuardClauses;
 using Ardalis.Specification;
+using AutoMapper;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
+using fh_service_directory_api.api.Commands.UpdateOpenReferralService;
+using fh_service_directory_api.api.Helper;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Collections.ObjectModel;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
 
-
 public class UpdateOpenReferralOrganisationCommand : IRequest<string>
 {
-    public UpdateOpenReferralOrganisationCommand(string id, OpenReferralOrganisation openReferralOrganisation)
+    public UpdateOpenReferralOrganisationCommand(string id, OpenReferralOrganisationWithServicesDto openReferralOrganisation)
     {
         Id = id;
         OpenReferralOrganisation = openReferralOrganisation;
     }
 
-    public OpenReferralOrganisation OpenReferralOrganisation { get; init; }
+    public OpenReferralOrganisationWithServicesDto OpenReferralOrganisation { get; init; }
 
     public string Id { get; set; }
 }
@@ -27,11 +31,15 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 {
     private readonly ApplicationDbContext _context;
     private readonly ILogger<UpdateOpenReferralOrganisationCommandHandler> _logger;
+    private readonly ISender _mediator;
+    private readonly IMapper _mapper;
 
-    public UpdateOpenReferralOrganisationCommandHandler(ApplicationDbContext context, ILogger<UpdateOpenReferralOrganisationCommandHandler> logger)
+    public UpdateOpenReferralOrganisationCommandHandler(ApplicationDbContext context, ILogger<UpdateOpenReferralOrganisationCommandHandler> logger, ISender mediator, IMapper mapper)
     {
         _context = context;
         _logger = logger;
+        _mediator = mediator;
+        _mapper = mapper;
     }
 
     public async Task<string> Handle(UpdateOpenReferralOrganisationCommand request, CancellationToken cancellationToken)
@@ -40,14 +48,6 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
         var entity = await _context.OpenReferralOrganisations
           .Include(x => x.Services!)
-            .ThenInclude(sd => sd.ServiceDelivery)
-          .Include(x => x.Services!)
-            .ThenInclude(x => x.Contacts).ThenInclude(x => x.Phones)
-          .Include(x => x.Services!)
-            .ThenInclude(x => x.Languages)
-          .Include(x => x.Services!)
-            .ThenInclude(x => x.Service_taxonomys)
-            .ThenInclude(x => x.Taxonomy)
           .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
 
         if (entity == null)
@@ -57,7 +57,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
         try
         {
-            entity.Update(request.OpenReferralOrganisation);
+            entity.Update(_mapper.Map<OpenReferralOrganisation>(request.OpenReferralOrganisation));
 
             if (entity.Services != null && request.OpenReferralOrganisation.Services != null)
             {
@@ -80,71 +80,48 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
                     if (existingChild != null)
                     {
-                        existingChild.Update(childModel);
-                        UpdateServiceDeliveryTypes(existingChild, childModel);
-                        //UpdateContacts(existingChild, childModel);
-                        UpdateLanguages(existingChild, childModel);
-                        //UpdateTaxonomies(existingChild, childModel);
-                        UpdateCostOptions(existingChild, childModel);
+                        UpdateOpenReferralServiceCommand updateOpenReferralServiceCommand = new(existingChild.Id, childModel);
+                        var serviceUpdateResult = await _mediator.Send(updateOpenReferralServiceCommand, cancellationToken);  
                     }
-
                     else
                     {
-                        childModel.OpenReferralOrganisationId = request.Id;
-
-                        if (childModel != null && childModel.Service_taxonomys != null)
-                        {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                            for (int i = 0; i < childModel.Service_taxonomys.Count; i++)
-                            {
-                                if (childModel.Service_taxonomys.ElementAt(i) != null && childModel.Service_taxonomys.ElementAt(i).Taxonomy != null)
-                                {
-                                    string id = childModel?.Service_taxonomys?.ElementAt(i)?.Taxonomy?.Id ?? string.Empty;
-                                    var tx = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == id);
-                                    if (childModel != null)
-                                        childModel.Service_taxonomys.ElementAt(i).Taxonomy = tx;
-                                }
-                            }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-                        }
-
                         if (childModel != null)
                         {
-                            entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(childModel));
-                            _context.OpenReferralServices.Add(childModel as OpenReferralService);
+                            OpenReferralService service = _mapper.Map<OpenReferralService>(childModel);
+                            entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(service));
+                            _context.OpenReferralServices.Add(service);
                         }
-
-
                     }
                 }
             }
 
-            if (entity.Reviews != null && request.OpenReferralOrganisation.Reviews != null) //TODO - also check for count=0 s if count==0, dont enter if block
-            {
-                // Delete children (does this need to be a soft delete)
-                foreach (var existingChild in entity.Reviews)
-                {
-                    if (!request.OpenReferralOrganisation.Reviews.Any(c => c.Id == existingChild.Id))
-                        _context.OpenReferralReviews.Remove(existingChild as OpenReferralReview);
-                }
+            //Review not yet included
+            //if (entity.Reviews != null && request.OpenReferralOrganisation.Reviews != null) //TODO - also check for count=0 s if count==0, dont enter if block
+            //{
+            //    // Delete children (does this need to be a soft delete)
+            //    foreach (var existingChild in entity.Reviews)
+            //    {
+            //        if (!request.OpenReferralOrganisation.Reviews.Any(c => c.Id == existingChild.Id))
+            //            _context.OpenReferralReviews.Remove(existingChild as OpenReferralReview);
+            //    }
 
-                foreach (var childModel in request.OpenReferralOrganisation.Reviews)
-                {
-                    var existingChild = entity.Reviews
-                        .Where(c => c.Id == childModel.Id && c.Id != default)
-                        .SingleOrDefault();
+            //    foreach (var childModel in request.OpenReferralOrganisation.Reviews)
+            //    {
+            //        var existingChild = entity.Reviews
+            //            .Where(c => c.Id == childModel.Id && c.Id != default)
+            //            .SingleOrDefault();
 
-                    if (existingChild != null)
-                        existingChild.Update(childModel);
-                    else
-                    {
-                        entity.RegisterDomainEvent(new OpenReferralReviewCreatedEvent(childModel));
+            //        if (existingChild != null)
+            //            existingChild.Update(childModel);
+            //        else
+            //        {
+            //            entity.RegisterDomainEvent(new OpenReferralReviewCreatedEvent(childModel));
 
-                        _context.OpenReferralReviews.Add(childModel as OpenReferralReview);
+            //            _context.OpenReferralReviews.Add(childModel as OpenReferralReview);
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
 
             await _context.SaveChangesAsync(cancellationToken);
         }
@@ -155,82 +132,6 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
         }
 
         return entity.Id;
-    }
-
-    private void UpdateCostOptions(OpenReferralService existingService, OpenReferralService updatedService)
-    {
-        //DEBUG
-        //var changedEntities = TrackDbContextChanges();
-
-        _context.OpenReferralCost_Options.RemoveRange(existingService.Cost_options);
-        existingService.Cost_options = updatedService.Cost_options;
-    }
-
-    private void UpdateTaxonomies(OpenReferralService existingService, OpenReferralService updatedService)
-    {
-        //DEBUG
-        //var changedEntities = TrackDbContextChanges();
-
-        existingService.Service_taxonomys = null;
-        
-        //_context.OpenReferralTaxonomies.RemoveRange(existingService.Service_taxonomys);
-
-        if (updatedService != null && updatedService.Service_taxonomys != null)
-        {
-            existingService.Service_taxonomys = updatedService.Service_taxonomys;
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            for (int i = 0; i < updatedService.Service_taxonomys.Count; i++)
-            {
-                if (updatedService.Service_taxonomys.ElementAt(i) != null && updatedService.Service_taxonomys.ElementAt(i).Taxonomy != null)
-                {
-                    string id = updatedService?.Service_taxonomys?.ElementAt(i)?.Taxonomy?.Id ?? string.Empty;
-                    var tx = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == id);
-                    if (existingService != null)
-                        existingService.Service_taxonomys.ElementAt(i).Taxonomy = tx;
-                }
-            }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-        }
-    }
-
-    private void UpdateLanguages(OpenReferralService existingService, OpenReferralService updatedService)
-    {
-        //DEBUG
-        //var changedEntities = TrackDbContextChanges();
-
-        _context.OpenReferralLanguages.RemoveRange(existingService.Languages);
-        existingService.Languages = updatedService.Languages;
-    }
-
-    private void UpdateContacts(OpenReferralService existingService, OpenReferralService updatedService)
-    {
-        //DEBUG
-        //var changedEntities = TrackDbContextChanges();
-
-        _context.OpenReferralContacts.RemoveRange(existingService.Contacts);
-        existingService.Contacts = updatedService.Contacts;
-    }
-
-    private void UpdateServiceDeliveryTypes(OpenReferralService existingService, OpenReferralService updatedService)
-    {
-        //DEBUG
-        //var changedEntities = TrackDbContextChanges();
-
-        _context.OpenReferralServiceDeliveries.RemoveRange(existingService.ServiceDelivery);
-        existingService.ServiceDelivery = updatedService.ServiceDelivery;
-    }
-
-    private List<EntityEntry> TrackDbContextChanges()
-    {
-        _context.ChangeTracker.DetectChanges();
-
-        if (!_context.ChangeTracker.HasChanges())
-            return null;
-
-        return _context.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged && e.State != EntityState.Detached).ToList();
-
-        //return _dbContext.ChangeTracker.DebugView.LongView;
-
     }
 }
 

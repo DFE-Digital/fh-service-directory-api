@@ -12,5 +12,5 @@ public class OpenReferralLanguage : EntityBase<string>, IOpenReferralLanguage, I
         Id = id;
         Language = language;
     }
-    public string Language { get; init; } = default!;
+    public string Language { get; set; } = default!;
 }
