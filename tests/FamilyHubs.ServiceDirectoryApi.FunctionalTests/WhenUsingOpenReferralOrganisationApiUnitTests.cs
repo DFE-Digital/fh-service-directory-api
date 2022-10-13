@@ -181,7 +181,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         return bristolCountyCouncil;
     }
 
-    private OpenReferralServiceDto GetTestCountyCouncilServicesRecord(string parentId)
+    public static OpenReferralServiceDto GetTestCountyCouncilServicesRecord(string parentId)
     {
         var contactId = Guid.NewGuid().ToString();
 
