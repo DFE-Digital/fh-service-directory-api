@@ -22,14 +22,14 @@ public class OpenReferralRegular_Schedule : EntityBase<string>, IOpenReferralReg
         Valid_from = valid_from;
         Valid_to = valid_to;
     }
-    public string Description { get; init; } = default!;
-    public DateTime? Opens_at { get; init; }
-    public DateTime? Closes_at { get; init; }
-    public string? Byday { get; init; }
-    public string? Bymonthday { get; init; }
-    public string? Dtstart { get; init; }
-    public string? Freq { get; init; }
-    public string? Interval { get; init; }
-    public DateTime? Valid_from { get; init; }
-    public DateTime? Valid_to { get; init; }
+    public string Description { get; set; } = default!;
+    public DateTime? Opens_at { get; set; }
+    public DateTime? Closes_at { get; set; }
+    public string? Byday { get; set; }
+    public string? Bymonthday { get; set; }
+    public string? Dtstart { get; set; }
+    public string? Freq { get; set; }
+    public string? Interval { get; set; }
+    public DateTime? Valid_from { get; set; }
+    public DateTime? Valid_to { get; set; }
 }

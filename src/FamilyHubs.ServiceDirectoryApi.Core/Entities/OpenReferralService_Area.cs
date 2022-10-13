@@ -15,8 +15,8 @@ public class OpenReferralService_Area : EntityBase<string>, IOpenReferralService
         Extent = extent;
         Uri = uri;
     }
-    public string Service_area { get; init; } = default!;
-    public string? LinkId { get; init; } = default!;
-    public string? Extent { get; init; }
-    public string? Uri { get; init; }
+    public string Service_area { get; set; } = default!;
+    public string? LinkId { get; set; } = default!;
+    public string? Extent { get; set; }
+    public string? Uri { get; set; }
 }
