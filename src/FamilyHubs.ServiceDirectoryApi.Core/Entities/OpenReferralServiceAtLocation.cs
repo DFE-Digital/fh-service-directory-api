@@ -9,7 +9,8 @@ public class OpenReferralServiceAtLocation : EntityBase<string>, IOpenReferralSe
     private OpenReferralServiceAtLocation() { }
     public OpenReferralServiceAtLocation(string id,
         OpenReferralLocation location,
-        ICollection<OpenReferralHoliday_Schedule>? holidayScheduleCollection, ICollection<OpenReferralRegular_Schedule>? regular_schedule
+        ICollection<OpenReferralRegular_Schedule>? regular_schedule,
+        ICollection<OpenReferralHoliday_Schedule>? holidayScheduleCollection
         )
     {
         Id = id;
@@ -18,7 +19,8 @@ public class OpenReferralServiceAtLocation : EntityBase<string>, IOpenReferralSe
         Regular_schedule = regular_schedule as ICollection<OpenReferralRegular_Schedule>;
     }
 
-    public OpenReferralLocation Location { get; init; } = default!;
-    public virtual ICollection<OpenReferralHoliday_Schedule>? HolidayScheduleCollection { get; init; }
-    public virtual ICollection<OpenReferralRegular_Schedule>? Regular_schedule { get; init; }
+    public OpenReferralLocation Location { get; set; } = default!;
+    public virtual ICollection<OpenReferralRegular_Schedule>? Regular_schedule { get; set; }
+    public virtual ICollection<OpenReferralHoliday_Schedule>? HolidayScheduleCollection { get; set; }
+    
 }
