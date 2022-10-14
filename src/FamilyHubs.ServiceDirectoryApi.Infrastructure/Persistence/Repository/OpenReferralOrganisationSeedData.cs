@@ -117,8 +117,8 @@ public class OpenReferralOrganisationSeedData
                             }),
                             new List<Accessibility_For_Disabilities>()
                             ),
-                        new List<OpenReferralHoliday_Schedule>(),
-                        new List<OpenReferralRegular_Schedule>()
+                        new List<OpenReferralRegular_Schedule>(),
+                        new List<OpenReferralHoliday_Schedule>()
                         )
 
                 }),
@@ -237,8 +237,8 @@ public class OpenReferralOrganisationSeedData
                             }),
                             new List<Accessibility_For_Disabilities>()
                             ),
-                        new List<OpenReferralHoliday_Schedule>(),
-                        new List<OpenReferralRegular_Schedule>()
+                        new List<OpenReferralRegular_Schedule>(),
+                        new List<OpenReferralHoliday_Schedule>()
                         )
 
                 }),

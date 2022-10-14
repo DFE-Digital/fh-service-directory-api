@@ -4,9 +4,11 @@ using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContacts;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralHolidaySchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhones;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralRegularSchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAreas;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAtLocations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
@@ -181,30 +183,30 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                             currentAddress.State_province = address.State_province;
                         }
                     }
-
-                    //To be added
-                    //if (current?.HolidayScheduleCollection?.Serialize() != updatedServiceLoc?.HolidayScheduleCollection?.Serialize())
-                    //{
-                    //    UpdateHolidaySchedule(current?.HolidayScheduleCollection ?? new Collection<OpenReferralHoliday_Schedule>(), updatedServiceLoc?.HolidayScheduleCollection ?? new Collection<OpenReferralHoliday_Schedule>());
-                    //}
-                    //if (current?.Regular_schedule?.Serialize() != updatedServiceLoc?.Regular_schedule?.Serialize())
-                    //{
-                    //    UpdateRegularSchedule(current?.Regular_schedule ?? new Collection<OpenReferralRegular_Schedule>(), updatedServiceLoc?.Regular_schedule ?? new Collection<OpenReferralRegular_Schedule>());
-                    //}
+                    if (current?.Regular_schedule?.Serialize() != updatedServiceLoc?.Regular_schedule?.Serialize())
+                    {
+                        UpdateRegularSchedule(current?.Regular_schedule ?? new Collection<OpenReferralRegular_Schedule>(), updatedServiceLoc?.Regular_schedule ?? new Collection<OpenReferralRegularScheduleDto>());
+                    }
+                    if (current?.HolidayScheduleCollection?.Serialize() != updatedServiceLoc?.HolidayScheduleCollection?.Serialize())
+                    {
+                        UpdateHolidaySchedule(current?.HolidayScheduleCollection ?? new Collection<OpenReferralHoliday_Schedule>(), updatedServiceLoc?.HolidayScheduleCollection ?? new Collection<OpenReferralHolidayScheduleDto>());
+                    }
+                    
                 }
             }
         }
     }
 
-    private void UpdateHolidaySchedule(ICollection<OpenReferralHoliday_Schedule> existing, ICollection<OpenReferralHoliday_Schedule> updated)
+    private void UpdateHolidaySchedule(ICollection<OpenReferralHoliday_Schedule> existing, ICollection<OpenReferralHolidayScheduleDto> updated)
     {
         foreach (var updatedSchedule in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedSchedule.Id);
             if (current == null)
             {
-                updatedSchedule.RegisterDomainEvent(new OpenReferralHolidayScheduleEvent(updatedSchedule));
-                _context.OpenReferralHoliday_Schedules.Add(updatedSchedule);
+                var entity = _mapper.Map<OpenReferralHoliday_Schedule>(updatedSchedule);
+                entity.RegisterDomainEvent(new OpenReferralHolidayScheduleEvent(entity));
+                _context.OpenReferralHoliday_Schedules.Add(entity);
             }
             else
             {
@@ -217,15 +219,16 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
         }
     }
 
-    private void UpdateRegularSchedule(ICollection<OpenReferralRegular_Schedule> existing, ICollection<OpenReferralRegular_Schedule> updated)
+    private void UpdateRegularSchedule(ICollection<OpenReferralRegular_Schedule> existing, ICollection<OpenReferralRegularScheduleDto> updated)
     {
         foreach (var updatedSchedule in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedSchedule.Id);
             if (current == null)
             {
-                updatedSchedule.RegisterDomainEvent(new OpenReferralRegularScheduleEvent(updatedSchedule));
-                _context.OpenReferralRegular_Schedules.Add(updatedSchedule);
+                var entity = _mapper.Map<OpenReferralRegular_Schedule>(updatedSchedule);
+                entity.RegisterDomainEvent(new OpenReferralRegularScheduleEvent(entity));
+                _context.OpenReferralRegular_Schedules.Add(entity);
             }
             else
             {

@@ -1,8 +1,12 @@
-﻿using fh_service_directory_api.api.Commands.DeleteOpenReferralService;
+﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+using fh_service_directory_api.api.Commands.CreateOpenReferralService;
+using fh_service_directory_api.api.Commands.DeleteOpenReferralService;
+using fh_service_directory_api.api.Commands.UpdateOpenReferralService;
 using fh_service_directory_api.api.Queries.GetOpenReferralService;
 using fh_service_directory_api.api.Queries.GetOpenReferralServicesByOrganisation;
 using fh_service_directory_api.api.Queries.GetServices;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace fh_service_directory_api.api.Endpoints;
@@ -74,6 +78,40 @@ public class MinimalServiceEndPoints
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Services by Organisation Id", "Get Service by Organisation Id") { Tags = new[] { "Services" } });
+
+        app.MapPost("api/services", async ([FromBody] OpenReferralServiceDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        {
+            try
+            {
+                CreateOpenReferralServiceCommand command = new(request);
+                var result = await _mediator.Send(command, cancellationToken);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred creating service (api). {exceptionMessage}", ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                throw;
+            }
+        }).WithMetadata(new SwaggerOperationAttribute("Create a Service", "Create a Service") { Tags = new[] { "Services" } });
+
+        app.MapPut("api/services/{id}", async (string id, [FromBody] OpenReferralServiceDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        {
+            try
+            {
+                UpdateOpenReferralServiceCommand command = new(id, request);
+                var result = await _mediator.Send(command, cancellationToken);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred updating service (api). {exceptionMessage}", ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                throw;
+            }
+        }).WithMetadata(new SwaggerOperationAttribute("Update a Service", "Update a Service") { Tags = new[] { "Services" } });
     }
+
+
 
 }

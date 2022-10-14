@@ -1,7 +1,9 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using FluentAssertions;
+using System.Text;
 using System.Text.Json;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
@@ -257,5 +259,83 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         firstService.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(firstService, nameof(firstService));
         firstService.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
+    }
+
+#if DEBUG
+    [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
+    public async Task ThenTheOpenReferralServiceIsUpdated()
+    {
+        GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
+        string url = getServicesUrlBuilder
+                    .WithStatus("active")
+                    .WithEligibility(0, 99)
+                    .WithProximity(52.6312, -1.66526, 1609.34)
+                    .WithPage(1, 10)
+                    .Build();
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(_client.BaseAddress + $"api/services{url}")
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var item = retVal?.Items.FirstOrDefault(x => x.Id == "4591d551-0d6a-4c0d-b109-002e67318231");
+        ArgumentNullException.ThrowIfNull(item, nameof(item));
+
+        item.Name += " Changed";
+        item.Description += " Changed";
+
+        var updaterequest = new HttpRequestMessage
+        {
+            Method = HttpMethod.Put,
+            RequestUri = new Uri(_client.BaseAddress + $"api/services/4591d551-0d6a-4c0d-b109-002e67318231"),
+            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json"),
+        };
+
+        using var updateresponse = await _client.SendAsync(updaterequest);
+
+        updateresponse.EnsureSuccessStatusCode();
+
+        var stringResult = await updateresponse.Content.ReadAsStringAsync();
+
+        updateresponse.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        stringResult.ToString().Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
+
+    }
+
+#if DEBUG
+    [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
+    public async Task ThenTheOpenReferralServiceIsCreated()
+    {
+        OpenReferralServiceDto openReferralService = WhenUsingOpenReferralOrganisationApiUnitTests.GetTestCountyCouncilServicesRecord("72e653e8-1d05-4821-84e9-9177571a6013");
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri(_client.BaseAddress + $"api/services"),
+            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(openReferralService), Encoding.UTF8, "application/json"),
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var stringResult = await response.Content.ReadAsStringAsync();
+
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        stringResult.ToString().Should().Be(openReferralService.Id);
+
     }
 }
