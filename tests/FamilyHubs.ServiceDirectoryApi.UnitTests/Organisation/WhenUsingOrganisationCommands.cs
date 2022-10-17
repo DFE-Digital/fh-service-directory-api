@@ -143,7 +143,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
             "Unit Test County Council",
             "Unit Test County Council",
-            null,
+            "",
             new Uri("https://www.unittest.gov.uk/").ToString(),
             "https://www.unittest.gov.uk/",
             new List<OpenReferralServiceDto>

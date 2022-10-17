@@ -91,5 +91,6 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
         Url = openReferralService.Url;
         Email = openReferralService.Email;
         Fees = openReferralService.Fees;
+        ServiceType = openReferralService.ServiceType;
     }
 }

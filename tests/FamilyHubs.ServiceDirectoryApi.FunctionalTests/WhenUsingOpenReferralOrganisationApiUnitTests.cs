@@ -165,6 +165,18 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         return openReferralOrganistions;
     }
 
+    public IReadOnlyCollection<OrganisationType> GetOrganisationTypes()
+    {
+        List<OrganisationType> serviceTypes = new()
+        {
+            new OrganisationType("1", "Local Authority", "Local Authority"),
+            new OrganisationType("2", "Voluntary, Charitable, Faith", "Voluntary, Charitable, Faith"),
+            new OrganisationType("2", "Private Company", "Private Company")
+        };
+
+        return serviceTypes;
+    }
+
     private IReadOnlyCollection<ServiceType> GetServiceTypes()
     {
         List<ServiceType> serviceTypes = new()
@@ -316,6 +328,8 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
     {
         var bristolCountyCouncil = new OpenReferralOrganisation(
             "ba1cca90-b02a-4a0b-afa0-d8aed1083c0d",
+            GetOrganisationTypes().ElementAt(0),
+            "Bristol City",
             "Test County Council",
             "Test County Council",
             null,

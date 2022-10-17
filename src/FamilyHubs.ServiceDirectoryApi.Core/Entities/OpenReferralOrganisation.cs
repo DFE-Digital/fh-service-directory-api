@@ -10,6 +10,8 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
 
     public OpenReferralOrganisation(
         string id,
+        OrganisationType organisationType,
+        string adminDistrict = default!,
         string name = default!,
         string? description = default!,
         string? logo = default!,
@@ -20,6 +22,8 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
     )
     {
         Id = id;
+        OrganisationType = organisationType;
+        AdminDistrict = adminDistrict;
         Name = name ?? default!;
         Description = description ?? string.Empty;
         Logo = logo ?? string.Empty;
@@ -29,6 +33,8 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
         Services = services ?? default!;
     }
 
+    public OrganisationType OrganisationType { get; set; } = default!;
+    public string AdminDistrict { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; } = string.Empty;
     public string? Logo { get; set; } = string.Empty;
@@ -39,6 +45,8 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
 
     public void Update(OpenReferralOrganisation openReferralOpenReferralOrganisation)
     {
+        OrganisationType = openReferralOpenReferralOrganisation.OrganisationType;
+        AdminDistrict = openReferralOpenReferralOrganisation.AdminDistrict;
         Name = openReferralOpenReferralOrganisation.Name;
         Description = openReferralOpenReferralOrganisation.Description;
         Logo = openReferralOpenReferralOrganisation.Logo;
