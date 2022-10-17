@@ -54,7 +54,7 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
                 {
-                    new OpenReferralEligibility("9109Children","",null,0,13,new List<OpenReferralTaxonomy>())
+                    new OpenReferralEligibility("9109Children","Children",null,13,0,new List<OpenReferralTaxonomy>())
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
@@ -173,7 +173,7 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
                 {
-                    new OpenReferralEligibility("9109T1Children","",null,0,13,new List<OpenReferralTaxonomy>())
+                    new OpenReferralEligibility("9109T1Children","Children",null,13,0,new List<OpenReferralTaxonomy>())
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
