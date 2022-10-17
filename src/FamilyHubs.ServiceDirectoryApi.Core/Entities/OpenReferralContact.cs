@@ -14,7 +14,7 @@ public class OpenReferralContact : EntityBase<string>, IOpenReferralContact, IAg
         Name = name;
         Phones = phones as ICollection<OpenReferralPhone>;
     }
-    public string Title { get; init; } = default!;
-    public string Name { get; init; } = default!;
-    public virtual ICollection<OpenReferralPhone>? Phones { get; init; }
+    public string Title { get; set; } = default!;
+    public string Name { get; set; } = default!;
+    public virtual ICollection<OpenReferralPhone>? Phones { get; set; }
 }

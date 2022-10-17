@@ -25,6 +25,7 @@ using fh_service_directory_api.api.Queries.ListOrganisation;
 using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
 using FluentAssertions;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Collections.ObjectModel;
@@ -65,21 +66,21 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var mockApplicationDbContext = GetApplicationDbContext();
         var testOrganisation = GetTestCountyCouncilDto();
         var updatelogger = new Mock<ILogger<UpdateOpenReferralOrganisationCommandHandler>>();
+        var mockMediator = new Mock<ISender>();
         CreateOpenReferralOrganisationCommand command = new(testOrganisation);
         CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
         var id = await handler.Handle(command, new System.Threading.CancellationToken());
-
-
-        OpenReferralOrganisation updateTestOrganisation = GetTestCountyCouncilRecord();
+        
+        OpenReferralOrganisationWithServicesDto updateTestOrganisation = GetTestCountyCouncilRecord();
         updateTestOrganisation.Name = "Unit Test B County Council";
         updateTestOrganisation.Description = "Unit Test B County Council Descrition";
         UpdateOpenReferralOrganisationCommand updatecommand = new(updateTestOrganisation.Id, updateTestOrganisation);
-        UpdateOpenReferralOrganisationCommandHandler updatehandler = new(mockApplicationDbContext, updatelogger.Object);
+        UpdateOpenReferralOrganisationCommandHandler updatehandler = new(mockApplicationDbContext, updatelogger.Object, mockMediator.Object, mapper);
 
-        //Act
+        ////Act
         var result = await updatehandler.Handle(updatecommand, new System.Threading.CancellationToken());
 
-        //Assert
+        ////Assert
         result.Should().NotBeNull();
         result.Should().Be(testOrganisation.Id);
     }
@@ -273,19 +274,19 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     }
 
     
-    public static OpenReferralOrganisation GetTestCountyCouncilRecord()
+    public static OpenReferralOrganisationWithServicesDto GetTestCountyCouncilRecord()
     {
-        var bristolCountyCouncil = new OpenReferralOrganisation(
+        var bristolCountyCouncil = new OpenReferralOrganisationWithServicesDto(
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
             "Unit Test A County Council",
             "Unit Test A County Council",
             null,
             new Uri("https://www.unittesta.gov.uk/").ToString(),
             "https://www.unittesta.gov.uk/",
-            new List<OpenReferralReview>(),
-            new List<OpenReferralService>
+            //new List<OpenReferralReviewDto>(),
+            new List<OpenReferralServiceDto>
             {
-                 GetTestCountyCouncilServicesRecord()
+                 //GetTestCountyCouncilServicesRecord()
             }
             );
 

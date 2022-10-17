@@ -9,7 +9,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
 {
     public OpenReferralService() { }
 
-    public OpenReferralService(string id, string parentId, string name, string? description, string? accreditations, DateTime? assured_date, string? attending_access, string? attending_type, string? deliverable_type, string? status, string? url, string? email, string? fees
+    public OpenReferralService(string id, string openReferralOrganisationId, string name, string? description, string? accreditations, DateTime? assured_date, string? attending_access, string? attending_type, string? deliverable_type, string? status, string? url, string? email, string? fees
         , ICollection<OpenReferralServiceDelivery> serviceDelivery
         , ICollection<OpenReferralEligibility> eligibilitys
         , ICollection<OpenReferralFunding> fundings
@@ -25,7 +25,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
         )
     {
         Id = id;
-        OpenReferralOrganisationId = parentId;
+        OpenReferralOrganisationId = openReferralOrganisationId;   
         Name = name;
         Description = description;
         Accreditations = accreditations;
@@ -51,7 +51,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
         ServiceDelivery = serviceDelivery as ICollection<OpenReferralServiceDelivery> ?? new Collection<OpenReferralServiceDelivery>();
     }
 
-    public string OpenReferralOrganisationId { get; set; } = default!;
+    public string OpenReferralOrganisationId { get; set; } = default!;  
     public string Name { get; set; } = default!;
     public string? Description { get; set; }
     public string? Accreditations { get; set; }

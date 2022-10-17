@@ -19,10 +19,10 @@ public class OpenReferralCost_Option : EntityBase<string>, IOpenReferralCost_Opt
         Valid_from = valid_from;
         Valid_to = valid_to;
     }
-    public string Amount_description { get; init; } = default!;
-    public decimal Amount { get; init; }
-    public string? LinkId { get; init; }
-    public string? Option { get; init; }
-    public DateTime? Valid_from { get; init; }
-    public DateTime? Valid_to { get; init; }
+    public string Amount_description { get; set; } = default!;
+    public decimal Amount { get; set; }
+    public string? LinkId { get; set; }
+    public string? Option { get; set; }
+    public DateTime? Valid_from { get; set; }
+    public DateTime? Valid_to { get; set; }
 }

@@ -2,6 +2,6 @@
 {
     public interface IOpenReferralLanguage : IEntityBase<string>
     {
-        string Language { get; init; }
+        string Language { get; set; }
     }
 }

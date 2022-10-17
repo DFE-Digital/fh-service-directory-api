@@ -2,15 +2,15 @@
 {
     public interface IOpenReferralRegular_Schedule : IEntityBase<string>
     {
-        string? Byday { get; init; }
-        string? Bymonthday { get; init; }
-        DateTime? Closes_at { get; init; }
-        string Description { get; init; }
-        string? Dtstart { get; init; }
-        string? Freq { get; init; }
-        string? Interval { get; init; }
-        DateTime? Opens_at { get; init; }
-        DateTime? Valid_from { get; init; }
-        DateTime? Valid_to { get; init; }
+        string? Byday { get; set; }
+        string? Bymonthday { get; set; }
+        DateTime? Closes_at { get; set; }
+        string Description { get; set; }
+        string? Dtstart { get; set; }
+        string? Freq { get; set; }
+        string? Interval { get; set; }
+        DateTime? Opens_at { get; set; }
+        DateTime? Valid_from { get; set; }
+        DateTime? Valid_to { get; set; }
     }
 }

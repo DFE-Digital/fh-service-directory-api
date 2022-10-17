@@ -16,9 +16,9 @@ public class OpenReferralEligibility : EntityBase<string>, IOpenReferralEligibil
         Minimum_age = minimum_age;
         Taxonomys = taxonomys as ICollection<OpenReferralTaxonomy>;
     }
-    public string Eligibility { get; init; } = default!;
-    public string? LinkId { get; init; }
-    public int Maximum_age { get; init; }
-    public int Minimum_age { get; init; }
+    public string Eligibility { get; set; } = default!;
+    public string? LinkId { get; set; }
+    public int Maximum_age { get; set; }
+    public int Minimum_age { get; set; }
     public ICollection<OpenReferralTaxonomy>? Taxonomys { get; set; }
 }

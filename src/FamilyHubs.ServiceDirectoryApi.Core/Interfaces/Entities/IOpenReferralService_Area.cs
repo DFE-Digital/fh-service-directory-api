@@ -2,9 +2,9 @@
 {
     public interface IOpenReferralService_Area : IEntityBase<string>
     {
-        string? Extent { get; init; }
-        string? LinkId { get; init; }
-        string Service_area { get; init; }
-        string? Uri { get; init; }
+        string? Extent { get; set; }
+        string? LinkId { get; set; }
+        string Service_area { get; set; }
+        string? Uri { get; set; }
     }
 }
