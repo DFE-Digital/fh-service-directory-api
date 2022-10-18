@@ -32,6 +32,6 @@ public class OpenReferralRegular_Schedule : EntityBase<string>, IOpenReferralReg
     public string? Interval { get; set; }
     public DateTime? Valid_from { get; set; }
     public DateTime? Valid_to { get; set; }
-    //public string OpenReferralServiceAtLocationId { get; set; } = default!;
+    public string OpenReferralServiceAtLocationId { get; set; } = default!;
     //public string OpenReferralServiceId { get; set; } = default!;
 }
