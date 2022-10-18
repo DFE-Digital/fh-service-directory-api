@@ -15,4 +15,6 @@ public class OpenReferralLinktaxonomycollection : EntityBase<string>, IOpenRefer
     }
     public string Link_id { get; init; } = default!;
     public string Link_type { get; init; } = default!;
+    public string OpenReferralServiceId { get; set; } = default!;
+    //public string OpenReferralServiceAtLocationId { get; set; } = default!;
 }

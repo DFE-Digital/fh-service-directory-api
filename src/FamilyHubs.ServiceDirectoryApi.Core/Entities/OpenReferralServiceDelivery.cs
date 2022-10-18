@@ -15,4 +15,5 @@ public class OpenReferralServiceDelivery : EntityBase<string>, IOpenReferralServ
     }
 
     public ServiceDelivery ServiceDelivery { get; set; }
+    public string OpenReferralServiceId { get; set; } = default!;
 }
