@@ -13,4 +13,6 @@ public class OpenReferralFunding : EntityBase<string>, IOpenReferralFunding, IAg
         Source = source;
     }
     public string Source { get; init; } = default!;
+
+    //public string OpenReferralServiceId { get; set; } = default!;
 }

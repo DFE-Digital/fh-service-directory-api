@@ -13,5 +13,6 @@ public class Accessibility_For_Disabilities : EntityBase<string>, IAccessibility
         Accessibility = accessibility;
     }
     public string Accessibility { get; init; } = default!;
+    public string OpenReferralLocationId { get; set; } = default!;
 
 }

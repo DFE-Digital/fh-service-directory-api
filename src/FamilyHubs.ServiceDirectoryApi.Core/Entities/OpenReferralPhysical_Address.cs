@@ -22,4 +22,5 @@ public class OpenReferralPhysical_Address : EntityBase<string>, IOpenReferralPhy
     public string Postal_code { get; set; } = default!;
     public string? Country { get; set; }
     public string? State_province { get; set; }
+    //public string OpenReferralLocationId { get; set; } = default!;
 }
