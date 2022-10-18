@@ -19,4 +19,5 @@ public class OpenReferralService_Area : EntityBase<string>, IOpenReferralService
     public string? LinkId { get; set; } = default!;
     public string? Extent { get; set; }
     public string? Uri { get; set; }
+    public string OpenReferralServiceId { get; set; } = default!;
 }
