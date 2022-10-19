@@ -319,8 +319,8 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 #endif
     public async Task ThenTheOpenReferralServiceIsCreated()
     {
-        OpenReferralServiceDto openReferralService = WhenUsingOpenReferralOrganisationApiUnitTests.GetTestCountyCouncilServicesRecord("72e653e8-1d05-4821-84e9-9177571a6013");
-
+        OpenReferralServiceDto openReferralService = WhenUsingOpenReferralOrganisationApiUnitTests.GetTestCountyCouncilServicesCreateRecord("72e653e8-1d05-4821-84e9-9177571a6013");
+        
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
