@@ -98,8 +98,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                                         string id = childModel?.Service_taxonomys?.ElementAt(i)?.Taxonomy?.Id ?? string.Empty;
                                         var tx = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == id);
                                         if (childModel != null)
-                                            //childModel.Service_taxonomys.ElementAt(i).Taxonomy = tx;
-                                            childModel.Service_taxonomys.ElementAt(i).Taxonomy = tx;
+                                            service.Service_taxonomys.ElementAt(i).Taxonomy = tx;
                                     }
                                 }
                             }
