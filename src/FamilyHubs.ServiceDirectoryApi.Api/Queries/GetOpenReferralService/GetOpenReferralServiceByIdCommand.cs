@@ -30,6 +30,7 @@ public class GetOpenReferralServiceByIdCommandHandler : IRequestHandler<GetOpenR
     public async Task<OpenReferralServiceDto> Handle(GetOpenReferralServiceByIdCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.OpenReferralServices
+            .Include(x => x.ServiceType)
             .Include(x => x.ServiceDelivery)
             .Include(x => x.Eligibilities)
             .Include(x => x.Contacts)

@@ -1,7 +1,9 @@
 ﻿using Ardalis.GuardClauses;
+using Autofac.Core;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
 using fh_service_directory_api.api.Helper;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Interfaces.Entities;
@@ -30,8 +32,11 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
     public async Task<OpenReferralOrganisationWithServicesDto> Handle(GetOpenReferralOrganisationByIdCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.OpenReferralOrganisations
+           .Include(x => x.OrganisationType)
            .Include(x => x.Services!)
            .ThenInclude(x => x.ServiceDelivery)
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.ServiceType)
            .Include(x => x.Services!)
            .ThenInclude(x => x.Eligibilities)
            .Include(x => x.Services!)
@@ -65,16 +70,16 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
             }
         }
 
-
         var result = new OpenReferralOrganisationWithServicesDto(
             entity.Id,
+            new OrganisationTypeDto(entity.OrganisationType.Id, entity.OrganisationType.Name, entity.OrganisationType.Description),
             entity.Name,
             entity.Description,
             entity.Logo,
             entity.Uri,
             entity.Url,
             openReferralServices);
-
+        
         return result;
     }
 }

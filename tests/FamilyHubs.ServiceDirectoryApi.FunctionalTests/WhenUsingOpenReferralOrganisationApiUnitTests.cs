@@ -16,6 +16,8 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverys
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
 using fh_service_directory_api.core.Entities;
 using FluentAssertions;
 using System.Text;
@@ -130,6 +132,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 
         var update = new OpenReferralOrganisationWithServicesDto(
             retVal.Id,
+            new OrganisationTypeDto(retVal.OrganisationType.Id, retVal.OrganisationType.Name, retVal.OrganisationType.Description),
             retVal.Name,
             retVal.Description + " Update Test",
             retVal.Logo,
@@ -169,6 +172,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
     {
         var bristolCountyCouncil = new OpenReferralOrganisationWithServicesDto(
             "ba1cca90-b02a-4a0b-afa0-d8aed1083c0d",
+            new OrganisationTypeDto("1", "LA", "Local Authority"),
             "Test County Council",
             "Test County Council",
             null,
@@ -189,6 +193,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 
         ServicesDtoBuilder builder = new ServicesDtoBuilder();
         OpenReferralServiceDto service = builder.WithMainProperties("c1b5dd80-7506-4424-9711-fe175fa13eb8",
+                new ServiceTypeDto("1", "Information Sharing", ""),
                 parentId,
                 "Test Organisation for Children with Tracheostomies",
                 @"Test Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
@@ -301,10 +306,92 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         return service;
     }
 
+    public static OpenReferralServiceDto GetTestCountyCouncilServicesCreateRecord(string parentId)
+    {
+        var contactId = Guid.NewGuid().ToString();
+
+        ServicesDtoBuilder builder = new ServicesDtoBuilder();
+        OpenReferralServiceDto service = builder.WithMainProperties("9066bccb-79cb-401f-818f-86ad23b022cf",
+                new ServiceTypeDto("1", "Information Sharing", ""),
+                parentId,
+                "Test1 Organisation for Children with Tracheostomies",
+                @"Test1 Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                "www.testservice1.com",
+                "support@testservice1.com",
+                null)
+            .WithServiceDelivery(new List<OpenReferralServiceDeliveryExDto>
+                {
+                    new OpenReferralServiceDeliveryExDto(Guid.NewGuid().ToString(),ServiceDelivery.Online)
+                })
+            .WithEligibility(new List<OpenReferralEligibilityDto>
+                {
+                    new OpenReferralEligibilityDto("Test91091Children","",0,13)
+                })
+            .WithContact(new List<OpenReferralContactDto>()
+            {
+                new OpenReferralContactDto(
+                    contactId,
+                    "Service",
+                    string.Empty,
+                    new List<OpenReferralPhoneDto>()
+                    {
+                        new OpenReferralPhoneDto("1570", "01827 65770")
+                    }
+                    )
+            })
+            .WithCostOption(new List<OpenReferralCostOptionDto>())
+            .WithLanguages(new List<OpenReferralLanguageDto>()
+                {
+                    new OpenReferralLanguageDto("943bc803-39f4-4805-8805-bc7d3eeae3ff", "English")
+                })
+            .WithServiceAreas(new List<OpenReferralServiceAreaDto>()
+                {
+                    new OpenReferralServiceAreaDto(Guid.NewGuid().ToString(), "National", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                })
+            .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>()
+                {
+                    new OpenReferralServiceAtLocationDto(
+                        "Test1749A",
+                        new OpenReferralLocationDto(
+                            "86119575-017f-4eeb-b92e-cb3f62d54840",
+                            "",
+                            "",
+                            52.6312,
+                            -1.66526,
+                            new List<OpenReferralPhysicalAddressDto>()
+                            {
+                                new OpenReferralPhysicalAddressDto(
+                                    Guid.NewGuid().ToString(),
+                                    "76 Sheepcote Lane",
+                                    ", Stathe, Tamworth, Staffordshire, ",
+                                    "B77 3JN",
+                                    "England",
+                                    null
+                                    )
+                            }
+                            //new List<Accessibility_For_Disabilities>()
+                            ),
+                        new List<OpenReferralRegularScheduleDto>(),
+                        new List<OpenReferralHolidayScheduleDto>()
+                        )
+
+                })
+            .Build();
+
+        return service;
+    }
+
     private OpenReferralOrganisation GetTestCountyCouncil()
     {
         var bristolCountyCouncil = new OpenReferralOrganisation(
             "ba1cca90-b02a-4a0b-afa0-d8aed1083c0d",
+            new OrganisationType("1", "LA", "Local Authority"),
             "Test County Council",
             "Test County Council",
             null,
@@ -322,6 +409,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         {
             new OpenReferralService(
                 "c1b5dd80-7506-4424-9711-fe175fa13eb8",
+                new ServiceType("1", "Information Sharing", ""),
                 "ba1cca90-b02a-4a0b-afa0-d8aed1083c0d",
                 "Test Organisation for Children with Tracheostomies",
                 @"Test Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",

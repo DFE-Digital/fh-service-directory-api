@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Autofac.Core;
+using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
@@ -36,6 +37,10 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
         {
             var entity = _mapper.Map<OpenReferralService>(request.OpenReferralService);
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+
+            var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.OpenReferralService.ServiceType.Id);
+            if (serviceType != null)
+                entity.ServiceType = serviceType;
 
             entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(entity));
 

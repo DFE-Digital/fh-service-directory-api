@@ -38,6 +38,22 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
             var entity = _mapper.Map<OpenReferralOrganisation>(request.OpenReferralOrganisation);
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
+            var organisationType = _context.OrganisationTypes.FirstOrDefault(x => x.Id == request.OpenReferralOrganisation.OrganisationType.Id);
+            if (organisationType != null)
+            {
+                entity.OrganisationType = organisationType;
+            }
+
+            if (entity.Services != null)
+            {
+                foreach (var service in entity.Services)
+                {
+                    var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == service.ServiceType.Id);
+                    if (serviceType != null)
+                        service.ServiceType = serviceType;
+                }
+            }
+
             entity.RegisterDomainEvent(new OpenReferralOrganisationCreatedEvent(entity));
 
             _context.OpenReferralOrganisations.Add(entity);

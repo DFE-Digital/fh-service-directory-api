@@ -55,6 +55,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
         _request = request;
 
         var entity = await _context.OpenReferralServices
+           .Include(x => x.ServiceType)
            .Include(x => x.ServiceDelivery)
            .Include(x => x.Eligibilities)
            .Include(x => x.Contacts)
@@ -78,6 +79,10 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
         {
             var serviceentity = _mapper.Map<OpenReferralService>(request.OpenReferralService);
             ArgumentNullException.ThrowIfNull(serviceentity, nameof(serviceentity));
+
+            var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.OpenReferralService.ServiceType.Id);
+            if (serviceType != null)
+                entity.ServiceType = serviceType;
 
             entity.Name = serviceentity.Name;
             entity.Description = serviceentity.Description;

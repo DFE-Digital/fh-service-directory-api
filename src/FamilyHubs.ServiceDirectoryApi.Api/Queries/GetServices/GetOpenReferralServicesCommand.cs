@@ -58,6 +58,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             request.Status = "active";
 
         var entities = await _context.OpenReferralServices
+           .Include(x => x.ServiceType)
            .Include(x => x.ServiceDelivery)
            .Include(x => x.Eligibilities)
            .Include(x => x.Contacts)

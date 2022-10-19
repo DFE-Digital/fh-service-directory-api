@@ -47,6 +47,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
         ArgumentNullException.ThrowIfNull(request, nameof(request));
 
         var entity = await _context.OpenReferralOrganisations
+          .Include(x => x.OrganisationType)
           .Include(x => x.Services!)
           .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
 
@@ -57,7 +58,14 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
         try
         {
-            entity.Update(_mapper.Map<OpenReferralOrganisation>(request.OpenReferralOrganisation));
+            OpenReferralOrganisation org = _mapper.Map<OpenReferralOrganisation>(request.OpenReferralOrganisation);
+            var organisationType = _context.OrganisationTypes.FirstOrDefault(x => x.Id == request.OpenReferralOrganisation.OrganisationType.Id);
+            if (organisationType != null)
+            {
+                org.OrganisationType = organisationType;
+            }
+
+            entity.Update(org);
 
             if (entity.Services != null && request.OpenReferralOrganisation.Services != null)
             {

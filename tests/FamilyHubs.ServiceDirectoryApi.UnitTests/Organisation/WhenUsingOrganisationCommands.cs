@@ -17,6 +17,8 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverys
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
 using FamilyHubs.ServiceDirectoryApi.UnitTests.Builders;
 using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 using fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
@@ -141,6 +143,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     {
         var bristolCountyCouncil = new OpenReferralOrganisationWithServicesDto(
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
+            new OrganisationTypeDto("1", "LA", "Local Authority"),
             "Unit Test County Council",
             "Unit Test County Council",
             null,
@@ -161,6 +164,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         ServicesDtoBuilder builder = new ServicesDtoBuilder();
         OpenReferralServiceDto service = builder.WithMainProperties("3010521b-6e0a-41b0-b610-200edbbeeb14",
+                new ServiceTypeDto("1", "Information Sharing", ""),
                 parentId,
                 "Unit Test Service",
                 @"Unit Test Service Description",
@@ -278,6 +282,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     {
         var bristolCountyCouncil = new OpenReferralOrganisationWithServicesDto(
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
+            new OrganisationTypeDto("1", "LA", "Local Authority"),
             "Unit Test A County Council",
             "Unit Test A County Council",
             null,
@@ -410,6 +415,8 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                         ))
                 })
             .Build();
+
+        service.ServiceType = new ServiceType("1", "Information Sharing", "");
 
         return service;
     }

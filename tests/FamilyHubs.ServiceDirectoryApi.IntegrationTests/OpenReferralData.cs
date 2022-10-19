@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Enums;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
 using fh_service_directory_api.core.Entities;
 
 namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests;
@@ -19,6 +20,7 @@ public class OpenReferralData
     {
         var bristolCountyCouncil = new OpenReferralOrganisation(
             "dcf1d9a2-004f-40e8-82aa-8a2660765d6e",
+            new OrganisationType("1", "LA", "Local Authority"),
             "Test County Council",
             "Test County Council",
             null,
@@ -65,6 +67,7 @@ public class OpenReferralData
         {
             new OpenReferralService(
                 "9f01190b-429c-41fd-ba38-936d2995398b",
+                new ServiceType("1", "Information Sharing", ""),
                 parentId,
                 "Test Service",
                 @"Test Service Description",
