@@ -29,12 +29,10 @@ public class GetOpenReferralServicesByOrganisationIdCommandHandler : IRequestHan
 
     public async Task<List<OpenReferralServiceDto>> Handle(GetOpenReferralServicesByOrganisationIdCommand request, CancellationToken cancellationToken)
     {
-#pragma warning disable CS8604 // Possible null reference argument.
         var organisation = _context.OpenReferralOrganisations
             .Include(x => x.OrganisationType)
-            .Include(x => x.Services.Where(x => x.Status != "Deleted"))
+            .Include(x => x.Services!.Where(x => x.Status != "Deleted"))
             .FirstOrDefault(x => x.Id == request.Id);
-#pragma warning restore CS8604 // Possible null reference argument.
 
         if (organisation == null)
         {

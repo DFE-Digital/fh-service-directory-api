@@ -35,7 +35,8 @@ public class ListOpenReferralOrganisationCommandHandler : IRequestHandler<ListOp
         org.Logo,
         org.Uri,
         org.Url
-            )).ToListAsync();
+            ))
+        .AsNoTracking().ToListAsync();
         return organisations;
     }
 }
