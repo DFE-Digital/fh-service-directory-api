@@ -46,6 +46,7 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
            .Include(x => x.Services!)
            .ThenInclude(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
+           .ThenInclude(x => x.Physical_addresses)
            .Include(x => x.Services!)
            .ThenInclude(x => x.Service_taxonomys)
            .ThenInclude(x => x.Taxonomy)
