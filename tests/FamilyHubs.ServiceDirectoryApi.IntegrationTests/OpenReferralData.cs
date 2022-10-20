@@ -56,7 +56,6 @@ public class OpenReferralData
 
 
         }
-        
 
         return bristolCountyCouncil;
     }

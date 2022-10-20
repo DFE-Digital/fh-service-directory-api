@@ -3,9 +3,9 @@ using fh_service_directory_api.core.Entities;
 
 namespace fh_service_directory_api.core.Events;
 
-public class OpenReferralServiceAtLocationEvent : DomainEventBase
+public class OpenReferralServiceAtLocationCreatedEvent : DomainEventBase
 {
-    public OpenReferralServiceAtLocationEvent(OpenReferralServiceAtLocation item)
+    public OpenReferralServiceAtLocationCreatedEvent(OpenReferralServiceAtLocation item)
     {
         Item = item;
     }

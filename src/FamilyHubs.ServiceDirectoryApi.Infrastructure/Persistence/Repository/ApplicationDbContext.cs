@@ -68,6 +68,8 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
 
         public DbSet<ServiceType> ServiceTypes => Set<ServiceType>();
         public DbSet<OrganisationType> OrganisationTypes => Set<OrganisationType>();
+        public DbSet<OrganisationAdminDistrict> OrganisationAdminDistricts => Set<OrganisationAdminDistrict>();
+        public DbSet<RelatedOrganisation> RelatedOrganisations => Set<RelatedOrganisation>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

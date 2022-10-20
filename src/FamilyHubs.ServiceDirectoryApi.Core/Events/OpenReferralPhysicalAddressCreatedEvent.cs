@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace fh_service_directory_api.core.Events;
 
 
-public class OpenReferralPhysicalAddressEvent : DomainEventBase
+public class OpenReferralPhysicalAddressCreatedEvent : DomainEventBase
 {
-    public OpenReferralPhysicalAddressEvent(OpenReferralPhysical_Address item)
+    public OpenReferralPhysicalAddressCreatedEvent(OpenReferralPhysical_Address item)
     {
         Item = item;
     }

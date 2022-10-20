@@ -95,6 +95,11 @@ public class ApplicationDbContextInitialiser
             } 
         }
 
+        if (!_context.OrganisationAdminDistricts.Any())
+        {
+            _context.OrganisationAdminDistricts.AddRange(openReferralOrganisationSeedData.SeedOrganisationAdminDistrict());
+        }
+
         await _context.SaveChangesAsync();
 
     }

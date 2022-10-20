@@ -42,6 +42,22 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
             if (serviceType != null)
                 entity.ServiceType = serviceType;
 
+            if (entity.Service_taxonomys != null)
+            {
+                foreach(var servicetaxonomy in entity.Service_taxonomys)
+                {
+                    if (servicetaxonomy != null && servicetaxonomy.Taxonomy != null)
+                    {
+                        var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == servicetaxonomy.Taxonomy.Id);
+                        if (taxonomy != null)
+                        {
+                            servicetaxonomy.Taxonomy = taxonomy;
+                        }
+                    }
+                    
+                }
+            }
+
             entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(entity));
 
             _context.OpenReferralServices.Add(entity);

@@ -3,9 +3,9 @@ using fh_service_directory_api.core.Entities;
 
 namespace fh_service_directory_api.core.Events;
 
-public class OpenReferralLanguageEvent : DomainEventBase
+public class OpenReferralLanguageCreatedEvent : DomainEventBase
 {
-    public OpenReferralLanguageEvent(OpenReferralLanguage item)
+    public OpenReferralLanguageCreatedEvent(OpenReferralLanguage item)
     {
         Item = item;
     }

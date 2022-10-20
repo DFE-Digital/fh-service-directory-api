@@ -3,9 +3,9 @@ using fh_service_directory_api.core.Entities;
 
 namespace fh_service_directory_api.core.Events;
 
-public class OpenReferralRegularScheduleEvent : DomainEventBase
+public class OpenReferralRegularScheduleCreatedEvent : DomainEventBase
 {
-    public OpenReferralRegularScheduleEvent(OpenReferralRegular_Schedule item)
+    public OpenReferralRegularScheduleCreatedEvent(OpenReferralRegular_Schedule item)
     {
         Item = item;
     }

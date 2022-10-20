@@ -5,6 +5,21 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository;
 
 public class OpenReferralOrganisationSeedData
 {
+    public IReadOnlyCollection<OrganisationAdminDistrict> SeedOrganisationAdminDistrict()
+    {
+        List<OrganisationAdminDistrict> adminDistricts = new()
+        {
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(),"E06000023", "72e653e8-1d05-4821-84e9-9177571a6013"), //Bristol
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E07000127", "fc51795e-ea95-4af0-a0b2-4c06d5463678"), //Lancashire
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E09000026", "1229cb45-0dc0-4f8a-81bd-2cd74c7cc9cc"), //Redbridge
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"), //Salford
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E07000203", "6dc1c3ad-d077-46ff-9e0d-04fb263f0637"), //Suffolk
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E09000030", "88e0bffd-ed0b-48ea-9a70-5f6ef729fc21"), //Tower Hamlets
+        };
+
+        return adminDistricts;
+    }
+
     public IReadOnlyCollection<OrganisationType> SeedOrganisationTypes()
     {
         List<OrganisationType> serviceTypes = new()

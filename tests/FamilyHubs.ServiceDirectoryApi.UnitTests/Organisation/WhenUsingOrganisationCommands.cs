@@ -110,7 +110,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(testOrganisation);
+        result.Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.AdministractiveDistrictCode));
     }
 
     [Fact]
@@ -136,12 +136,12 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         //Assert
         result.Should().NotBeNull();
-        result[0].Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.Services));
+        result[0].Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.Services).Excluding(si => si.AdministractiveDistrictCode));
     }
 
     public static OpenReferralOrganisationWithServicesDto GetTestCountyCouncilDto()
     {
-        var bristolCountyCouncil = new OpenReferralOrganisationWithServicesDto(
+        var testCountyCouncil = new OpenReferralOrganisationWithServicesDto(
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
             new OrganisationTypeDto("1", "LA", "Local Authority"),
             "Unit Test County Council",
@@ -155,7 +155,9 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             }
             );
 
-        return bristolCountyCouncil;
+        testCountyCouncil.AdministractiveDistrictCode = "XTEST";
+
+        return testCountyCouncil;
     }
 
     public static OpenReferralServiceDto GetTestCountyCouncilServicesDto(string parentId)
@@ -280,7 +282,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     
     public static OpenReferralOrganisationWithServicesDto GetTestCountyCouncilRecord()
     {
-        var bristolCountyCouncil = new OpenReferralOrganisationWithServicesDto(
+        var testCountyCouncil = new OpenReferralOrganisationWithServicesDto(
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
             new OrganisationTypeDto("1", "LA", "Local Authority"),
             "Unit Test A County Council",
@@ -295,7 +297,9 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             }
             );
 
-        return bristolCountyCouncil;
+        testCountyCouncil.AdministractiveDistrictCode = "XTEST";
+
+        return testCountyCouncil;
     }
 
     private static OpenReferralService GetTestCountyCouncilServicesRecord()

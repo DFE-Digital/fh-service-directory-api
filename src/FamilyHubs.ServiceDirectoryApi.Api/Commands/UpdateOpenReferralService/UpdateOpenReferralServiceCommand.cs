@@ -135,7 +135,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             {
                 var entity = _mapper.Map<OpenReferralEligibility>(updatedEligibility);
                 entity.OpenReferralServiceId = _request.OpenReferralService.Id;
-                entity.RegisterDomainEvent(new OpenReferralEligibilityEvent(entity));
+                entity.RegisterDomainEvent(new OpenReferralEligibilityCreatedEvent(entity));
                 _context.OpenReferralEligibilities.Add(entity);
                 currentIds.Add(entity.Id);
             }
@@ -167,7 +167,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             {
                 var entity = _mapper.Map<OpenReferralServiceAtLocation>(updatedServiceLoc);
                 entity.OpenReferralServiceId = _request.OpenReferralService.Id;
-                entity.RegisterDomainEvent(new OpenReferralServiceAtLocationEvent(entity));
+                entity.RegisterDomainEvent(new OpenReferralServiceAtLocationCreatedEvent(entity));
                 _context.OpenReferralServiceAtLocations.Add(entity);
                 list.Add(entity.Id);
             }
@@ -187,7 +187,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                         {
                             var entity = _mapper.Map<OpenReferralPhysical_Address>(address);
                             //entity.OpenReferralLocationId = current.Location.Id;
-                            entity.RegisterDomainEvent(new OpenReferralPhysicalAddressEvent(entity));
+                            entity.RegisterDomainEvent(new OpenReferralPhysicalAddressCreatedEvent(entity));
                             _context.OpenReferralPhysical_Addresses.Add(entity);
                             listAddress.Add(entity.Id);
                         }
@@ -250,7 +250,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 var entity = _mapper.Map<OpenReferralHoliday_Schedule>(updatedSchedule);
                 if (serviceAtlocation != null)
                     entity.OpenReferralServiceAtLocationId = serviceAtlocation.Id;
-                entity.RegisterDomainEvent(new OpenReferralHolidayScheduleEvent(entity));
+                entity.RegisterDomainEvent(new OpenReferralHolidayScheduleCreatedEvent(entity));
                 _context.OpenReferralHoliday_Schedules.Add(entity);
             }
             else
@@ -279,7 +279,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 var entity = _mapper.Map<OpenReferralRegular_Schedule>(updatedSchedule);
                 if (serviceAtlocation != null)
                     entity.OpenReferralServiceAtLocationId = serviceAtlocation.Id;
-                entity.RegisterDomainEvent(new OpenReferralRegularScheduleEvent(entity));
+                entity.RegisterDomainEvent(new OpenReferralRegularScheduleCreatedEvent(entity));
                 _context.OpenReferralRegular_Schedules.Add(entity);
             }
             else
@@ -312,7 +312,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             {
                 var entity = _mapper.Map<OpenReferralService_Area>(updatedServiceArea);
                 entity.OpenReferralServiceId = _request.OpenReferralService.Id;
-                entity.RegisterDomainEvent(new OpenReferralServiceAreaEvent(entity));
+                entity.RegisterDomainEvent(new OpenReferralServiceAreaCreatedEvent(entity));
                 _context.OpenReferralService_Areas.Add(entity);
                 currentIds.Add(entity.Id);
             }
@@ -340,7 +340,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             {
                 var entity = _mapper.Map<OpenReferralCost_Option>(updatedCostOption);
                 entity.OpenReferralServiceId = _request.OpenReferralService.Id;
-                entity.RegisterDomainEvent(new OpenReferralCostOptionEvent(entity));
+                entity.RegisterDomainEvent(new OpenReferralCostOptionCreatedEvent(entity));
                 _context.OpenReferralCost_Options.Add(entity);
                 currentIds.Add(entity.Id);
             }
@@ -393,7 +393,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 if (updatedServiceTaxonomy != null && updatedServiceTaxonomy.Taxonomy != null)
                     entity.Taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == updatedServiceTaxonomy.Taxonomy.Id);
                 entity.OpenReferralServiceId = _request.OpenReferralService.Id;
-                entity.RegisterDomainEvent(new OpenReferralServiceTaxonomyEvent(entity));
+                entity.RegisterDomainEvent(new OpenReferralServiceTaxonomyCreatedEvent(entity));
                 _context.OpenReferralService_Taxonomies.Add(entity);
                 currentIds.Add(entity.Id);
             }
@@ -425,7 +425,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             {
                 var entity = _mapper.Map<OpenReferralLanguage>(updatedLanguage);
                 entity.OpenReferralServiceId = _request.OpenReferralService.Id;
-                entity.RegisterDomainEvent(new OpenReferralLanguageEvent(entity));
+                entity.RegisterDomainEvent(new OpenReferralLanguageCreatedEvent(entity));
                 _context.OpenReferralLanguages.Add(entity);
                 currentIds.Add(entity.Id);
             }
@@ -462,7 +462,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                         {
                             var phoneentity = _mapper.Map<OpenReferralPhone>(phone);
                             phoneentity.OpenReferralContactId = updatedContact.Id;
-                            phoneentity.RegisterDomainEvent(new OpenReferralPhoneEvent(phoneentity));
+                            phoneentity.RegisterDomainEvent(new OpenReferralPhoneCreatedEvent(phoneentity));
                             _context.OpenReferralPhones.Add(phoneentity);
                             listPhones.Add(phoneentity);
                             phoneIds.Add(phoneentity.Id);
@@ -479,7 +479,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 var entity = _mapper.Map<OpenReferralContact>(updatedContact);
                 entity.OpenReferralServiceId = _request.OpenReferralService.Id;
                 entity.Phones = listPhones;
-                entity.RegisterDomainEvent(new OpenReferralContactEvent(entity));
+                entity.RegisterDomainEvent(new OpenReferralContactCreatedEvent(entity));
                 _context.OpenReferralContacts.Add(entity);
                 contactIds.Add(entity.Id);
             }
@@ -496,7 +496,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                         {
                             var entity = _mapper.Map<OpenReferralPhone>(phone);
                             entity.OpenReferralContactId = current.Id;
-                            entity.RegisterDomainEvent(new OpenReferralPhoneEvent(entity));
+                            entity.RegisterDomainEvent(new OpenReferralPhoneCreatedEvent(entity));
                             _context.OpenReferralPhones.Add(entity);
                             phoneIds.Add(entity.Id);
                         }
@@ -544,7 +544,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             {
                 var entity = _mapper.Map<OpenReferralServiceDelivery>(updatedServiceDelivery);
                 entity.OpenReferralServiceId = _request.OpenReferralService.Id;
-                entity.RegisterDomainEvent(new OpenReferralServiceDeliveryEvent(entity));
+                entity.RegisterDomainEvent(new OpenReferralServiceDeliveryCreatedEvent(entity));
                 _context.OpenReferralServiceDeliveries.Add(entity);
                 currentIds.Add(entity.Id);
             }
