@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 using fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
 using fh_service_directory_api.api.Queries.GetOpenReferralOrganisationById;
+using fh_service_directory_api.api.Queries.GetOrganisationTypes;
 using fh_service_directory_api.api.Queries.ListOrganisation;
 using fh_service_directory_api.core.Entities;
 using MediatR;
@@ -81,5 +82,21 @@ public class MinimalOrganisationEndPoints
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Update Organisation", "Update Organisation By Id") { Tags = new[] { "Organisations" } });
+
+        app.MapGet("api/organizationtypes", async (CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        {
+            try
+            {
+                GetOrganisationTypesCommand request = new();
+                var result = await _mediator.Send(request, cancellationToken);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred listing organisation types (api). {exceptionMessage}", ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+                throw;
+            }
+        }).WithMetadata(new SwaggerOperationAttribute("List Organisation types", "List Organisation types") { Tags = new[] { "Organisations" } });
     }
 }

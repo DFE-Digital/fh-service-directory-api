@@ -113,6 +113,33 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 #else
     [Fact(Skip = "This test should be run locally")]
 #endif
+    public async Task ThenListOpenReferralOrganisationTypesIsRetrieved()
+    {
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(_client.BaseAddress + "api/organizationtypes"),
+
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var retVal = await JsonSerializer.DeserializeAsync<List<OpenReferralOrganisationDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        retVal.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
+        retVal.Count.Should().BeGreaterThan(2);
+    }
+
+
+#if DEBUG
+    [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
     public async Task ThenTheOpenReferralOrganisationIsUpdated()
     {
         var request = new HttpRequestMessage

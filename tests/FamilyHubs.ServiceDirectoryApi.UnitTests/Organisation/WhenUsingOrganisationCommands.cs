@@ -23,9 +23,11 @@ using FamilyHubs.ServiceDirectoryApi.UnitTests.Builders;
 using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 using fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
 using fh_service_directory_api.api.Queries.GetOpenReferralOrganisationById;
+using fh_service_directory_api.api.Queries.GetOrganisationTypes;
 using fh_service_directory_api.api.Queries.ListOrganisation;
 using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
+using fh_service_directory_api.infrastructure.Persistence.Repository;
 using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -137,6 +139,35 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         //Assert
         result.Should().NotBeNull();
         result[0].Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.Services).Excluding(si => si.AdministractiveDistrictCode));
+    }
+
+    [Fact]
+    public async Task ThenListOpenReferralOrganisationTypes()
+    {
+        //Arange
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
+        var mockApplicationDbContext = GetApplicationDbContext();
+        var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData();
+        if (!mockApplicationDbContext.OrganisationAdminDistricts.Any())
+        {
+            mockApplicationDbContext.OrganisationTypes.AddRange(openReferralOrganisationSeedData.SeedOrganisationTypes());
+            mockApplicationDbContext.SaveChanges();
+        }
+
+        GetOrganisationTypesCommand getcommand = new();
+        GetOrganisationTypesCommandHandler gethandler = new(mockApplicationDbContext);
+        
+
+        //Act
+        var result = await gethandler.Handle(getcommand, new System.Threading.CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Count.Should().Be(3);
+        
     }
 
     public static OpenReferralOrganisationWithServicesDto GetTestCountyCouncilDto()
