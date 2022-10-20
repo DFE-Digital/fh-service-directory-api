@@ -96,6 +96,21 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                         if (childModel != null)
                         {
                             OpenReferralService service = _mapper.Map<OpenReferralService>(childModel);
+
+                            if (childModel.Service_taxonomys != null)
+                            {
+                                for (int i = 0; i < childModel?.Service_taxonomys.Count; i++)
+                                {
+                                    if (childModel.Service_taxonomys.ElementAt(i) != null && childModel.Service_taxonomys.ElementAt(i).Taxonomy != null)
+                                    {
+                                        string id = childModel?.Service_taxonomys?.ElementAt(i)?.Taxonomy?.Id ?? string.Empty;
+                                        var tx = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == id);
+                                        if (childModel != null)
+                                            service.Service_taxonomys.ElementAt(i).Taxonomy = tx;
+                                    }
+                                }
+                            }
+
                             entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(service));
                             _context.OpenReferralServices.Add(service);
                         }
