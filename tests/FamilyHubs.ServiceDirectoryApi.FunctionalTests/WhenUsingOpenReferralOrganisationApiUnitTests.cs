@@ -313,6 +313,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 
         ServicesDtoBuilder builder = new ServicesDtoBuilder();
         OpenReferralServiceDto service = builder.WithMainProperties("9066bccb-79cb-401f-818f-86ad23b022cf",
+                new ServiceTypeDto("1", "Information Sharing", ""),
                 parentId,
                 "Test1 Organisation for Children with Tracheostomies",
                 @"Test1 Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
@@ -358,87 +359,6 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                 {
                     new OpenReferralServiceAtLocationDto(
                         "Test1749",
-                        new OpenReferralLocationDto(
-                            "86119575-017f-4eeb-b92e-cb3f62d54840",
-                            "",
-                            "",
-                            52.6312,
-                            -1.66526,
-                            new List<OpenReferralPhysicalAddressDto>()
-                            {
-                                new OpenReferralPhysicalAddressDto(
-                                    Guid.NewGuid().ToString(),
-                                    "76 Sheepcote Lane",
-                                    ", Stathe, Tamworth, Staffordshire, ",
-                                    "B77 3JN",
-                                    "England",
-                                    null
-                                    )
-                            }
-                            //new List<Accessibility_For_Disabilities>()
-                            ),
-                        new List<OpenReferralRegularScheduleDto>(),
-                        new List<OpenReferralHolidayScheduleDto>()
-                        )
-
-                })
-            .Build();
-
-        return service;
-    }
-
-    public static OpenReferralServiceDto GetTestCountyCouncilServicesCreateRecord(string parentId)
-    {
-        var contactId = Guid.NewGuid().ToString();
-
-        ServicesDtoBuilder builder = new ServicesDtoBuilder();
-        OpenReferralServiceDto service = builder.WithMainProperties("9066bccb-79cb-401f-818f-86ad23b022cf",
-                new ServiceTypeDto("1", "Information Sharing", ""),
-                parentId,
-                "Test1 Organisation for Children with Tracheostomies",
-                @"Test1 Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
-                null,
-                null,
-                null,
-                null,
-                null,
-                "active",
-                "www.testservice1.com",
-                "support@testservice1.com",
-                null)
-            .WithServiceDelivery(new List<OpenReferralServiceDeliveryExDto>
-                {
-                    new OpenReferralServiceDeliveryExDto(Guid.NewGuid().ToString(),ServiceDelivery.Online)
-                })
-            .WithEligibility(new List<OpenReferralEligibilityDto>
-                {
-                    new OpenReferralEligibilityDto("Test91091Children","",0,13)
-                })
-            .WithContact(new List<OpenReferralContactDto>()
-            {
-                new OpenReferralContactDto(
-                    contactId,
-                    "Service",
-                    string.Empty,
-                    new List<OpenReferralPhoneDto>()
-                    {
-                        new OpenReferralPhoneDto("1570", "01827 65770")
-                    }
-                    )
-            })
-            .WithCostOption(new List<OpenReferralCostOptionDto>())
-            .WithLanguages(new List<OpenReferralLanguageDto>()
-                {
-                    new OpenReferralLanguageDto("943bc803-39f4-4805-8805-bc7d3eeae3ff", "English")
-                })
-            .WithServiceAreas(new List<OpenReferralServiceAreaDto>()
-                {
-                    new OpenReferralServiceAreaDto(Guid.NewGuid().ToString(), "National", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
-                })
-            .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>()
-                {
-                    new OpenReferralServiceAtLocationDto(
-                        "Test1749A",
                         new OpenReferralLocationDto(
                             "86119575-017f-4eeb-b92e-cb3f62d54840",
                             "",
