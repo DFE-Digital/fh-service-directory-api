@@ -114,7 +114,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 UpdateCostOptions(entity.Cost_options ?? new Collection<OpenReferralCost_Option>(), request?.OpenReferralService?.Cost_options ?? new Collection<OpenReferralCostOptionDto>());
 
             await _context.SaveChangesAsync(cancellationToken);
-
+            
         }
         catch (Exception ex)
         {
@@ -170,6 +170,13 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 entity.RegisterDomainEvent(new OpenReferralServiceAtLocationCreatedEvent(entity));
                 _context.OpenReferralServiceAtLocations.Add(entity);
                 list.Add(entity.Id);
+                if (entity != null && entity.Location != null && entity.Location.Physical_addresses != null)
+                {
+                    foreach (var address in entity.Location.Physical_addresses)
+                    {
+                        listAddress.Add(address.Id);
+                    }
+                }
             }
             else
             {

@@ -69,6 +69,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
            .ThenInclude(x => x.Taxonomy)
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
+           .ThenInclude(x => x.Physical_addresses)
            .Include(x => x.Cost_options)
            .Where(x => x.Status == request.Status && x.Status != "Deleted").ToListAsync();
 
