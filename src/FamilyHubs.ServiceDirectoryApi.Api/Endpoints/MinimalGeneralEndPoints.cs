@@ -24,5 +24,28 @@ public class MinimalGeneralEndPoints
                 throw;
             }
         });
+
+        app.MapGet("api/test", (ILogger<MinimalGeneralEndPoints> logger) =>
+        {
+            try
+            {
+                var assembly = typeof(WebMarker).Assembly;
+
+                var creationDate = File.GetCreationTime(assembly.Location);
+                var version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
+
+                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                logger.LogInformation($"api/Test - Version: {version}, Last Updated: {creationDate}, Environment: {env}");
+
+                return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Environment: {env}");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred getting info (api). {exceptionMessage}", ex.Message);
+                Debug.WriteLine(ex.Message);
+                throw;
+            }
+        });
     }
 }
