@@ -46,7 +46,7 @@ public class MinimalGeneralEndPoints
                 logger1.LogWarning("This is a WARNING message");
                 logger1.LogInformation("This is an INFORMATION message");
 
-                return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Environment: {env} RecreateDbOnStartup: {configuration.GetValue<bool>("RecreateDbOnStartup")} UseInMemoryDatabase: {configuration.GetValue<bool>("UseInMemoryDatabase")} UseSqlServerDatabase: {configuration.GetValue<bool>("UseSqlServerDatabase")}");
+                return Results.Ok($"Version: {version} MAB-1, Last Updated: {creationDate}, Environment: {env} RecreateDbOnStartup: {configuration.GetValue<bool>("RecreateDbOnStartup")} UseInMemoryDatabase: {configuration.GetValue<bool>("UseInMemoryDatabase")} UseSqlServerDatabase: {configuration.GetValue<bool>("UseSqlServerDatabase")}");
             }
             catch (Exception ex)
             {
