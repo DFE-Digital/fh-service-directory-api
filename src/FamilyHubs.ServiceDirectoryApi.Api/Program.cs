@@ -31,7 +31,13 @@ builder.Host.UseSerilog((ctx, lc) => lc
         .WriteTo.Console()
         .ReadFrom.Configuration(ctx.Configuration));
 
-builder.Host.ConfigureLogging(logging => logging.AddAzureWebAppDiagnostics())
+builder.Host.ConfigureLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddConsole();
+    logging.AddDebug();
+    logging.AddAzureWebAppDiagnostics();
+})
 .ConfigureServices(serviceCollection => serviceCollection
     .Configure<AzureFileLoggerOptions>(options =>
     {

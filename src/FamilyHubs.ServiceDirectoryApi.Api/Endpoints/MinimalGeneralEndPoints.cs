@@ -25,7 +25,7 @@ public class MinimalGeneralEndPoints
             }
         });
 
-        app.MapGet("api/test", (ILogger<MinimalGeneralEndPoints> logger) =>
+        app.MapGet("api/test", (ILoggerFactory loggerFactory, ILogger<MinimalGeneralEndPoints> logger) =>
         {
             try
             {
@@ -37,6 +37,10 @@ public class MinimalGeneralEndPoints
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
                 logger.LogInformation($"api/Test - Version: {version}, Last Updated: {creationDate}, Environment: {env}");
+
+                var logger1 = loggerFactory.CreateLogger<MinimalGeneralEndPoints>();
+                logger1.LogWarning("This is a WARNING message");
+                logger1.LogInformation("This is an INFORMATION message");
 
                 return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Environment: {env}");
             }
