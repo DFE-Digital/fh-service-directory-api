@@ -1,4 +1,8 @@
-﻿using System.Diagnostics;
+﻿using fh_service_directory_api.api.Queries.ListOrganisation;
+using fh_service_directory_api.infrastructure.Persistence.Repository;
+using MediatR;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Diagnostics;
 
 namespace fh_service_directory_api.api.Endpoints;
 
@@ -48,6 +52,23 @@ public class MinimalGeneralEndPoints
             {
                 logger.LogError(ex, "An error occurred getting info (api). {exceptionMessage}", ex.Message);
                 Debug.WriteLine(ex.Message);
+                throw;
+            }
+        });
+
+        app.MapGet("api/testorganizations", async (CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger, ApplicationDbContext context) =>
+        {
+            try
+            {
+                ListOpenReferralOrganisationCommand request = new();
+                return Results.Ok($"Created ListOpenReferralOrganisationCommand");
+                //var result = await _mediator.Send(request, cancellationToken);
+                //return result;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred listing organisation (api). {exceptionMessage}", ex.Message);
+                System.Diagnostics.Debug.WriteLine(ex.Message);
                 throw;
             }
         });
