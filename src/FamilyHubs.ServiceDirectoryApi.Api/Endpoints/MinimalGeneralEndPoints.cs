@@ -29,7 +29,7 @@ public class MinimalGeneralEndPoints
             }
         });
 
-        app.MapGet("api/test", (ILoggerFactory loggerFactory, ILogger<MinimalGeneralEndPoints> logger) =>
+        app.MapGet("api/test", (ILoggerFactory loggerFactory, ILogger<MinimalGeneralEndPoints> logger, IConfiguration configuration) =>
         {
             try
             {
@@ -46,7 +46,7 @@ public class MinimalGeneralEndPoints
                 logger1.LogWarning("This is a WARNING message");
                 logger1.LogInformation("This is an INFORMATION message");
 
-                return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Environment: {env}");
+                return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Environment: {env} RecreateDbOnStartup: {configuration.GetValue<bool>("RecreateDbOnStartup")} UseInMemoryDatabase: {configuration.GetValue<bool>("UseInMemoryDatabase")} UseSqlServerDatabase: {configuration.GetValue<bool>("UseSqlServerDatabase")}");
             }
             catch (Exception ex)
             {
