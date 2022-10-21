@@ -23,6 +23,7 @@ using FamilyHubs.ServiceDirectoryApi.UnitTests.Builders;
 using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 using fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
 using fh_service_directory_api.api.Queries.GetOpenReferralOrganisationById;
+using fh_service_directory_api.api.Queries.GetOrganisationAdminByOrganisationId;
 using fh_service_directory_api.api.Queries.GetOrganisationTypes;
 using fh_service_directory_api.api.Queries.ListOrganisation;
 using fh_service_directory_api.core;
@@ -168,6 +169,32 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         result.Should().NotBeNull();
         result.Count.Should().Be(3);
         
+    }
+
+    [Fact]
+    public async Task ThenGetOpenReferralAdminByOrganisationId()
+    {
+        //Arange
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
+        var mockApplicationDbContext = GetApplicationDbContext();
+        var testOrganisation = GetTestCountyCouncilDto();
+        CreateOpenReferralOrganisationCommand command = new(testOrganisation);
+        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
+        var id = await handler.Handle(command, new System.Threading.CancellationToken());
+
+        GetOrganisationAdminByOrganisationIdCommand getcommand = new(testOrganisation.Id);
+        GetOrganisationAdminByOrganisationIdCommandHandler gethandler = new(mockApplicationDbContext, mapper);
+        testOrganisation.Logo = "";
+
+        //Act
+        var result = await gethandler.Handle(getcommand, new System.Threading.CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be("XTEST");
     }
 
     public static OpenReferralOrganisationWithServicesDto GetTestCountyCouncilDto()

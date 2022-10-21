@@ -1,12 +1,10 @@
 ﻿using Ardalis.GuardClauses;
-using Autofac.Core;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
 using fh_service_directory_api.api.Helper;
 using fh_service_directory_api.core.Entities;
-using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
