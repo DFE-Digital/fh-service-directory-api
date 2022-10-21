@@ -18,6 +18,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Serilog;
 using Microsoft.Extensions.Logging.AzureAppServices;
+using Microsoft.Extensions.Logging;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -34,6 +35,7 @@ builder.Host.UseSerilog((ctx, lc) => lc
 builder.Host.ConfigureLogging(logging =>
 {
     logging.ClearProviders();
+    logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
     logging.AddConsole();
     logging.AddDebug();
     logging.AddAzureWebAppDiagnostics();
@@ -44,10 +46,11 @@ builder.Host.ConfigureLogging(logging =>
         options.FileName = "azure-diagnostics-";
         options.FileSizeLimit = 50 * 1024;
         options.RetainedFileCountLimit = 5;
-    }).Configure<AzureBlobLoggerOptions>(options =>
-    {
-        options.BlobName = "log.txt";
     })
+    //.Configure<AzureBlobLoggerOptions>(options =>
+    //{
+    //    options.BlobName = "log.txt";
+    //})
 );
 
 ConfigurWebApplicationBuilderHost(builder);
