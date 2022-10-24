@@ -31,17 +31,25 @@ builder.Host.UseSerilog((ctx, lc) => lc
         .WriteTo.Console()
         .ReadFrom.Configuration(ctx.Configuration));
 
-builder.Host.ConfigureLogging(logging => logging.AddAzureWebAppDiagnostics())
+builder.Host.ConfigureLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
+    logging.AddConsole();
+    logging.AddDebug();
+    logging.AddAzureWebAppDiagnostics();
+})
 .ConfigureServices(serviceCollection => serviceCollection
     .Configure<AzureFileLoggerOptions>(options =>
     {
         options.FileName = "azure-diagnostics-";
         options.FileSizeLimit = 50 * 1024;
         options.RetainedFileCountLimit = 5;
-    }).Configure<AzureBlobLoggerOptions>(options =>
-    {
-        options.BlobName = "log.txt";
     })
+//.Configure<AzureBlobLoggerOptions>(options =>
+//{
+//    options.BlobName = "log.txt";
+//})
 );
 
 ConfigurWebApplicationBuilderHost(builder);

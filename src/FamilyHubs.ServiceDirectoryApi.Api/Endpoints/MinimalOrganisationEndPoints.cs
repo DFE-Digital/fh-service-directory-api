@@ -114,7 +114,7 @@ public class MinimalOrganisationEndPoints
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 throw;
             }
-        }).WithMetadata(new SwaggerOperationAttribute("Get Organisation By Code", "Get Organisation By Code") { Tags = new[] { "Organisations" } });
+        }).WithMetadata(new SwaggerOperationAttribute("Get Organisation Code By Organisation Id", "Get Organisation Code By Organisation Id") { Tags = new[] { "Organisations" } });
 
     }
 }
