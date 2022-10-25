@@ -12,9 +12,10 @@ namespace fh_service_directory_api.api.Queries.GetServices;
 public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferralServiceDto>>
 {
     public GetOpenReferralServicesCommand() { }
-    public GetOpenReferralServicesCommand(string? status, int? minimum_age, int? maximum_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds)
+    public GetOpenReferralServicesCommand(string? status, string? districtCode, int? minimum_age, int? maximum_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds)
     {
         Status = status;
+        DistrictCode = districtCode;
         MaximumAge = maximum_age;
         MinimumAge = minimum_age;
         Latitude = latitude;
@@ -29,6 +30,7 @@ public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferra
     }
 
     public string? Status { get; set; }
+    public string? DistrictCode { get; set; }
     public int? MaximumAge { get; set; }
     public int? MinimumAge { get; set; }
     public double? Latitude { get; set; }
@@ -57,7 +59,31 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         if (string.IsNullOrEmpty(request.Status))
             request.Status = "active";
 
-        var entities = await _context.OpenReferralServices
+        List<OpenReferralService> entities;
+
+        if (request.DistrictCode != null)
+        {
+           List<string> organisationIds = await _context.OrganisationAdminDistricts.Where(x => x.Code == request.DistrictCode).Select(x => x.OpenReferralOrganisationId).ToListAsync();
+
+            entities = await _context.OpenReferralServices
+          .Include(x => x.ServiceType)
+          .Include(x => x.ServiceDelivery)
+          .Include(x => x.Eligibilities)
+          .Include(x => x.Contacts)
+          .ThenInclude(x => x.Phones)
+          .Include(x => x.Languages)
+          .Include(x => x.Service_areas)
+          .Include(x => x.Service_taxonomys)
+          .ThenInclude(x => x.Taxonomy)
+          .Include(x => x.Service_at_locations)
+          .ThenInclude(x => x.Location)
+          .ThenInclude(x => x.Physical_addresses)
+          .Include(x => x.Cost_options)
+          .Where(x => x.Status == request.Status && x.Status != "Deleted" && organisationIds.Contains(x.OpenReferralOrganisationId)).ToListAsync();
+        }
+        else
+        {
+            entities = await _context.OpenReferralServices
            .Include(x => x.ServiceType)
            .Include(x => x.ServiceDelivery)
            .Include(x => x.Eligibilities)
@@ -72,6 +98,8 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
            .ThenInclude(x => x.Physical_addresses)
            .Include(x => x.Cost_options)
            .Where(x => x.Status == request.Status && x.Status != "Deleted").ToListAsync();
+        }
+        
 
         IEnumerable<OpenReferralService> dbservices = entities;
         if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
