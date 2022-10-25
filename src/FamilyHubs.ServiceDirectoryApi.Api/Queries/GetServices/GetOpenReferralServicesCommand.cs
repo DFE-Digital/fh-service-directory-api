@@ -102,7 +102,8 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         
 
         IEnumerable<OpenReferralService> dbservices = entities;
-        if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
+
+        if (request.DistrictCode == null && request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
             dbservices = entities.Where(x => core.Helper.GetDistance(request.Latitude, request.Longtitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Latitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Longitude, x?.Name) < request.Meters);
 
         if (request?.MaximumAge != null)
@@ -155,7 +156,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
                 dbservices = new List<OpenReferralService>();
         }
 
-        if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
+        if (request?.Latitude != null && request?.Longtitude != null)
             dbservices = dbservices.OrderBy(x => core.Helper.GetDistance(
                 request.Latitude,
                 request.Longtitude,

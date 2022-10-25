@@ -310,8 +310,8 @@ public class OpenReferralOrganisationSeedData
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
                                     "71 Sheepcote Lane",
-                                    ", Stathe, Tamworth, Staffordshire, ",
-                                    "B77 3JN",
+                                    "Bristol",
+                                    "BS2 0SP",
                                     "England",
                                     null
                                     )
