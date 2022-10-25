@@ -42,7 +42,6 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
 
     public void Update(OpenReferralOrganisation openReferralOpenReferralOrganisation)
     {
-        OrganisationType = openReferralOpenReferralOrganisation.OrganisationType;
         Name = openReferralOpenReferralOrganisation.Name;
         Description = openReferralOpenReferralOrganisation.Description;
         Logo = openReferralOpenReferralOrganisation.Logo;

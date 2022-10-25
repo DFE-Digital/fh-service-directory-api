@@ -60,13 +60,14 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
         try
         {
+            
             OpenReferralOrganisation org = _mapper.Map<OpenReferralOrganisation>(request.OpenReferralOrganisation);
             var organisationType = _context.OrganisationTypes.FirstOrDefault(x => x.Id == request.OpenReferralOrganisation.OrganisationType.Id);
             if (organisationType != null)
             {
                 org.OrganisationType = organisationType;
             }
-
+            
             entity.Update(org);
             AddOrUpdateAdministractiveDistrict(request, entity);
 
@@ -99,6 +100,10 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                         if (childModel != null)
                         {
                             OpenReferralService service = _mapper.Map<OpenReferralService>(childModel);
+
+                            var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == childModel.ServiceType.Id);
+                            if (serviceType != null)
+                                service.ServiceType = serviceType;
 
                             if (childModel.Service_taxonomys != null)
                             {
