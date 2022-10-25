@@ -3,9 +3,9 @@ using fh_service_directory_api.core.Entities;
 
 namespace fh_service_directory_api.core.Events;
 
-public class OpenReferralHolidayScheduleEvent : DomainEventBase
+public class OpenReferralHolidayScheduleCreatedEvent : DomainEventBase
 {
-    public OpenReferralHolidayScheduleEvent(OpenReferralHoliday_Schedule item)
+    public OpenReferralHolidayScheduleCreatedEvent(OpenReferralHoliday_Schedule item)
     {
         Item = item;
     }

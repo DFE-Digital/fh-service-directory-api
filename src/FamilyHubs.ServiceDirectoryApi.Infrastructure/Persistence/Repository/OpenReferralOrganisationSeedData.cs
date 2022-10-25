@@ -5,13 +5,51 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository;
 
 public class OpenReferralOrganisationSeedData
 {
-    public IReadOnlyCollection<OpenReferralOrganisation> SeedOpenReferralOrganistions()
+    public IReadOnlyCollection<OrganisationAdminDistrict> SeedOrganisationAdminDistrict()
+    {
+        List<OrganisationAdminDistrict> adminDistricts = new()
+        {
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(),"E06000023", "72e653e8-1d05-4821-84e9-9177571a6013"), //Bristol
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E07000127", "fc51795e-ea95-4af0-a0b2-4c06d5463678"), //Lancashire
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E09000026", "1229cb45-0dc0-4f8a-81bd-2cd74c7cc9cc"), //Redbridge
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"), //Salford
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E07000203", "6dc1c3ad-d077-46ff-9e0d-04fb263f0637"), //Suffolk
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E09000030", "88e0bffd-ed0b-48ea-9a70-5f6ef729fc21"), //Tower Hamlets
+        };
+
+        return adminDistricts;
+    }
+
+    public IReadOnlyCollection<OrganisationType> SeedOrganisationTypes()
+    {
+        List<OrganisationType> serviceTypes = new()
+        {
+            new OrganisationType("1", "LA", "Local Authority"),
+            new OrganisationType("2", "VCFS", "Voluntary, Charitable, Faith Sector"),
+            new OrganisationType("3", "Company", "Public / Private Company eg: Child Care Centre")
+        };
+
+        return serviceTypes;
+    }
+
+    public IReadOnlyCollection<ServiceType> SeedServiceTypes()
+    {
+        List<ServiceType> serviceTypes = new()
+        {
+            new ServiceType("1", "Information Sharing", ""),
+            new ServiceType("2", "Family Experience", "")
+        };
+
+        return serviceTypes;
+    }
+    public IReadOnlyCollection<OpenReferralOrganisation> SeedOpenReferralOrganistions(OrganisationType organisationType)
     {
         List<OpenReferralOrganisation> openReferralOrganistions = new()
         {
-            GetBristolCountyCouncil(),
+            GetBristolCountyCouncil(organisationType),
             new OpenReferralOrganisation(
             "fc51795e-ea95-4af0-a0b2-4c06d5463678",
+            organisationType,
             "Lancashire County Council",
             "Lancashire County Council",
             null,
@@ -22,6 +60,7 @@ public class OpenReferralOrganisationSeedData
             ),
             new OpenReferralOrganisation(
             "1229cb45-0dc0-4f8a-81bd-2cd74c7cc9cc",
+            organisationType,
             "London Borough of Redbridge",
             "London Borough of Redbridge",
             null,
@@ -32,6 +71,7 @@ public class OpenReferralOrganisationSeedData
             ),
             new OpenReferralOrganisation(
             "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066",
+            organisationType,
             "Salford City Council",
             "Salford City Council",
             null,
@@ -42,6 +82,7 @@ public class OpenReferralOrganisationSeedData
             ),
             new OpenReferralOrganisation(
             "6dc1c3ad-d077-46ff-9e0d-04fb263f0637",
+            organisationType,
             "Suffolk County Council",
             "Suffolk County Council",
             null,
@@ -52,6 +93,7 @@ public class OpenReferralOrganisationSeedData
             ),
             new OpenReferralOrganisation(
             "88e0bffd-ed0b-48ea-9a70-5f6ef729fc21",
+            organisationType,
             "Tower Hamlets Council",
             "Tower Hamlets Council",
             null,
@@ -65,10 +107,11 @@ public class OpenReferralOrganisationSeedData
         return openReferralOrganistions;
     }
 
-    private OpenReferralOrganisation GetBristolCountyCouncil()
+    private OpenReferralOrganisation GetBristolCountyCouncil(OrganisationType organisationType)
     {
         var bristolCountyCouncil = new OpenReferralOrganisation(
             "72e653e8-1d05-4821-84e9-9177571a6013",
+            organisationType,
             "Bristol County Council",
             "Bristol County Council",
             null,
@@ -86,6 +129,7 @@ public class OpenReferralOrganisationSeedData
         {
             new OpenReferralService(
                 "4591d551-0d6a-4c0d-b109-002e67318231",
+                SeedServiceTypes().ElementAt(0),
                 parentId,
                 "Aid for Children with Tracheostomies",
                 @"Aid for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
@@ -205,6 +249,7 @@ public class OpenReferralOrganisationSeedData
 
             new OpenReferralService(
                 "96781fd9-95a2-4196-8db6-0f083f1c38fc",
+                SeedServiceTypes().ElementAt(0),
                 parentId,
                 "Test Service",
                 @"This is a test service.",

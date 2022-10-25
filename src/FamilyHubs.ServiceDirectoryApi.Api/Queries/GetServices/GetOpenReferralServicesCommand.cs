@@ -58,6 +58,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             request.Status = "active";
 
         var entities = await _context.OpenReferralServices
+           .Include(x => x.ServiceType)
            .Include(x => x.ServiceDelivery)
            .Include(x => x.Eligibilities)
            .Include(x => x.Contacts)
@@ -95,7 +96,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
                 if (Enum.TryParse(part, out ServiceDelivery serviceDelivery))
                 {
                     dbservices = dbservices.Where(x => x.ServiceDelivery.Any(x => x.ServiceDelivery == serviceDelivery));
-                }   
+                }
             }
         }
 
@@ -123,7 +124,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         {
             dbservices = entities.ToList();
             if (dbservices == null)
-            dbservices = new List<OpenReferralService>();
+                dbservices = new List<OpenReferralService>();
         }
 
         if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
