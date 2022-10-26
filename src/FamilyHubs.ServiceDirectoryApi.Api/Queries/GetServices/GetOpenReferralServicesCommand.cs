@@ -155,7 +155,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
                 dbservices = new List<OpenReferralService>();
         }
 
-        if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
+        if (request?.Latitude != null && request?.Longtitude != null)
             dbservices = dbservices.OrderBy(x => core.Helper.GetDistance(
                 request.Latitude,
                 request.Longtitude,
