@@ -335,7 +335,100 @@ public class OpenReferralOrganisationSeedData
                         null
                         ))
                 }
-                ))
+                )),
+
+            new OpenReferralService(
+                "207613c5-4cdf-46b2-a110-cf120a9412f9",
+                SeedServiceTypes().ElementAt(0),
+                parentId,
+                "Test Service - Paid",
+                @"This is a paid test service.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                "www.test1.com",
+                "support@test1.com",
+                null,
+                new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
+                {
+                    new OpenReferralServiceDelivery("46d1d3df-c7f7-47f0-9672-e18b67594d4e",ServiceDelivery.Online)
+                }),
+                new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
+                {
+                    new OpenReferralEligibility("9109T2Children","Children",null,13,0,new List<OpenReferralTaxonomy>())
+                }),
+                new List<OpenReferralFunding>(),
+                new List<OpenReferralHoliday_Schedule>(),
+                new List<OpenReferralLanguage>()
+                {
+                    new OpenReferralLanguage("51e75b71-56b9-4cde-9a14-f2a520deff5e","English")
+                },
+                new List<OpenReferralRegular_Schedule>(),
+                new List<OpenReferralReview>(),
+                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                {
+                    new OpenReferralContact(
+                        "1562",
+                        "Mr",
+                        "John Smith",
+                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
+                        {
+                            new OpenReferralPhone("1562", "01827 64328")
+                        }
+                        ))
+                }),
+                new List<OpenReferralCost_Option>(new List<OpenReferralCost_Option>()
+                {
+                    new OpenReferralCost_Option("1345", "Session", 45.0m, null, null, null, null)
+                }),
+                new List<OpenReferralService_Area>()
+                {
+                    new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                {
+                    new OpenReferralServiceAtLocation(
+                        "1867",
+                        new OpenReferralLocation(
+                            "fb82fbea-78bb-40c7-bbca-a29f95589483",
+                            "",
+                            "",
+                            52.63123,
+                            -1.66519,
+                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
+                            {
+                                new OpenReferralPhysical_Address(
+                                    Guid.NewGuid().ToString(),
+                                    "63 Sheepcote Lane",
+                                    "Tamworth",
+                                    "B77 3JN",
+                                    "England",
+                                    "Staffordshire"
+                                    )
+                            }),
+                            new List<Accessibility_For_Disabilities>()
+                            ),
+                        new List<OpenReferralRegular_Schedule>(),
+                        new List<OpenReferralHoliday_Schedule>()
+                        )
+
+                }),
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
+                {
+                    new OpenReferralService_Taxonomy
+                    ("9120TestDelete",
+                    null,
+                    new OpenReferralTaxonomy(
+                        "bccusergroupTestDelete2:56",
+                        "Test Conditions",
+                        "BCC User Groups",
+                        null
+                        ))
+                }
+                )),
 
         };
     }
