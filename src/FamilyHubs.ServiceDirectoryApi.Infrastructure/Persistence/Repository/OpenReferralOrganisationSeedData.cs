@@ -5,6 +5,44 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository;
 
 public class OpenReferralOrganisationSeedData
 {
+    public IReadOnlyCollection<OpenReferralLocation> SeedFamilyHubs()
+    {
+        List<OpenReferralLocation> locations = new()
+        {
+            new OpenReferralLocation("964ea451-6146-4add-913e-dff23a1bd7b6", "Central Family Hub", "Broughton Hub", -2.259764D, 53.507025D, new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("84c0a47a-08a1-4e54-814b-46ce26765c08", "50 Rigby Street", "Manchester", "M7 4BQ", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+            new OpenReferralLocation("74c37f53-dbc0-4958-8c97-baee41a022bf", "North Family Hub", "Swinton Gateway", -2.342044D, 53.5124278D, new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("83bf4f64-fdcb-46bc-a32e-8b117bf5c19a", "100 Chorley Road", "Manchester", "M27 6BP", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+            new OpenReferralLocation("1b4a625b-54bb-407d-a508-f90cade1e96f", "South Family Hub", "Winton Children’s Centre", -2.368140748303118D, 53.48801070060149D,  new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("45603703-5d3f-45f4-84f1-b294ac4d3290", "Brindley Street", "Manchester", "M30 8AB", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+        };
+
+        return locations;
+    }
+    public IReadOnlyCollection<OpenReferralTaxonomy> SeedTaxonomies()
+    {
+        List<OpenReferralTaxonomy> taxonomies = new()
+        {
+            new OpenReferralTaxonomy("d242700a-b2ad-42fe-8848-61534002156c", "FamilyHub", "FX Family Hub", null)
+        };
+
+        return taxonomies;
+    }
+
+    public IReadOnlyCollection<ModelLink> SeedModelLinks()
+    {
+        List<ModelLink> modelLinks = new()
+        {
+            new ModelLink("ebe8647d-e06d-478d-a6af-948dd7a289c7", "Location-Taxonomy", "964ea451-6146-4add-913e-dff23a1bd7b6", "d242700a-b2ad-42fe-8848-61534002156c"),
+            new ModelLink("760f05de-07df-4e58-a429-20922416b221", "Location-Taxonomy", "74c37f53-dbc0-4958-8c97-baee41a022bf", "d242700a-b2ad-42fe-8848-61534002156c"),
+            new ModelLink("9c8df56e-bebf-486f-8544-39f8deccbe94", "Location-Taxonomy", "1b4a625b-54bb-407d-a508-f90cade1e96f", "d242700a-b2ad-42fe-8848-61534002156c"),
+
+            new ModelLink("dc5e2bdb-ed5a-4278-b3a3-f0622502b5e4", "Location-Organisation", "964ea451-6146-4add-913e-dff23a1bd7b6", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
+            new ModelLink("4cb330f6-f68f-4529-8a55-dffa8b9d48af", "Location-Organisation", "74c37f53-dbc0-4958-8c97-baee41a022bf", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
+            new ModelLink("06bf080c-b161-4fc3-b015-81535ced46d8", "Location-Organisation", "1b4a625b-54bb-407d-a508-f90cade1e96f", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
+
+        };
+
+        return modelLinks;
+    }
+
     public IReadOnlyCollection<OrganisationAdminDistrict> SeedOrganisationAdminDistrict()
     {
         List<OrganisationAdminDistrict> adminDistricts = new()

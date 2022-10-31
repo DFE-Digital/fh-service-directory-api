@@ -66,6 +66,7 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
         public DbSet<OpenReferralServiceDelivery> OpenReferralServiceDeliveries => Set<OpenReferralServiceDelivery>();
         #endregion///
 
+        public DbSet<ModelLink> ModelLinks => Set<ModelLink>();
         public DbSet<ServiceType> ServiceTypes => Set<ServiceType>();
         public DbSet<OrganisationType> OrganisationTypes => Set<OrganisationType>();
         public DbSet<OrganisationAdminDistrict> OrganisationAdminDistricts => Set<OrganisationAdminDistrict>();

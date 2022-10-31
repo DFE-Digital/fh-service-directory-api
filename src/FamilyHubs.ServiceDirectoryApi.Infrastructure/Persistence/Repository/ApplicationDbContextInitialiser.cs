@@ -102,5 +102,14 @@ public class ApplicationDbContextInitialiser
 
         await _context.SaveChangesAsync();
 
+        if (!_context.ModelLinks.Any())
+        {
+            _context.OpenReferralLocations.AddRange(openReferralOrganisationSeedData.SeedFamilyHubs());
+            _context.OpenReferralTaxonomies.AddRange(openReferralOrganisationSeedData.SeedTaxonomies());
+            _context.ModelLinks.AddRange(openReferralOrganisationSeedData.SeedModelLinks());
+
+            await _context.SaveChangesAsync();
+        }
+
     }
 }
