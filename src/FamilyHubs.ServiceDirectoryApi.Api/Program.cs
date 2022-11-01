@@ -7,7 +7,6 @@ using fh_service_directory_api.api.Endpoints;
 using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Interfaces;
-using fh_service_directory_api.core.Interfaces.Infrastructure;
 using fh_service_directory_api.infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Interceptors;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
@@ -54,6 +53,9 @@ builder.Host.ConfigureLogging(logging =>
 
 ConfigurWebApplicationBuilderHost(builder);
 ConfigurWebApplicationBuilderServices(builder);
+
+// ApplicationInsights
+
 
 var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
@@ -129,6 +131,8 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
 
 });
 
+var applicationBuilder = WebApplication.CreateBuilder(args);
+RegisterComponents(builder.Services, applicationBuilder.Configuration);
 var webApplication = builder.Build();
 webApplication.UseSerilogRequestLogging();
 ConfigureWebApplication(webApplication);
@@ -171,7 +175,6 @@ using (var scope = webApplication.Services.CreateScope())
     }
 }
 
-
 webApplication.Run();
 
 
@@ -182,9 +185,12 @@ static void ConfigurWebApplicationBuilderHost(WebApplicationBuilder builder)
 
 static void ConfigurWebApplicationBuilderServices(WebApplicationBuilder builder)
 {
+   
     // Add services to the container.
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
+
+    
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddSwaggerGen(c =>
     {
@@ -199,6 +205,7 @@ static void ConfigurWebApplicationBuilderServices(WebApplicationBuilder builder)
         typeof(OpenReferralOrganisation).Assembly
           };
     builder.Services.AddMediatR(assemblies);
+  
 }
 
 static void ConfigureWebApplication(WebApplication webApplication)
@@ -212,6 +219,12 @@ static void ConfigureWebApplication(WebApplication webApplication)
     webApplication.UseAuthorization();
     webApplication.MapControllers();
 }
+
+static void RegisterComponents(IServiceCollection builder, IConfiguration configuration)
+{
+    builder.AddApplicationInsights(configuration);
+}
+
 
 
 public partial class Program { }
