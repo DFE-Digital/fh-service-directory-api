@@ -1,36 +1,21 @@
-# Base Image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
 
-# Copy Solution File to support Multi-Project
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY fh-service-directory-api.sln ./
-
-# Copy Dependencies
-COPY ["src/FamilyHubs.ServiceDirectoryApi.Api/FamilyHubs.ServiceDirectoryApi.Api.csproj", "src/FamilyHubs.ServiceDirectoryApi.Api/"]
-COPY ["src/FamilyHubs.ServiceDirectoryApi.Core/FamilyHubs.ServiceDirectoryApi.Core.csproj", "src/FamilyHubs.ServiceDirectoryApi.Core/"]
-COPY ["src/FamilyHubs.ServiceDirectoryApi.Infrastructure/FamilyHubs.ServiceDirectoryApi.Infrastructure.csproj", "src/FamilyHubs.ServiceDirectoryApi.Infrastructure/"]
-
-# Restore Project
-RUN dotnet restore "src/FamilyHubs.ServiceDirectoryApi.Api/FamilyHubs.ServiceDirectoryApi.Api.csproj"
-
-# Copy Everything
-COPY . .
-
-# Build
-WORKDIR "/src/src/FamilyHubs.ServiceDirectoryApi.Api"
-RUN dotnet build "FamilyHubs.ServiceDirectoryApi.Api.csproj" -c Release -o /app/build
-
-# publish
-FROM build AS publish
-WORKDIR "/src/src/FamilyHubs.ServiceDirectoryApi.Api"
-RUN dotnet publish "FamilyHubs.ServiceDirectoryApi.Api.csproj" -c Release -o /app/publish
+# Copy everything
+COPY . ./
+# Restore as distinct layers
+RUN dotnet restore
+# Build and publish a release
+RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "FamilyHubs.ServiceDirectoryApi.Api.dll"]
+COPY --from=build-env /app/out .
+EXPOSE 80
+EXPOSE 443
+ENTRYPOINT ["dotnet", "FamilyHubs.ServiceDirectoryAdminUi.Ui.dll"]
+
+# Export image to tar 
+WORKDIR /app/out
+CMD $ docker save --output $(pipeline.workspace)/servicedirectoryadminui.image.tar $(imagename):$(build.buildid)
