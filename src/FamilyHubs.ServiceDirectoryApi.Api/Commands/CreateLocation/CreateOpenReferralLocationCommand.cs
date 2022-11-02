@@ -64,7 +64,7 @@ public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOp
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred creating UICache. {exceptionMessage}", ex.Message);
+            _logger.LogError(ex, "An error occurred creating Location. {exceptionMessage}", ex.Message);
             throw new Exception(ex.Message, ex);
         }
 
