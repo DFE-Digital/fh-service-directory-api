@@ -189,9 +189,9 @@ public class OpenReferralOrganisationSeedData
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
-                                    "75 Sheepcote Lane",
-                                    ", Stathe, Tamworth, Staffordshire, ",
-                                    "B77 3JN",
+                                    "7A Boyce's Ave, Clifton", 
+                                    "Bristol", 
+                                    "BS8 4AA",
                                     "England",
                                     null
                                     )
@@ -251,7 +251,7 @@ public class OpenReferralOrganisationSeedData
                 "96781fd9-95a2-4196-8db6-0f083f1c38fc",
                 SeedServiceTypes().ElementAt(0),
                 parentId,
-                "Test Service",
+                "Test Service - Free - 10 to 15 yrs",
                 @"This is a test service.",
                 null,
                 null,
@@ -268,7 +268,7 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
                 {
-                    new OpenReferralEligibility("9109T1Children","Children",null,13,0,new List<OpenReferralTaxonomy>())
+                    new OpenReferralEligibility("9109T1Children","Children",null,15,10,new List<OpenReferralTaxonomy>())
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
@@ -309,9 +309,9 @@ public class OpenReferralOrganisationSeedData
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
-                                    "71 Sheepcote Lane",
-                                    ", Stathe, Tamworth, Staffordshire, ",
-                                    "B77 3JN",
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
                                     "England",
                                     null
                                     )
@@ -341,7 +341,7 @@ public class OpenReferralOrganisationSeedData
                 "207613c5-4cdf-46b2-a110-cf120a9412f9",
                 SeedServiceTypes().ElementAt(0),
                 parentId,
-                "Test Service - Paid",
+                "Test Service - Paid - 0 to 13yrs",
                 @"This is a paid test service.",
                 null,
                 null,
@@ -402,11 +402,11 @@ public class OpenReferralOrganisationSeedData
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
-                                    "63 Sheepcote Lane",
-                                    "Tamworth",
-                                    "B77 3JN",
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
                                     "England",
-                                    "Staffordshire"
+                                    null
                                     )
                             }),
                             new List<Accessibility_For_Disabilities>()
