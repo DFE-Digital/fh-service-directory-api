@@ -27,7 +27,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var id = await createhandler.Handle(createcommand, new System.Threading.CancellationToken());
 
 
-        GetOpenReferralServicesCommand command = new("active", "XTEST", null, null, null, null, null, 1, 10, null, null, null, null);
+        GetOpenReferralServicesCommand command = new("active", "XTEST", null, null, null, null, null, null, 1, 10, null, null, null, null);
         GetOpenReferralServicesCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
@@ -55,7 +55,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var id = await createhandler.Handle(createcommand, new System.Threading.CancellationToken());
 
 
-        GetOpenReferralServicesCommand command = new("active", "XTEST", null, null, null, null, null, 1, 10, null, null, true, null);
+        GetOpenReferralServicesCommand command = new("active", "XTEST", null, null, null, null, null, null, 1, 10, null, null, true, null);
         GetOpenReferralServicesCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
@@ -81,7 +81,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var id = await createhandler.Handle(createcommand, new System.Threading.CancellationToken());
 
 
-        GetOpenReferralServicesCommand command = new("active", "XTEST", null, null, null, null, null, 1, 10, null, null, false, null);
+        GetOpenReferralServicesCommand command = new("active", "XTEST", null, null, null, null, null, null, 1, 10, null, null, false, null);
         GetOpenReferralServicesCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
