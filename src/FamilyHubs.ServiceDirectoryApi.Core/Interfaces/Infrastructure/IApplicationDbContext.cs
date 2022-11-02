@@ -5,6 +5,7 @@ namespace fh_service_directory_api.core.Interfaces.Infrastructure
 {
     public interface IApplicationDbContext
     {
+        DbSet<ModelLink> ModelLinks { get; }
         DbSet<UICache> UICaches { get; }
         DbSet<Accessibility_For_Disabilities> Accessibility_For_Disabilities { get; }
         DbSet<OpenReferralContact> OpenReferralContacts { get; }

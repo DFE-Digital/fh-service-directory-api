@@ -26,9 +26,11 @@ Log.Information("Starting up");
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((ctx, lc) => lc
-        .WriteTo.Console()
-        .ReadFrom.Configuration(ctx.Configuration));
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+    .WriteTo.Console());
 
 builder.Host.ConfigureLogging(logging =>
 {
@@ -100,6 +102,7 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
     containerBuilder.RegisterType<MinimalGeneralEndPoints>();
     containerBuilder.RegisterType<MinimalServiceEndPoints>();
     containerBuilder.RegisterType<MinimalTaxonomyEndPoints>();
+    containerBuilder.RegisterType<MinimalLocationEndPoints>();
     containerBuilder.RegisterType<MinimalUICacheEndPoints>();
     containerBuilder.RegisterType<ApplicationDbContextInitialiser>();
 
@@ -150,6 +153,10 @@ using (var scope = webApplication.Services.CreateScope())
     var taxonyservice = scope.ServiceProvider.GetService<MinimalTaxonomyEndPoints>();
     if (taxonyservice != null)
         taxonyservice.RegisterTaxonomyEndPoints(webApplication);
+
+    var locationservice = scope.ServiceProvider.GetService<MinimalLocationEndPoints>();
+    if (locationservice != null)
+        locationservice.RegisterLocationEndPoints(webApplication);
 
     var uiCacheservice = scope.ServiceProvider.GetService<MinimalUICacheEndPoints>();
     if (uiCacheservice != null)

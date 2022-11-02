@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.ModelLink;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContacts;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
@@ -39,6 +40,7 @@ public class AutoMappingProfiles : Profile
         CreateMap<OpenReferralTaxonomyDto, OpenReferralTaxonomy>();
         CreateMap<OrganisationTypeDto, OrganisationType>();
         CreateMap<ServiceTypeDto, ServiceType>();
+        CreateMap<ModelLinkDto, ModelLink>();
 
     }
 }
