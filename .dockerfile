@@ -35,6 +35,3 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "FamilyHubs.ServiceDirectoryApi.Api.dll"]
 
-# Export image to tar 
-WORKDIR /app/publish
-CMD $ docker save --output $(pipeline.workspace)/servicedirectoryadminapi.image.tar $(imagename):$(build.buildid)
