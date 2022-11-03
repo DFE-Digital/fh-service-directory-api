@@ -392,7 +392,7 @@ public class OpenReferralOrganisationSeedData
                 null,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
-                    new OpenReferralServiceDelivery("46d1d3df-c7f7-47f0-9672-e18b67594d4e",ServiceDelivery.Online)
+                    new OpenReferralServiceDelivery("46d1d3df-c7f7-47f0-9672-e18b67594d4e",ServiceDelivery.Telephone)
                 }),
                 new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
                 {
