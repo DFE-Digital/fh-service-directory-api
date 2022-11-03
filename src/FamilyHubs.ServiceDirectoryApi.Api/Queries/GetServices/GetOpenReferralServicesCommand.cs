@@ -121,6 +121,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             dbservices = dbservices.Where(x => x.Name.Contains(request.Text) || x.Description != null && x.Description.Contains(request.Text));
         }
 
+        List<OpenReferralService> servicesFilteredByDelMethod = new List<OpenReferralService>();
         if (request?.ServiceDeliveries != null)
         {
             string[] parts = request.ServiceDeliveries.Split(',');
@@ -128,10 +129,12 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             {
                 if (Enum.TryParse(part, out ServiceDelivery serviceDelivery))
                 {
-                    dbservices = dbservices.Where(x => x.ServiceDelivery.Any(x => x.ServiceDelivery == serviceDelivery));
+                    servicesFilteredByDelMethod.AddRange(dbservices.Where(x => x.ServiceDelivery.Any(x => x.ServiceDelivery == serviceDelivery)).ToList());
                 }
             }
         }
+
+        dbservices = servicesFilteredByDelMethod;
 
         if (request?.IsPaidFor != null)
         {
