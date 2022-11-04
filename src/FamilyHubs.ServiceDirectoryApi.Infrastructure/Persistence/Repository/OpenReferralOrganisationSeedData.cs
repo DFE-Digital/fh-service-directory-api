@@ -302,7 +302,7 @@ public class OpenReferralOrganisationSeedData
                 null,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
-                    new OpenReferralServiceDelivery("b2518131-90fc-4149-bbd1-1c9992cd92ac",ServiceDelivery.Online)
+                    new OpenReferralServiceDelivery("b2518131-90fc-4149-bbd1-1c9992cd92ac",ServiceDelivery.InPerson)
                 }),
                 new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
                 {
