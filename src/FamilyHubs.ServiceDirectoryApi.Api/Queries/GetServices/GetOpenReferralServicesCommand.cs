@@ -12,12 +12,13 @@ namespace fh_service_directory_api.api.Queries.GetServices;
 public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferralServiceDto>>
 {
     public GetOpenReferralServicesCommand() { }
-    public GetOpenReferralServicesCommand(string? status, string? districtCode, int? minimum_age, int? maximum_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds)
+    public GetOpenReferralServicesCommand(string? status, string? districtCode, int? minimum_age, int? maximum_age, int? given_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds)
     {
         Status = status;
         DistrictCode = districtCode;
         MaximumAge = maximum_age;
         MinimumAge = minimum_age;
+        GivenAge = given_age;
         Latitude = latitude;
         Longtitude = longtitude;
         Meters = proximity;
@@ -33,6 +34,7 @@ public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferra
     public string? DistrictCode { get; set; }
     public int? MaximumAge { get; set; }
     public int? MinimumAge { get; set; }
+    public int? GivenAge { get; set; }
     public double? Latitude { get; set; }
     public double? Longtitude { get; set; }
     public double? Meters { get; set; }
@@ -111,11 +113,15 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         if (request?.MinimumAge != null)
             dbservices = dbservices.Where(x => x.Eligibilities.Any(x => x.Minimum_age >= request.MinimumAge.Value));
 
+        if (request?.GivenAge != null)
+            dbservices = dbservices.Where(x => x.Eligibilities.Any(x => x.Minimum_age <= request.GivenAge.Value && x.Maximum_age >= request.GivenAge.Value));
+
         if (request?.Text != null)
         {
             dbservices = dbservices.Where(x => x.Name.Contains(request.Text) || x.Description != null && x.Description.Contains(request.Text));
         }
 
+        List<OpenReferralService> servicesFilteredByDelMethod = new List<OpenReferralService>();
         if (request?.ServiceDeliveries != null)
         {
             string[] parts = request.ServiceDeliveries.Split(',');
@@ -123,10 +129,12 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             {
                 if (Enum.TryParse(part, out ServiceDelivery serviceDelivery))
                 {
-                    dbservices = dbservices.Where(x => x.ServiceDelivery.Any(x => x.ServiceDelivery == serviceDelivery));
+                    servicesFilteredByDelMethod.AddRange(dbservices.Where(x => x.ServiceDelivery.Any(x => x.ServiceDelivery == serviceDelivery)).ToList());
                 }
             }
         }
+
+        dbservices = servicesFilteredByDelMethod;
 
         if (request?.IsPaidFor != null)
         {

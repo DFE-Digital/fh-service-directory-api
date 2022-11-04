@@ -30,13 +30,13 @@ public class OpenReferralOrganisationSeedData
     {
         List<ModelLink> modelLinks = new()
         {
-            new ModelLink("ebe8647d-e06d-478d-a6af-948dd7a289c7", "Location-Taxonomy", "964ea451-6146-4add-913e-dff23a1bd7b6", "d242700a-b2ad-42fe-8848-61534002156c"),
-            new ModelLink("760f05de-07df-4e58-a429-20922416b221", "Location-Taxonomy", "74c37f53-dbc0-4958-8c97-baee41a022bf", "d242700a-b2ad-42fe-8848-61534002156c"),
-            new ModelLink("9c8df56e-bebf-486f-8544-39f8deccbe94", "Location-Taxonomy", "1b4a625b-54bb-407d-a508-f90cade1e96f", "d242700a-b2ad-42fe-8848-61534002156c"),
+            new ModelLink("ebe8647d-e06d-478d-a6af-948dd7a289c7", fh_service_directory_api.core.StaticContants.Location_Taxonomy, "964ea451-6146-4add-913e-dff23a1bd7b6", "d242700a-b2ad-42fe-8848-61534002156c"),
+            new ModelLink("760f05de-07df-4e58-a429-20922416b221", fh_service_directory_api.core.StaticContants.Location_Taxonomy, "74c37f53-dbc0-4958-8c97-baee41a022bf", "d242700a-b2ad-42fe-8848-61534002156c"),
+            new ModelLink("9c8df56e-bebf-486f-8544-39f8deccbe94", fh_service_directory_api.core.StaticContants.Location_Taxonomy, "1b4a625b-54bb-407d-a508-f90cade1e96f", "d242700a-b2ad-42fe-8848-61534002156c"),
 
-            new ModelLink("dc5e2bdb-ed5a-4278-b3a3-f0622502b5e4", "Location-Organisation", "964ea451-6146-4add-913e-dff23a1bd7b6", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
-            new ModelLink("4cb330f6-f68f-4529-8a55-dffa8b9d48af", "Location-Organisation", "74c37f53-dbc0-4958-8c97-baee41a022bf", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
-            new ModelLink("06bf080c-b161-4fc3-b015-81535ced46d8", "Location-Organisation", "1b4a625b-54bb-407d-a508-f90cade1e96f", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
+            new ModelLink("dc5e2bdb-ed5a-4278-b3a3-f0622502b5e4", fh_service_directory_api.core.StaticContants.Location_Organisation, "964ea451-6146-4add-913e-dff23a1bd7b6", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
+            new ModelLink("4cb330f6-f68f-4529-8a55-dffa8b9d48af", fh_service_directory_api.core.StaticContants.Location_Organisation, "74c37f53-dbc0-4958-8c97-baee41a022bf", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
+            new ModelLink("06bf080c-b161-4fc3-b015-81535ced46d8", fh_service_directory_api.core.StaticContants.Location_Organisation, "1b4a625b-54bb-407d-a508-f90cade1e96f", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
 
         };
 
@@ -227,9 +227,9 @@ public class OpenReferralOrganisationSeedData
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
-                                    "75 Sheepcote Lane",
-                                    ", Stathe, Tamworth, Staffordshire, ",
-                                    "B77 3JN",
+                                    "7A Boyce's Ave, Clifton", 
+                                    "Bristol", 
+                                    "BS8 4AA",
                                     "England",
                                     null
                                     )
@@ -289,7 +289,7 @@ public class OpenReferralOrganisationSeedData
                 "96781fd9-95a2-4196-8db6-0f083f1c38fc",
                 SeedServiceTypes().ElementAt(0),
                 parentId,
-                "Test Service",
+                "Test Service - Free - 10 to 15 yrs",
                 @"This is a test service.",
                 null,
                 null,
@@ -306,7 +306,7 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
                 {
-                    new OpenReferralEligibility("9109T1Children","Children",null,13,0,new List<OpenReferralTaxonomy>())
+                    new OpenReferralEligibility("9109T1Children","Children",null,15,10,new List<OpenReferralTaxonomy>())
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
@@ -347,9 +347,9 @@ public class OpenReferralOrganisationSeedData
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
-                                    "71 Sheepcote Lane",
-                                    ", Stathe, Tamworth, Staffordshire, ",
-                                    "B77 3JN",
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
                                     "England",
                                     null
                                     )
@@ -379,7 +379,7 @@ public class OpenReferralOrganisationSeedData
                 "207613c5-4cdf-46b2-a110-cf120a9412f9",
                 SeedServiceTypes().ElementAt(0),
                 parentId,
-                "Test Service - Paid",
+                "Test Service - Paid - 0 to 13yrs",
                 @"This is a paid test service.",
                 null,
                 null,
@@ -392,7 +392,7 @@ public class OpenReferralOrganisationSeedData
                 null,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
-                    new OpenReferralServiceDelivery("46d1d3df-c7f7-47f0-9672-e18b67594d4e",ServiceDelivery.Online)
+                    new OpenReferralServiceDelivery("46d1d3df-c7f7-47f0-9672-e18b67594d4e",ServiceDelivery.Telephone)
                 }),
                 new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
                 {
@@ -440,11 +440,11 @@ public class OpenReferralOrganisationSeedData
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
-                                    "63 Sheepcote Lane",
-                                    "Tamworth",
-                                    "B77 3JN",
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
                                     "England",
-                                    "Staffordshire"
+                                    null
                                     )
                             }),
                             new List<Accessibility_For_Disabilities>()
