@@ -4,6 +4,6 @@ namespace fh_service_directory_api.infrastructure.Services
 {
     public interface IPostcodeLookupService
     {
-        Task<IPostcodeIOResponseDto> GetPostcodeAsync(string postcode);
+        Task<PostcodeIOResponseDto> GetPostcodeAsync(string postcode);
     }
 }

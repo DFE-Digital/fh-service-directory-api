@@ -23,7 +23,7 @@ namespace fh_service_directory_api.infrastructure.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<IPostcodeIOResponseDto> GetPostcodeAsync(string postcode)
+        public async Task<PostcodeIOResponseDto> GetPostcodeAsync(string postcode)
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_postcodeIOBaseAddress);

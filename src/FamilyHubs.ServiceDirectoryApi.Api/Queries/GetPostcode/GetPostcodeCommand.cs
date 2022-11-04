@@ -5,7 +5,7 @@ using System.Net;
 
 namespace fh_service_directory_api.api.Queries.GetPostcode
 {
-    public class GetPostcodeCommand : IRequest<IPostcodeIOResponseDto>
+    public class GetPostcodeCommand : IRequest<PostcodeIOResponseDto>
     {
         public GetPostcodeCommand(string? postcodeToFind)
         {
@@ -15,7 +15,7 @@ namespace fh_service_directory_api.api.Queries.GetPostcode
         public string? PostcodeToFind { get; }
     }
 
-    public class GetPostcodeCommandHandler : IRequestHandler<GetPostcodeCommand, IPostcodeIOResponseDto>
+    public class GetPostcodeCommandHandler : IRequestHandler<GetPostcodeCommand, PostcodeIOResponseDto>
     {
         private readonly IPostcodeLookupService _postcodeLookupService;
 
@@ -24,7 +24,7 @@ namespace fh_service_directory_api.api.Queries.GetPostcode
             _postcodeLookupService = postcodeLookupService;
         }
 
-        public async Task<IPostcodeIOResponseDto> Handle(GetPostcodeCommand request, CancellationToken cancellationToken)
+        public async Task<PostcodeIOResponseDto> Handle(GetPostcodeCommand request, CancellationToken cancellationToken)
         {
             if (request == null || string.IsNullOrWhiteSpace(request.PostcodeToFind))
             {
