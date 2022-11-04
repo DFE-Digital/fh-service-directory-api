@@ -10,6 +10,12 @@ public class GetServicesUrlBuilder
         return this;
     }
 
+    public GetServicesUrlBuilder WithDistrictCode(string code)
+    {
+        _urlParameter.Add($"districtCode={code}");
+        return this;
+    }
+
     public GetServicesUrlBuilder WithEligibility(int minimum_age, int maximum_age)
     {
         _urlParameter.Add( $"minimum_age={minimum_age}&maximum_age={maximum_age}" );

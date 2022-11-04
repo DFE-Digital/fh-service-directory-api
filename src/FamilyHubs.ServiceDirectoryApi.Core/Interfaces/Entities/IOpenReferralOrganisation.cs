@@ -11,6 +11,6 @@ public interface IOpenReferralOrganisation : IEntityBase<string>
     ICollection<OpenReferralService>? Services { get; set; }
     string? Uri { get; }
     string? Url { get; }
-
+    OrganisationType OrganisationType { get; set; }
     void Update(OpenReferralOrganisation openReferralOpenReferralOrganisation);
 }

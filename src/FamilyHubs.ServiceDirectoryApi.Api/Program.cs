@@ -7,7 +7,6 @@ using fh_service_directory_api.api.Endpoints;
 using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Interfaces;
-using fh_service_directory_api.core.Interfaces.Infrastructure;
 using fh_service_directory_api.infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Interceptors;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
@@ -17,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Serilog;
+using Microsoft.Extensions.Logging.AzureAppServices;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -26,12 +26,38 @@ Log.Information("Starting up");
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((ctx, lc) => lc
-        .WriteTo.Console()
-        .ReadFrom.Configuration(ctx.Configuration));
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+    .WriteTo.Console());
+
+builder.Host.ConfigureLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
+    logging.AddConsole();
+    logging.AddDebug();
+    logging.AddAzureWebAppDiagnostics();
+})
+.ConfigureServices(serviceCollection => serviceCollection
+    .Configure<AzureFileLoggerOptions>(options =>
+    {
+        options.FileName = "azure-diagnostics-";
+        options.FileSizeLimit = 50 * 1024;
+        options.RetainedFileCountLimit = 5;
+    })
+//.Configure<AzureBlobLoggerOptions>(options =>
+//{
+//    options.BlobName = "log.txt";
+//})
+);
 
 ConfigurWebApplicationBuilderHost(builder);
 ConfigurWebApplicationBuilderServices(builder);
+
+// ApplicationInsights
+
 
 var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
@@ -76,6 +102,7 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
     containerBuilder.RegisterType<MinimalGeneralEndPoints>();
     containerBuilder.RegisterType<MinimalServiceEndPoints>();
     containerBuilder.RegisterType<MinimalTaxonomyEndPoints>();
+    containerBuilder.RegisterType<MinimalLocationEndPoints>();
     containerBuilder.RegisterType<MinimalUICacheEndPoints>();
     containerBuilder.RegisterType<ApplicationDbContextInitialiser>();
 
@@ -107,6 +134,8 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
 
 });
 
+var applicationBuilder = WebApplication.CreateBuilder(args);
+RegisterComponents(builder.Services, applicationBuilder.Configuration);
 var webApplication = builder.Build();
 webApplication.UseSerilogRequestLogging();
 ConfigureWebApplication(webApplication);
@@ -124,6 +153,10 @@ using (var scope = webApplication.Services.CreateScope())
     var taxonyservice = scope.ServiceProvider.GetService<MinimalTaxonomyEndPoints>();
     if (taxonyservice != null)
         taxonyservice.RegisterTaxonomyEndPoints(webApplication);
+
+    var locationservice = scope.ServiceProvider.GetService<MinimalLocationEndPoints>();
+    if (locationservice != null)
+        locationservice.RegisterLocationEndPoints(webApplication);
 
     var uiCacheservice = scope.ServiceProvider.GetService<MinimalUICacheEndPoints>();
     if (uiCacheservice != null)
@@ -149,7 +182,6 @@ using (var scope = webApplication.Services.CreateScope())
     }
 }
 
-
 webApplication.Run();
 
 
@@ -160,9 +192,12 @@ static void ConfigurWebApplicationBuilderHost(WebApplicationBuilder builder)
 
 static void ConfigurWebApplicationBuilderServices(WebApplicationBuilder builder)
 {
+   
     // Add services to the container.
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
+
+    
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddSwaggerGen(c =>
     {
@@ -177,6 +212,7 @@ static void ConfigurWebApplicationBuilderServices(WebApplicationBuilder builder)
         typeof(OpenReferralOrganisation).Assembly
           };
     builder.Services.AddMediatR(assemblies);
+  
 }
 
 static void ConfigureWebApplication(WebApplication webApplication)
@@ -190,6 +226,12 @@ static void ConfigureWebApplication(WebApplication webApplication)
     webApplication.UseAuthorization();
     webApplication.MapControllers();
 }
+
+static void RegisterComponents(IServiceCollection builder, IConfiguration configuration)
+{
+    builder.AddApplicationInsights(configuration);
+}
+
 
 
 public partial class Program { }

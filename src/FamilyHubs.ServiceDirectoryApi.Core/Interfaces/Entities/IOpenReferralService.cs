@@ -28,6 +28,7 @@ namespace fh_service_directory_api.core.Interfaces.Entities
         ICollection<OpenReferralServiceDelivery> ServiceDelivery { get; set; }
         string? Status { get; }
         string? Url { get; }
+        ServiceType ServiceType { get; set; }
 
         void Update(OpenReferralService openReferralService);
     }

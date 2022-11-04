@@ -5,6 +5,7 @@ namespace fh_service_directory_api.core.Interfaces.Infrastructure
 {
     public interface IApplicationDbContext
     {
+        DbSet<ModelLink> ModelLinks { get; }
         DbSet<UICache> UICaches { get; }
         DbSet<Accessibility_For_Disabilities> Accessibility_For_Disabilities { get; }
         DbSet<OpenReferralContact> OpenReferralContacts { get; }
@@ -27,7 +28,10 @@ namespace fh_service_directory_api.core.Interfaces.Infrastructure
         DbSet<OpenReferralServiceDelivery> OpenReferralServiceDeliveries { get; }
         DbSet<OpenReferralService> OpenReferralServices { get; }
         DbSet<OpenReferralTaxonomy> OpenReferralTaxonomies { get; }
-
+        DbSet<OrganisationType> OrganisationTypes { get; }
+        DbSet<ServiceType> ServiceTypes { get; }
+        DbSet<OrganisationAdminDistrict> OrganisationAdminDistricts { get; }
+        DbSet<RelatedOrganisation> RelatedOrganisations { get; }
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

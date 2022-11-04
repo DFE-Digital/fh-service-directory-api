@@ -22,4 +22,6 @@ public class OpenReferralHoliday_Schedule : EntityBase<string>, IOpenReferralHol
     public DateTime? Start_date { get; set; }
     public DateTime? End_date { get; set; }
     public DateTime? Opens_at { get; set; }
+    public string OpenReferralServiceAtLocationId { get; set; } = default!;
+    
 }

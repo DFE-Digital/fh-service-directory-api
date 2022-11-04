@@ -17,13 +17,18 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverys
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
 using FamilyHubs.ServiceDirectoryApi.UnitTests.Builders;
 using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 using fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
 using fh_service_directory_api.api.Queries.GetOpenReferralOrganisationById;
+using fh_service_directory_api.api.Queries.GetOrganisationAdminByOrganisationId;
+using fh_service_directory_api.api.Queries.GetOrganisationTypes;
 using fh_service_directory_api.api.Queries.ListOrganisation;
 using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
+using fh_service_directory_api.infrastructure.Persistence.Repository;
 using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -108,7 +113,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(testOrganisation);
+        result.Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.AdministractiveDistrictCode));
     }
 
     [Fact]
@@ -134,13 +139,69 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         //Assert
         result.Should().NotBeNull();
-        result[0].Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.Services));
+        result[0].Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.Services).Excluding(si => si.AdministractiveDistrictCode));
+    }
+
+    [Fact]
+    public async Task ThenListOpenReferralOrganisationTypes()
+    {
+        //Arange
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
+        var mockApplicationDbContext = GetApplicationDbContext();
+        var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData();
+        if (!mockApplicationDbContext.OrganisationAdminDistricts.Any())
+        {
+            mockApplicationDbContext.OrganisationTypes.AddRange(openReferralOrganisationSeedData.SeedOrganisationTypes());
+            mockApplicationDbContext.SaveChanges();
+        }
+
+        GetOrganisationTypesCommand getcommand = new();
+        GetOrganisationTypesCommandHandler gethandler = new(mockApplicationDbContext);
+        
+
+        //Act
+        var result = await gethandler.Handle(getcommand, new System.Threading.CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Count.Should().Be(3);
+        
+    }
+
+    [Fact]
+    public async Task ThenGetOpenReferralAdminByOrganisationId()
+    {
+        //Arange
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
+        var mockApplicationDbContext = GetApplicationDbContext();
+        var testOrganisation = GetTestCountyCouncilDto();
+        CreateOpenReferralOrganisationCommand command = new(testOrganisation);
+        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
+        var id = await handler.Handle(command, new System.Threading.CancellationToken());
+
+        GetOrganisationAdminByOrganisationIdCommand getcommand = new(testOrganisation.Id);
+        GetOrganisationAdminByOrganisationIdCommandHandler gethandler = new(mockApplicationDbContext, mapper);
+        testOrganisation.Logo = "";
+
+        //Act
+        var result = await gethandler.Handle(getcommand, new System.Threading.CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be("XTEST");
     }
 
     public static OpenReferralOrganisationWithServicesDto GetTestCountyCouncilDto()
     {
-        var bristolCountyCouncil = new OpenReferralOrganisationWithServicesDto(
+        var testCountyCouncil = new OpenReferralOrganisationWithServicesDto(
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
+            new OrganisationTypeDto("1", "LA", "Local Authority"),
             "Unit Test County Council",
             "Unit Test County Council",
             null,
@@ -152,7 +213,9 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             }
             );
 
-        return bristolCountyCouncil;
+        testCountyCouncil.AdministractiveDistrictCode = "XTEST";
+
+        return testCountyCouncil;
     }
 
     public static OpenReferralServiceDto GetTestCountyCouncilServicesDto(string parentId)
@@ -161,6 +224,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         ServicesDtoBuilder builder = new ServicesDtoBuilder();
         OpenReferralServiceDto service = builder.WithMainProperties("3010521b-6e0a-41b0-b610-200edbbeeb14",
+                new ServiceTypeDto("1", "Information Sharing", ""),
                 parentId,
                 "Unit Test Service",
                 @"Unit Test Service Description",
@@ -276,8 +340,9 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     
     public static OpenReferralOrganisationWithServicesDto GetTestCountyCouncilRecord()
     {
-        var bristolCountyCouncil = new OpenReferralOrganisationWithServicesDto(
+        var testCountyCouncil = new OpenReferralOrganisationWithServicesDto(
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
+            new OrganisationTypeDto("1", "LA", "Local Authority"),
             "Unit Test A County Council",
             "Unit Test A County Council",
             null,
@@ -290,7 +355,9 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             }
             );
 
-        return bristolCountyCouncil;
+        testCountyCouncil.AdministractiveDistrictCode = "XTEST";
+
+        return testCountyCouncil;
     }
 
     private static OpenReferralService GetTestCountyCouncilServicesRecord()
@@ -410,6 +477,8 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                         ))
                 })
             .Build();
+
+        service.ServiceType = new ServiceType("1", "Information Sharing", "");
 
         return service;
     }

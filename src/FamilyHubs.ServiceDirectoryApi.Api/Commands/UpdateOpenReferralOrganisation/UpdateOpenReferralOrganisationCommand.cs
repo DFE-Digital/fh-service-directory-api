@@ -2,10 +2,12 @@
 using Ardalis.Specification;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
+using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 using fh_service_directory_api.api.Commands.UpdateOpenReferralService;
 using fh_service_directory_api.api.Helper;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
+using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +49,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
         ArgumentNullException.ThrowIfNull(request, nameof(request));
 
         var entity = await _context.OpenReferralOrganisations
+          .Include(x => x.OrganisationType)
           .Include(x => x.Services!)
           .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
 
@@ -57,7 +60,16 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
         try
         {
-            entity.Update(_mapper.Map<OpenReferralOrganisation>(request.OpenReferralOrganisation));
+            
+            OpenReferralOrganisation org = _mapper.Map<OpenReferralOrganisation>(request.OpenReferralOrganisation);
+            var organisationType = _context.OrganisationTypes.FirstOrDefault(x => x.Id == request.OpenReferralOrganisation.OrganisationType.Id);
+            if (organisationType != null)
+            {
+                org.OrganisationType = organisationType;
+            }
+            
+            entity.Update(org);
+            AddOrUpdateAdministractiveDistrict(request, entity);
 
             if (entity.Services != null && request.OpenReferralOrganisation.Services != null)
             {
@@ -88,6 +100,25 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                         if (childModel != null)
                         {
                             OpenReferralService service = _mapper.Map<OpenReferralService>(childModel);
+
+                            var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == childModel.ServiceType.Id);
+                            if (serviceType != null)
+                                service.ServiceType = serviceType;
+
+                            if (childModel.Service_taxonomys != null)
+                            {
+                                for (int i = 0; i < childModel?.Service_taxonomys.Count; i++)
+                                {
+                                    if (childModel.Service_taxonomys.ElementAt(i) != null && childModel.Service_taxonomys.ElementAt(i).Taxonomy != null)
+                                    {
+                                        string id = childModel?.Service_taxonomys?.ElementAt(i)?.Taxonomy?.Id ?? string.Empty;
+                                        var tx = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == id);
+                                        if (childModel != null)
+                                            service.Service_taxonomys.ElementAt(i).Taxonomy = tx;
+                                    }
+                                }
+                            }
+
                             entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(service));
                             _context.OpenReferralServices.Add(service);
                         }
@@ -133,6 +164,30 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
         return entity.Id;
     }
+
+    private void AddOrUpdateAdministractiveDistrict(UpdateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
+    {
+        if (!string.IsNullOrEmpty(request.OpenReferralOrganisation.AdministractiveDistrictCode))
+        {
+            var organisationAdminDistrict = _context.OrganisationAdminDistricts.FirstOrDefault(x => x.OpenReferralOrganisationId == openReferralOrganisation.Id);
+            if (organisationAdminDistrict == null)
+            {
+                var entity = new OrganisationAdminDistrict(
+                    Guid.NewGuid().ToString(),
+                    request.OpenReferralOrganisation.AdministractiveDistrictCode,
+                    openReferralOrganisation.Id);
+
+                entity.RegisterDomainEvent(new OrganisationAdminDistrictCreatedEvent(entity));
+                _context.OrganisationAdminDistricts.Add(entity);
+            }
+            else
+            {
+                organisationAdminDistrict.Code = request.OpenReferralOrganisation.AdministractiveDistrictCode;
+            }
+            
+        }
+    }
+
 }
 
 

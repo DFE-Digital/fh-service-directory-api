@@ -9,7 +9,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
 {
     public OpenReferralService() { }
 
-    public OpenReferralService(string id, string openReferralOrganisationId, string name, string? description, string? accreditations, DateTime? assured_date, string? attending_access, string? attending_type, string? deliverable_type, string? status, string? url, string? email, string? fees
+    public OpenReferralService(string id, ServiceType serviceType, string openReferralOrganisationId, string name, string? description, string? accreditations, DateTime? assured_date, string? attending_access, string? attending_type, string? deliverable_type, string? status, string? url, string? email, string? fees
         , ICollection<OpenReferralServiceDelivery> serviceDelivery
         , ICollection<OpenReferralEligibility> eligibilitys
         , ICollection<OpenReferralFunding> fundings
@@ -25,6 +25,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
         )
     {
         Id = id;
+        ServiceType = serviceType;
         OpenReferralOrganisationId = openReferralOrganisationId;   
         Name = name;
         Description = description;
@@ -51,6 +52,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
         ServiceDelivery = serviceDelivery as ICollection<OpenReferralServiceDelivery> ?? new Collection<OpenReferralServiceDelivery>();
     }
 
+    public ServiceType ServiceType { get; set; } = default!;
     public string OpenReferralOrganisationId { get; set; } = default!;  
     public string Name { get; set; } = default!;
     public string? Description { get; set; }
@@ -78,6 +80,8 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
 
     public void Update(OpenReferralService openReferralService)
     {
+        Id = openReferralService.Id;
+        ServiceType = openReferralService.ServiceType;
         Name = openReferralService.Name;
         Description = openReferralService.Description;
         Accreditations = openReferralService.Accreditations;

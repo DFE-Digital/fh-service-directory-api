@@ -62,14 +62,54 @@ public class ApplicationDbContextInitialiser
 
         var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData();
 
-        IReadOnlyCollection<OpenReferralOrganisation> openReferralOrganisations = openReferralOrganisationSeedData.SeedOpenReferralOrganistions();
-
-        foreach (var openReferralOrganisation in openReferralOrganisations)
+        if (!_context.OrganisationTypes.Any())
         {
-            _context.OpenReferralOrganisations.Add(openReferralOrganisation);
+            _context.OrganisationTypes.AddRange(openReferralOrganisationSeedData.SeedOrganisationTypes());
+        }
+
+        if (!_context.ServiceTypes.Any())
+        {
+            _context.ServiceTypes.AddRange(openReferralOrganisationSeedData.SeedServiceTypes());
         }
 
         await _context.SaveChangesAsync();
+
+        var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Name == "Information Sharing");
+
+        IReadOnlyCollection<OpenReferralOrganisation> openReferralOrganisations = openReferralOrganisationSeedData.SeedOpenReferralOrganistions(_context.OrganisationTypes.FirstOrDefault(x => x.Name == "LA") ?? _context.OrganisationTypes.First());
+
+        foreach (var openReferralOrganisation in openReferralOrganisations)
+        {
+            if (serviceType != null && openReferralOrganisation != null && openReferralOrganisation.Services != null)
+            {
+                foreach(var service in openReferralOrganisation.Services)
+                {
+                    service.ServiceType = serviceType;
+                }
+                
+            }
+
+            if (openReferralOrganisation != null)
+            {
+                _context.OpenReferralOrganisations.Add(openReferralOrganisation);
+            } 
+        }
+
+        if (!_context.OrganisationAdminDistricts.Any())
+        {
+            _context.OrganisationAdminDistricts.AddRange(openReferralOrganisationSeedData.SeedOrganisationAdminDistrict());
+        }
+
+        await _context.SaveChangesAsync();
+
+        if (!_context.ModelLinks.Any())
+        {
+            _context.OpenReferralLocations.AddRange(openReferralOrganisationSeedData.SeedFamilyHubs());
+            _context.OpenReferralTaxonomies.AddRange(openReferralOrganisationSeedData.SeedTaxonomies());
+            _context.ModelLinks.AddRange(openReferralOrganisationSeedData.SeedModelLinks());
+
+            await _context.SaveChangesAsync();
+        }
 
     }
 }

@@ -6,8 +6,6 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralHolidaySchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhones;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralRegularSchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAreas;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAtLocations;
@@ -20,11 +18,7 @@ using fh_service_directory_api.core.Events;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.Metrics;
-using System.Xml.Linq;
 
 namespace fh_service_directory_api.api.Commands.UpdateOpenReferralService;
 
@@ -46,6 +40,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
     private readonly ApplicationDbContext _context;
     private readonly ILogger<UpdateOpenReferralServiceCommandHandler> _logger;
     private readonly IMapper _mapper;
+    private UpdateOpenReferralServiceCommand _request = default!;
 
     public UpdateOpenReferralServiceCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<UpdateOpenReferralServiceCommandHandler> logger)
     {
@@ -57,8 +52,10 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
     public async Task<string> Handle(UpdateOpenReferralServiceCommand request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
+        _request = request;
 
         var entity = await _context.OpenReferralServices
+           .Include(x => x.ServiceType)
            .Include(x => x.ServiceDelivery)
            .Include(x => x.Eligibilities)
            .Include(x => x.Contacts)
@@ -82,6 +79,10 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
         {
             var serviceentity = _mapper.Map<OpenReferralService>(request.OpenReferralService);
             ArgumentNullException.ThrowIfNull(serviceentity, nameof(serviceentity));
+
+            var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.OpenReferralService.ServiceType.Id);
+            if (serviceType != null)
+                entity.ServiceType = serviceType;
 
             entity.Name = serviceentity.Name;
             entity.Description = serviceentity.Description;
@@ -113,6 +114,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 UpdateCostOptions(entity.Cost_options ?? new Collection<OpenReferralCost_Option>(), request?.OpenReferralService?.Cost_options ?? new Collection<OpenReferralCostOptionDto>());
 
             await _context.SaveChangesAsync(cancellationToken);
+            
         }
         catch (Exception ex)
         {
@@ -125,17 +127,21 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
 
     private void UpdateEligibility(ICollection<OpenReferralEligibility> existing, ICollection<OpenReferralEligibilityDto> updated)
     {
+        List<string> currentIds = new();
         foreach (var updatedEligibility in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedEligibility.Id);
             if (current == null)
             {
                 var entity = _mapper.Map<OpenReferralEligibility>(updatedEligibility);
-                entity.RegisterDomainEvent(new OpenReferralEligibilityEvent(entity));
+                entity.OpenReferralServiceId = _request.OpenReferralService.Id;
+                entity.RegisterDomainEvent(new OpenReferralEligibilityCreatedEvent(entity));
                 _context.OpenReferralEligibilities.Add(entity);
+                currentIds.Add(entity.Id);
             }
             else
             {
+                currentIds.Add(updatedEligibility.Id);
                 //current.LinkId = updatedEligibility.LinkId;
                 current.Eligibility = updatedEligibility.Eligibility;
                 current.Maximum_age = updatedEligibility.Maximum_age;
@@ -143,18 +149,34 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 //current.Taxonomys = updatedEligibility.Taxonomys;
             }
         }
+
+        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
+        if (dataToDelete != null && dataToDelete.Any())
+            _context.OpenReferralEligibilities.RemoveRange(dataToDelete);
     }
 
     private void UpdateServiceAtLocation(ICollection<OpenReferralServiceAtLocation> existing, ICollection<OpenReferralServiceAtLocationDto> updated)
     {
+        List<string> list = new();
+        List<string> listAddress = new();
+
         foreach (var updatedServiceLoc in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedServiceLoc.Id);
             if (current == null)
             {
                 var entity = _mapper.Map<OpenReferralServiceAtLocation>(updatedServiceLoc);
-                entity.RegisterDomainEvent(new OpenReferralServiceAtLocationEvent(entity));
+                entity.OpenReferralServiceId = _request.OpenReferralService.Id;
+                entity.RegisterDomainEvent(new OpenReferralServiceAtLocationCreatedEvent(entity));
                 _context.OpenReferralServiceAtLocations.Add(entity);
+                list.Add(entity.Id);
+                if (entity != null && entity.Location != null && entity.Location.Physical_addresses != null)
+                {
+                    foreach (var address in entity.Location.Physical_addresses)
+                    {
+                        listAddress.Add(address.Id);
+                    }
+                }
             }
             else
             {
@@ -171,8 +193,10 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                         if (currentAddress == null)
                         {
                             var entity = _mapper.Map<OpenReferralPhysical_Address>(address);
-                            entity.RegisterDomainEvent(new OpenReferralPhysicalAddressEvent(entity));
+                            //entity.OpenReferralLocationId = current.Location.Id;
+                            entity.RegisterDomainEvent(new OpenReferralPhysicalAddressCreatedEvent(entity));
                             _context.OpenReferralPhysical_Addresses.Add(entity);
+                            listAddress.Add(entity.Id);
                         }
                         else
                         {
@@ -181,31 +205,59 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                             currentAddress.Postal_code = address.Postal_code;
                             currentAddress.Country = address.Country;
                             currentAddress.State_province = address.State_province;
+                            listAddress.Add(currentAddress.Id);
                         }
                     }
                     if (current?.Regular_schedule?.Serialize() != updatedServiceLoc?.Regular_schedule?.Serialize())
                     {
-                        UpdateRegularSchedule(current?.Regular_schedule ?? new Collection<OpenReferralRegular_Schedule>(), updatedServiceLoc?.Regular_schedule ?? new Collection<OpenReferralRegularScheduleDto>());
+                        UpdateRegularSchedule(current?.Regular_schedule ?? new Collection<OpenReferralRegular_Schedule>(), updatedServiceLoc?.Regular_schedule ?? new Collection<OpenReferralRegularScheduleDto>(), current);
                     }
                     if (current?.HolidayScheduleCollection?.Serialize() != updatedServiceLoc?.HolidayScheduleCollection?.Serialize())
                     {
-                        UpdateHolidaySchedule(current?.HolidayScheduleCollection ?? new Collection<OpenReferralHoliday_Schedule>(), updatedServiceLoc?.HolidayScheduleCollection ?? new Collection<OpenReferralHolidayScheduleDto>());
+                        UpdateHolidaySchedule(current?.HolidayScheduleCollection ?? new Collection<OpenReferralHoliday_Schedule>(), updatedServiceLoc?.HolidayScheduleCollection ?? new Collection<OpenReferralHolidayScheduleDto>(), current);
                     }
                     
                 }
+
+                if (current != null)
+                    list.Add(current.Id);
             }
         }
+
+        foreach(var item in existing)
+        {
+            if (item != null && item.Location != null && item.Location.Physical_addresses != null)
+            {
+                foreach (var address in item.Location.Physical_addresses)
+                {
+                    if (!listAddress.Contains(address.Id))
+                    {
+                        _context.OpenReferralPhysical_Addresses.Remove(address);
+                    }
+                }
+            }
+            
+
+            if (item != null && !list.Contains(item.Id))
+            {
+                _context.OpenReferralServiceAtLocations.Remove(item);
+            }
+        }
+        
     }
 
-    private void UpdateHolidaySchedule(ICollection<OpenReferralHoliday_Schedule> existing, ICollection<OpenReferralHolidayScheduleDto> updated)
+    private void UpdateHolidaySchedule(ICollection<OpenReferralHoliday_Schedule> existing, ICollection<OpenReferralHolidayScheduleDto> updated, OpenReferralServiceAtLocation? serviceAtlocation)
     {
+        List<string> currentIds = new();
         foreach (var updatedSchedule in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedSchedule.Id);
             if (current == null)
             {
                 var entity = _mapper.Map<OpenReferralHoliday_Schedule>(updatedSchedule);
-                entity.RegisterDomainEvent(new OpenReferralHolidayScheduleEvent(entity));
+                if (serviceAtlocation != null)
+                    entity.OpenReferralServiceAtLocationId = serviceAtlocation.Id;
+                entity.RegisterDomainEvent(new OpenReferralHolidayScheduleCreatedEvent(entity));
                 _context.OpenReferralHoliday_Schedules.Add(entity);
             }
             else
@@ -217,17 +269,24 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 current.Opens_at = updatedSchedule.Opens_at;
             }
         }
+
+        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
+        if (dataToDelete != null && dataToDelete.Any())
+            _context.OpenReferralHoliday_Schedules.RemoveRange(dataToDelete);
     }
 
-    private void UpdateRegularSchedule(ICollection<OpenReferralRegular_Schedule> existing, ICollection<OpenReferralRegularScheduleDto> updated)
+    private void UpdateRegularSchedule(ICollection<OpenReferralRegular_Schedule> existing, ICollection<OpenReferralRegularScheduleDto> updated, OpenReferralServiceAtLocation? serviceAtlocation)
     {
+        List<string> currentIds = new();
         foreach (var updatedSchedule in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedSchedule.Id);
             if (current == null)
             {
                 var entity = _mapper.Map<OpenReferralRegular_Schedule>(updatedSchedule);
-                entity.RegisterDomainEvent(new OpenReferralRegularScheduleEvent(entity));
+                if (serviceAtlocation != null)
+                    entity.OpenReferralServiceAtLocationId = serviceAtlocation.Id;
+                entity.RegisterDomainEvent(new OpenReferralRegularScheduleCreatedEvent(entity));
                 _context.OpenReferralRegular_Schedules.Add(entity);
             }
             else
@@ -244,18 +303,25 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 current.Valid_to = updatedSchedule.Valid_to;
             }
         }
+
+        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
+        if (dataToDelete != null && dataToDelete.Any())
+            _context.OpenReferralRegular_Schedules.RemoveRange(dataToDelete);
     }
 
     private void UpdateServiceArea(ICollection<OpenReferralService_Area> existing, ICollection<OpenReferralServiceAreaDto> updated)
     {
+        List<string> currentIds = new();
         foreach (var updatedServiceArea in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedServiceArea.Id);
             if (current == null)
             {
                 var entity = _mapper.Map<OpenReferralService_Area>(updatedServiceArea);
-                entity.RegisterDomainEvent(new OpenReferralServiceAreaEvent(entity));
+                entity.OpenReferralServiceId = _request.OpenReferralService.Id;
+                entity.RegisterDomainEvent(new OpenReferralServiceAreaCreatedEvent(entity));
                 _context.OpenReferralService_Areas.Add(entity);
+                currentIds.Add(entity.Id);
             }
             else
             {
@@ -265,18 +331,25 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 current.Uri = updatedServiceArea.Uri;
             }
         }
+
+        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
+        if (dataToDelete != null && dataToDelete.Any())
+            _context.OpenReferralService_Areas.RemoveRange(dataToDelete);
     }
 
     private void UpdateCostOptions(ICollection<OpenReferralCost_Option> existing, ICollection<OpenReferralCostOptionDto> updated)
     {
+        List<string> currentIds = new();
         foreach (var updatedCostOption in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedCostOption.Id);
             if (current == null)
             {
                 var entity = _mapper.Map<OpenReferralCost_Option>(updatedCostOption);
-                entity.RegisterDomainEvent(new OpenReferralCostOptionEvent(entity));
+                entity.OpenReferralServiceId = _request.OpenReferralService.Id;
+                entity.RegisterDomainEvent(new OpenReferralCostOptionCreatedEvent(entity));
                 _context.OpenReferralCost_Options.Add(entity);
+                currentIds.Add(entity.Id);
             }
             else
             {
@@ -286,37 +359,50 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 current.Option = updatedCostOption.Option;
                 current.Valid_from = updatedCostOption.Valid_from;
                 current.Valid_to = updatedCostOption.Valid_to;
+                currentIds.Add(current.Id);
             }
         }
+
+        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
+        if (dataToDelete != null && dataToDelete.Any())
+            _context.OpenReferralCost_Options.RemoveRange(dataToDelete);
+
     }
 
     private void UpdateTaxonomies(ICollection<OpenReferralService_Taxonomy> existing, ICollection<OpenReferralServiceTaxonomyDto> updated)
     {
+        List<string> currentIds = new();
         foreach (var updatedServiceTaxonomy in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedServiceTaxonomy.Id);
             if (current == null)
             {
-                if (updatedServiceTaxonomy.Taxonomy != null)
-                {
-                    var currentTaxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x =>x.Id == updatedServiceTaxonomy.Taxonomy.Id);
-                    if (currentTaxonomy == null)
-                    {
-                        var entityTaxonomy = _mapper.Map<OpenReferralTaxonomy>(updatedServiceTaxonomy.Taxonomy);
-                        entityTaxonomy.RegisterDomainEvent(new OpenReferralTaxonomyCreatedEvent(entityTaxonomy));
-                        _context.OpenReferralTaxonomies.Add(entityTaxonomy);
-                    }
-                    else
-                    {
-                        currentTaxonomy.Name = updatedServiceTaxonomy.Taxonomy.Name;
-                        currentTaxonomy.Vocabulary = updatedServiceTaxonomy.Taxonomy.Vocabulary;
-                        currentTaxonomy.Parent = updatedServiceTaxonomy.Taxonomy.Parent;
-                    }
-                }
+                //if (updatedServiceTaxonomy.Taxonomy != null)
+                //{
+                //    var currentTaxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x =>x.Id == updatedServiceTaxonomy.Taxonomy.Id);
+                //    if (currentTaxonomy == null)
+                //    {
+                //        var entityTaxonomy = _mapper.Map<OpenReferralTaxonomy>(updatedServiceTaxonomy.Taxonomy);
+                //        entityTaxonomy.RegisterDomainEvent(new OpenReferralTaxonomyCreatedEvent(entityTaxonomy));
+                //        _context.OpenReferralTaxonomies.Add(entityTaxonomy);
+                        
+                //    }
+                //    else
+                //    {
+                //        currentTaxonomy.Name = updatedServiceTaxonomy.Taxonomy.Name;
+                //        currentTaxonomy.Vocabulary = updatedServiceTaxonomy.Taxonomy.Vocabulary;
+                //        currentTaxonomy.Parent = updatedServiceTaxonomy.Taxonomy.Parent;
+                //    }
+                //}
 
+               
                 var entity = _mapper.Map<OpenReferralService_Taxonomy>(updatedServiceTaxonomy);
-                entity.RegisterDomainEvent(new OpenReferralServiceTaxonomyEvent(entity));
+                if (updatedServiceTaxonomy != null && updatedServiceTaxonomy.Taxonomy != null)
+                    entity.Taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == updatedServiceTaxonomy.Taxonomy.Id);
+                entity.OpenReferralServiceId = _request.OpenReferralService.Id;
+                entity.RegisterDomainEvent(new OpenReferralServiceTaxonomyCreatedEvent(entity));
                 _context.OpenReferralService_Taxonomies.Add(entity);
+                currentIds.Add(entity.Id);
             }
             else
             {
@@ -325,33 +411,49 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                     current.Taxonomy.Name = updatedServiceTaxonomy.Taxonomy.Name;
                     current.Taxonomy.Vocabulary = updatedServiceTaxonomy.Taxonomy.Vocabulary;
                     current.Taxonomy.Parent = updatedServiceTaxonomy.Taxonomy.Parent;
-                } 
+                }
+
+                currentIds.Add(current.Id);
             }
         }
+
+        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
+        if (dataToDelete != null && dataToDelete.Any())
+            _context.OpenReferralService_Taxonomies.RemoveRange(dataToDelete);
     }
 
     private void UpdateLanguages(ICollection<OpenReferralLanguage> existing, ICollection<OpenReferralLanguageDto> updated)
     {
+        List<string> currentIds = new();
         foreach (var updatedLanguage in updated)
         {
-            var current = existing.FirstOrDefault(x => x.Id == updatedLanguage.Id);
+            var current = existing.FirstOrDefault(x => x.Language == updatedLanguage.Language && x.OpenReferralServiceId == _request.OpenReferralService.Id);
             if (current == null)
             {
                 var entity = _mapper.Map<OpenReferralLanguage>(updatedLanguage);
-                entity.RegisterDomainEvent(new OpenReferralLanguageEvent(entity));
+                entity.OpenReferralServiceId = _request.OpenReferralService.Id;
+                entity.RegisterDomainEvent(new OpenReferralLanguageCreatedEvent(entity));
                 _context.OpenReferralLanguages.Add(entity);
+                currentIds.Add(entity.Id);
             }
             else
             {
                 current.Language = updatedLanguage.Language;
+                currentIds.Add(current.Id);
             }
         }
+        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
+        if (dataToDelete != null && dataToDelete.Any())
+            _context.OpenReferralLanguages.RemoveRange(dataToDelete);
     }
 
     
 
     private void UpdateContacts(ICollection<OpenReferralContact> existing, ICollection<OpenReferralContactDto> updated)
     {
+        List<string> contactIds = new();
+        List<string> phoneIds = new();
+
         foreach (var updatedContact in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedContact.Id);
@@ -366,22 +468,27 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                         if (existingphone == null)
                         {
                             var phoneentity = _mapper.Map<OpenReferralPhone>(phone);
-                            phoneentity.RegisterDomainEvent(new OpenReferralPhoneEvent(phoneentity));
+                            phoneentity.OpenReferralContactId = updatedContact.Id;
+                            phoneentity.RegisterDomainEvent(new OpenReferralPhoneCreatedEvent(phoneentity));
                             _context.OpenReferralPhones.Add(phoneentity);
                             listPhones.Add(phoneentity);
+                            phoneIds.Add(phoneentity.Id);
                         }
                         else
                         {
                             existingphone.Number = phone.Number;
+                            phoneIds.Add(existingphone.Id);
                         }
 
                     }
                 }
                 
                 var entity = _mapper.Map<OpenReferralContact>(updatedContact);
+                entity.OpenReferralServiceId = _request.OpenReferralService.Id;
                 entity.Phones = listPhones;
-                entity.RegisterDomainEvent(new OpenReferralContactEvent(entity));
+                entity.RegisterDomainEvent(new OpenReferralContactCreatedEvent(entity));
                 _context.OpenReferralContacts.Add(entity);
+                contactIds.Add(entity.Id);
             }
             else
             {
@@ -395,35 +502,69 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                         if (existingphone == null)
                         {
                             var entity = _mapper.Map<OpenReferralPhone>(phone);
-                            entity.RegisterDomainEvent(new OpenReferralPhoneEvent(entity));
+                            entity.OpenReferralContactId = current.Id;
+                            entity.RegisterDomainEvent(new OpenReferralPhoneCreatedEvent(entity));
                             _context.OpenReferralPhones.Add(entity);
+                            phoneIds.Add(entity.Id);
                         }
                         else
                         {
                             existingphone.Number = phone.Number;
+                            phoneIds.Add(existingphone.Id);
                         }
                     }
                 }
+                contactIds.Add(current.Id);
             }
         }
+
+
+        foreach(var contact in existing)
+        {
+            if (contact != null && contact.Phones != null)
+            {
+                foreach (var phone in contact.Phones)
+                {
+                    if (!phoneIds.Contains(phone.Id))
+                    {
+                        _context.OpenReferralPhones.Remove(phone);
+                    }
+                }
+            }   
+        }
+
+        var contactToDelete = existing.Where(a => !existing.Select(x => x.Id).Contains(a.Id)).ToList();
+        if (contactToDelete != null && contactToDelete.Any())
+        {
+            _context.OpenReferralContacts.RemoveRange(contactToDelete);
+        }
+            
     }
 
     private void UpdateServiceDelivery(ICollection<OpenReferralServiceDelivery> existing, ICollection<OpenReferralServiceDeliveryExDto> updated)
     {
+        List<string> currentIds = new();
         foreach (var updatedServiceDelivery in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedServiceDelivery.Id);
             if (current == null)
             {
                 var entity = _mapper.Map<OpenReferralServiceDelivery>(updatedServiceDelivery);
-                entity.RegisterDomainEvent(new OpenReferralServiceDeliveryEvent(entity));
+                entity.OpenReferralServiceId = _request.OpenReferralService.Id;
+                entity.RegisterDomainEvent(new OpenReferralServiceDeliveryCreatedEvent(entity));
                 _context.OpenReferralServiceDeliveries.Add(entity);
+                currentIds.Add(entity.Id);
             }
             else
             {
                 current.ServiceDelivery = updatedServiceDelivery.ServiceDelivery;
+                currentIds.Add(current.Id);
             }
         }
+
+        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
+        if (dataToDelete != null && dataToDelete.Any())
+            _context.OpenReferralServiceDeliveries.RemoveRange(dataToDelete);
     }
 }
 

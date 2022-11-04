@@ -13,8 +13,10 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverys
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
 using fh_service_directory_api.core.Entities;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace fh_service_directory_api.api.Helper;
 
@@ -24,6 +26,7 @@ public class OpenReferralDtoHelper
     {
         var dtoServices = dbservices.Select(x => new OpenReferralServiceDto(
             x.Id,
+            new ServiceTypeDto(x.ServiceType.Id, x.ServiceType.Name, x.ServiceType.Description),
             x.OpenReferralOrganisationId,
             x.Name,
             x.Description,
@@ -76,6 +79,7 @@ public class OpenReferralDtoHelper
     {
         var dtoService = new OpenReferralServiceDto(
             service.Id,
+            new ServiceTypeDto(service.ServiceType.Id, service.ServiceType.Name, service.ServiceType.Description),
             service.OpenReferralOrganisationId,
             service.Name,
             service.Description,

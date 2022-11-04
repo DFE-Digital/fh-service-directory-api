@@ -3,9 +3,9 @@ using fh_service_directory_api.core.Entities;
 
 namespace fh_service_directory_api.core.Events;
 
-public class OpenReferralCostOptionEvent : DomainEventBase
+public class OpenReferralCostOptionCreatedEvent : DomainEventBase
 {
-    public OpenReferralCostOptionEvent(OpenReferralCost_Option item)
+    public OpenReferralCostOptionCreatedEvent(OpenReferralCost_Option item)
     {
         Item = item;
     }

@@ -25,4 +25,5 @@ public class OpenReferralCost_Option : EntityBase<string>, IOpenReferralCost_Opt
     public string? Option { get; set; }
     public DateTime? Valid_from { get; set; }
     public DateTime? Valid_to { get; set; }
+    public string OpenReferralServiceId { get; set; } = default!;
 }
