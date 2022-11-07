@@ -5,6 +5,7 @@ using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -34,9 +35,11 @@ namespace fh_service_directory_api.core.Extensions
 
             builder.Configure((ApplicationInsightsServiceOptions options) =>
             {
-                #pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
                 options.InstrumentationKey = appInsightsKey;
+#pragma warning restore CS0618
                 options.ConnectionString = appInsightsConnectionString;
+                
             });
 
             if (channelType == TelemetryChannelType.Sync)
@@ -49,11 +52,12 @@ namespace fh_service_directory_api.core.Extensions
           
             builder.AddScoped((ctx) =>
             {
-                #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                TelemetryConfiguration telemetryConfiguration = ctx.GetService<TelemetryConfiguration>();
+                TelemetryConfiguration telemetryConfiguration = ctx.GetService<TelemetryConfiguration>() ?? new TelemetryConfiguration();   
                 TelemetryClient client = new TelemetryClient(telemetryConfiguration)
                 {
+#pragma warning disable CS0618 // Type or member is obsolete
                     InstrumentationKey = appInsightsKey
+#pragma warning restore CS0618
                 };
 
                 if (!client.Context.GlobalProperties.ContainsKey(LoggingConstants.ServiceNamePropertiesName))

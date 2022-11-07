@@ -5,17 +5,16 @@ using Microsoft.ApplicationInsights.Extensibility.Implementation;
     {
         private Uri _endpoint;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public SyncTelemetryChannel(string endpointUrl)
-    {
-            _endpoint = new Uri(endpointUrl);
-    }
+        public SyncTelemetryChannel(string endpointUrl)
+        {
+                _endpoint = new Uri(endpointUrl);
+        }
 
         public bool? DeveloperMode { get; set; }
 
-        public string EndpointAddress { get; set; }
+        public string EndpointAddress { get; set; } = default!;
 
-        public void Send(ITelemetry item)
+    public void Send(ITelemetry item)
         {
             byte[] json = JsonSerializer.Serialize(new List<ITelemetry>() { item }, true);
 
