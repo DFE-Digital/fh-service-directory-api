@@ -12,7 +12,7 @@ using Microsoft.ApplicationInsights;
             _client = client;
         }
 
-        public void TrackEvent(string eventName, IDictionary<string, string> properties = null, IDictionary<string, double> metrics = null)
+        public void TrackEvent(string eventName, IDictionary<string, string>? properties = null, IDictionary<string, double>? metrics = null)
         {
             _client.TrackEvent(eventName, properties, metrics);
         }

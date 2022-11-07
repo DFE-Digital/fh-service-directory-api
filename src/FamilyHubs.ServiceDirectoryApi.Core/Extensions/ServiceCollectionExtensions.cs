@@ -34,6 +34,7 @@ namespace fh_service_directory_api.core.Extensions
 
             builder.Configure((ApplicationInsightsServiceOptions options) =>
             {
+                #pragma warning disable CS0618 // Type or member is obsolete
                 options.InstrumentationKey = appInsightsKey;
                 options.ConnectionString = appInsightsConnectionString;
             });
@@ -45,10 +46,11 @@ namespace fh_service_directory_api.core.Extensions
 
             //builder.AddApplicationInsightsTelemetry(config);
 
+          
             builder.AddScoped((ctx) =>
             {
+                #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                 TelemetryConfiguration telemetryConfiguration = ctx.GetService<TelemetryConfiguration>();
-
                 TelemetryClient client = new TelemetryClient(telemetryConfiguration)
                 {
                     InstrumentationKey = appInsightsKey
@@ -76,7 +78,7 @@ namespace fh_service_directory_api.core.Extensions
             return builder;
         }
 
-        public static IServiceCollection AddLogging(this IServiceCollection builder, string serviceName, IConfigurationRoot config = null)
+        public static IServiceCollection AddLogging(this IServiceCollection builder, string serviceName, IConfigurationRoot? config = null)
         {
             builder.AddSingleton<ILogger>((ctx) =>
             {
