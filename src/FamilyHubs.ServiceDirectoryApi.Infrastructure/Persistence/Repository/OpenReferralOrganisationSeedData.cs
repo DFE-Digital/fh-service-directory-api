@@ -468,6 +468,99 @@ public class OpenReferralOrganisationSeedData
                 }
                 )),
 
+            new OpenReferralService(
+                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b51",
+                SeedServiceTypes().ElementAt(0),
+                parentId,
+                "Test Service - Paid - 15 to 20yrs - Afrikaans",
+                @"This is an Afrikaans test service.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                "www.test1.com",
+                "support@test1.com",
+                null,
+                new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
+                {
+                    new OpenReferralServiceDelivery("d4e1fbfb-dd48-4950-b259-7547260ef838",ServiceDelivery.InPerson)
+                }),
+                new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
+                {
+                    new OpenReferralEligibility("9109T3Children","Children",null,20,15,new List<OpenReferralTaxonomy>())
+                }),
+                new List<OpenReferralFunding>(),
+                new List<OpenReferralHoliday_Schedule>(),
+                new List<OpenReferralLanguage>()
+                {
+                    new OpenReferralLanguage("73a688a2-0dad-4674-ac63-5115c990ea1f","Afrikaans")
+                },
+                new List<OpenReferralRegular_Schedule>(),
+                new List<OpenReferralReview>(),
+                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                {
+                    new OpenReferralContact(
+                        "1563",
+                        "Mr",
+                        "John Smith",
+                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
+                        {
+                            new OpenReferralPhone("1563", "01827 64328")
+                        }
+                        ))
+                }),
+                new List<OpenReferralCost_Option>(new List<OpenReferralCost_Option>()
+                {
+                    new OpenReferralCost_Option("1346", "Hour", 25.0m, null, null, null, null)
+                }),
+                new List<OpenReferralService_Area>()
+                {
+                    new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                {
+                    new OpenReferralServiceAtLocation(
+                        "1868",
+                        new OpenReferralLocation(
+                            "68615e6e-c9e2-4a1f-8824-a5c1da36a953",
+                            "",
+                            "",
+                            52.63123,
+                            -1.66519,
+                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
+                            {
+                                new OpenReferralPhysical_Address(
+                                    Guid.NewGuid().ToString(),
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
+                                    "England",
+                                    null
+                                    )
+                            }),
+                            new List<Accessibility_For_Disabilities>()
+                            ),
+                        new List<OpenReferralRegular_Schedule>(),
+                        new List<OpenReferralHoliday_Schedule>()
+                        )
+
+                }),
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
+                {
+                    new OpenReferralService_Taxonomy
+                    ("9121TestDelete",
+                    null,
+                    new OpenReferralTaxonomy(
+                        "bccusergroupTestDelete3:56",
+                        "Test Conditions",
+                        "BCC User Groups",
+                        null
+                        ))
+                }
+                )),
+
         };
     }
 }
