@@ -204,9 +204,9 @@ using (var scope = webApplication.Services.CreateScope())
     try
     {
         // Seed Database
-        //var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-        //await initialiser.InitialiseAsync(builder.Configuration);
-        //await initialiser.SeedAsync();
+        var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
+        await initialiser.InitialiseAsync(builder.Configuration);
+        await initialiser.SeedAsync();
 
     }
     catch (Exception ex)
