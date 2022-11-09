@@ -258,7 +258,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                 "active",
                 "www.testservice.com",
                 "support@testservice.com",
-                null)
+                null, false)
             .WithServiceDelivery(new List<OpenReferralServiceDeliveryExDto>
                 {
                     new OpenReferralServiceDeliveryExDto(Guid.NewGuid().ToString(),ServiceDelivery.Online)
@@ -376,7 +376,8 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                 "active",
                 "www.testservice1.com",
                 "support@testservice1.com",
-                null)
+                null,
+                false)
             .WithServiceDelivery(new List<OpenReferralServiceDeliveryExDto>
                 {
                     new OpenReferralServiceDeliveryExDto(Guid.NewGuid().ToString(),ServiceDelivery.Online)
@@ -475,6 +476,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                 "www.testservice.com",
                 "support@testservice.com",
                 null,
+                false,
                 new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery(Guid.NewGuid().ToString(),ServiceDelivery.Online)

@@ -180,6 +180,7 @@ public class OpenReferralOrganisationSeedData
                 "www.actfortrachykids.com",
                 "support@ACTfortrachykids.com",
                 null,
+                false,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("9db7f878-be53-4a45-ac47-472568dfeeea",ServiceDelivery.Online)
@@ -300,6 +301,7 @@ public class OpenReferralOrganisationSeedData
                 "www.test1.com",
                 "support@test1.com",
                 null,
+                false,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("b2518131-90fc-4149-bbd1-1c9992cd92ac",ServiceDelivery.InPerson)
@@ -390,6 +392,7 @@ public class OpenReferralOrganisationSeedData
                 "www.test1.com",
                 "support@test1.com",
                 null,
+                false,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("46d1d3df-c7f7-47f0-9672-e18b67594d4e",ServiceDelivery.Telephone)
@@ -483,6 +486,7 @@ public class OpenReferralOrganisationSeedData
                 "www.test1.com",
                 "support@test1.com",
                 null,
+                false,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("d4e1fbfb-dd48-4950-b259-7547260ef838",ServiceDelivery.InPerson)
