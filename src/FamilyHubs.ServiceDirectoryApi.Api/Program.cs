@@ -18,6 +18,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Serilog;
 using Microsoft.Extensions.Logging.AzureAppServices;
+using Microsoft.Extensions.Configuration;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -74,12 +75,28 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
             .As<ICurrentUserService>().InstancePerLifetimeScope();
     containerBuilder.RegisterType<AuditableEntitySaveChangesInterceptor>();
 
-    // Register Entity Framework
-    DbContextOptions<ApplicationDbContext> options;
 
     string useDbType = builder.Configuration.GetValue<string>("UseDbType");
 
-    switch(useDbType)
+    if (builder.Configuration.GetValue<bool>("UseVault") && useDbType != "UseInMemoryDatabase")
+    {
+        (bool isOk, string errorMessage) = builder.AddAzureKeyVault();
+        if (!isOk)
+        {
+            useDbType = "UseInMemoryDatabase";
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                Log.Error($"An error occurred Initializing Azure Vault");
+            }
+        }
+    }
+
+    //string connectionString = builder.Configuration.GetConnectionString("ServiceDirectoryConnection");
+
+    // Register Entity Framework
+    DbContextOptions<ApplicationDbContext> options;
+
+    switch (useDbType)
     {
         case "UseInMemoryDatabase":
             {
@@ -187,9 +204,9 @@ using (var scope = webApplication.Services.CreateScope())
     try
     {
         // Seed Database
-        var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-        await initialiser.InitialiseAsync(builder.Configuration);
-        await initialiser.SeedAsync();
+        //var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
+        //await initialiser.InitialiseAsync(builder.Configuration);
+        //await initialiser.SeedAsync();
 
     }
     catch (Exception ex)
