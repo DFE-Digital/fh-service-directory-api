@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<RootNamespace>fh_service_directory_api.api</RootNamespace>
+		<UserSecretsId>26d99b98-f8d3-4ce4-ab2e-2042a23ac6eb</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
