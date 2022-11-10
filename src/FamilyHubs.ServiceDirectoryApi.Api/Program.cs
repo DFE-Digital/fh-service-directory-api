@@ -53,8 +53,6 @@ builder.Host.ConfigureLogging(logging =>
 //})
 );
 
-builder.Host.ConfigureServices(serviceCollection => serviceCollection.AddHttpClient());
-
 ConfigurWebApplicationBuilderHost(builder);
 ConfigurWebApplicationBuilderServices(builder);
 
@@ -106,10 +104,8 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
     containerBuilder.RegisterType<MinimalTaxonomyEndPoints>();
     containerBuilder.RegisterType<MinimalLocationEndPoints>();
     containerBuilder.RegisterType<MinimalUICacheEndPoints>();
-    containerBuilder.RegisterType<MinimalPostcodeSearchEndPoints>();
     containerBuilder.RegisterType<MinimalSearchEndPoints>();
     containerBuilder.RegisterType<ApplicationDbContextInitialiser>();
-    containerBuilder.RegisterType<PostcodeLookupService>().As<IPostcodeLookupService>().InstancePerLifetimeScope();
 
     containerBuilder
     .RegisterAssemblyTypes(typeof(IRequest<>).Assembly)
@@ -170,10 +166,6 @@ using (var scope = webApplication.Services.CreateScope())
     var genservice = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
     if (genservice != null)
         genservice.RegisterMinimalGeneralEndPoints(webApplication);
-
-    var postcodeService = scope.ServiceProvider.GetService<MinimalPostcodeSearchEndPoints>();
-    if (postcodeService != null)
-        postcodeService.RegisterServiceEndPoints(webApplication);
 
     var searchService = scope.ServiceProvider.GetService<MinimalSearchEndPoints>();
     if (searchService != null)

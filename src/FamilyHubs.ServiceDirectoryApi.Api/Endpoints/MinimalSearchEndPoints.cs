@@ -8,11 +8,11 @@ namespace fh_service_directory_api.api.Endpoints
     {
         public void RegisterSearchEndPoints(WebApplication app)
         {
-            app.MapGet("api/search", async (string? postcode, string? districtCode, double? longitude, double? latitude, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalServiceEndPoints> logger) =>
+            app.MapGet("api/search", async (string? districtCode, double? longitude, double? latitude, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalServiceEndPoints> logger) =>
             {
                 try
                 {
-                    FxSearchCommand command = new(postcode, districtCode, latitude, longitude);
+                    FxSearchCommand command = new(districtCode, latitude, longitude);
                     var result = await _mediator.Send(command, cancellationToken);
                     return result;
                 }
