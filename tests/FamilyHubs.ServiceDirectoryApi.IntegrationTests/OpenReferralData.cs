@@ -79,6 +79,7 @@ public class OpenReferralData
                 "www.testservice.com",
                 "support@testservice.com",
                 null,
+                false,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("4c10bb58-eee2-4508-842d-a903949304cc",ServiceDelivery.Online)

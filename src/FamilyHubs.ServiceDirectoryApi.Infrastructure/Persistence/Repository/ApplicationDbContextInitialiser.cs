@@ -20,20 +20,16 @@ public class ApplicationDbContextInitialiser
     {
         try
         {
+            if (_context.Database.IsInMemory())
+            {
+                _context.Database.EnsureDeleted();
+                _context.Database.EnsureCreated();
+            }
+
             if (_context.Database.IsSqlServer() || _context.Database.IsNpgsql())
             {
-                if (configuration.GetValue<bool>("RecreateDbOnStartup"))
-                {
-                    _context.Database.EnsureDeleted();
-                    _context.Database.EnsureCreated();
-                }
-                else
-                    await _context.Database.MigrateAsync();
+                await _context.Database.MigrateAsync();
             }
-            //else
-            //{
-            //    _context.Database.EnsureDeleted();
-            //}
         }
         catch (Exception ex)
         {

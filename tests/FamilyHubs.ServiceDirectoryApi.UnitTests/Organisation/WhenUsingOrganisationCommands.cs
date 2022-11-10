@@ -236,7 +236,8 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                 "active",
                 "www.unittestservice.com",
                 "support@unittestservice.com",
-                null)
+                null,
+                false)
             .WithServiceDelivery(new List<OpenReferralServiceDeliveryExDto>
                 {
                     new OpenReferralServiceDeliveryExDto(Guid.NewGuid().ToString(),ServiceDelivery.Online)
