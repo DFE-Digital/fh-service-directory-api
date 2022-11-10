@@ -78,7 +78,8 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
 
     string useDbType = builder.Configuration.GetValue<string>("UseDbType");
 
-    if (builder.Configuration.GetValue<bool>("UseVault") && useDbType != "UseInMemoryDatabase")
+#if USE_AZURE_VAULT
+    if (builder.Configuration.GetValue<bool>("UseVault"))
     {
         (bool isOk, string errorMessage) = builder.AddAzureKeyVault();
         if (!isOk)
@@ -90,8 +91,7 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
             }
         }
     }
-
-    //string connectionString = builder.Configuration.GetConnectionString("ServiceDirectoryConnection");
+#endif
 
     // Register Entity Framework
     DbContextOptions<ApplicationDbContext> options;

@@ -15,18 +15,19 @@ public class MinimalGeneralEndPoints
                 var creationDate = File.GetCreationTime(assembly.Location);
                 var version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
 
-                string kvURL = configuration.GetValue<string>("KeyVaultConfig:KVUrl");
-                string tenantId = configuration.GetValue<string>("KeyVaultConfig:TenantId");
-                string clientId = configuration.GetValue<string>("KeyVaultConfig:ClientId");
-                string clientSecretId = configuration.GetValue<string>("KeyVaultConfig:ClientSecretId");
                 string useDbType = configuration.GetValue<string>("UseDbType");
-                bool haveKeyVaultConfig = false;
-                if (!string.IsNullOrEmpty(kvURL) && !string.IsNullOrEmpty(tenantId) && !string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecretId))
+                if (useDbType != "UseInMemoryDatabase")
                 {
-                    haveKeyVaultConfig = true;
+                    string? connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
+                    bool connectionStringOK = false;
+                    if (!string.IsNullOrEmpty(connectionString) && connectionString.Contains("Database"))
+                        connectionStringOK = true;
+
+                    return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Db Type: {useDbType}, Is Connection String OK: {connectionStringOK}");
                 }
                 
-                return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Have Vault Config: {haveKeyVaultConfig}, Db Type: {useDbType}");
+
+                return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Db Type: {useDbType}");
             }
             catch (Exception ex)
             {
