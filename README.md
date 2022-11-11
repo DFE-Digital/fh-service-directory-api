@@ -16,7 +16,7 @@ In the appsetting.json file set the UseDbType with one of the following options:
 
 * "UseInMemoryDatabase"
 * "SqlServerDatabase"
-* "Postgre"
+* "Postgres"
 
 The startup project is: FamilyHubs.ServiceDirectoryApi.Api
 Starting the API will then show the swagger definition with the available operations.
