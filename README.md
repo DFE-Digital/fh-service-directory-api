@@ -12,26 +12,19 @@ This repos has been built using the "Clean Architecture Design" taken from Steve
 
 ## Local running
 
-In the appsetting.json file set:
+In the appsetting.json file set the UseDbType with one of the following options:
 
-To use In Memory Database set the following:
-
-* "RecreateDbOnStartup": true,
-* "UseInMemoryDatabase": true,
-* "UseSqlServerDatabase": false
-
-To use a SQL Server database ensure the DefaultConnection is set then set:
-
-* "RecreateDbOnStartup": false,
-* "UseInMemoryDatabase": false,
-* "UseSqlServerDatabase": true
-
-To use Postgres database ensure the DefaultConnection is set then set:
-
-* "RecreateDbOnStartup": false,
-* "UseInMemoryDatabase": false,
-* "UseSqlServerDatabase": false
+* "UseInMemoryDatabase"
+* "SqlServerDatabase"
+* "Postgre"
 
 The startup project is: FamilyHubs.ServiceDirectoryApi.Api
 Starting the API will then show the swagger definition with the available operations.
 
+## Migrations
+
+To Add Migration
+<br />
+dotnet ef migrations add CreateIntialSchema -c ApplicationDbContext --output-dir ../FamilyHubs.ServiceDirectoryApi.Infrastructure/Persistence/Data
+<br />
+dotnet ef database update -c ApplicationDbContext

@@ -19,6 +19,7 @@ using System.Reflection;
 using Serilog;
 using Microsoft.Extensions.Logging.AzureAppServices;
 using Microsoft.Extensions.Configuration;
+using fh_service_directory_api.api.Data;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -92,6 +93,8 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
         }
     }
 #endif
+
+    
 
     // Register Entity Framework
     DbContextOptions<ApplicationDbContext> options;
