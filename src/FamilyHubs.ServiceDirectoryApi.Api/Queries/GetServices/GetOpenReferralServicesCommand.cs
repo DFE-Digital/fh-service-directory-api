@@ -12,7 +12,7 @@ namespace fh_service_directory_api.api.Queries.GetServices;
 public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferralServiceDto>>
 {
     public GetOpenReferralServicesCommand() { }
-    public GetOpenReferralServicesCommand(string? status, string? districtCode, int? minimum_age, int? maximum_age, int? given_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages)
+    public GetOpenReferralServicesCommand(string? status, string? districtCode, int? minimum_age, int? maximum_age, int? given_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation)
     {
         Status = status;
         DistrictCode = districtCode;
@@ -29,6 +29,7 @@ public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferra
         IsPaidFor = isPaidFor;
         TaxonmyIds = taxonmyIds;
         Languages = languages;
+        CanFamilyChooseLocation = canFamilyChooseLocation;
     }
 
     public string? Status { get; set; }
@@ -46,7 +47,7 @@ public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferra
     public bool? IsPaidFor { get; set; }
     public string? TaxonmyIds { get; set; }
     public string? Languages { get; set; }
-
+    public bool? CanFamilyChooseLocation { get; set; }
 
 }
 
@@ -155,6 +156,15 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             if (request?.IsPaidFor.Value == false)
             {
                 dbservices = dbservices.Where(x => x.Cost_options.Any() == false);
+            }
+        }
+
+        //Can families choose location
+        if (request?.CanFamilyChooseLocation != null)
+        {
+            if (request?.CanFamilyChooseLocation.Value == true)
+            {
+                dbservices = dbservices.Where(x => x.CanFamilyChooseDeliveryLocation == true);
             }
         }
 
