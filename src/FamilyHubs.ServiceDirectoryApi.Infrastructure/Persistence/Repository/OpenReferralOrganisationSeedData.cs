@@ -486,7 +486,7 @@ public class OpenReferralOrganisationSeedData
                 "www.test1.com",
                 "support@test1.com",
                 null,
-                false,
+                true,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("d4e1fbfb-dd48-4950-b259-7547260ef838",ServiceDelivery.InPerson)
