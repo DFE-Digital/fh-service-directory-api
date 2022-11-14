@@ -68,11 +68,19 @@ public class ApplicationDbContextInitialiser
             _context.ServiceTypes.AddRange(openReferralOrganisationSeedData.SeedServiceTypes());
         }
 
+        if (!_context.OpenReferralTaxonomies.Any())
+        {
+            _context.OpenReferralTaxonomies.AddRange(openReferralOrganisationSeedData.SeedOpenReferralTaxonomies());
+        }
+
         await _context.SaveChangesAsync();
 
         var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Name == "Information Sharing");
 
         IReadOnlyCollection<OpenReferralOrganisation> openReferralOrganisations = openReferralOrganisationSeedData.SeedOpenReferralOrganistions(_context.OrganisationTypes.FirstOrDefault(x => x.Name == "LA") ?? _context.OrganisationTypes.First());
+
+
+        var taxonomies = _context.OpenReferralTaxonomies.ToList();
 
         foreach (var openReferralOrganisation in openReferralOrganisations)
         {
@@ -81,8 +89,19 @@ public class ApplicationDbContextInitialiser
                 foreach(var service in openReferralOrganisation.Services)
                 {
                     service.ServiceType = serviceType;
+
+                    foreach(var serviceTaxonomy in service.Service_taxonomys)
+                    {
+                        if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
+                        {
+                            var taxonomy = taxonomies.FirstOrDefault(x => x.Id == serviceTaxonomy.Taxonomy.Id);
+                            if (taxonomy != null)
+                            {
+                                serviceTaxonomy.Taxonomy = taxonomy;
+                            }
+                        }
+                    }
                 }
-                
             }
 
             if (openReferralOrganisation != null)
@@ -101,7 +120,6 @@ public class ApplicationDbContextInitialiser
         if (!_context.ModelLinks.Any())
         {
             _context.OpenReferralLocations.AddRange(openReferralOrganisationSeedData.SeedFamilyHubs());
-            _context.OpenReferralTaxonomies.AddRange(openReferralOrganisationSeedData.SeedTaxonomies());
             _context.ModelLinks.AddRange(openReferralOrganisationSeedData.SeedModelLinks());
 
             await _context.SaveChangesAsync();
