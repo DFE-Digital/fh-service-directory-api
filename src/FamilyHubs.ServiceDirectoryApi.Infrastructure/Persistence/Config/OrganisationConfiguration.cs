@@ -11,7 +11,7 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<OpenReferralOr
     {
         builder.Property(p => p.Id).ValueGeneratedNever();
         builder.Property(t => t.Name)
-            .HasMaxLength(50)
+            .HasMaxLength(255)
             .IsRequired();
         builder.Property(t => t.Description)
             .HasMaxLength(500);

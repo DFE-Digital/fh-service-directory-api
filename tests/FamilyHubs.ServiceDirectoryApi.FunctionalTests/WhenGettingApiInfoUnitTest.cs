@@ -9,7 +9,7 @@ public class WhenGettingApiInfoUnitTest
 
     public WhenGettingApiInfoUnitTest()
     {
-        var webAppFactory = new WebApplicationFactory<Program>();
+        var webAppFactory = new MyWebApplicationFactory();
 
         _client = webAppFactory.CreateDefaultClient();
         _client.BaseAddress = new Uri("https://localhost:7128/");
