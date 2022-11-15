@@ -202,7 +202,7 @@ namespace fh_service_directory_api.api.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     OrganisationTypeId = table.Column<string>(type: "text", nullable: true),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     Logo = table.Column<string>(type: "text", nullable: true),
                     Uri = table.Column<string>(type: "text", nullable: true),
@@ -229,7 +229,7 @@ namespace fh_service_directory_api.api.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     ServiceTypeId = table.Column<string>(type: "text", nullable: true),
                     OpenReferralOrganisationId = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     Accreditations = table.Column<string>(type: "text", nullable: true),
                     Assured_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -267,7 +267,7 @@ namespace fh_service_directory_api.api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Title = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     OpenReferralServiceId = table.Column<string>(type: "text", nullable: false),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),

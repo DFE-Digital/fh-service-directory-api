@@ -126,7 +126,6 @@ namespace fh_service_directory_api.api.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -457,8 +456,8 @@ namespace fh_service_directory_api.api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("OrganisationTypeId")
                         .HasColumnType("text");
@@ -756,8 +755,8 @@ namespace fh_service_directory_api.api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("OpenReferralOrganisationId")
                         .IsRequired()
