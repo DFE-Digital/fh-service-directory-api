@@ -9,8 +9,7 @@ public class ContactConfiguration : IEntityTypeConfiguration<OpenReferralContact
     public void Configure(EntityTypeBuilder<OpenReferralContact> builder)
     {
         builder.Property(t => t.Title)
-            .HasMaxLength(50)
-            .IsRequired();
+            .HasMaxLength(50);
         builder.Property(t => t.Name)
             .HasMaxLength(50);
         builder.Property(t => t.Created)
