@@ -275,7 +275,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                     string.Empty,
                     new List<OpenReferralPhoneDto>()
                     {
-                        new OpenReferralPhoneDto("1568", "01827 65779")
+                        new OpenReferralPhoneDto("1569", "01827 65780")
                     }
                     )
             })
