@@ -22,7 +22,6 @@ public class WhenUsingFxSearchCommands : BaseCreateDbUnitTest
         ApplicationDbContextInitialiser applicationDbContextInitialiser = new(logger.Object, mockApplicationDbContext);
         await applicationDbContextInitialiser.SeedAsync();
 
-
         FxSearchCommand searchCommand = new("E08000006", -2.3D, 53.6D);
         FxSearchCommandHandler searchCommandHandler = new(mockApplicationDbContext);
         
@@ -32,7 +31,8 @@ public class WhenUsingFxSearchCommands : BaseCreateDbUnitTest
 
         //Assert
         results.Should().NotBeNull();
-        results.Count().Should().BeGreaterThan(2);
+        results.Where(r => r.First != null).Count().Should().Be(1); // Services
+        results.Where(r => r.Second != null).Count().Should().Be(3);    // Family Hubs
     }
 }
 

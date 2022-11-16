@@ -174,6 +174,88 @@ public class OpenReferralOrganisationSeedData
             "https://www.salford.gov.uk/",
             new List<OpenReferralReview>(),
             new List<OpenReferralService>()
+            {
+                new OpenReferralService(
+                "1144EB57-32D2-4915-8807-8884EC27B48D",
+                SeedServiceTypes().ElementAt(0),
+                null,
+                "Salford Service 1",
+                @"Salford Service 1.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                "www.Salford.gov.uk",
+                "supporttestdev@SalfordTest.Gov.UK",
+                null,
+                false,
+                new List<OpenReferralServiceDelivery>(),
+                new List<OpenReferralEligibility>(),
+                new List<OpenReferralFunding>(),
+                new List<OpenReferralHoliday_Schedule>(),
+                new List<OpenReferralLanguage>(),
+                new List<OpenReferralRegular_Schedule>(),
+                new List<OpenReferralReview>(),
+                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                {
+                    new OpenReferralContact(
+                        "1568",
+                        "Mr",
+                        "John Smith",
+                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
+                        {
+                            new OpenReferralPhone("1568", "01234 567890")
+                        }
+                        ))
+                }),
+                new List<OpenReferralCost_Option>(),
+                new List<OpenReferralService_Area>()
+                {
+                    new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                {
+                    new OpenReferralServiceAtLocation(
+                        "1750",
+                        new OpenReferralLocation(
+                            "00768BBC-E830-4F94-9126-FB44CD31204D",
+                            "",
+                            "",
+                            52.6312,
+                            -1.66526,
+                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
+                            {
+                                new OpenReferralPhysical_Address(
+                                    Guid.NewGuid().ToString(),
+                                    "1A Del's Ave",
+                                    "Salford",
+                                    "ABC 123",
+                                    "England",
+                                    null
+                                    )
+                            }),
+                            new List<Accessibility_For_Disabilities>()
+                            ),
+                        new List<OpenReferralRegular_Schedule>(),
+                        new List<OpenReferralHoliday_Schedule>()
+                        )
+
+                }),
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
+                {
+                    new OpenReferralService_Taxonomy
+                    ("9999",
+                    null,
+                    new OpenReferralTaxonomy(
+                        "3f6221f3-ce5f-4500-962e-3a5960d20474",
+                        "Test Category 1","Test Category 1",
+                        "32712b43-e4f7-484f-97d7-beb3bb463133"
+                        ))
+                }
+                ))
+            }
             ),
             new OpenReferralOrganisation(
             "6dc1c3ad-d077-46ff-9e0d-04fb263f0637",
