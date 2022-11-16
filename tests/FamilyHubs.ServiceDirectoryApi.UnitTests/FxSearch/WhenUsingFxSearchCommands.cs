@@ -19,7 +19,7 @@ public class WhenUsingFxSearchCommands : BaseCreateDbUnitTest
         IMapper mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<ApplicationDbContextInitialiser>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        ApplicationDbContextInitialiser applicationDbContextInitialiser = new ApplicationDbContextInitialiser(logger.Object, mockApplicationDbContext);
+        ApplicationDbContextInitialiser applicationDbContextInitialiser = new(logger.Object, mockApplicationDbContext);
         await applicationDbContextInitialiser.SeedAsync();
 
 

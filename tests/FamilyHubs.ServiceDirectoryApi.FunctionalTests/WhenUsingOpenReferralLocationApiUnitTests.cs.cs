@@ -1,11 +1,6 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
-using fh_service_directory_api.core.Entities;
+﻿using fh_service_directory_api.core.Entities;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
