@@ -142,6 +142,7 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
     containerBuilder.RegisterType<MinimalTaxonomyEndPoints>();
     containerBuilder.RegisterType<MinimalLocationEndPoints>();
     containerBuilder.RegisterType<MinimalUICacheEndPoints>();
+    containerBuilder.RegisterType<MinimalSearchEndPoints>();
     containerBuilder.RegisterType<ApplicationDbContextInitialiser>();
 
     containerBuilder
@@ -203,6 +204,10 @@ using (var scope = webApplication.Services.CreateScope())
     var genservice = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
     if (genservice != null)
         genservice.RegisterMinimalGeneralEndPoints(webApplication);
+
+    var searchService = scope.ServiceProvider.GetService<MinimalSearchEndPoints>();
+    if (searchService != null)
+        searchService.RegisterSearchEndPoints(webApplication);
 
     try
     {
