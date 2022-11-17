@@ -12,8 +12,9 @@ namespace fh_service_directory_api.api.Queries.GetServices;
 public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferralServiceDto>>
 {
     public GetOpenReferralServicesCommand() { }
-    public GetOpenReferralServicesCommand(string? status, string? districtCode, int? minimum_age, int? maximum_age, int? given_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation)
+    public GetOpenReferralServicesCommand(string? serviceType, string? status, string? districtCode, int? minimum_age, int? maximum_age, int? given_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation)
     {
+        ServiceType = serviceType;
         Status = status;
         DistrictCode = districtCode;
         MaximumAge = maximum_age;
@@ -32,6 +33,7 @@ public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferra
         CanFamilyChooseLocation = canFamilyChooseLocation;
     }
 
+    public string? ServiceType { get; set; }
     public string? Status { get; set; }
     public string? DistrictCode { get; set; }
     public int? MaximumAge { get; set; }
@@ -64,64 +66,26 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         if (string.IsNullOrEmpty(request.Status))
             request.Status = "active";
 
-        List<OpenReferralService> entities;
-
-        if (request.DistrictCode != null)
-        {
-           List<string> organisationIds = await _context.OrganisationAdminDistricts.Where(x => x.Code == request.DistrictCode).Select(x => x.OpenReferralOrganisationId).ToListAsync();
-
-            entities = await _context.OpenReferralServices
-          .Include(x => x.ServiceType)
-          .Include(x => x.ServiceDelivery)
-          .Include(x => x.Eligibilities)
-          .Include(x => x.Contacts)
-          .ThenInclude(x => x.Phones)
-          .Include(x => x.Languages)
-          .Include(x => x.Service_areas)
-          .Include(x => x.Service_taxonomys)
-          .ThenInclude(x => x.Taxonomy)
-          .Include(x => x.Service_at_locations)
-          .ThenInclude(x => x.Location)
-          .ThenInclude(x => x.Physical_addresses)
-          .Include(x => x.Cost_options)
-          .Where(x => x.Status == request.Status && x.Status != "Deleted" && organisationIds.Contains(x.OpenReferralOrganisationId)).ToListAsync();
-        }
-        else
-        {
-            entities = await _context.OpenReferralServices
-           .Include(x => x.ServiceType)
-           .Include(x => x.ServiceDelivery)
-           .Include(x => x.Eligibilities)
-           .Include(x => x.Contacts)
-           .ThenInclude(x => x.Phones)
-           .Include(x => x.Languages)
-           .Include(x => x.Service_areas)
-           .Include(x => x.Service_taxonomys)
-           .ThenInclude(x => x.Taxonomy)
-           .Include(x => x.Service_at_locations)
-           .ThenInclude(x => x.Location)
-           .ThenInclude(x => x.Physical_addresses)
-           .Include(x => x.Cost_options)
-           .Where(x => x.Status == request.Status && x.Status != "Deleted").ToListAsync();
-        }
-        
-
-        IEnumerable<OpenReferralService> dbservices = entities;
-        if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
-            dbservices = entities.Where(x => core.Helper.GetDistance(request.Latitude, request.Longtitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Latitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Longitude, x?.Name) < request.Meters);
+        IQueryable<OpenReferralService> entities = await GetOpenReferralServices(request);
 
         if (request?.MaximumAge != null)
-            dbservices = dbservices.Where(x => x.Eligibilities.Any(x => x.Maximum_age <= request.MaximumAge.Value));
+            entities = entities.Where(x => x.Eligibilities.Any(x => x.Maximum_age <= request.MaximumAge.Value));
 
         if (request?.MinimumAge != null)
-            dbservices = dbservices.Where(x => x.Eligibilities.Any(x => x.Minimum_age >= request.MinimumAge.Value));
+            entities = entities.Where(x => x.Eligibilities.Any(x => x.Minimum_age >= request.MinimumAge.Value));
 
         if (request?.GivenAge != null)
-            dbservices = dbservices.Where(x => x.Eligibilities.Any(x => x.Minimum_age <= request.GivenAge.Value && x.Maximum_age >= request.GivenAge.Value));
+            entities = entities.Where(x => x.Eligibilities.Any(x => x.Minimum_age <= request.GivenAge.Value && x.Maximum_age >= request.GivenAge.Value));
 
         if (request?.Text != null)
-            dbservices = dbservices.Where(x => x.Name.Contains(request.Text) || x.Description != null && x.Description.Contains(request.Text));
+            entities = entities.Where(x => x.Name.Contains(request.Text) || x.Description != null && x.Description.Contains(request.Text));
 
+
+        IEnumerable<OpenReferralService> dbservices = await entities.ToListAsync();
+        if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
+            dbservices = dbservices.Where(x => core.Helper.GetDistance(request.Latitude, request.Longtitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Latitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Longitude, x?.Name) < request.Meters);
+
+        
         //ServiceDeliveries
         if (request?.ServiceDeliveries != null)
         {
@@ -202,6 +166,61 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
         return new PaginatedList<OpenReferralServiceDto>(filteredServices, filteredServices.Count, 1, 10);
 
+    }
+
+    private async Task<IQueryable<OpenReferralService>> GetOpenReferralServices(GetOpenReferralServicesCommand request)
+    {
+        IQueryable<OpenReferralService> openReferralServices;
+
+        if (request.DistrictCode != null)
+        {
+            List<string> organisationIds = await _context.OrganisationAdminDistricts.Where(x => x.Code == request.DistrictCode).Select(x => x.OpenReferralOrganisationId).ToListAsync();
+
+           openReferralServices = _context.OpenReferralServices
+          .Include(x => x.ServiceType)
+          .Include(x => x.ServiceDelivery)
+          .Include(x => x.Eligibilities)
+          .Include(x => x.Contacts)
+          .ThenInclude(x => x.Phones)
+          .Include(x => x.Languages)
+          .Include(x => x.Service_areas)
+          .Include(x => x.Service_taxonomys)
+          .ThenInclude(x => x.Taxonomy)
+          .Include(x => x.Service_at_locations)
+          .ThenInclude(x => x.Location)
+          .ThenInclude(x => x.Physical_addresses)
+          .Include(x => x.Cost_options)
+          .Where(x => x.Status == request.Status && x.Status != "Deleted" && organisationIds.Contains(x.OpenReferralOrganisationId));
+        }
+        else
+        {
+            openReferralServices = _context.OpenReferralServices
+           .Include(x => x.ServiceType)
+           .Include(x => x.ServiceDelivery)
+           .Include(x => x.Eligibilities)
+           .Include(x => x.Contacts)
+           .ThenInclude(x => x.Phones)
+           .Include(x => x.Languages)
+           .Include(x => x.Service_areas)
+           .Include(x => x.Service_taxonomys)
+           .ThenInclude(x => x.Taxonomy)
+           .Include(x => x.Service_at_locations)
+           .ThenInclude(x => x.Location)
+           .ThenInclude(x => x.Physical_addresses)
+           .Include(x => x.Cost_options)
+           .Where(x => x.Status == request.Status && x.Status != "Deleted");
+        }
+
+        if (request.ServiceType != null)
+        {
+            ServiceType? serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.ServiceType || x.Name == request.ServiceType);
+            if (serviceType != null)
+            {
+                openReferralServices = openReferralServices.Where(x => x.ServiceType.Id == serviceType.Id);
+            }
+        }
+        
+        return openReferralServices;
     }
 
 }

@@ -178,7 +178,7 @@ public class OpenReferralOrganisationSeedData
                 new OpenReferralService(
                 "1144EB57-32D2-4915-8807-8884EC27B48D",
                 SeedServiceTypes().ElementAt(0),
-                null,
+                "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066",
                 "Salford Service 1",
                 @"Salford Service 1.",
                 null,
