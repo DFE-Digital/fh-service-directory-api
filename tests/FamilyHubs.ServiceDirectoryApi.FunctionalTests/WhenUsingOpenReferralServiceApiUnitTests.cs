@@ -42,6 +42,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
         string url = getServicesUrlBuilder
+                    .WithServiceType("Information Sharing")
                     .WithStatus("active")
                     .WithEligibility(0,99)
                     .WithProximity(52.6312, -1.66526, 1609.34)
@@ -78,6 +79,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
         string url = getServicesUrlBuilder
+                    .WithServiceType("Information Sharing")
                     .WithStatus("active")
                     .WithEligibility(0, 99)
                     .WithPage(1, 10)
@@ -113,6 +115,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
         string url = getServicesUrlBuilder
+                    .WithServiceType("Information Sharing")
                     .WithStatus("active")
                     .WithProximity(52.6312, -1.66526, 1609.34)
                     .WithPage(1, 10)
@@ -148,6 +151,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
         string url = getServicesUrlBuilder
+                    .WithServiceType("Information Sharing")
                     .WithStatus("active")
                     .WithDelimitedSearchDeliveries("online")
                     .WithPage(1, 10)
@@ -182,6 +186,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
         string url = getServicesUrlBuilder
+                    .WithServiceType("Information Sharing")
                     .WithStatus("active")
                     .WithDelimitedTaxonomies("11696b1f-209a-47b1-9ef5-c588a14d43c6")
                     .WithPage(1, 10)
@@ -270,6 +275,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
         string url = getServicesUrlBuilder
+                    .WithServiceType("Information Sharing")
                     .WithStatus("active")
                     .WithEligibility(0, 99)
                     .WithProximity(52.6312, -1.66526, 1609.34)
