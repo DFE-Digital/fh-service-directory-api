@@ -147,15 +147,29 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
                 dbservices = new List<OpenReferralService>();
         }
 
-        if (request?.Latitude != null && request?.Longtitude != null)
-            dbservices = dbservices.OrderBy(x => core.Helper.GetDistance(
-                request.Latitude,
-                request.Longtitude,
-                x?.Service_at_locations?.FirstOrDefault()?.Location.Latitude,
-                x?.Service_at_locations?.FirstOrDefault()?.Location.Longitude,
-                x?.Name));
+        //if (request?.Latitude != null && request?.Longtitude != null)
+        //    dbservices = dbservices.OrderBy(x => core.Helper.GetDistance(
+        //        request.Latitude,
+        //        request.Longtitude,
+        //        x?.Service_at_locations?.FirstOrDefault()?.Location.Latitude,
+        //        x?.Service_at_locations?.FirstOrDefault()?.Location.Longitude,
+        //        x?.Name));
 
         var filteredServices = OpenReferralDtoHelper.GetOpenReferralServicesDto(dbservices);
+        if (request?.Latitude != null && request?.Longtitude != null)
+        {
+            foreach (var service in filteredServices)
+            {
+                service.Distance = core.Helper.GetDistance(
+                    request.Latitude,
+                    request.Longtitude,
+                    service.Service_at_locations?.FirstOrDefault()?.Location.Latitude,
+                    service.Service_at_locations?.FirstOrDefault()?.Location.Longitude);
+            }
+
+            filteredServices = filteredServices.OrderBy(x => x.Distance).ToList();
+        }
+        
 
         if (request != null)
         {
@@ -168,6 +182,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
     }
 
+    
     private async Task<IQueryable<OpenReferralService>> GetOpenReferralServices(GetOpenReferralServicesCommand request)
     {
         IQueryable<OpenReferralService> openReferralServices;

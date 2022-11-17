@@ -11,8 +11,6 @@ public class ServiceConfiguration : IEntityTypeConfiguration<OpenReferralService
         builder.Property(t => t.Name)
             .HasMaxLength(255)
             .IsRequired();
-        builder.Property(t => t.Description)
-            .HasMaxLength(500);
         builder.Property(t => t.Created)
             .IsRequired();
         builder.Property(t => t.CreatedBy)

@@ -57,12 +57,14 @@ namespace fh_service_directory_api.api.Queries.FxSearch
                     }
                 }
 
-                resultList.Add(new Either<OpenReferralServiceDto, OpenReferralLocationDto, double>
+                var item = new Either<OpenReferralServiceDto, OpenReferralLocationDto, double>
                 {
                     Second = new OpenReferralLocationDto(
                     familyHub.Id, familyHub.Name, familyHub.Description, familyHub.Latitude, familyHub.Longitude, physicalAddresses),
                     Third = distance
-                });
+                };
+                item.Second.Distance = distance;
+                resultList.Add(item);
             }
 
 
@@ -98,7 +100,9 @@ namespace fh_service_directory_api.api.Queries.FxSearch
                     }
                 }
 
-                resultList.Add(new Either<OpenReferralServiceDto, OpenReferralLocationDto, double> { First = service, Third = distance });
+                var item = new Either<OpenReferralServiceDto, OpenReferralLocationDto, double> { First = service, Third = distance };
+                item.First.Distance = distance;
+                resultList.Add(item);
             }
 
             return resultList;
