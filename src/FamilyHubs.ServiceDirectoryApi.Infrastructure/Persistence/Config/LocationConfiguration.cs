@@ -9,7 +9,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<OpenReferralLocati
     public void Configure(EntityTypeBuilder<OpenReferralLocation> builder)
     {
         builder.Property(t => t.Name)
-            .HasMaxLength(50)
+            .HasMaxLength(255)
             .IsRequired();
         builder.Property(t => t.Description)
             .HasMaxLength(500)
