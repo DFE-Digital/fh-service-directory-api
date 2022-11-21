@@ -9,7 +9,7 @@ public class AddressConfiguration : IEntityTypeConfiguration<OpenReferralPhysica
     public void Configure(EntityTypeBuilder<OpenReferralPhysical_Address> builder)
     {
         builder.Property(t => t.Address_1)
-            .HasMaxLength(50)
+            .HasMaxLength(100)
             .IsRequired();
         builder.Property(t => t.City)
             .HasMaxLength(50);
