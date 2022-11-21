@@ -13,12 +13,7 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
         private readonly IDomainEventDispatcher _dispatcher;
         private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
 
-        public ApplicationDbContext
-        (
-            DbContextOptions<ApplicationDbContext> options,
-            IDomainEventDispatcher dispatcher,
-            AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor
-        )
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,IDomainEventDispatcher dispatcher,AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor) 
         : base(options)
         {
             _dispatcher = dispatcher;

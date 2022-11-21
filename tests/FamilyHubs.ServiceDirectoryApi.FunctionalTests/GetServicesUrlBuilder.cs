@@ -4,6 +4,11 @@ public class GetServicesUrlBuilder
 {
     private readonly List<string> _urlParameter = new();
 
+    public GetServicesUrlBuilder WithServiceType(string serviceType)
+    {
+        _urlParameter.Add($"serviceType={serviceType}");
+        return this;
+    }
     public GetServicesUrlBuilder WithStatus(string status)
     {
         _urlParameter.Add($"status={status}");

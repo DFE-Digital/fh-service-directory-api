@@ -9,7 +9,7 @@ public class ServiceTypeConfiguration : IEntityTypeConfiguration<ServiceType>
     public void Configure(EntityTypeBuilder<ServiceType> builder)
     {
         builder.Property(t => t.Name)
-            .HasMaxLength(50)
+            .HasMaxLength(255)
             .IsRequired();
         builder.Property(t => t.Description)
             .HasMaxLength(500)

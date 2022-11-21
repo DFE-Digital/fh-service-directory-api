@@ -9,7 +9,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
 {
     public OpenReferralService() { }
 
-    public OpenReferralService(string id, ServiceType serviceType, string openReferralOrganisationId, string name, string? description, string? accreditations, DateTime? assured_date, string? attending_access, string? attending_type, string? deliverable_type, string? status, string? url, string? email, string? fees
+    public OpenReferralService(string id, ServiceType serviceType, string openReferralOrganisationId, string name, string? description, string? accreditations, DateTime? assured_date, string? attending_access, string? attending_type, string? deliverable_type, string? status, string? url, string? email, string? fees, bool canFamilyChooseDeliveryLocation
         , ICollection<OpenReferralServiceDelivery> serviceDelivery
         , ICollection<OpenReferralEligibility> eligibilitys
         , ICollection<OpenReferralFunding> fundings
@@ -38,6 +38,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
         Url = url;
         Email = email;
         Fees = fees;
+        CanFamilyChooseDeliveryLocation = canFamilyChooseDeliveryLocation;
         Eligibilities = eligibilitys as ICollection<OpenReferralEligibility> ?? new Collection<OpenReferralEligibility>();
         Fundings = fundings as ICollection<OpenReferralFunding> ?? new Collection<OpenReferralFunding>();
         Holiday_schedules = holiday_schedules as ICollection<OpenReferralHoliday_Schedule> ?? new Collection<OpenReferralHoliday_Schedule>();
@@ -65,6 +66,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
     public string? Url { get; set; }
     public string? Email { get; set; }
     public string? Fees { get; set; }
+    public bool CanFamilyChooseDeliveryLocation { get; set; }
     public virtual ICollection<OpenReferralServiceDelivery> ServiceDelivery { get; set; } = new Collection<OpenReferralServiceDelivery>();
     public virtual ICollection<OpenReferralEligibility> Eligibilities { get; set; } = new Collection<OpenReferralEligibility>();
     public virtual ICollection<OpenReferralFunding> Fundings { get; set; } = new Collection<OpenReferralFunding>();

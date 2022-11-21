@@ -11,12 +11,15 @@ using fh_service_directory_api.infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Interceptors;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using fh_service_directory_api.infrastructure.Services;
+using FamilyHubs.ServiceDirectory.Shared.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Serilog;
 using Microsoft.Extensions.Logging.AzureAppServices;
+using Microsoft.Extensions.Configuration;
+using fh_service_directory_api.api.Data;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -73,25 +76,60 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
             .As<ICurrentUserService>().InstancePerLifetimeScope();
     containerBuilder.RegisterType<AuditableEntitySaveChangesInterceptor>();
 
+
+    string useDbType = builder.Configuration.GetValue<string>("UseDbType");
+
+#if USE_AZURE_VAULT
+    if (builder.Configuration.GetValue<bool>("UseVault"))
+    {
+        (bool isOk, string errorMessage) = builder.AddAzureKeyVault();
+        if (!isOk)
+        {
+            useDbType = "UseInMemoryDatabase";
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                Log.Error($"An error occurred Initializing Azure Vault");
+            }
+        }
+    }
+#endif
+
+    
+
     // Register Entity Framework
     DbContextOptions<ApplicationDbContext> options;
 
-    if (builder.Configuration.GetValue<bool>("UseInMemoryDatabase"))
+    switch (useDbType)
     {
-        options = new DbContextOptionsBuilder<ApplicationDbContext>()
+        case "UseInMemoryDatabase":
+            {
+                options = new DbContextOptionsBuilder<ApplicationDbContext>()
                         .UseInMemoryDatabase("FH-LAHubDb").Options;
-    }
-    else if (builder.Configuration.GetValue<bool>("UseSqlServerDatabase"))
-    {
-        options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                         .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+            }
+            break;
+
+        case "UseSqlServerDatabase":
+            {
+                options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                         .UseSqlServer(builder.Configuration.GetConnectionString("ServiceDirectoryConnection") ?? string.Empty)
                          .Options;
-    }
-    else
-    {
-        options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                         .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+            }
+            break;
+
+        case "UsePostgresDatabase":
+            {
+                options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                         .UseNpgsql(builder.Configuration.GetConnectionString("ServiceDirectoryConnection") ?? string.Empty)
                          .Options;
+            }
+            break;
+
+        default:
+            {
+                options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                        .UseInMemoryDatabase("FH-LAHubDb").Options;
+            }
+            break;
     }
 
     containerBuilder.RegisterType<ApplicationDbContext>()
@@ -104,6 +142,7 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
     containerBuilder.RegisterType<MinimalTaxonomyEndPoints>();
     containerBuilder.RegisterType<MinimalLocationEndPoints>();
     containerBuilder.RegisterType<MinimalUICacheEndPoints>();
+    containerBuilder.RegisterType<MinimalSearchEndPoints>();
     containerBuilder.RegisterType<ApplicationDbContextInitialiser>();
 
     containerBuilder
@@ -165,6 +204,10 @@ using (var scope = webApplication.Services.CreateScope())
     var genservice = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
     if (genservice != null)
         genservice.RegisterMinimalGeneralEndPoints(webApplication);
+
+    var searchService = scope.ServiceProvider.GetService<MinimalSearchEndPoints>();
+    if (searchService != null)
+        searchService.RegisterSearchEndPoints(webApplication);
 
     try
     {
@@ -229,7 +272,7 @@ static void ConfigureWebApplication(WebApplication webApplication)
 
 static void RegisterComponents(IServiceCollection builder, IConfiguration configuration)
 {
-    builder.AddApplicationInsights(configuration);
+    builder.AddApplicationInsights(configuration, "fh_service_directory_api.api");
 }
 
 

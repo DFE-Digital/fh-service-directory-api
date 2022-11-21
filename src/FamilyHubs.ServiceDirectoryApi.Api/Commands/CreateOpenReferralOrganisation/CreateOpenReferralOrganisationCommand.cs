@@ -1,4 +1,5 @@
-﻿using Ardalis.Specification;
+﻿using Ardalis.GuardClauses;
+using Ardalis.Specification;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using fh_service_directory_api.core.Entities;
@@ -39,6 +40,11 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
         {
             var entity = _mapper.Map<OpenReferralOrganisation>(request.OpenReferralOrganisation);
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+
+            if (_context.OpenReferralOrganisations.FirstOrDefault(x => x.Id == request.OpenReferralOrganisation.Id) != null)
+            {
+                throw new ArgumentException("Duplicate Id");
+            }
 
             var organisationType = _context.OrganisationTypes.FirstOrDefault(x => x.Id == request.OpenReferralOrganisation.OrganisationType.Id);
             if (organisationType != null)

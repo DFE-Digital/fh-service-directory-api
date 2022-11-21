@@ -9,7 +9,7 @@ public class TaxonomyConfiguration : IEntityTypeConfiguration<OpenReferralTaxono
     public void Configure(EntityTypeBuilder<OpenReferralTaxonomy> builder)
     {
         builder.Property(t => t.Name)
-            .HasMaxLength(50)
+            .HasMaxLength(255)
             .IsRequired();
         builder.Property(t => t.Created)
             .IsRequired();

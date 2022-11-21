@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<RootNamespace>fh_service_directory_api.api</RootNamespace>
+		<UserSecretsId>26d99b98-f8d3-4ce4-ab2e-2042a23ac6eb</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,6 +24,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="6.0.10" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.6" />
@@ -34,6 +36,10 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\FamilyHubs.ServiceDirectoryApi.Core\FamilyHubs.ServiceDirectoryApi.Core.csproj" />
 	  <ProjectReference Include="..\FamilyHubs.ServiceDirectoryApi.Infrastructure\FamilyHubs.ServiceDirectoryApi.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
 	</ItemGroup>
 
 </Project>

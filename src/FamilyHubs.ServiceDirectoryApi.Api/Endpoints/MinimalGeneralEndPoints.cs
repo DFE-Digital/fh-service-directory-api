@@ -6,7 +6,7 @@ public class MinimalGeneralEndPoints
 {
     public void RegisterMinimalGeneralEndPoints(WebApplication app)
     {
-        app.MapGet("api/info", (ILogger<MinimalGeneralEndPoints> logger) =>
+        app.MapGet("api/info", (IConfiguration configuration, ILogger < MinimalGeneralEndPoints> logger) =>
         {
             try
             {
@@ -15,7 +15,19 @@ public class MinimalGeneralEndPoints
                 var creationDate = File.GetCreationTime(assembly.Location);
                 var version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
 
-                return Results.Ok($"Version: {version}, Last Updated: {creationDate}");
+                string useDbType = configuration.GetValue<string>("UseDbType");
+                if (useDbType != "UseInMemoryDatabase")
+                {
+                    string? connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
+                    bool connectionStringOK = false;
+                    if (!string.IsNullOrEmpty(connectionString) && connectionString.Contains("Database"))
+                        connectionStringOK = true;
+
+                    return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Db Type: {useDbType}, Is Connection String OK: {connectionStringOK}");
+                }
+                
+
+                return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Db Type: {useDbType}");
             }
             catch (Exception ex)
             {
