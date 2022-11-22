@@ -1,25 +1,22 @@
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using FamilyHubs.ServiceDirectory.Shared.Extensions;
 using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.api;
 using fh_service_directory_api.api.Endpoints;
 using fh_service_directory_api.core;
-using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Interfaces;
 using fh_service_directory_api.infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Interceptors;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using fh_service_directory_api.infrastructure.Services;
-using FamilyHubs.ServiceDirectory.Shared.Extensions;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
-using Serilog;
 using Microsoft.Extensions.Logging.AzureAppServices;
-using Microsoft.Extensions.Configuration;
-using fh_service_directory_api.api.Data;
+using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using System.Text;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -56,8 +53,55 @@ builder.Host.ConfigureLogging(logging =>
 //})
 );
 
-ConfigurWebApplicationBuilderHost(builder);
-ConfigurWebApplicationBuilderServices(builder);
+
+
+ConfigureBuilder.ConfigurWebApplicationBuilderHost(builder);
+ConfigureBuilder.ConfigurWebApplicationBuilderServices(builder);
+
+// Adding Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+
+// Adding Jwt Bearer
+.AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"] ?? "JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xzyr"))
+    };
+});
+
+//https://www.youtube.com/watch?v=cbtK3U2aOlg
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AllAdminAccess", policy =>
+                    policy.RequireAssertion(context =>
+                                context.User.IsInRole("DfEAdmin") ||
+                                context.User.IsInRole("LAAdmin") ||
+                                context.User.IsInRole("VCSAdmin")));
+
+    options.AddPolicy("OrgAccess", policy =>
+                    policy.RequireAssertion(context =>
+                                context.User.IsInRole("DfEAdmin") ||
+                                context.User.IsInRole("LAAdmin")));
+
+    options.AddPolicy("ServiceAccess", policy =>
+                    policy.RequireAssertion(context =>
+                                context.User.IsInRole("LAAdmin") ||
+                                context.User.IsInRole("VCSAdmin")));
+
+});
 
 // ApplicationInsights
 
@@ -228,35 +272,7 @@ using (var scope = webApplication.Services.CreateScope())
 webApplication.Run();
 
 
-static void ConfigurWebApplicationBuilderHost(WebApplicationBuilder builder)
-{
-    builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-}
 
-static void ConfigurWebApplicationBuilderServices(WebApplicationBuilder builder)
-{
-   
-    // Add services to the container.
-    builder.Services.AddControllers();
-    builder.Services.AddEndpointsApiExplorer();
-
-    
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddSwaggerGen(c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "fh-service-directory-api.api", Version = "v1" });
-        c.EnableAnnotations();
-    });
-
-    var assemblies = new Assembly[]
-          {
-        typeof(Program).Assembly,
-        typeof(ApplicationDbContext).Assembly,
-        typeof(OpenReferralOrganisation).Assembly
-          };
-    builder.Services.AddMediatR(assemblies);
-  
-}
 
 static void ConfigureWebApplication(WebApplication webApplication)
 {
@@ -266,6 +282,7 @@ static void ConfigureWebApplication(WebApplication webApplication)
     
 
     webApplication.UseHttpsRedirection();
+    webApplication.UseAuthentication();
     webApplication.UseAuthorization();
     webApplication.MapControllers();
 }

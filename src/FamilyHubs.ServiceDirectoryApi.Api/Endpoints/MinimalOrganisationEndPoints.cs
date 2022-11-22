@@ -8,6 +8,7 @@ using fh_service_directory_api.api.Queries.GetOrganisationTypes;
 using fh_service_directory_api.api.Queries.ListOrganisation;
 using fh_service_directory_api.core.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -17,7 +18,7 @@ public class MinimalOrganisationEndPoints
 {
     public void RegisterOrganisationEndPoints(WebApplication app)
     {
-        app.MapPost("api/organizations", async ([FromBody] OpenReferralOrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPost("api/organizations", [Authorize(Policy = "OrgAccess")] async ([FromBody] OpenReferralOrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
@@ -68,7 +69,7 @@ public class MinimalOrganisationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Organisations", "List Organisations") { Tags = new[] { "Organisations" } });
 
-        app.MapPut("api/organizations/{id}", async (string id, [FromBody] OpenReferralOrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPut("api/organizations/{id}", [Authorize(Policy = "AllAdminAccess")] async (string id, [FromBody] OpenReferralOrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {

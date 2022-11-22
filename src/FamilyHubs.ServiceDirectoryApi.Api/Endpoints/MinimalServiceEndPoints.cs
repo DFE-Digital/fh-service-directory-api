@@ -6,6 +6,7 @@ using fh_service_directory_api.api.Queries.GetOpenReferralService;
 using fh_service_directory_api.api.Queries.GetOpenReferralServicesByOrganisation;
 using fh_service_directory_api.api.Queries.GetServices;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -79,7 +80,7 @@ public class MinimalServiceEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Services by Organisation Id", "Get Service by Organisation Id") { Tags = new[] { "Services" } });
 
-        app.MapPost("api/services", async ([FromBody] OpenReferralServiceDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPost("api/services", [Authorize(Policy = "ServiceAccess")] async ([FromBody] OpenReferralServiceDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
@@ -95,7 +96,7 @@ public class MinimalServiceEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Create a Service", "Create a Service") { Tags = new[] { "Services" } });
 
-        app.MapPut("api/services/{id}", async (string id, [FromBody] OpenReferralServiceDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPut("api/services/{id}", [Authorize(Policy = "ServiceAccess")] async (string id, [FromBody] OpenReferralServiceDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
