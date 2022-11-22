@@ -1,5 +1,6 @@
 ﻿using fh_service_directory_api.core.Entities;
 using FluentAssertions;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
@@ -23,6 +24,8 @@ public class WhenUsingOpenReferralLocationApiUnitTests : BaseWhenUsingOpenReferr
             RequestUri = new Uri(_client.BaseAddress + "api/location/d242700a-b2ad-42fe-8848-61534002156c/ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
+
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
 
         using var response = await _client.SendAsync(request);
 

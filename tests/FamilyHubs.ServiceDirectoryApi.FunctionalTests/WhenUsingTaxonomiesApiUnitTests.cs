@@ -1,6 +1,7 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using FamilyHubs.SharedKernel;
 using FluentAssertions;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json;
 
@@ -51,6 +52,8 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(commandtaxonomy), Encoding.UTF8, "application/json"),
         };
 
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+
         using var response = await _client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
@@ -77,6 +80,8 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(commandtaxonomy), Encoding.UTF8, "application/json"),
         };
 
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+
         using var response = await _client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
@@ -91,6 +96,8 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
             RequestUri = new Uri(_client.BaseAddress + $"api/taxonomies/{commandtaxonomy.Id}"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(updatedtaxonomy), Encoding.UTF8, "application/json"),
         };
+
+        updaterequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
 
         using var updateresponse = await _client.SendAsync(updaterequest);
 
