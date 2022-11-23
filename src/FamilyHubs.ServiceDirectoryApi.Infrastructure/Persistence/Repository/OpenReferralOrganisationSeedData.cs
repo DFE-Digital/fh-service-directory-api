@@ -228,7 +228,7 @@ public class OpenReferralOrganisationSeedData
                             new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
                             {
                                 new OpenReferralPhysical_Address(
-                                    Guid.NewGuid().ToString(),
+                                    "bf962211-48d3-4332-a46f-273a8b1ccdce",
                                     "1A Del's Ave",
                                     "Salford",
                                     "ABC 123",
