@@ -253,19 +253,22 @@ using (var scope = webApplication.Services.CreateScope())
     if (searchService != null)
         searchService.RegisterSearchEndPoints(webApplication);
 
-    try
+    if (!webApplication.Environment.IsProduction())
     {
-        // Seed Database
-        var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-        await initialiser.InitialiseAsync(builder.Configuration);
-        await initialiser.SeedAsync();
+        try
+        {
+            // Seed Database
+            var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
+            await initialiser.InitialiseAsync(builder.Configuration);
+            await initialiser.SeedAsync();
 
-    }
-    catch (Exception ex)
-    {
-        var logger = scope.ServiceProvider.GetService<ILogger<Program>>();
-        if (logger != null)
-            logger.LogError(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
+        }
+        catch (Exception ex)
+        {
+            var logger = scope.ServiceProvider.GetService<ILogger<Program>>();
+            if (logger != null)
+                logger.LogError(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
+        }
     }
 }
 
