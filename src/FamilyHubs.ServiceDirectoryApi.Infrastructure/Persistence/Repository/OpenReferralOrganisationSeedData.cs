@@ -476,12 +476,14 @@ public class OpenReferralOrganisationSeedData
                     new OpenReferralService_Taxonomy
                     ("9110TestDelete",
                     null,
-                    new OpenReferralTaxonomy(
-                        "bccusergroupTestDelete:56",
-                        "Test Conditions",
-                        "BCC User Groups",
-                        null
-                        ))
+                    new OpenReferralTaxonomy("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", "Activities", "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4")
+                    //new OpenReferralTaxonomy(
+                    //    "bccusergroupTestDelete:56",
+                    //    "Test Conditions",
+                    //    "BCC User Groups",
+                    //    null
+                    //    )
+                    )
                 }
                 )),
 
@@ -570,12 +572,14 @@ public class OpenReferralOrganisationSeedData
                     new OpenReferralService_Taxonomy
                     ("9120TestDelete",
                     null,
-                    new OpenReferralTaxonomy(
-                        "bccusergroupTestDelete2:56",
-                        "Test Conditions",
-                        "BCC User Groups",
-                        null
-                        ))
+                    new OpenReferralTaxonomy("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", "Activities", "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4")
+                    //new OpenReferralTaxonomy(
+                    //    "bccusergroupTestDelete2:56",
+                    //    "Test Conditions",
+                    //    "BCC User Groups",
+                    //    null
+                    //    )
+                    )
                 }
                 )),
 
@@ -664,12 +668,14 @@ public class OpenReferralOrganisationSeedData
                     new OpenReferralService_Taxonomy
                     ("9121TestDelete",
                     null,
-                    new OpenReferralTaxonomy(
-                        "bccusergroupTestDelete3:56",
-                        "Test Conditions",
-                        "BCC User Groups",
-                        null
-                        ))
+                    new OpenReferralTaxonomy("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", "Activities", "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4")
+                    //new OpenReferralTaxonomy(
+                    //    "bccusergroupTestDelete3:56",
+                    //    "Test Conditions",
+                    //    "BCC User Groups",
+                    //    null
+                    //    )
+                    )
                 }
                 )),
 
