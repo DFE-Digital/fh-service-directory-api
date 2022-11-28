@@ -135,8 +135,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         if (request?.TaxonmyIds != null)
         {
             string[] parts = request.TaxonmyIds.Split(',');
-            foreach (string part in parts)
-                dbservices = dbservices.Where(x => x.Service_taxonomys.Any(x => x.Taxonomy?.Id == part));
+            dbservices = dbservices.Where(x => x.Service_taxonomys.Any(x => parts.Contains(x.Taxonomy?.Id) ));
 
         }
 
