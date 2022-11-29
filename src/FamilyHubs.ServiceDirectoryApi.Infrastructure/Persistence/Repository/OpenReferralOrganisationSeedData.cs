@@ -1,39 +1,14 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Enums;
 using fh_service_directory_api.core.Entities;
+using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
+using System;
+using System.Collections.ObjectModel;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Repository;
 
 public class OpenReferralOrganisationSeedData
 {
-    public IReadOnlyCollection<OpenReferralLocation> SeedFamilyHubs()
-    {
-        List<OpenReferralLocation> locations = new()
-        {
-            new OpenReferralLocation("964ea451-6146-4add-913e-dff23a1bd7b6", "Central Family Hub", "Broughton Hub", -2.259764D, 53.507025D, new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("84c0a47a-08a1-4e54-814b-46ce26765c08", "50 Rigby Street", "Manchester", "M7 4BQ", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
-            new OpenReferralLocation("74c37f53-dbc0-4958-8c97-baee41a022bf", "North Family Hub", "Swinton Gateway", -2.342044D, 53.5124278D, new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("83bf4f64-fdcb-46bc-a32e-8b117bf5c19a", "100 Chorley Road", "Manchester", "M27 6BP", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
-            new OpenReferralLocation("1b4a625b-54bb-407d-a508-f90cade1e96f", "South Family Hub", "Winton Children’s Centre", -2.368140748303118D, 53.48801070060149D,  new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("45603703-5d3f-45f4-84f1-b294ac4d3290", "Brindley Street", "Manchester", "M30 8AB", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
-        };
-
-        return locations;
-    }
-    
-    public IReadOnlyCollection<ModelLink> SeedModelLinks()
-    {
-        List<ModelLink> modelLinks = new()
-        {
-            new ModelLink("ebe8647d-e06d-478d-a6af-948dd7a289c7", fh_service_directory_api.core.StaticContants.Location_Taxonomy, "964ea451-6146-4add-913e-dff23a1bd7b6", "d242700a-b2ad-42fe-8848-61534002156c"),
-            new ModelLink("760f05de-07df-4e58-a429-20922416b221", fh_service_directory_api.core.StaticContants.Location_Taxonomy, "74c37f53-dbc0-4958-8c97-baee41a022bf", "d242700a-b2ad-42fe-8848-61534002156c"),
-            new ModelLink("9c8df56e-bebf-486f-8544-39f8deccbe94", fh_service_directory_api.core.StaticContants.Location_Taxonomy, "1b4a625b-54bb-407d-a508-f90cade1e96f", "d242700a-b2ad-42fe-8848-61534002156c"),
-
-            new ModelLink("dc5e2bdb-ed5a-4278-b3a3-f0622502b5e4", fh_service_directory_api.core.StaticContants.Location_Organisation, "964ea451-6146-4add-913e-dff23a1bd7b6", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
-            new ModelLink("4cb330f6-f68f-4529-8a55-dffa8b9d48af", fh_service_directory_api.core.StaticContants.Location_Organisation, "74c37f53-dbc0-4958-8c97-baee41a022bf", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
-            new ModelLink("06bf080c-b161-4fc3-b015-81535ced46d8", fh_service_directory_api.core.StaticContants.Location_Organisation, "1b4a625b-54bb-407d-a508-f90cade1e96f", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"),
-
-        };
-
-        return modelLinks;
-    }
-
     public IReadOnlyCollection<OrganisationAdminDistrict> SeedOrganisationAdminDistrict()
     {
         List<OrganisationAdminDistrict> adminDistricts = new()
@@ -173,89 +148,7 @@ public class OpenReferralOrganisationSeedData
             new Uri("https://www.salford.gov.uk/").ToString(),
             "https://www.salford.gov.uk/",
             new List<OpenReferralReview>(),
-            new List<OpenReferralService>()
-            {
-                new OpenReferralService(
-                "1144EB57-32D2-4915-8807-8884EC27B48D",
-                SeedServiceTypes().ElementAt(0),
-                "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066",
-                "Salford Service 1",
-                @"Salford Service 1.",
-                null,
-                null,
-                null,
-                null,
-                null,
-                "active",
-                "www.Salford.gov.uk",
-                "supporttestdev@SalfordTest.Gov.UK",
-                null,
-                false,
-                new List<OpenReferralServiceDelivery>(),
-                new List<OpenReferralEligibility>(),
-                new List<OpenReferralFunding>(),
-                new List<OpenReferralHoliday_Schedule>(),
-                new List<OpenReferralLanguage>(),
-                new List<OpenReferralRegular_Schedule>(),
-                new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
-                {
-                    new OpenReferralContact(
-                        "1568",
-                        "Mr",
-                        "John Smith",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("1568", "01234 567890")
-                        }
-                        ))
-                }),
-                new List<OpenReferralCost_Option>(),
-                new List<OpenReferralService_Area>()
-                {
-                    new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
-                },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
-                {
-                    new OpenReferralServiceAtLocation(
-                        "1750",
-                        new OpenReferralLocation(
-                            "00768BBC-E830-4F94-9126-FB44CD31204D",
-                            "",
-                            "",
-                            52.6312,
-                            -1.66526,
-                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
-                            {
-                                new OpenReferralPhysical_Address(
-                                    "bf962211-48d3-4332-a46f-273a8b1ccdce",
-                                    "1A Del's Ave",
-                                    "Salford",
-                                    "ABC 123",
-                                    "England",
-                                    null
-                                    )
-                            }),
-                            new List<Accessibility_For_Disabilities>()
-                            ),
-                        new List<OpenReferralRegular_Schedule>(),
-                        new List<OpenReferralHoliday_Schedule>()
-                        )
-
-                }),
-                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
-                {
-                    new OpenReferralService_Taxonomy
-                    ("9999",
-                    null,
-                    new OpenReferralTaxonomy(
-                        "3f6221f3-ce5f-4500-962e-3a5960d20474",
-                        "Test Category 1","Test Category 1",
-                        "32712b43-e4f7-484f-97d7-beb3bb463133"
-                        ))
-                }
-                ))
-            }
+            GetSalfordFamilyHubs("ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066")
             ),
             new OpenReferralOrganisation(
             "6dc1c3ad-d077-46ff-9e0d-04fb263f0637",
@@ -300,6 +193,219 @@ public class OpenReferralOrganisationSeedData
         return bristolCountyCouncil;
     }
 
+    private List<OpenReferralService> GetSalfordFamilyHubs(string parentId)
+    {
+        return new List<OpenReferralService>{
+
+            new OpenReferralService(
+                "6f4251a7-ae32-44cd-84fc-a632e944fccf",
+                serviceType: new ServiceType("2", "Family Experience", ""),
+                openReferralOrganisationId: parentId,
+                name: "Central Family Hub",
+                description: "Family Hub",
+                accreditations: null,
+                assured_date: null,
+                attending_access: null,
+                attending_type: null,
+                deliverable_type: null,
+                status: "active",
+                url: "https://familyhubsnetwork.com/hub/central-family-hub-salford/",
+                email: "central.locality@salford.gov.uk",
+                fees: null,
+                canFamilyChooseDeliveryLocation: false,
+                new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
+                {
+                    new OpenReferralServiceDelivery("c820ea55-14e9-4061-9c89-6906ec3064d1",ServiceDelivery.InPerson)
+                }),
+                new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
+                {
+                    new OpenReferralEligibility("4468ed19-0b26-414b-8d71-b09ca3802b75","",null,25,0,new List<OpenReferralTaxonomy>())
+                }),
+                new List<OpenReferralFunding>(),
+                new List<OpenReferralHoliday_Schedule>(),
+                new List<OpenReferralLanguage>()
+                {
+                    new OpenReferralLanguage("41814ec8-410a-4f37-aa9f-7b3a83b7f33b","English")
+                },
+                new List<OpenReferralRegular_Schedule>(),
+                new List<OpenReferralReview>(),
+                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                {
+                    new OpenReferralContact(
+                        "6a84d5af-2e5c-40fa-9689-6b11181db320",
+                        "Ms",
+                        "Kate Berry",
+                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
+                        {
+                            new OpenReferralPhone("8c1ea252-03ef-41d0-90e0-d12616853f80", "0161 778 0601")
+                        }
+                        ))
+                }),
+                new List<OpenReferralCost_Option>(),
+                new List<OpenReferralService_Area>()
+                {
+                    new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                {
+                    new OpenReferralServiceAtLocation(
+                        "e234f5b5-fb74-4e68-bd29-88e736bfc317",
+                        new OpenReferralLocation("964ea451-6146-4add-913e-dff23a1bd7b6", "Central Family Hub", "Broughton Hub", -2.259764D, 53.507025D, new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("84c0a47a-08a1-4e54-814b-46ce26765c08", "50 Rigby Street", "Manchester", "M7 4BQ", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+                        new List<OpenReferralRegular_Schedule>(),
+                        new List<OpenReferralHoliday_Schedule>()
+                        )
+
+                }),
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
+                {
+                    new OpenReferralService_Taxonomy
+                    ("acf61107-44b8-4c7e-b298-b90f61d4274e",
+                    null,
+                    new OpenReferralTaxonomy("d242700a-b2ad-42fe-8848-61534002156c", "FamilyHub", "FX Family Hub", null))
+                }
+                )
+                ),
+
+            new OpenReferralService(
+                "57bde76b-885d-484d-869f-7e60faf4b1b2",
+                serviceType: new ServiceType("2", "Family Experience", ""),
+                openReferralOrganisationId: parentId,
+                name: "North Family Hub",
+                description: "Family Hub",
+                accreditations: null,
+                assured_date: null,
+                attending_access: null,
+                attending_type: null,
+                deliverable_type: null,
+                status: "active",
+                url: "https://familyhubsnetwork.com/hub/north-family-hub-salford/",
+                email: "north.locality@salford.gov.uk",
+                fees: null,
+                canFamilyChooseDeliveryLocation: false,
+                new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
+                {
+                    new OpenReferralServiceDelivery("5432f1f5-b822-4501-a018-7581add71dbc",ServiceDelivery.InPerson)
+                }),
+                new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
+                {
+                    new OpenReferralEligibility("758aedf1-a177-42ed-9ea9-3ef6e95b9b6b","",null,25,0,new List<OpenReferralTaxonomy>())
+                }),
+                new List<OpenReferralFunding>(),
+                new List<OpenReferralHoliday_Schedule>(),
+                new List<OpenReferralLanguage>()
+                {
+                    new OpenReferralLanguage("c3ee6046-6caf-4204-8eaf-db9bc192c7da","English")
+                },
+                new List<OpenReferralRegular_Schedule>(),
+                new List<OpenReferralReview>(),
+                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                {
+                    new OpenReferralContact(
+                        "560e159d-c54c-4925-bd55-8bbfd5071520",
+                        "Ms",
+                        "Kate Berry",
+                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
+                        {
+                            new OpenReferralPhone("fe89304c-792d-4e64-877a-3f1a645ecdea", "0161 778 0495")
+                        }
+                        ))
+                }),
+                new List<OpenReferralCost_Option>(),
+                new List<OpenReferralService_Area>()
+                {
+                    new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                {
+                    new OpenReferralServiceAtLocation(
+                        "2995a7a0-6552-4c71-9e91-7f860d5a993e",
+                        new OpenReferralLocation("74c37f53-dbc0-4958-8c97-baee41a022bf", "North Family Hub", "Swinton Gateway", -2.342044D, 53.5124278D, new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("83bf4f64-fdcb-46bc-a32e-8b117bf5c19a", "100 Chorley Road", "Manchester", "M27 6BP", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+                        new List<OpenReferralRegular_Schedule>(),
+                        new List<OpenReferralHoliday_Schedule>()
+                        )
+
+                }),
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
+                {
+                    new OpenReferralService_Taxonomy
+                    ("3836ef2c-bd27-40a8-a3f1-8c64c58af08f",
+                    null,
+                    new OpenReferralTaxonomy("d242700a-b2ad-42fe-8848-61534002156c", "FamilyHub", "FX Family Hub", null))
+                }
+                )
+                ),
+
+            new OpenReferralService(
+                "8930d8f0-d563-4d4b-b666-8351f4719d78",
+                serviceType: new ServiceType("2", "Family Experience", ""),
+                openReferralOrganisationId: parentId,
+                name: "South Family Hub",
+                description: "Family Hub",
+                accreditations: null,
+                assured_date: null,
+                attending_access: null,
+                attending_type: null,
+                deliverable_type: null,
+                status: "active",
+                url: "https://familyhubsnetwork.com/hub/south-family-hub-central/",
+                email: "south.locality@salford.gov.uk",
+                fees: null,
+                canFamilyChooseDeliveryLocation: false,
+                new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
+                {
+                    new OpenReferralServiceDelivery("3af77d95-1e1a-412f-9daa-98dc74af8e54",ServiceDelivery.InPerson)
+                }),
+                new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
+                {
+                    new OpenReferralEligibility("94589b64-2ab8-4748-8a70-13f3ba1e35e8","",null,25,0,new List<OpenReferralTaxonomy>())
+                }),
+                new List<OpenReferralFunding>(),
+                new List<OpenReferralHoliday_Schedule>(),
+                new List<OpenReferralLanguage>()
+                {
+                    new OpenReferralLanguage("724630f7-4c8b-4864-96be-bc74891f2b4a","English")
+                },
+                new List<OpenReferralRegular_Schedule>(),
+                new List<OpenReferralReview>(),
+                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                {
+                    new OpenReferralContact(
+                        "6596d609-8ba1-4188-a357-3d92ae9dec8f",
+                        "Ms",
+                        "Kate Berry",
+                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
+                        {
+                            new OpenReferralPhone("51a9f241-a666-43e1-91b8-7ebdaad614e0", "0161 686 5260")
+                        }
+                        ))
+                }),
+                new List<OpenReferralCost_Option>(),
+                new List<OpenReferralService_Area>()
+                {
+                    new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                {
+                    new OpenReferralServiceAtLocation(
+                        "4e969589-e2b3-47d7-b079-1af1e3de5554",
+                        new OpenReferralLocation("1b4a625b-54bb-407d-a508-f90cade1e96f", "South Family Hub", "Winton Children’s Centre", -2.368140748303118D, 53.48801070060149D,  new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("45603703-5d3f-45f4-84f1-b294ac4d3290", "Brindley Street", "Manchester", "M30 8AB", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+                        new List<OpenReferralRegular_Schedule>(),
+                        new List<OpenReferralHoliday_Schedule>()
+                        )
+
+                }),
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
+                {
+                    new OpenReferralService_Taxonomy
+                    ("758eea75-1cec-44ec-816f-2f612537f716",
+                    null,
+                    new OpenReferralTaxonomy("d242700a-b2ad-42fe-8848-61534002156c", "FamilyHub", "FX Family Hub", null))
+                }
+                )
+                )
+        };
+    }
+
     private List<OpenReferralService> GetBristolCountyCouncilServices(string parentId)
     {
         return new()
@@ -332,7 +438,7 @@ public class OpenReferralOrganisationSeedData
                 new List<OpenReferralHoliday_Schedule>(),
                 new List<OpenReferralLanguage>()
                 {
-                    new OpenReferralLanguage("724630f7-4c8b-4864-96be-bc74891f2b4a","English")
+                    new OpenReferralLanguage("29794770-11bc-400f-82b7-f03d256ca5dc","English")
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
