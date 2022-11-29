@@ -36,7 +36,7 @@ public class WhenUsingFxSearchCommands : BaseCreateDbUnitTest
 
         //Assert
         results.Should().NotBeNull();
-        results.Where(r => r.First != null).Count().Should().Be(3); // Services
+        results.Where(r => r.First != null).Count().Should().BeGreaterThan(3); // Services
         results.Where(r => r.Second != null).Count().Should().Be(3);    // Family Hubs
     }
 

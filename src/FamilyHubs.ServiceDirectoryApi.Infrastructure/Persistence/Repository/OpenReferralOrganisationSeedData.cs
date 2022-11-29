@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Repository;
 
@@ -148,7 +149,7 @@ public class OpenReferralOrganisationSeedData
             new Uri("https://www.salford.gov.uk/").ToString(),
             "https://www.salford.gov.uk/",
             new List<OpenReferralReview>(),
-            GetSalfordFamilyHubs("ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066")
+            GetSalfordHubsAndServices("ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066")
             ),
             new OpenReferralOrganisation(
             "6dc1c3ad-d077-46ff-9e0d-04fb263f0637",
@@ -191,6 +192,14 @@ public class OpenReferralOrganisationSeedData
             GetBristolCountyCouncilServices("72e653e8-1d05-4821-84e9-9177571a6013")
             );
         return bristolCountyCouncil;
+    }
+
+    private List<OpenReferralService> GetSalfordHubsAndServices(string parentId)
+    {
+        List<OpenReferralService> openReferralServices= new();
+        openReferralServices.AddRange(GetSalfordFamilyHubs(parentId));
+        openReferralServices.AddRange(GetSalfordFamilyService(parentId));
+        return openReferralServices;
     }
 
     private List<OpenReferralService> GetSalfordFamilyHubs(string parentId)
@@ -403,6 +412,164 @@ public class OpenReferralOrganisationSeedData
                 }
                 )
                 )
+        };
+    }
+
+    private List<OpenReferralService> GetSalfordFamilyService(string parentId)
+    {
+        return new List<OpenReferralService>{
+
+            new OpenReferralService(
+                "1a000f89-6487-49ae-9f70-166070b02b48",
+                serviceType: new ServiceType("2", "Family Experience", ""),
+                openReferralOrganisationId: parentId,
+                name: "Baby Social at Ordsall Neighbourhood Centre",
+                description: "This session is for babies non mobile aged from birth to twelve months. Each week we will introduce you to one of our five to thrive key messages and a fun activity you can do at home with your baby. It will also give you the opportunity to connect with other parents and share your experiences.",
+                accreditations: null,
+                assured_date: null,
+                attending_access: null,
+                attending_type: null,
+                deliverable_type: null,
+                status: "active",
+                url: "https://directory.salford.gov.uk/kb5/salford/directory/service.page?id=B3Z2uCshOk4&localofferchannel=2_8",
+                email: null,
+                fees: null,
+                canFamilyChooseDeliveryLocation: false,
+                new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
+                {
+                    new OpenReferralServiceDelivery("71cdb1fc-324a-4161-9ced-13e9d504942b",ServiceDelivery.InPerson)
+                }),
+                new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
+                {
+                    new OpenReferralEligibility("e884bf7d-1479-4ed0-8cf8-fede12ea4ac2","",null,1,0,new List<OpenReferralTaxonomy>())
+                }),
+                new List<OpenReferralFunding>(),
+                new List<OpenReferralHoliday_Schedule>(),
+                new List<OpenReferralLanguage>()
+                {
+                    new OpenReferralLanguage("705b93e5-f70d-4237-84ab-36aef2c864e3","English")
+                },
+                new List<OpenReferralRegular_Schedule>(),
+                new List<OpenReferralReview>(),
+                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                {
+                    new OpenReferralContact(
+                        "7a488a62-6c5b-4fa7-88bc-f60f83627e38",
+                        "",
+                        "Broughton Hub",
+                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
+                        {
+                            new OpenReferralPhone("06e0df3a-5b13-4eef-984a-07b35471e99d", "0161 778 0601")
+                        }
+                        ))
+                }),
+                new List<OpenReferralCost_Option>(),
+                new List<OpenReferralService_Area>()
+                {
+                    new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                {
+                    new OpenReferralServiceAtLocation(
+                        "5fdbbefd-4cf4-4c4a-8178-c001fcb25570",
+                        new OpenReferralLocation("b405ae9a-5410-4136-86f3-dc1e85f1ec68", "Ordsall Neighbourhood Centre", "2, Robert Hall Street M5 3LT", -2.2721559641660787D, 53.474103227856105D, new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("67efce6d-248b-4e71-b08d-4c21009d01f0", "2, Robert Hall Street", "Ordsall", "M5 3LT", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+                        new List<OpenReferralRegular_Schedule>()
+                        {
+                            new OpenReferralRegular_Schedule("16785195-413f-417c-8c77-8f3e3fe08e6f",
+                            description: string.Empty,
+                            opens_at: null,
+                            closes_at: null,
+                            byday: "Friday 1.30pm - 2.30pm", 
+                            bymonthday: null, 
+                            dtstart: "1.30pm - 2.30pm",
+                            freq: "Every Friday", 
+                            interval: null,
+                            valid_from: null,
+                            valid_to: null
+                            )
+                        },
+                        new List<OpenReferralHoliday_Schedule>()
+                        )
+
+                }),
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
+                {
+                    new OpenReferralService_Taxonomy
+                    ("ae95b14e-2559-4ba0-8c31-3085777bfdd4",
+                    null,
+                    new OpenReferralTaxonomy("231a2bf5-b05a-4da7-a338-a838b83806db", "Infant feeding support (including breastfeeding)","Infant feeding support (including breastfeeding)", "ff704172-db6a-4e7a-b612-cd925e0aa7a0"))
+                }
+                )
+                ),
+
+            new OpenReferralService(
+                "2dde869a-914a-4acc-915b-10d368808022",
+                serviceType: new ServiceType("2", "Family Experience", ""),
+                openReferralOrganisationId: parentId,
+                name: "Oakwood Academy",
+                description: "Oakwood Academy is a special school for pupils aged 9-18 years who have a range of moderate and/or complex learning difficulties. The school has Visual Arts, Technology and Sports Specialist status. \r\n\r\nAdmissions to Oakwood Academy are controlled by Salford Local Authority. We are unable to accept direct requests for placement from parents or carers or other local authorities. Pupils who attend Oakwood Academy have an Educational, Health and Care Plan which outlines the area of need and what provision and resources are needed to support the pupil. \r\n\r\nIn rare cases, a child may be admitted on an assessment placement to determine what the pupil's needs are and whether their needs can be met at Oakwood Academy. ",
+                accreditations: null,
+                assured_date: null,
+                attending_access: null,
+                attending_type: null,
+                deliverable_type: null,
+                status: "active",
+                url: "https://www.oakwoodacademy.co.uk/",
+                email: "enquiries@oakwoodacademy.co.uk",
+                fees: null,
+                canFamilyChooseDeliveryLocation: false,
+                new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
+                {
+                    new OpenReferralServiceDelivery("31ac8379-1b1b-416f-a1e2-6c617c40cf32",ServiceDelivery.InPerson)
+                }),
+                new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
+                {
+                    new OpenReferralEligibility("c3398bf9-c10e-4309-94dd-234ac43e4abc","",null,10,4,new List<OpenReferralTaxonomy>())
+                }),
+                new List<OpenReferralFunding>(),
+                new List<OpenReferralHoliday_Schedule>(),
+                new List<OpenReferralLanguage>()
+                {
+                    new OpenReferralLanguage("fa4183e5-006d-45f4-89a0-f285e1d33575","English")
+                },
+                new List<OpenReferralRegular_Schedule>(),
+                new List<OpenReferralReview>(),
+                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                {
+                    new OpenReferralContact(
+                        "aaef3e12-849d-4a09-8606-17252cee6572",
+                        "Ms",
+                        "Kate Berry",
+                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
+                        {
+                            new OpenReferralPhone("939ade12-b54e-4a62-8367-0c07077968f9", "01619212880")
+                        }
+                        ))
+                }),
+                new List<OpenReferralCost_Option>(),
+                new List<OpenReferralService_Area>()
+                {
+                    new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                {
+                    new OpenReferralServiceAtLocation(
+                        "6e0bb978-fe9e-4c13-b8e7-50c97bf06ed7",
+                        new OpenReferralLocation("f7301eeb-3293-4d7b-9869-d1e8a6368a13", "Oakwood Academy", "", -2.336084327089324D, 53.493505779578605D, new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("387b5dff-a26a-42fe-84d6-1a744097cf4f", "Chatsworth Road", "Eccles", "M30 9DY", "United Kingdom", "Manchester") }, new List<Accessibility_For_Disabilities>()),
+                        new List<OpenReferralRegular_Schedule>(),
+                        new List<OpenReferralHoliday_Schedule>()
+                        )
+
+                }),
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
+                {
+                    new OpenReferralService_Taxonomy
+                    ("5b9eb3b7-aace-4161-aee1-e5ae5c6fd767",
+                    null,
+                    new OpenReferralTaxonomy("dacf095a-83df-4d23-a20a-da751d956ab9", "Early years support","Early years support", "6c873b97-6978-4c0f-8e3c-0b2804dd3826"))
+                }
+                )
+                ),
         };
     }
 
