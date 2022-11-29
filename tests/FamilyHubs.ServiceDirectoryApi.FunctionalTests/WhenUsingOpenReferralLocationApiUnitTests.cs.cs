@@ -47,7 +47,7 @@ public class WhenUsingOpenReferralLocationApiUnitTests : BaseWhenUsingOpenReferr
     public async Task ThenTheOpenReferralLocationIsAFamilyHub()
     {
         var command = new OpenReferralLocationDto(
-                            "00768BBC-E830-4F94-9126-FB44CD31204D",
+                            "964ea451-6146-4add-913e-dff23a1bd7b6",
                             "",
                             "",
                             52.6312,
@@ -79,6 +79,6 @@ public class WhenUsingOpenReferralLocationApiUnitTests : BaseWhenUsingOpenReferr
         var stringResult = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        stringResult.ToString().Should().Be("00768BBC-E830-4F94-9126-FB44CD31204D");
+        stringResult.ToString().Should().Be("964ea451-6146-4add-913e-dff23a1bd7b6");
     }
 }
