@@ -23,7 +23,7 @@ public class WhenUsingFxSearchCommands : BaseCreateDbUnitTest
         var logger = new Mock<ILogger<ApplicationDbContextInitialiser>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         ApplicationDbContextInitialiser applicationDbContextInitialiser = new(logger.Object, mockApplicationDbContext);
-        await applicationDbContextInitialiser.SeedAsync();
+        await applicationDbContextInitialiser.SeedAsync(false);
         mockApplicationDbContext.ModelLinks.AddRange(SeedModelLinks());
         await mockApplicationDbContext.SaveChangesAsync();
 

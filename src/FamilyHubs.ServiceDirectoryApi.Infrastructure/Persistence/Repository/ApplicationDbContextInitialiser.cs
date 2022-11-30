@@ -38,11 +38,11 @@ public class ApplicationDbContextInitialiser
         }
     }
 
-    public async Task SeedAsync()
+    public async Task SeedAsync(bool isProduction)
     {
         try
         {
-            await TrySeedAsync();
+            await TrySeedAsync(isProduction);
         }
         catch (Exception ex)
         {
@@ -51,12 +51,12 @@ public class ApplicationDbContextInitialiser
         }
     }
 
-    public async Task TrySeedAsync()
+    public async Task TrySeedAsync(bool isProduction)
     {
         if (_context.OpenReferralOrganisations.Any())
             return;
 
-        var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData();
+        var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData(isProduction);
 
         if (!_context.OrganisationTypes.Any())
         {
