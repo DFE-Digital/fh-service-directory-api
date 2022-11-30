@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Repository;
 
@@ -75,7 +76,7 @@ public class ApplicationDbContextInitialiser
 
         await _context.SaveChangesAsync();
 
-        var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Name == "Information Sharing");
+        
 
         IReadOnlyCollection<OpenReferralOrganisation> openReferralOrganisations = openReferralOrganisationSeedData.SeedOpenReferralOrganistions(_context.OrganisationTypes.FirstOrDefault(x => x.Name == "LA") ?? _context.OrganisationTypes.First());
 
@@ -84,11 +85,15 @@ public class ApplicationDbContextInitialiser
 
         foreach (var openReferralOrganisation in openReferralOrganisations)
         {
-            if (serviceType != null && openReferralOrganisation != null && openReferralOrganisation.Services != null)
+            if (openReferralOrganisation != null && openReferralOrganisation.Services != null)
             {
                 foreach(var service in openReferralOrganisation.Services)
                 {
-                    service.ServiceType = serviceType;
+                    var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == service.ServiceType.Id);
+                    if (serviceType != null)
+                    {
+                        service.ServiceType = serviceType;
+                    }
 
                     foreach(var serviceTaxonomy in service.Service_taxonomys)
                     {
