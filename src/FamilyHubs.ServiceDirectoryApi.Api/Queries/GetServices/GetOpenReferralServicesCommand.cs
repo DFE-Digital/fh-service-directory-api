@@ -203,6 +203,14 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
           .Include(x => x.Service_at_locations)
           .ThenInclude(x => x.Location)
           .ThenInclude(x => x.Physical_addresses)
+
+          .Include(x => x.Service_at_locations)
+          .ThenInclude(x => x.Regular_schedule)
+          .Include(x => x.Service_at_locations)
+          .ThenInclude(x => x.HolidayScheduleCollection)
+          .Include(x => x.Regular_schedules)
+          .Include(x => x.Holiday_schedules)
+
           .Include(x => x.Cost_options)
           .Where(x => x.Status == request.Status && x.Status != "Deleted" && organisationIds.Contains(x.OpenReferralOrganisationId));
         }
@@ -221,6 +229,12 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
            .ThenInclude(x => x.Physical_addresses)
+           .Include(x => x.Service_at_locations)
+           .ThenInclude(x => x.Regular_schedule)
+           .Include(x => x.Service_at_locations)
+           .ThenInclude(x => x.HolidayScheduleCollection)
+           .Include(x => x.Regular_schedules)
+           .Include(x => x.Holiday_schedules)
            .Include(x => x.Cost_options)
            .Where(x => x.Status == request.Status && x.Status != "Deleted");
         }
