@@ -335,6 +335,9 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                 })
             .Build();
 
+        service.RegularSchedules = new List<OpenReferralRegularScheduleDto>();
+        service.HolidaySchedules = new List<OpenReferralHolidayScheduleDto>();
+
         return service;
     }
 

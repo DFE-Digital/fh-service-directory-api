@@ -1,10 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Enums;
 using fh_service_directory_api.core.Entities;
-using Microsoft.Extensions.Hosting;
-using System.Collections.Generic;
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Repository;
 
