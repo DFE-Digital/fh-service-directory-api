@@ -458,7 +458,10 @@ public class OpenReferralOrganisationSeedData
                         }
                         ))
                 }),
-                new List<OpenReferralCost_Option>(),
+                new List<OpenReferralCost_Option>(new List<OpenReferralCost_Option>()
+                {
+                    new OpenReferralCost_Option("983764", "Session", 2.5m, null, null, null, null)
+                }),
                 new List<OpenReferralService_Area>()
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
