@@ -77,7 +77,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         if (request?.GivenAge != null)
             entities = entities.Where(x => x.Eligibilities.Any(x => x.Minimum_age <= request.GivenAge.Value && x.Maximum_age >= request.GivenAge.Value));
 
-        if (request?.Text != null)
+        if (!string.IsNullOrEmpty(request?.Text))
             entities = entities.Where(x => x.Name.Contains(request.Text) || x.Description != null && x.Description.Contains(request.Text));
 
 
@@ -87,7 +87,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
         
         //ServiceDeliveries
-        if (request?.ServiceDeliveries != null)
+        if (!string.IsNullOrEmpty(request?.ServiceDeliveries))
         {
             List<OpenReferralService> servicesFilteredByDelMethod = new List<OpenReferralService>();
             string[] parts = request.ServiceDeliveries.Split(',');
@@ -100,7 +100,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         }
 
         //Languages
-        if (request?.Languages != null)
+        if (!string.IsNullOrEmpty(request?.Languages))
         {
             List<OpenReferralService> servicesFilteredByLanguages = new List<OpenReferralService>();
             string[] parts = request.Languages.Split(',');
@@ -132,7 +132,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             }
         }
 
-        if (request?.TaxonmyIds != null)
+        if (!string.IsNullOrEmpty(request?.TaxonmyIds))
         {
             string[] parts = request.TaxonmyIds.Split(',');
             dbservices = dbservices.Where(x => x.Service_taxonomys.Any(x => parts.Contains(x.Taxonomy?.Id) ));
