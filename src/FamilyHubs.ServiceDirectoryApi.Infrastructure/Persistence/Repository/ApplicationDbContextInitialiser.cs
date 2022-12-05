@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Repository;
 
@@ -15,6 +14,25 @@ public class ApplicationDbContextInitialiser
     {
         _logger = logger;
         _context = context;      
+    }
+
+    public async Task InitialiseWithRecreateAsync(IConfiguration configuration)
+    {
+        try
+        {
+            _context.Database.EnsureDeleted();
+            _context.Database.EnsureCreated();
+
+            if (_context.Database.IsSqlServer() || _context.Database.IsNpgsql())
+            {
+                await _context.Database.MigrateAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while initialising the database.");
+            throw;
+        }
     }
 
     public async Task InitialiseAsync(IConfiguration configuration)
