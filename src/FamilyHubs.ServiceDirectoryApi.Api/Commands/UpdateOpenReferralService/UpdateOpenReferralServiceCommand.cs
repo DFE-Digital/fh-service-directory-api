@@ -66,6 +66,15 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
            .ThenInclude(x => x.Physical_addresses)
+
+           .Include(x => x.Service_at_locations)
+           .ThenInclude(x => x.Regular_schedule)
+           .Include(x => x.Service_at_locations)
+           .ThenInclude(x => x.HolidayScheduleCollection)
+
+           .Include(x => x.Regular_schedules)
+           .Include(x => x.Holiday_schedules)
+
            .Include(x => x.Service_taxonomys)
            .ThenInclude(x => x.Taxonomy)
            .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
@@ -112,6 +121,11 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 UpdateTaxonomies(entity.Service_taxonomys ?? new Collection<OpenReferralService_Taxonomy>(), request?.OpenReferralService?.Service_taxonomys ?? new Collection<OpenReferralServiceTaxonomyDto>());
             if (entity.Cost_options?.Serialize() != request?.OpenReferralService?.Cost_options?.Serialize())
                 UpdateCostOptions(entity.Cost_options ?? new Collection<OpenReferralCost_Option>(), request?.OpenReferralService?.Cost_options ?? new Collection<OpenReferralCostOptionDto>());
+
+            if (entity.Regular_schedules?.Serialize() != request?.OpenReferralService?.RegularSchedules?.Serialize())
+                UpdateRegularSchedule(entity.Regular_schedules ?? new Collection<OpenReferralRegular_Schedule>(), request?.OpenReferralService.RegularSchedules ?? new Collection<OpenReferralRegularScheduleDto>(), null);
+            if (entity.Holiday_schedules?.Serialize() != request?.OpenReferralService?.HolidaySchedules?.Serialize())
+                UpdateHolidaySchedule(entity.Holiday_schedules ?? new Collection<OpenReferralHoliday_Schedule>(), request?.OpenReferralService.HolidaySchedules ?? new Collection<OpenReferralHolidayScheduleDto>(), null);
 
             await _context.SaveChangesAsync(cancellationToken);
             
