@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using fh_service_directory_api.infrastructure.Persistence.Repository;
+using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
 
 namespace fh_service_directory_api.api.Endpoints;
 
@@ -36,5 +38,29 @@ public class MinimalGeneralEndPoints
                 throw;
             }
         });
+
+        app.MapGet("api/resetdb", [Authorize(Policy = "OrgAccess")] async (string password, IConfiguration configuration, ApplicationDbContextInitialiser initialiser, ILogger<MinimalGeneralEndPoints> logger) =>
+        {
+            try
+            {
+                if (password == "RnFkxAFcJLF9kcA4BYv4")
+                {
+                    string useDbType = configuration.GetValue<string>("UseDbType");
+                    if (useDbType != "UseSqlServerDatabase" || useDbType != "UsePostgresDatabase")
+                    {
+                        await initialiser.InitialiseWithRecreateAsync(configuration);
+                        await initialiser.SeedAsync();
+                    }
+                }
+
+                return Results.Ok("All Done");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred getting info (api). {exceptionMessage}", ex.Message);
+                Debug.WriteLine(ex.Message);
+                throw;
+            }
+        }).ExcludeFromDescription();
     }
 }

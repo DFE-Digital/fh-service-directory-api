@@ -26,7 +26,8 @@ public class OpenReferralOrganisationSeedData
         {
             new OrganisationType("1", "LA", "Local Authority"),
             new OrganisationType("2", "VCFS", "Voluntary, Charitable, Faith Sector"),
-            new OrganisationType("3", "Company", "Public / Private Company eg: Child Care Centre")
+            new OrganisationType("3", "FamilyHub", "Family Hub"),
+            new OrganisationType("4", "Company", "Public / Private Company eg: Child Care Centre")
         };
 
         return serviceTypes;

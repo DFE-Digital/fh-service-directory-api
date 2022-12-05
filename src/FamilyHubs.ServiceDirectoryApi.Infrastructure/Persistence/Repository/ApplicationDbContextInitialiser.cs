@@ -17,6 +17,25 @@ public class ApplicationDbContextInitialiser
         _context = context;      
     }
 
+    public async Task InitialiseWithRecreateAsync(IConfiguration configuration)
+    {
+        try
+        {
+            _context.Database.EnsureDeleted();
+            _context.Database.EnsureCreated();
+
+            if (_context.Database.IsSqlServer() || _context.Database.IsNpgsql())
+            {
+                await _context.Database.MigrateAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while initialising the database.");
+            throw;
+        }
+    }
+
     public async Task InitialiseAsync(IConfiguration configuration)
     {
         try
