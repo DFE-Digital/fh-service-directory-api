@@ -33,7 +33,7 @@ public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOp
     {
         _context = context;
         _mapper = mapper;
-        _mediator = mediator;   
+        _mediator = mediator;
         _logger = logger;
     }
 
@@ -58,7 +58,7 @@ public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOp
             modelLinkDto = new ModelLinkDto(Guid.NewGuid().ToString(), fh_service_directory_api.core.StaticContants.Location_Organisation, entity.Id, request.OpenReferralOrganisationId);
             command = new CreateModelLinkCommand(modelLinkDto);
             var organisationLinkresult = await _mediator.Send(command, cancellationToken);
-            ArgumentNullException.ThrowIfNull(taxonomyLinkresult, nameof(taxonomyLinkresult));
+            ArgumentNullException.ThrowIfNull(organisationLinkresult, nameof(organisationLinkresult));
 
 
         }
