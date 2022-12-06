@@ -223,6 +223,7 @@ using (var scope = webApplication.Services.CreateScope())
         if (logger != null)
             logger.LogError(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
     }
+    
 }
 
 webApplication.Run();

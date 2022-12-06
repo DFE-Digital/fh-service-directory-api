@@ -167,7 +167,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         //Assert
         result.Should().NotBeNull();
-        result.Count.Should().Be(3);
+        result.Count.Should().Be(4);
         
     }
 
@@ -228,11 +228,11 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                 parentId,
                 "Unit Test Service",
                 @"Unit Test Service Description",
-                null,
-                null,
-                null,
-                null,
-                null,
+                "accreditations",
+                DateTime.Now,
+                "attending access",
+                "attending type",
+                "delivery type",
                 "active",
                 "www.unittestservice.com",
                 "support@unittestservice.com",
@@ -334,6 +334,9 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                         ))
                 })
             .Build();
+
+        service.RegularSchedules = new List<OpenReferralRegularScheduleDto>();
+        service.HolidaySchedules = new List<OpenReferralHolidayScheduleDto>();
 
         return service;
     }
