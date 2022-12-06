@@ -128,7 +128,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 UpdateHolidaySchedule(entity.Holiday_schedules ?? new Collection<OpenReferralHoliday_Schedule>(), request?.OpenReferralService.HolidaySchedules ?? new Collection<OpenReferralHolidayScheduleDto>(), null);
 
             await _context.SaveChangesAsync(cancellationToken);
-            
+
         }
         catch (Exception ex)
         {
@@ -230,7 +230,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                     {
                         UpdateHolidaySchedule(current?.HolidayScheduleCollection ?? new Collection<OpenReferralHoliday_Schedule>(), updatedServiceLoc?.HolidayScheduleCollection ?? new Collection<OpenReferralHolidayScheduleDto>(), current);
                     }
-                    
+
                 }
 
                 if (current != null)
@@ -238,7 +238,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             }
         }
 
-        foreach(var item in existing)
+        foreach (var item in existing)
         {
             if (item != null && item.Location != null && item.Location.Physical_addresses != null)
             {
@@ -250,14 +250,14 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                     }
                 }
             }
-            
+
 
             if (item != null && !list.Contains(item.Id))
             {
                 _context.OpenReferralServiceAtLocations.Remove(item);
             }
         }
-        
+
     }
 
     private void UpdateHolidaySchedule(ICollection<OpenReferralHoliday_Schedule> existing, ICollection<OpenReferralHolidayScheduleDto> updated, OpenReferralServiceAtLocation? serviceAtlocation)
@@ -399,7 +399,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 //        var entityTaxonomy = _mapper.Map<OpenReferralTaxonomy>(updatedServiceTaxonomy.Taxonomy);
                 //        entityTaxonomy.RegisterDomainEvent(new OpenReferralTaxonomyCreatedEvent(entityTaxonomy));
                 //        _context.OpenReferralTaxonomies.Add(entityTaxonomy);
-                        
+
                 //    }
                 //    else
                 //    {
@@ -409,7 +409,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 //    }
                 //}
 
-               
+
                 var entity = _mapper.Map<OpenReferralService_Taxonomy>(updatedServiceTaxonomy);
                 if (updatedServiceTaxonomy != null && updatedServiceTaxonomy.Taxonomy != null)
                     entity.Taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == updatedServiceTaxonomy.Taxonomy.Id);
@@ -461,7 +461,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             _context.OpenReferralLanguages.RemoveRange(dataToDelete);
     }
 
-    
+
 
     private void UpdateContacts(ICollection<OpenReferralContact> existing, ICollection<OpenReferralContactDto> updated)
     {
@@ -496,7 +496,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
 
                     }
                 }
-                
+
                 var entity = _mapper.Map<OpenReferralContact>(updatedContact);
                 entity.OpenReferralServiceId = _request.OpenReferralService.Id;
                 entity.Phones = listPhones;
@@ -533,7 +533,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
         }
 
 
-        foreach(var contact in existing)
+        foreach (var contact in existing)
         {
             if (contact != null && contact.Phones != null)
             {
@@ -544,7 +544,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                         _context.OpenReferralPhones.Remove(phone);
                     }
                 }
-            }   
+            }
         }
 
         var contactToDelete = existing.Where(a => !existing.Select(x => x.Id).Contains(a.Id)).ToList();
@@ -552,7 +552,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
         {
             _context.OpenReferralContacts.RemoveRange(contactToDelete);
         }
-            
+
     }
 
     private void UpdateServiceDelivery(ICollection<OpenReferralServiceDelivery> existing, ICollection<OpenReferralServiceDeliveryExDto> updated)
@@ -581,5 +581,3 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             _context.OpenReferralServiceDeliveries.RemoveRange(dataToDelete);
     }
 }
-
-

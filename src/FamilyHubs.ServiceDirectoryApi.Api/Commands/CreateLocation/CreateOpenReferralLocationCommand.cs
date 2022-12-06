@@ -33,7 +33,7 @@ public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOp
     {
         _context = context;
         _mapper = mapper;
-        _mediator = mediator;   
+        _mediator = mediator;
         _logger = logger;
     }
 
