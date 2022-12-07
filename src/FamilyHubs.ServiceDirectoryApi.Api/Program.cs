@@ -85,22 +85,35 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AllAdminAccess", policy =>
-                    policy.RequireAssertion(context =>
-                                context.User.IsInRole("DfEAdmin") ||
-                                context.User.IsInRole("LAAdmin") ||
-                                context.User.IsInRole("VCSAdmin")));
+    if (builder.Environment.IsDevelopment())
+    {
+        options.AddPolicy("AllAdminAccess", policy =>
+            policy.RequireAssertion(context => true));
 
-    options.AddPolicy("OrgAccess", policy =>
-                    policy.RequireAssertion(context =>
-                                context.User.IsInRole("DfEAdmin") ||
-                                context.User.IsInRole("LAAdmin")));
+        options.AddPolicy("OrgAccess", policy =>
+            policy.RequireAssertion(context => true));
 
-    options.AddPolicy("ServiceAccess", policy =>
-                    policy.RequireAssertion(context =>
-                                context.User.IsInRole("LAAdmin") ||
-                                context.User.IsInRole("VCSAdmin")));
+        options.AddPolicy("ServiceAccess", policy =>
+            policy.RequireAssertion(context => true));
+    }
+    else
+    {
+        options.AddPolicy("AllAdminAccess", policy =>
+            policy.RequireAssertion(context =>
+                context.User.IsInRole("DfEAdmin") ||
+                context.User.IsInRole("LAAdmin") ||
+                context.User.IsInRole("VCSAdmin")));
 
+        options.AddPolicy("OrgAccess", policy =>
+            policy.RequireAssertion(context =>
+                context.User.IsInRole("DfEAdmin") ||
+                context.User.IsInRole("LAAdmin")));
+
+        options.AddPolicy("ServiceAccess", policy =>
+            policy.RequireAssertion(context =>
+                context.User.IsInRole("LAAdmin") ||
+                context.User.IsInRole("VCSAdmin")));
+    }
 });
 
 // ApplicationInsights

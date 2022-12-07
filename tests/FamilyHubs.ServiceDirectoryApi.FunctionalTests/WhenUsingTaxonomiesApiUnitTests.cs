@@ -52,7 +52,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(commandtaxonomy), Encoding.UTF8, "application/json"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
 
         using var response = await _client.SendAsync(request);
 
@@ -80,7 +80,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(commandtaxonomy), Encoding.UTF8, "application/json"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
 
         using var response = await _client.SendAsync(request);
 
@@ -97,7 +97,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(updatedtaxonomy), Encoding.UTF8, "application/json"),
         };
 
-        updaterequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        //updaterequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
 
         using var updateresponse = await _client.SendAsync(updaterequest);
 
