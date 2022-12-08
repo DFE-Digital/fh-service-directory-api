@@ -1,6 +1,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using FamilyHubs.ServiceDirectory.Shared.Extensions;
 using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.api;
 using fh_service_directory_api.api.Endpoints;
@@ -11,15 +12,12 @@ using fh_service_directory_api.infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Interceptors;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using fh_service_directory_api.infrastructure.Services;
-using FamilyHubs.ServiceDirectory.Shared.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
-using Serilog;
 using Microsoft.Extensions.Logging.AzureAppServices;
-using Microsoft.Extensions.Configuration;
-using fh_service_directory_api.api.Data;
+using Microsoft.OpenApi.Models;
+using Serilog;
+using System.Reflection;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -142,7 +140,6 @@ var autofacContainerbuilder = builder.Host.ConfigureContainer<ContainerBuilder>(
     containerBuilder.RegisterType<MinimalTaxonomyEndPoints>();
     containerBuilder.RegisterType<MinimalLocationEndPoints>();
     containerBuilder.RegisterType<MinimalUICacheEndPoints>();
-    containerBuilder.RegisterType<MinimalSearchEndPoints>();
     containerBuilder.RegisterType<ApplicationDbContextInitialiser>();
 
     containerBuilder
@@ -204,10 +201,6 @@ using (var scope = webApplication.Services.CreateScope())
     var genservice = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
     if (genservice != null)
         genservice.RegisterMinimalGeneralEndPoints(webApplication);
-
-    var searchService = scope.ServiceProvider.GetService<MinimalSearchEndPoints>();
-    if (searchService != null)
-        searchService.RegisterSearchEndPoints(webApplication);
 
     try
     {

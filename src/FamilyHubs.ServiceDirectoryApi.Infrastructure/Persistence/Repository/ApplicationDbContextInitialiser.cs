@@ -94,10 +94,7 @@ public class ApplicationDbContextInitialiser
 
         await _context.SaveChangesAsync();
 
-        
-
         IReadOnlyCollection<OpenReferralOrganisation> openReferralOrganisations = openReferralOrganisationSeedData.SeedOpenReferralOrganistions(_context.OrganisationTypes.FirstOrDefault(x => x.Name == "LA") ?? _context.OrganisationTypes.First());
-
 
         var taxonomies = _context.OpenReferralTaxonomies.ToList();
 
@@ -131,6 +128,47 @@ public class ApplicationDbContextInitialiser
             {
                 _context.OpenReferralOrganisations.Add(openReferralOrganisation);
             } 
+        }
+
+        IReadOnlyCollection<OpenReferralOrganisation> familyHubs = openReferralOrganisationSeedData.GetSalfordFamilyHubOrganisations();
+
+        foreach (var openReferralOrganisation in familyHubs)
+        {
+            openReferralOrganisation.OrganisationType = _context.OrganisationTypes.First(x => x.Id == openReferralOrganisation.OrganisationType.Id);
+
+            if (openReferralOrganisation != null && openReferralOrganisation.Services != null)
+            {
+                foreach (var service in openReferralOrganisation.Services)
+                {
+                    var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == service.ServiceType.Id);
+                    if (serviceType != null)
+                    {
+                        service.ServiceType = serviceType;
+                    }
+
+                    foreach (var serviceTaxonomy in service.Service_taxonomys)
+                    {
+                        if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
+                        {
+                            var taxonomy = taxonomies.FirstOrDefault(x => x.Id == serviceTaxonomy.Taxonomy.Id);
+                            if (taxonomy != null)
+                            {
+                                serviceTaxonomy.Taxonomy = taxonomy;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (openReferralOrganisation != null)
+            {
+                _context.OpenReferralOrganisations.Add(openReferralOrganisation);
+            }
+        }
+
+        if (!_context.RelatedOrganisations.Any())
+        {
+            _context.RelatedOrganisations.AddRange(openReferralOrganisationSeedData.SeedRelatedOrganisations());
         }
 
         if (!_context.OrganisationAdminDistricts.Any())
