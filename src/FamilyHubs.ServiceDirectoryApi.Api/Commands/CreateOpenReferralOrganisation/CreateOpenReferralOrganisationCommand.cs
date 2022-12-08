@@ -135,7 +135,7 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
             return;
         }
 
-        var entity = new RelatedOrganisation(result.Id, openReferralOrganisation.Id);
+        var entity = new RelatedOrganisation(Guid.NewGuid().ToString(),result.Id, openReferralOrganisation.Id);
         entity.RegisterDomainEvent(new RelatedOrganisationCreatedEvent(entity));
         _context.RelatedOrganisations.Add(entity);
     }
