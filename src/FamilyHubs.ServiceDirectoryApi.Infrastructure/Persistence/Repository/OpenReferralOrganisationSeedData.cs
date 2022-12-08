@@ -672,8 +672,8 @@ public class OpenReferralOrganisationSeedData
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
-                                    "7A Boyce's Ave, Clifton",
-                                    "Bristol",
+                                    "7A Boyce's Ave, Clifton", 
+                                    "Bristol", 
                                     "BS8 4AA",
                                     "England",
                                     null
