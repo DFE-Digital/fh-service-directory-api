@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Enums;
 using fh_service_directory_api.core.Entities;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Repository;
 
@@ -13,6 +14,11 @@ public class OpenReferralOrganisationSeedData
             new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E07000127", "fc51795e-ea95-4af0-a0b2-4c06d5463678"), //Lancashire
             new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E09000026", "1229cb45-0dc0-4f8a-81bd-2cd74c7cc9cc"), //Redbridge
             new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"), //Salford
+
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "b2446860-cff0-4fb7-a703-bc4a919b3417"), //Central Family Hub
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "18e95341-8464-4375-84fd-195af5fe7d9c"), //North Family Hub
+            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "99d11261-5551-40c1-988e-59d13a377e75"), //South Family Hub
+
             new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E07000203", "6dc1c3ad-d077-46ff-9e0d-04fb263f0637"), //Suffolk
             new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E09000030", "88e0bffd-ed0b-48ea-9a70-5f6ef729fc21"), //Tower Hamlets
         };
@@ -102,9 +108,7 @@ public class OpenReferralOrganisationSeedData
             new OpenReferralTaxonomy("4c219f95-21da-4222-8286-bbe1cfaf675c", "Visual impairment","Visual impairment", "6c873b97-6978-4c0f-8e3c-0b2804dd3826"),
 
             new OpenReferralTaxonomy("be261f9e-f024-46f8-8b5b-58251f25388d", "Transport","Transport", null),
-            new OpenReferralTaxonomy("93a29b1e-acd9-4abf-9f30-07dce3378558", "Community transport","Community transport", "be261f9e-f024-46f8-8b5b-58251f25388d"),
-
-            new OpenReferralTaxonomy("d242700a-b2ad-42fe-8848-61534002156c", "FamilyHub", "FX Family Hub", null)
+            new OpenReferralTaxonomy("93a29b1e-acd9-4abf-9f30-07dce3378558", "Community transport","Community transport", "be261f9e-f024-46f8-8b5b-58251f25388d")
         };
         
         return openReferralTaxonomies;
@@ -193,19 +197,39 @@ public class OpenReferralOrganisationSeedData
     private List<OpenReferralService> GetSalfordHubsAndServices(string parentId)
     {
         List<OpenReferralService> openReferralServices= new();
-        openReferralServices.AddRange(GetSalfordFamilyHubs(parentId));
         openReferralServices.AddRange(GetSalfordFamilyService(parentId));
         return openReferralServices;
     }
 
-    private List<OpenReferralService> GetSalfordFamilyHubs(string parentId)
+    public IReadOnlyCollection<RelatedOrganisation> SeedRelatedOrganisations()
     {
-        return new List<OpenReferralService>{
+        return new List<RelatedOrganisation>()
+        {
+            new RelatedOrganisation(Guid.NewGuid().ToString(), "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066", "b2446860-cff0-4fb7-a703-bc4a919b3417"),
+            new RelatedOrganisation(Guid.NewGuid().ToString(), "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066", "18e95341-8464-4375-84fd-195af5fe7d9c"),
+            new RelatedOrganisation(Guid.NewGuid().ToString(), "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066", "99d11261-5551-40c1-988e-59d13a377e75")
+        };
+    }
 
-            new OpenReferralService(
+    public IReadOnlyCollection<OpenReferralOrganisation> GetSalfordFamilyHubOrganisations()
+    {
+        return new List<OpenReferralOrganisation>()
+        {
+            new OpenReferralOrganisation(
+            "b2446860-cff0-4fb7-a703-bc4a919b3417",
+            new OrganisationType("3", "FamilyHub", "Family Hub"),
+            "Central Family Hub",
+            "Central Family Hub",
+            null,
+            new Uri("https://familyhubsnetwork.com/hub/central-family-hub-salford/").ToString(),
+            "https://familyhubsnetwork.com/hub/central-family-hub-salford/",
+            new List<OpenReferralReview>(),
+            new List<OpenReferralService>()
+            {
+                new OpenReferralService(
                 "6f4251a7-ae32-44cd-84fc-a632e944fccf",
                 serviceType: new ServiceType("2", "Family Experience", ""),
-                openReferralOrganisationId: parentId,
+                openReferralOrganisationId: "b2446860-cff0-4fb7-a703-bc4a919b3417",
                 name: "Central Family Hub",
                 description: "Family Hub",
                 accreditations: null,
@@ -261,20 +285,27 @@ public class OpenReferralOrganisationSeedData
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
-                {
-                    new OpenReferralService_Taxonomy
-                    ("acf61107-44b8-4c7e-b298-b90f61d4274e",
-                    null,
-                    new OpenReferralTaxonomy("d242700a-b2ad-42fe-8848-61534002156c", "FamilyHub", "FX Family Hub", null))
-                }
+                new List<OpenReferralService_Taxonomy>()
                 )
-                ),
+            }
 
-            new OpenReferralService(
+            ),
+
+            new OpenReferralOrganisation(
+            "18e95341-8464-4375-84fd-195af5fe7d9c",
+            new OrganisationType("3", "FamilyHub", "Family Hub"),
+            "North Family Hub",
+            "North Family Hub",
+            null,
+            new Uri("https://familyhubsnetwork.com/hub/north-family-hub-salford/").ToString(),
+            "https://familyhubsnetwork.com/hub/north-family-hub-salford/",
+            new List<OpenReferralReview>(),
+            new List<OpenReferralService>()
+            {
+                new OpenReferralService(
                 "57bde76b-885d-484d-869f-7e60faf4b1b2",
                 serviceType: new ServiceType("2", "Family Experience", ""),
-                openReferralOrganisationId: parentId,
+                openReferralOrganisationId: "18e95341-8464-4375-84fd-195af5fe7d9c",
                 name: "North Family Hub",
                 description: "Family Hub",
                 accreditations: null,
@@ -330,20 +361,26 @@ public class OpenReferralOrganisationSeedData
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
-                {
-                    new OpenReferralService_Taxonomy
-                    ("3836ef2c-bd27-40a8-a3f1-8c64c58af08f",
-                    null,
-                    new OpenReferralTaxonomy("d242700a-b2ad-42fe-8848-61534002156c", "FamilyHub", "FX Family Hub", null))
-                }
+                new List<OpenReferralService_Taxonomy>()
                 )
-                ),
+            }
+            ),
 
-            new OpenReferralService(
-                "8930d8f0-d563-4d4b-b666-8351f4719d78",
+            new OpenReferralOrganisation(
+            "99d11261-5551-40c1-988e-59d13a377e75",
+            new OrganisationType("3", "FamilyHub", "Family Hub"),
+            "South Family Hub",
+            "South Family Hub",
+            null,
+            new Uri("https://familyhubsnetwork.com/hub/south-family-hub-central/").ToString(),
+            "https://familyhubsnetwork.com/hub/south-family-hub-central/",
+            new List<OpenReferralReview>(),
+            new List<OpenReferralService>()
+            {
+                new OpenReferralService(
+                "06c16312-fa5f-4e82-b672-3a9ab099649a",
                 serviceType: new ServiceType("2", "Family Experience", ""),
-                openReferralOrganisationId: parentId,
+                openReferralOrganisationId: "99d11261-5551-40c1-988e-59d13a377e75",
                 name: "South Family Hub",
                 description: "Family Hub",
                 accreditations: null,
@@ -399,15 +436,11 @@ public class OpenReferralOrganisationSeedData
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
-                {
-                    new OpenReferralService_Taxonomy
-                    ("758eea75-1cec-44ec-816f-2f612537f716",
-                    null,
-                    new OpenReferralTaxonomy("d242700a-b2ad-42fe-8848-61534002156c", "FamilyHub", "FX Family Hub", null))
-                }
+                new List<OpenReferralService_Taxonomy>()
                 )
-                )
+            }
+            )
+
         };
     }
 
