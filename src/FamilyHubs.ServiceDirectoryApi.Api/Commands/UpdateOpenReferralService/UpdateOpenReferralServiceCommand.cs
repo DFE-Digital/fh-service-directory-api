@@ -105,6 +105,25 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             entity.Email = serviceentity.Email;
             entity.Fees = serviceentity.Fees;
 
+            foreach (var serviceAtLocation in serviceentity.Service_at_locations)
+            {
+                if (serviceAtLocation.Regular_schedule != null)
+                {
+                    foreach (var regularSchedules in serviceAtLocation.Regular_schedule)
+                    {
+                        regularSchedules.OpenReferralServiceAtLocationId = serviceAtLocation.Id;
+                    }
+                }
+
+                if (serviceAtLocation.HolidayScheduleCollection != null)
+                {
+                    foreach (var holidaySchedules in serviceAtLocation.HolidayScheduleCollection)
+                    {
+                        holidaySchedules.OpenReferralServiceAtLocationId = serviceAtLocation.Id;
+                    }
+                }
+            }
+
             if (entity.Eligibilities.Serialize() != request?.OpenReferralService?.Eligibilities?.Serialize())
                 UpdateEligibility(entity.Eligibilities, request?.OpenReferralService.Eligibilities ?? new Collection<OpenReferralEligibilityDto>());
             if (entity.Service_areas.Serialize() != request?.OpenReferralService.Service_areas?.Serialize())

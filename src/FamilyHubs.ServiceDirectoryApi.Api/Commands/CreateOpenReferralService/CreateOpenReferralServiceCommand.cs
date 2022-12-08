@@ -58,6 +58,25 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
                 }
             }
 
+            foreach(var serviceAtLocation in entity.Service_at_locations)
+            {
+                if (serviceAtLocation.Regular_schedule != null)
+                {
+                    foreach (var regularSchedules in serviceAtLocation.Regular_schedule)
+                    {
+                        regularSchedules.OpenReferralServiceAtLocationId = serviceAtLocation.Id;
+                    }
+                }
+
+                if (serviceAtLocation.HolidayScheduleCollection != null)
+                {
+                    foreach (var holidaySchedules in serviceAtLocation.HolidayScheduleCollection)
+                    {
+                        holidaySchedules.OpenReferralServiceAtLocationId = serviceAtLocation.Id;
+                    }
+                }
+            }
+
             entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(entity));
 
             _context.OpenReferralServices.Add(entity);
