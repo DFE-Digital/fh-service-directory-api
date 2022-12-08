@@ -5,8 +5,8 @@
             "launchBrowser": true,
             "launchUrl": "swagger",
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "Production"
-                //"ASPNETCORE_ENVIRONMENT": "Development"
+                //"ASPNETCORE_ENVIRONMENT": "Production"
+                "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "dotnetRunMessages": true,
             "applicationUrl": "https://localhost:7022;http://localhost:5063"
@@ -14,8 +14,8 @@
         "live-profile": {
             "commandName": "Project",
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "Production"
-                //"ASPNETCORE_ENVIRONMENT": "Development"
+                //"ASPNETCORE_ENVIRONMENT": "Production"
+                "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "applicationUrl": "https://localhost:7022;http://localhost:5063"
         }
