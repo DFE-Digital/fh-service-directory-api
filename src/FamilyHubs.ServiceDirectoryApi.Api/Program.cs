@@ -85,18 +85,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    if (builder.Environment.IsDevelopment())
-    {
-        options.AddPolicy("AllAdminAccess", policy =>
-            policy.RequireAssertion(context => true));
-
-        options.AddPolicy("OrgAccess", policy =>
-            policy.RequireAssertion(context => true));
-
-        options.AddPolicy("ServiceAccess", policy =>
-            policy.RequireAssertion(context => true));
-    }
-    else
+    if (builder.Environment.IsProduction())
     {
         options.AddPolicy("AllAdminAccess", policy =>
             policy.RequireAssertion(context =>
@@ -113,6 +102,17 @@ builder.Services.AddAuthorization(options =>
             policy.RequireAssertion(context =>
                 context.User.IsInRole("LAAdmin") ||
                 context.User.IsInRole("VCSAdmin")));
+    }
+    else //LocalHost, Dev, Test, PP, disable Authorization
+    {
+        options.AddPolicy("AllAdminAccess", policy =>
+            policy.RequireAssertion(context => true));
+
+        options.AddPolicy("OrgAccess", policy =>
+            policy.RequireAssertion(context => true));
+
+        options.AddPolicy("ServiceAccess", policy =>
+            policy.RequireAssertion(context => true));
     }
 });
 
