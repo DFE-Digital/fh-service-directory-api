@@ -29,4 +29,10 @@
     <ProjectReference Include="..\..\src\FamilyHubs.ServiceDirectoryApi.Api\FamilyHubs.ServiceDirectoryApi.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.test.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

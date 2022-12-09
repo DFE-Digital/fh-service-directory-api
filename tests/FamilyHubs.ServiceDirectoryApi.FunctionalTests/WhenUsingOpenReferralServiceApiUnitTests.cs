@@ -1,6 +1,7 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using FluentAssertions;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -288,6 +289,8 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
             RequestUri = new Uri(_client.BaseAddress + $"api/services{url}")
         };
 
+        //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+
         using var response = await _client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
@@ -306,6 +309,8 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
             RequestUri = new Uri(_client.BaseAddress + $"api/services/4591d551-0d6a-4c0d-b109-002e67318231"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json"),
         };
+
+        //updaterequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
 
         using var updateresponse = await _client.SendAsync(updaterequest);
 
@@ -333,6 +338,8 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
             RequestUri = new Uri(_client.BaseAddress + $"api/services"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(openReferralService), Encoding.UTF8, "application/json"),
         };
+
+        //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
 
         using var response = await _client.SendAsync(request);
 

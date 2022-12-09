@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace fh_service_directory_api.api.Endpoints;
 
@@ -13,7 +14,7 @@ public class MinimalTaxonomyEndPoints
 {
     public void RegisterTaxonomyEndPoints(WebApplication app)
     {
-        app.MapPost("api/taxonomies", async ([FromBody] OpenReferralTaxonomyDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
+        app.MapPost("api/taxonomies", [Authorize(Policy = "ServiceAccess")] async ([FromBody] OpenReferralTaxonomyDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
             {
@@ -29,7 +30,7 @@ public class MinimalTaxonomyEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Taxonomy", "Create Taxonomy") { Tags = new[] { "Taxonomies" } });
 
-        app.MapPut("api/taxonomies/{id}", async (string id, [FromBody] OpenReferralTaxonomyDto request, CancellationToken cancellationToken, ISender _mediator, IMapper mapper, ILogger<MinimalTaxonomyEndPoints> logger) =>
+        app.MapPut("api/taxonomies/{id}", [Authorize(Policy = "ServiceAccess")] async (string id, [FromBody] OpenReferralTaxonomyDto request, CancellationToken cancellationToken, ISender _mediator, IMapper mapper, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
             {

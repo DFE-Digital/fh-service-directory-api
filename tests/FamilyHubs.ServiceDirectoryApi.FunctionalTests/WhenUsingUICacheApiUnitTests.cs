@@ -1,5 +1,7 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api;
 using FluentAssertions;
+using RTools_NTS.Util;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json;
 
@@ -23,6 +25,8 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
             RequestUri = new Uri(_client.BaseAddress + "api/uicaches"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
+
+        //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
 
         using var response = await _client.SendAsync(request);
 
@@ -60,6 +64,8 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
+        //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+
         using var response = await _client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
@@ -85,6 +91,8 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
             RequestUri = new Uri(_client.BaseAddress + $"api/uicaches/{id}"),            
         };
 
+        //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+
         using var response = await _client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
@@ -108,7 +116,11 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
-        using var response = await _client.SendAsync(request);
+        //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+
+        var response = await _client.SendAsync(request);
+
+        var contentString = await response.Content.ReadAsStringAsync();
 
         response.EnsureSuccessStatusCode();
 

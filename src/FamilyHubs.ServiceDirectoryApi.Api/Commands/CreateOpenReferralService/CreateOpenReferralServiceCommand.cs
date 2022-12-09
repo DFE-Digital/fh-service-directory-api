@@ -58,7 +58,7 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
                 }
             }
 
-            foreach(var serviceAtLocation in entity.Service_at_locations)
+            foreach (var serviceAtLocation in entity.Service_at_locations)
             {
                 if (serviceAtLocation.Regular_schedule != null)
                 {

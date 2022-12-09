@@ -2,6 +2,7 @@
 using fh_service_directory_api.api.Commands.CreateLocation;
 using fh_service_directory_api.api.Commands.UpdateLocation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -11,7 +12,7 @@ public class MinimalLocationEndPoints
 {
     public void RegisterLocationEndPoints(WebApplication app)
     {
-        app.MapPost("api/location/{taxonomyId}/{organisationId}", async (string taxonomyId, string organisationId,[FromBody] OpenReferralLocationDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
+        app.MapPost("api/location/{taxonomyId}/{organisationId}", [Authorize(Policy = "ServiceAccess")] async (string taxonomyId, string organisationId,[FromBody] OpenReferralLocationDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
             {

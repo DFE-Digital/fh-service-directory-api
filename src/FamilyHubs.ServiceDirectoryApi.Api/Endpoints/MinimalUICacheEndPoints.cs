@@ -5,6 +5,7 @@ using fh_service_directory_api.api.Commands.CreateUICache;
 using MediatR;
 using fh_service_directory_api.api.Queries.GetUICacheById;
 using fh_service_directory_api.api.Commands.UpdateUICache;
+using Microsoft.AspNetCore.Authorization;
 
 namespace fh_service_directory_api.api.Endpoints;
 
@@ -12,7 +13,7 @@ public class MinimalUICacheEndPoints
 {
     public void RegisterUICacheEndPoints(WebApplication app)
     {
-        app.MapPost("api/uicaches", async ([FromBody] UICacheDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalUICacheEndPoints> logger) =>
+        app.MapPost("api/uicaches", [Authorize(Policy = "ServiceAccess")] async ([FromBody] UICacheDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalUICacheEndPoints> logger) =>
         {
             try
             {
@@ -44,7 +45,7 @@ public class MinimalUICacheEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get UICache", "Get UICache By Id") { Tags = new[] { "UICaches" } });
 
-        app.MapPut("api/uicaches/{id}", async (string id, [FromBody] UICacheDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalUICacheEndPoints> logger) =>
+        app.MapPut("api/uicaches/{id}", [Authorize(Policy = "ServiceAccess")] async (string id, [FromBody] UICacheDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalUICacheEndPoints> logger) =>
         {
             try
             {

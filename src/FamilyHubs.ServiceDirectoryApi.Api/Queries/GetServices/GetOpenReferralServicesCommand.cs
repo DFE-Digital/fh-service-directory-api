@@ -85,7 +85,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
             dbservices = dbservices.Where(x => core.Helper.GetDistance(request.Latitude, request.Longtitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Latitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Longitude, x?.Name) < request.Meters);
 
-        
+
         //ServiceDeliveries
         if (!string.IsNullOrEmpty(request?.ServiceDeliveries))
         {
@@ -229,12 +229,14 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
            .ThenInclude(x => x.Physical_addresses)
+
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Regular_schedule)
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.HolidayScheduleCollection)
            .Include(x => x.Regular_schedules)
            .Include(x => x.Holiday_schedules)
+
            .Include(x => x.Cost_options)
            .Where(x => x.Status == request.Status && x.Status != "Deleted");
         }
