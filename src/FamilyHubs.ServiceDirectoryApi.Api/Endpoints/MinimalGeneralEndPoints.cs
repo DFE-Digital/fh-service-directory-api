@@ -38,29 +38,5 @@ public class MinimalGeneralEndPoints
                 throw;
             }
         });
-
-        app.MapGet("api/resetdb", async (string password, IConfiguration configuration, ApplicationDbContextInitialiser initialiser, ILogger <MinimalGeneralEndPoints> logger) =>
-        {
-            try
-            {
-                if (password== "RnFkxAFcJLF9kcA4BYv4")
-                {
-                    string useDbType = configuration.GetValue<string>("UseDbType");
-                    if (useDbType != "UseSqlServerDatabase" || useDbType != "UsePostgresDatabase")
-                    {
-                        await initialiser.InitialiseWithRecreateAsync(configuration);
-                        await initialiser.SeedAsync();
-                    }
-                }
-
-                return Results.Ok("All Done");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error occurred getting info (api). {exceptionMessage}", ex.Message);
-                Debug.WriteLine(ex.Message);
-                throw;
-            }
-        }).ExcludeFromDescription();
     }
 }

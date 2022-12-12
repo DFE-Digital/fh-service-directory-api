@@ -9,6 +9,8 @@ public class ApplicationDbContextInitialiser
 {
     private readonly ILogger<ApplicationDbContextInitialiser> _logger;
     private readonly ApplicationDbContext _context;
+    private bool _isProduction = false;
+
 
     public ApplicationDbContextInitialiser(ILogger<ApplicationDbContextInitialiser> logger, ApplicationDbContext context)
     {
@@ -16,29 +18,12 @@ public class ApplicationDbContextInitialiser
         _context = context;      
     }
 
-    public async Task InitialiseWithRecreateAsync(IConfiguration configuration)
+    public async Task InitialiseAsync(IConfiguration configuration, bool isProduction)
     {
         try
         {
-            _context.Database.EnsureDeleted();
-            _context.Database.EnsureCreated();
+            _isProduction = isProduction;
 
-            if (_context.Database.IsSqlServer() || _context.Database.IsNpgsql())
-            {
-                await _context.Database.MigrateAsync();
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while initialising the database.");
-            throw;
-        }
-    }
-
-    public async Task InitialiseAsync(IConfiguration configuration)
-    {
-        try
-        {
             if (_context.Database.IsInMemory())
             {
                 _context.Database.EnsureDeleted();
@@ -75,7 +60,7 @@ public class ApplicationDbContextInitialiser
         if (_context.OpenReferralOrganisations.Any())
             return;
 
-        var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData();
+        var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData(_isProduction);
 
         if (!_context.OrganisationTypes.Any())
         {
@@ -130,45 +115,48 @@ public class ApplicationDbContextInitialiser
             } 
         }
 
-        IReadOnlyCollection<OpenReferralOrganisation> familyHubs = openReferralOrganisationSeedData.GetSalfordFamilyHubOrganisations();
-
-        foreach (var openReferralOrganisation in familyHubs)
+        if (!_isProduction) 
         {
-            openReferralOrganisation.OrganisationType = _context.OrganisationTypes.First(x => x.Id == openReferralOrganisation.OrganisationType.Id);
+            IReadOnlyCollection<OpenReferralOrganisation> familyHubs = openReferralOrganisationSeedData.GetSalfordFamilyHubOrganisations();
 
-            if (openReferralOrganisation != null && openReferralOrganisation.Services != null)
+            foreach (var openReferralOrganisation in familyHubs)
             {
-                foreach (var service in openReferralOrganisation.Services)
-                {
-                    var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == service.ServiceType.Id);
-                    if (serviceType != null)
-                    {
-                        service.ServiceType = serviceType;
-                    }
+                openReferralOrganisation.OrganisationType = _context.OrganisationTypes.First(x => x.Id == openReferralOrganisation.OrganisationType.Id);
 
-                    foreach (var serviceTaxonomy in service.Service_taxonomys)
+                if (openReferralOrganisation != null && openReferralOrganisation.Services != null)
+                {
+                    foreach (var service in openReferralOrganisation.Services)
                     {
-                        if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
+                        var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == service.ServiceType.Id);
+                        if (serviceType != null)
                         {
-                            var taxonomy = taxonomies.FirstOrDefault(x => x.Id == serviceTaxonomy.Taxonomy.Id);
-                            if (taxonomy != null)
+                            service.ServiceType = serviceType;
+                        }
+
+                        foreach (var serviceTaxonomy in service.Service_taxonomys)
+                        {
+                            if (serviceTaxonomy != null && serviceTaxonomy.Taxonomy != null)
                             {
-                                serviceTaxonomy.Taxonomy = taxonomy;
+                                var taxonomy = taxonomies.FirstOrDefault(x => x.Id == serviceTaxonomy.Taxonomy.Id);
+                                if (taxonomy != null)
+                                {
+                                    serviceTaxonomy.Taxonomy = taxonomy;
+                                }
                             }
                         }
                     }
                 }
+
+                if (openReferralOrganisation != null)
+                {
+                    _context.OpenReferralOrganisations.Add(openReferralOrganisation);
+                }
             }
 
-            if (openReferralOrganisation != null)
+            if (!_context.RelatedOrganisations.Any())
             {
-                _context.OpenReferralOrganisations.Add(openReferralOrganisation);
+                _context.RelatedOrganisations.AddRange(openReferralOrganisationSeedData.SeedRelatedOrganisations());
             }
-        }
-
-        if (!_context.RelatedOrganisations.Any())
-        {
-            _context.RelatedOrganisations.AddRange(openReferralOrganisationSeedData.SeedRelatedOrganisations());
         }
 
         if (!_context.OrganisationAdminDistricts.Any())
