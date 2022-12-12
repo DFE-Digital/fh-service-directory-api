@@ -6,6 +6,11 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository;
 
 public class OpenReferralOrganisationSeedData
 {
+    private bool _isProduction {  get; set; }
+    public OpenReferralOrganisationSeedData(bool isProduction)
+    {
+        _isProduction = isProduction;
+    }
     public IReadOnlyCollection<OrganisationAdminDistrict> SeedOrganisationAdminDistrict()
     {
         List<OrganisationAdminDistrict> adminDistricts = new()
@@ -14,14 +19,16 @@ public class OpenReferralOrganisationSeedData
             new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E07000127", "fc51795e-ea95-4af0-a0b2-4c06d5463678"), //Lancashire
             new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E09000026", "1229cb45-0dc0-4f8a-81bd-2cd74c7cc9cc"), //Redbridge
             new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"), //Salford
-
-            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "b2446860-cff0-4fb7-a703-bc4a919b3417"), //Central Family Hub
-            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "18e95341-8464-4375-84fd-195af5fe7d9c"), //North Family Hub
-            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "99d11261-5551-40c1-988e-59d13a377e75"), //South Family Hub
-
             new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E07000203", "6dc1c3ad-d077-46ff-9e0d-04fb263f0637"), //Suffolk
             new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E09000030", "88e0bffd-ed0b-48ea-9a70-5f6ef729fc21"), //Tower Hamlets
         };
+
+        if (!_isProduction)
+        {
+            adminDistricts.Add(new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "b2446860-cff0-4fb7-a703-bc4a919b3417")); //Central Family Hub
+            adminDistricts.Add(new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "18e95341-8464-4375-84fd-195af5fe7d9c")); //North Family Hub
+            adminDistricts.Add(new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "99d11261-5551-40c1-988e-59d13a377e75")); //South Family Hub
+        }
 
         return adminDistricts;
     }
@@ -197,12 +204,19 @@ public class OpenReferralOrganisationSeedData
     private List<OpenReferralService> GetSalfordHubsAndServices(string parentId)
     {
         List<OpenReferralService> openReferralServices= new();
-        openReferralServices.AddRange(GetSalfordFamilyService(parentId));
+        if (!_isProduction) 
+        {
+            openReferralServices.AddRange(GetSalfordFamilyService(parentId));
+        }
         return openReferralServices;
     }
 
     public IReadOnlyCollection<RelatedOrganisation> SeedRelatedOrganisations()
     {
+        if (!_isProduction)
+        {
+            return new List<RelatedOrganisation>();
+        }
         return new List<RelatedOrganisation>()
         {
             new RelatedOrganisation(Guid.NewGuid().ToString(), "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066", "b2446860-cff0-4fb7-a703-bc4a919b3417"),
@@ -446,6 +460,11 @@ public class OpenReferralOrganisationSeedData
 
     private List<OpenReferralService> GetSalfordFamilyService(string parentId)
     {
+        if (_isProduction)
+        {
+            return new List<OpenReferralService>();
+        }
+
         return new List<OpenReferralService>{
 
             new OpenReferralService(
@@ -607,6 +626,11 @@ public class OpenReferralOrganisationSeedData
 
     private List<OpenReferralService> GetBristolCountyCouncilServices(string parentId)
     {
+        if(_isProduction)
+        {
+            return new List<OpenReferralService>();
+        }
+
         return new()
         {
             new OpenReferralService(

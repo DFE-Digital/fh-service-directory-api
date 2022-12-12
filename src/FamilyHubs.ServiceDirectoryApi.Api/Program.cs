@@ -265,7 +265,7 @@ using (var scope = webApplication.Services.CreateScope())
     {
         // Seed Database
         var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-        await initialiser.InitialiseAsync(builder.Configuration);
+        await initialiser.InitialiseAsync(builder.Configuration, webApplication.Environment.IsProduction());
         await initialiser.SeedAsync();
 
     }
