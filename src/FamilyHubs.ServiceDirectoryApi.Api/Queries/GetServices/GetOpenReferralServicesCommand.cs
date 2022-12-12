@@ -12,7 +12,7 @@ namespace fh_service_directory_api.api.Queries.GetServices;
 public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferralServiceDto>>
 {
     public GetOpenReferralServicesCommand() { }
-    public GetOpenReferralServicesCommand(string? serviceType, string? status, string? districtCode, int? minimum_age, int? maximum_age, int? given_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation)
+    public GetOpenReferralServicesCommand(string? serviceType, string? status, string? districtCode, int? minimum_age, int? maximum_age, int? given_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub)
     {
         ServiceType = serviceType;
         Status = status;
@@ -31,6 +31,7 @@ public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferra
         TaxonmyIds = taxonmyIds;
         Languages = languages;
         CanFamilyChooseLocation = canFamilyChooseLocation;
+        IsFamilyHub = isFamilyHub;
     }
 
     public string? ServiceType { get; set; }
@@ -50,6 +51,7 @@ public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferra
     public string? TaxonmyIds { get; set; }
     public string? Languages { get; set; }
     public bool? CanFamilyChooseLocation { get; set; }
+    public bool? IsFamilyHub { get; set; }
 
 }
 
@@ -146,6 +148,23 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
                 dbservices = new List<OpenReferralService>();
         }
 
+        if (request != null && request.IsFamilyHub != null) 
+        {
+            var organisationList = dbservices.Select(x => x.OpenReferralOrganisationId).ToList();
+            IQueryable<OpenReferralOrganisation> organisations;
+            if (request.IsFamilyHub.Value)
+            {
+                organisations = _context.OpenReferralOrganisations.Where(x => organisationList.Contains(x.Id) && x.OrganisationType.Name == "FamilyHub");  
+            }
+            else
+            {
+                organisations = _context.OpenReferralOrganisations.Where(x => organisationList.Contains(x.Id) && x.OrganisationType.Name != "FamilyHub");
+            }
+
+            var familyHubList = organisations.Select(x => x.Id).ToList();
+            dbservices = dbservices.Where(x => familyHubList.Contains(x.OpenReferralOrganisationId));
+        }
+        
         //if (request?.Latitude != null && request?.Longtitude != null)
         //    dbservices = dbservices.OrderBy(x => core.Helper.GetDistance(
         //        request.Latitude,
