@@ -20,8 +20,8 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests
                  .AddEnvironmentVariables()
                  .Build();
 
-        //List<Claim> authClaims = new() { new Claim(ClaimTypes.Role, "LAAdmin") };
-        //_token = CreateToken(authClaims, config);
+        List<Claim> authClaims = new() { new Claim(ClaimTypes.Role, "LAAdmin") };
+        _token = CreateToken(authClaims, config);
 
         var webAppFactory = new MyWebApplicationFactory();
 
