@@ -151,7 +151,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         IMapper mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData();
+        var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData(false);
         if (!mockApplicationDbContext.OrganisationAdminDistricts.Any())
         {
             mockApplicationDbContext.OrganisationTypes.AddRange(openReferralOrganisationSeedData.SeedOrganisationTypes());
