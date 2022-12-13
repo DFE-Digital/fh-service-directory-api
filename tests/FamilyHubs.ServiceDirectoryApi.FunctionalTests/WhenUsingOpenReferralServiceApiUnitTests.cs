@@ -362,6 +362,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
         string url = getServicesUrlBuilder
                     .WithStatus("active")
+                    .WithServiceType("Family Experience")
                     .WithFamilyHub(true)
                     .WithEligibility(0, 99)
                     .WithProximity(53.507025D, -2.259764D, 32186.9)
@@ -395,6 +396,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
         string url = getServicesUrlBuilder
                     .WithStatus("active")
+                    .WithServiceType("Family Experience")
                     .WithFamilyHub(false)
                     .WithEligibility(0, 99)
                     .WithProximity(53.507025D, -2.259764D, 32186.9)
@@ -418,4 +420,108 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         retVal?.Items.Count.Should().Be(2);
     }
 
+#if DEBUG
+    [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
+    public async Task ThenTheOpenReferralServicesWithLimitedFamilyHubsAreRetrieved()
+    {
+        GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
+        string url = getServicesUrlBuilder
+                    .WithStatus("active")
+                    .WithServiceType("Family Experience")
+                    .WithFamilyHub(true)
+                    .WithMaxFamilyHubs(1)
+                    .WithEligibility(0, 99)
+                    .WithProximity(53.507025D, -2.259764D, 32186.9)
+                    .WithPage(1, 10)
+                    .Build();
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(_client.BaseAddress + $"api/services{url}")
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        retVal.Should().NotBeNull();
+        retVal?.Items.Count.Should().Be(1);
+    }
+
+#if DEBUG
+    [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
+    public async Task ThenTheOpenReferralServicesWithOutLimitedFamilyHubsAreRetrieved()
+    {
+        GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
+        string url = getServicesUrlBuilder
+                    .WithStatus("active")
+                    .WithServiceType("Family Experience")
+                    .WithFamilyHub(false)
+                    .WithMaxFamilyHubs(1)
+                    .WithEligibility(0, 99)
+                    .WithProximity(53.507025D, -2.259764D, 32186.9)
+                    .WithPage(1, 10)
+                    .Build();
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(_client.BaseAddress + $"api/services{url}")
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        retVal.Should().NotBeNull();
+        retVal?.Items.Count.Should().Be(2);
+    }
+
+#if DEBUG
+    [Fact]
+#else
+    [Fact(Skip = "This test should be run locally")]
+#endif
+    public async Task ThenTheOpenReferralServicesLimitedByMaxFamilyHubsAreRetrieved()
+    {
+        GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
+        string url = getServicesUrlBuilder
+            .WithServiceType("Family Experience")
+            .WithStatus("active")
+            .WithMaxFamilyHubs(1)
+            .WithPage(1, 10)
+            .Build();
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(_client.BaseAddress + $"api/services{url}")
+        };
+
+        using var response = await _client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var items = retVal?.Items;
+   
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        retVal.Should().NotBeNull();
+        items.Should().NotBeNull();
+
+        items.Where(i => i.Description == "Family Hub").Should().HaveCount(1);
+    }
 }
