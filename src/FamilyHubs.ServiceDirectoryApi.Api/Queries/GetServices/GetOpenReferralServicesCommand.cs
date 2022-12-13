@@ -192,7 +192,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         if (request != null)
         {
             var pagelist = filteredServices.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToList();
-            var result = new PaginatedList<OpenReferralServiceDto>(filteredServices, pagelist.Count, request.PageNumber, request.PageSize);
+            var result = new PaginatedList<OpenReferralServiceDto>(pagelist, filteredServices.Count, request.PageNumber, request.PageSize);
             return result;
         }
 
