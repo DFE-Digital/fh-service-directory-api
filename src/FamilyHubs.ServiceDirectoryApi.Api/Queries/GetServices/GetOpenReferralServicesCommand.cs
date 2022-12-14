@@ -154,7 +154,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             var organisationList = dbservices.Select(x => x.OpenReferralOrganisationId).ToList();
             IQueryable<OpenReferralOrganisation>? familyHubOrganisations = null;
 
-            if (request.MaxFamilyHubs != null)
+            if (request!.MaxFamilyHubs != null)
             {
                 familyHubOrganisations = _context.OpenReferralOrganisations.Where(x => organisationList.Contains(x.Id) && x.OrganisationType.Name == "FamilyHub");
             }
@@ -180,9 +180,9 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
             if (limitNumberOfFamilyHubs)
             {
-                var familyHubOrganisationIds = familyHubOrganisations.Select(x => x.Id).ToList();
+                var familyHubOrganisationIds = familyHubOrganisations!.Select(x => x.Id).ToList();
                 dbservices = dbservices.Where(x => familyHubOrganisationIds.Contains(x.OpenReferralOrganisationId))
-                    .Take(request.MaxFamilyHubs.Value)
+                    .Take(request.MaxFamilyHubs!.Value)
                     .Concat(dbservices.Where(x => !familyHubOrganisationIds.Contains(x.OpenReferralOrganisationId)));
             }
         }
@@ -207,9 +207,18 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
                     service.Service_at_locations?.FirstOrDefault()?.Location.Longitude);
             }
 
-            filteredServices = filteredServices.OrderBy(x => x.Distance).ToList();
+            // special handling when we are limiting the number of family hubs, so that the hubs come first (and appear in the first page)
+            if (limitNumberOfFamilyHubs)
+            {
+                filteredServices = (filteredServices
+                    .Take(request.MaxFamilyHubs!.Value).OrderBy(x => x.Distance)
+                    .Concat(filteredServices.Skip(request.MaxFamilyHubs!.Value).OrderBy(x => x.Distance))).ToList();
+            }
+            else
+            {
+                filteredServices = filteredServices.OrderBy(x => x.Distance).ToList();
+            }
         }
-        
 
         if (request != null)
         {
