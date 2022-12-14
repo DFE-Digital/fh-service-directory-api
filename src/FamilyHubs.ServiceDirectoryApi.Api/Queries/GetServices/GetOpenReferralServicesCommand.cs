@@ -23,7 +23,7 @@ public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferra
         Longtitude = longtitude;
         Meters = proximity;
         PageNumber = pageNumber != null ? pageNumber.Value : 1;
-        PageSize = pageSize != null ? pageSize.Value : 1;
+        PageSize = pageSize != null ? pageSize.Value : 10;
         Text = text;
         ServiceDeliveries = serviceDeliveries;
         IsPaidFor = isPaidFor;
