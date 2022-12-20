@@ -115,6 +115,12 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
             entity.Uri,
             entity.Url,
             openReferralServices);
+
+        OrganisationAdminDistrict? organisationAdminDistrict = _context.OrganisationAdminDistricts.FirstOrDefault(x => x.OpenReferralOrganisationId == entity.Id);
+        if (organisationAdminDistrict != null)
+        {
+            result.AdministractiveDistrictCode = organisationAdminDistrict.Code;
+        }
         
         return result;
     }
