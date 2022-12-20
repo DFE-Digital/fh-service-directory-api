@@ -149,9 +149,10 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         }
 
         bool limitNumberOfFamilyHubs = request?.MaxFamilyHubs != null;
+        int numberOfFamilyHubs = 0;
         if (request?.IsFamilyHub != null || limitNumberOfFamilyHubs)
         {
-            var organisationList = dbservices.Select(x => x.OpenReferralOrganisationId).ToList();
+            var organisationList = dbservices.Select(x => x.OpenReferralOrganisationId).Distinct().ToList();
             IQueryable<OpenReferralOrganisation>? familyHubOrganisations = null;
 
             if (request!.MaxFamilyHubs != null)
@@ -181,9 +182,10 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             if (limitNumberOfFamilyHubs)
             {
                 var familyHubOrganisationIds = familyHubOrganisations!.Select(x => x.Id).ToList();
-                dbservices = dbservices.Where(x => familyHubOrganisationIds.Contains(x.OpenReferralOrganisationId))
-                    .Take(request.MaxFamilyHubs!.Value)
-                    .Concat(dbservices.Where(x => !familyHubOrganisationIds.Contains(x.OpenReferralOrganisationId)));
+                var familyHubs = dbservices.Where(x => familyHubOrganisationIds.Contains(x.OpenReferralOrganisationId))
+                    .Take(request.MaxFamilyHubs!.Value);
+                numberOfFamilyHubs = familyHubs.Count();
+                dbservices = familyHubs.Concat(dbservices.Where(x => !familyHubOrganisationIds.Contains(x.OpenReferralOrganisationId)));
             }
         }
 
@@ -208,10 +210,10 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             }
 
             // special handling when we are limiting the number of family hubs, so that the hubs come first (and appear in the first page)
-            if (limitNumberOfFamilyHubs)
+            if (numberOfFamilyHubs > 0)
             {
                 filteredServices = (filteredServices
-                    .Take(request.MaxFamilyHubs!.Value).OrderBy(x => x.Distance)
+                    .Take(numberOfFamilyHubs).OrderBy(x => x.Distance)
                     .Concat(filteredServices.Skip(request.MaxFamilyHubs!.Value).OrderBy(x => x.Distance))).ToList();
             }
             else
