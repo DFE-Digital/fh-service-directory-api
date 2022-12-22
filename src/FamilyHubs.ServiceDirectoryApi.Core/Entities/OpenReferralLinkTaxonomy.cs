@@ -4,10 +4,10 @@ using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class OpenReferralLinktaxonomycollection : EntityBase<string>, IOpenReferralLinktaxonomycollection, IAggregateRoot
+public class OpenReferralLinkTaxonomy : EntityBase<string>, IOpenReferralLinkTaxonomy, IAggregateRoot
 {
-    private OpenReferralLinktaxonomycollection() { }
-    public OpenReferralLinktaxonomycollection(string id, string link_id, string link_type)
+    private OpenReferralLinkTaxonomy() { }
+    public OpenReferralLinkTaxonomy(string id, string link_id, string link_type)
     {
         Id = id;
         Link_id = link_id;

@@ -45,7 +45,7 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
         public DbSet<OpenReferralFunding> OpenReferralFundings => Set<OpenReferralFunding>();
         public DbSet<OpenReferralHoliday_Schedule> OpenReferralHoliday_Schedules => Set<OpenReferralHoliday_Schedule>();
         public DbSet<OpenReferralLanguage> OpenReferralLanguages => Set<OpenReferralLanguage>();
-        public DbSet<OpenReferralLinktaxonomycollection> OpenReferralLinktaxonomycollections => Set<OpenReferralLinktaxonomycollection>();
+        public DbSet<OpenReferralLinkTaxonomy> OpenReferralLinkTaxonomy => Set<OpenReferralLinkTaxonomy>();
         public DbSet<OpenReferralLocation> OpenReferralLocations => Set<OpenReferralLocation>();
         public DbSet<OpenReferralOrganisation> OpenReferralOrganisations => Set<OpenReferralOrganisation>();
         public DbSet<OpenReferralParent> OpenReferralParents => Set<OpenReferralParent>();
