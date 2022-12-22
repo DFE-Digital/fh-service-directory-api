@@ -39,8 +39,7 @@ public class OpenReferralOrganisationSeedData
         {
             new OrganisationType("1", "LA", "Local Authority"),
             new OrganisationType("2", "VCFS", "Voluntary, Charitable, Faith Sector"),
-            new OrganisationType("3", "FamilyHub", "Family Hub"),
-            new OrganisationType("4", "Company", "Public / Private Company eg: Child Care Centre")
+            new OrganisationType("3", "Company", "Public / Private Company eg: Child Care Centre")
         };
 
         return serviceTypes;
@@ -115,7 +114,8 @@ public class OpenReferralOrganisationSeedData
             new OpenReferralTaxonomy("4c219f95-21da-4222-8286-bbe1cfaf675c", "Visual impairment","Visual impairment", "6c873b97-6978-4c0f-8e3c-0b2804dd3826"),
 
             new OpenReferralTaxonomy("be261f9e-f024-46f8-8b5b-58251f25388d", "Transport","Transport", null),
-            new OpenReferralTaxonomy("93a29b1e-acd9-4abf-9f30-07dce3378558", "Community transport","Community transport", "be261f9e-f024-46f8-8b5b-58251f25388d")
+            new OpenReferralTaxonomy("93a29b1e-acd9-4abf-9f30-07dce3378558", "Community transport","Community transport", "be261f9e-f024-46f8-8b5b-58251f25388d"),
+            new OpenReferralTaxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null),
         };
         
         return openReferralTaxonomies;
