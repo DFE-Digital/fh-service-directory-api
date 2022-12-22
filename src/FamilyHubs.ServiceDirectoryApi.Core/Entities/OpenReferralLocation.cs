@@ -23,6 +23,7 @@ public class OpenReferralLocation : EntityBase<string>, IOpenReferralLocation, I
     public string? Description { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+    public virtual ICollection<OpenReferralLinkTaxonomy>? LinkTaxonomies { get; set; }
     public virtual ICollection<OpenReferralPhysical_Address>? Physical_addresses { get; set; }
     public virtual ICollection<Accessibility_For_Disabilities>? Accessibility_for_disabilities { get; set; }
 }

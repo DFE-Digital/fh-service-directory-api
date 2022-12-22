@@ -14,9 +14,9 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
 using fh_service_directory_api.core.Entities;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace fh_service_directory_api.api.Helper;
 
@@ -46,7 +46,7 @@ public class OpenReferralDtoHelper
             x.Cost_options.Select(x => new OpenReferralCostOptionDto(x.Id, x.Amount_description, x.Amount, x.LinkId, x.Option, x.Valid_from, x.Valid_to)).ToList(),
             x.Languages.Select(x => new OpenReferralLanguageDto(x.Id, x.Language)).ToList(),
             x.Service_areas.Select(x => new OpenReferralServiceAreaDto(x.Id, x.Service_area, x.Extent, x.Uri)).ToList(),
-            x.Service_at_locations.Select(x => new OpenReferralServiceAtLocationDto(x.Id, new OpenReferralLocationDto(x.Location.Id, x.Location.Name, x.Location.Description, x.Location.Latitude, x.Location.Longitude, GetAddresses(x.Location)),GetRegularSchedules(x.Regular_schedule), GetHolidaySchedules(x.HolidayScheduleCollection) )).ToList(),
+            x.Service_at_locations.Select(x => new OpenReferralServiceAtLocationDto(x.Id, new OpenReferralLocationDto(x.Location.Id, x.Location.Name, x.Location.Description, x.Location.Latitude, x.Location.Longitude, GetAddresses(x.Location), GetLinkTaxonomies(x.Location)), GetRegularSchedules(x.Regular_schedule), GetHolidaySchedules(x.HolidayScheduleCollection))).ToList(),
             x.Service_taxonomys.Select(x => new OpenReferralServiceTaxonomyDto(x.Id, x.Taxonomy != null ? new OpenReferralTaxonomyDto(x.Taxonomy.Id, x.Taxonomy.Name, x.Taxonomy.Vocabulary, x.Taxonomy.Parent) : null)).ToList(),
             x.Regular_schedules.Select(x => new OpenReferralRegularScheduleDto(x.Id, x.Description, x.Opens_at, x.Closes_at, x.Byday, x.Bymonthday, x.Dtstart, x.Freq, x.Interval, x.Valid_from, x.Valid_to)).ToList(),
             x.Holiday_schedules.Select(x => new OpenReferralHolidayScheduleDto(x.Id, x.Closed, x.Closes_at, x.Start_date, x.End_date, x.Opens_at)).ToList()
@@ -102,7 +102,7 @@ public class OpenReferralDtoHelper
             service.Cost_options.Select(x => new OpenReferralCostOptionDto(x.Id, x.Amount_description, x.Amount, x.LinkId, x.Option, x.Valid_from, x.Valid_to)).ToList(),
             service.Languages.Select(x => new OpenReferralLanguageDto(x.Id, x.Language)).ToList(),
             service.Service_areas.Select(x => new OpenReferralServiceAreaDto(x.Id, x.Service_area, x.Extent, x.Uri)).ToList(),
-            service.Service_at_locations.Select(x => new OpenReferralServiceAtLocationDto(x.Id, new OpenReferralLocationDto(x.Location.Id, x.Location.Name, x.Location.Description, x.Location.Latitude, x.Location.Longitude, GetAddresses(x.Location) ), GetRegularSchedules(x.Regular_schedule), GetHolidaySchedules(x.HolidayScheduleCollection))).ToList(),
+            service.Service_at_locations.Select(x => new OpenReferralServiceAtLocationDto(x.Id, new OpenReferralLocationDto(x.Location.Id, x.Location.Name, x.Location.Description, x.Location.Latitude, x.Location.Longitude, GetAddresses(x.Location), GetLinkTaxonomies(x.Location)), GetRegularSchedules(x.Regular_schedule), GetHolidaySchedules(x.HolidayScheduleCollection))).ToList(),
             service.Service_taxonomys.Select(x => new OpenReferralServiceTaxonomyDto(x.Id, x.Taxonomy != null ? new OpenReferralTaxonomyDto(x.Taxonomy.Id, x.Taxonomy.Name, x.Taxonomy.Vocabulary, x.Taxonomy.Parent) : null)).ToList(),
             service.Regular_schedules.Select(x => new OpenReferralRegularScheduleDto(x.Id, x.Description, x.Opens_at, x.Closes_at, x.Byday, x.Bymonthday, x.Dtstart, x.Freq, x.Interval, x.Valid_from, x.Valid_to)).ToList(),
             service.Holiday_schedules.Select(x => new OpenReferralHolidayScheduleDto(x.Id, x.Closed, x.Closes_at, x.Start_date, x.End_date, x.Opens_at)).ToList()
@@ -145,5 +145,16 @@ public class OpenReferralDtoHelper
         }
 
         return new List<OpenReferralPhysicalAddressDto>();
+    }
+    private static List<OpenReferralLinkTaxonomyDto> GetLinkTaxonomies(OpenReferralLocation location)
+    {
+        if (location != null && location.LinkTaxonomies != null)
+        {
+            var linkTaxonomies = location?.LinkTaxonomies?.Select(x => new OpenReferralLinkTaxonomyDto(x.Id, x.LinkType, x.LinkId, x.Taxonomy ?? new OpenReferralTaxonomyDto())).ToList();
+            if (linkTaxonomies != null)
+                return linkTaxonomies;
+        }
+
+        return new List<OpenReferralLinkTaxonomyDto>();
     }
 }

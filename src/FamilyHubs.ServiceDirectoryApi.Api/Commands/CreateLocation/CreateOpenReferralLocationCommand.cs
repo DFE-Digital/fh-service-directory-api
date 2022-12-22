@@ -50,12 +50,12 @@ public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOp
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            ModelLinkDto modelLinkDto = new ModelLinkDto(Guid.NewGuid().ToString(), fh_service_directory_api.core.StaticContants.Location_Taxonomy, entity.Id, request.OpenReferralTaxonomyId);
+            ModelLinkDto modelLinkDto = new ModelLinkDto(Guid.NewGuid().ToString(), fh_service_directory_api.core.LinkType.Location, entity.Id, request.OpenReferralTaxonomyId);
             CreateModelLinkCommand command = new CreateModelLinkCommand(modelLinkDto);
             var taxonomyLinkresult = await _mediator.Send(command, cancellationToken);
             ArgumentNullException.ThrowIfNull(taxonomyLinkresult, nameof(taxonomyLinkresult));
 
-            modelLinkDto = new ModelLinkDto(Guid.NewGuid().ToString(), fh_service_directory_api.core.StaticContants.Location_Organisation, entity.Id, request.OpenReferralOrganisationId);
+            modelLinkDto = new ModelLinkDto(Guid.NewGuid().ToString(), fh_service_directory_api.core.LinkType.Location_Organisation, entity.Id, request.OpenReferralOrganisationId);
             command = new CreateModelLinkCommand(modelLinkDto);
             var organisationLinkresult = await _mediator.Send(command, cancellationToken);
             ArgumentNullException.ThrowIfNull(organisationLinkresult, nameof(organisationLinkresult));

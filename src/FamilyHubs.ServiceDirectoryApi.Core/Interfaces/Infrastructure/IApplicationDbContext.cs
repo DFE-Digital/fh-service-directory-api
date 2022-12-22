@@ -14,7 +14,7 @@ namespace fh_service_directory_api.core.Interfaces.Infrastructure
         DbSet<OpenReferralFunding> OpenReferralFundings { get; }
         DbSet<OpenReferralHoliday_Schedule> OpenReferralHoliday_Schedules { get; }
         DbSet<OpenReferralLanguage> OpenReferralLanguages { get; }
-        DbSet<OpenReferralLinkTaxonomy> OpenReferralLinkTaxonomy { get; }
+        DbSet<OpenReferralLinkTaxonomy> OpenReferralLinkTaxonomies { get; }
         DbSet<OpenReferralLocation> OpenReferralLocations { get; }
         DbSet<OpenReferralOrganisation> OpenReferralOrganisations { get; }
         DbSet<OpenReferralParent> OpenReferralParents { get; }

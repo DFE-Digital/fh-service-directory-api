@@ -63,30 +63,15 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
 
            .Include(x => x.Services!)
            .ThenInclude(x => x.Service_at_locations)
-           .ThenInclude(x => x.Regular_schedule)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.Service_at_locations)
-           .ThenInclude(x => x.Regular_schedule)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.Service_at_locations)
-           .ThenInclude(x => x.HolidayScheduleCollection)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.Regular_schedules)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.Holiday_schedules)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.Service_at_locations)
-           .ThenInclude(x => x.Regular_schedule)
-
+           .ThenInclude(x => x.Location)
+           .ThenInclude(x => x.Physical_addresses)
+           
            .Include(x => x.Services!)
            .ThenInclude(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
-           .ThenInclude(x => x.Physical_addresses)
+           .ThenInclude(x => x.LinkTaxonomies!)
+           .ThenInclude(x => x.Taxonomy)
+
            .Include(x => x.Services!)
            .ThenInclude(x => x.Service_taxonomys)
            .ThenInclude(x => x.Taxonomy)

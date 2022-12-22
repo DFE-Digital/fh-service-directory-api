@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using Ardalis.Specification;
 using AutoMapper;
+using Azure.Core;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContacts;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
@@ -63,12 +64,19 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
            .Include(x => x.Cost_options)
            .Include(x => x.Languages)
            .Include(x => x.Service_areas)
+
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
            .ThenInclude(x => x.Physical_addresses)
 
            .Include(x => x.Service_at_locations)
+           .ThenInclude(x => x.Location)
+           .ThenInclude(x => x.LinkTaxonomies!)
+           .ThenInclude(x => x.Taxonomy)
+
+           .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Regular_schedule)
+
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.HolidayScheduleCollection)
 
@@ -249,7 +257,49 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                     {
                         UpdateHolidaySchedule(current?.HolidayScheduleCollection ?? new Collection<OpenReferralHoliday_Schedule>(), updatedServiceLoc?.HolidayScheduleCollection ?? new Collection<OpenReferralHolidayScheduleDto>(), current);
                     }
-                    
+                }
+                if (updatedServiceLoc!.Location.LinkTaxonomies != null && updatedServiceLoc.Location.LinkTaxonomies.Any())
+                {
+                    foreach (var linkTaxonomyDto in updatedServiceLoc.Location.LinkTaxonomies)
+                    {
+                        var linkTaxonomy =  _context.OpenReferralLinkTaxonomies.SingleOrDefault(p => p.Id == linkTaxonomyDto.Id);
+                        if (linkTaxonomy != null)
+                        {
+                            linkTaxonomy.LinkType = linkTaxonomyDto.LinkType;
+                            linkTaxonomy.LinkId = linkTaxonomyDto.LinkId;
+
+                            if (linkTaxonomyDto.Taxonomy != null)
+                            {
+                                var taxonomy =  _context.OpenReferralTaxonomies.FirstOrDefault(p => p.Id == linkTaxonomyDto.Taxonomy.Id);
+                                if (taxonomy != null)
+                                {
+                                    taxonomy.Name = linkTaxonomyDto.Taxonomy.Name;
+                                    taxonomy.Parent = linkTaxonomyDto.Taxonomy.Parent;
+                                    taxonomy.Name = linkTaxonomyDto.Taxonomy.Name;
+                                }
+                                else
+                                {
+                                    var taxonomyEntity = _mapper.Map<OpenReferralTaxonomy>(linkTaxonomyDto);
+
+                                    ArgumentNullException.ThrowIfNull(taxonomyEntity, nameof(taxonomyEntity));
+
+                                    taxonomyEntity.RegisterDomainEvent(new OpenReferralTaxonomyCreatedEvent(taxonomyEntity));
+
+                                     _context.OpenReferralTaxonomies.Add(taxonomyEntity);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var linkTaxonomyEntity = _mapper.Map<OpenReferralLinkTaxonomy>(linkTaxonomyDto);
+
+                            ArgumentNullException.ThrowIfNull(linkTaxonomyEntity, nameof(linkTaxonomyEntity));
+
+                            linkTaxonomyEntity.RegisterDomainEvent(new OpenReferralLinkTaxonomyCreatedEvent(linkTaxonomyEntity));
+
+                             _context.OpenReferralLinkTaxonomies.Add(linkTaxonomyEntity);
+                        }
+                    }
                 }
 
                 if (current != null)
@@ -257,7 +307,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             }
         }
 
-        foreach(var item in existing)
+        foreach (var item in existing)
         {
             if (item != null && item.Location != null && item.Location.Physical_addresses != null)
             {

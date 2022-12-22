@@ -38,17 +38,24 @@ public class GetOpenReferralServiceByIdCommandHandler : IRequestHandler<GetOpenR
             .Include(x => x.Cost_options)
             .Include(x => x.Languages)
             .Include(x => x.Service_areas)
+            
             .Include(x => x.Service_at_locations)
             .ThenInclude(x => x.Location)
             .ThenInclude(x => x.Physical_addresses)
 
             .Include(x => x.Service_at_locations)
+            .ThenInclude(x => x.Location)
+            .ThenInclude(x => x.LinkTaxonomies!)
+            .ThenInclude(x => x.Taxonomy)
+
+            .Include(x => x.Service_at_locations)
             .ThenInclude(x => x.Regular_schedule)
+
             .Include(x => x.Service_at_locations)
             .ThenInclude(x => x.HolidayScheduleCollection)
+
             .Include(x => x.Regular_schedules)
             .Include(x => x.Holiday_schedules)
-
             .Include(x => x.Service_taxonomys)
             .ThenInclude(x => x.Taxonomy)
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);

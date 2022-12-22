@@ -1,4 +1,5 @@
-﻿using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
+using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Interfaces.Entities;
 
@@ -7,14 +8,14 @@ namespace fh_service_directory_api.core.Entities;
 public class OpenReferralLinkTaxonomy : EntityBase<string>, IOpenReferralLinkTaxonomy, IAggregateRoot
 {
     private OpenReferralLinkTaxonomy() { }
-    public OpenReferralLinkTaxonomy(string id, string link_id, string link_type)
+    public OpenReferralLinkTaxonomy(string id, string linkId, string linkType, OpenReferralTaxonomyDto? taxonomy)
     {
         Id = id;
-        Link_id = link_id;
-        Link_type = link_type;
+        Taxonomy = taxonomy;
+        LinkId = linkId;
+        LinkType = linkType;
     }
-    public string Link_id { get; init; } = default!;
-    public string Link_type { get; init; } = default!;
-    public string OpenReferralServiceId { get; set; } = default!;
-    //public string OpenReferralServiceAtLocationId { get; set; } = default!;
+    public OpenReferralTaxonomyDto? Taxonomy { get; set; }
+    public string LinkId { get; set; } = default!;
+    public string LinkType { get; set; } = default!;
 }
