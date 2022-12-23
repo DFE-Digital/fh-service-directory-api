@@ -110,29 +110,25 @@ public class UpdateOpenReferralLocationCommandHandler : IRequestHandler<UpdateOp
 
                         if (linkTaxonomyDto.Taxonomy != null)
                         {
-                            var taxonomy = await _context.OpenReferralTaxonomies.SingleOrDefaultAsync(p => p.Id == request.OpenReferralTaxonomyId, cancellationToken);
-
+                            var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
                             if (taxonomy != null)
                             {
-                                taxonomy.Name = linkTaxonomyDto.Taxonomy.Name;
-                                taxonomy.Parent = linkTaxonomyDto.Taxonomy.Parent;
-                                taxonomy.Name = linkTaxonomyDto.Taxonomy.Name;
-                            }
-                            else
-                            {
-                                var taxonomyEntity = _mapper.Map<OpenReferralTaxonomy>(linkTaxonomyDto);
-
-                                ArgumentNullException.ThrowIfNull(taxonomyEntity, nameof(taxonomyEntity));
-
-                                entity.RegisterDomainEvent(new OpenReferralTaxonomyCreatedEvent(taxonomyEntity));
-
-                                await _context.OpenReferralTaxonomies.AddAsync(taxonomyEntity, cancellationToken);
+                                linkTaxonomy.Taxonomy = taxonomy;
                             }
                         }
                     }
                     else
                     {
                         var linkTaxonomyEntity = _mapper.Map<OpenReferralLinkTaxonomy>(linkTaxonomyDto);
+
+                        if (linkTaxonomyEntity.Taxonomy != null)
+                        {
+                            var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomyEntity.Taxonomy.Id);
+                            if (taxonomy != null)
+                            {
+                                linkTaxonomyEntity.Taxonomy = taxonomy;
+                            }
+                        }
 
                         ArgumentNullException.ThrowIfNull(linkTaxonomyEntity, nameof(linkTaxonomyEntity));
 

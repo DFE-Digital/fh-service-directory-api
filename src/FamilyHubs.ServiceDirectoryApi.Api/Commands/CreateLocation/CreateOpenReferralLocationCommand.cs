@@ -46,6 +46,21 @@ public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOp
 
             entity.RegisterDomainEvent(new OpenReferralLocationCreatedEvent(entity));
 
+            if (entity.LinkTaxonomies != null)
+            {
+                foreach(var linkTaxonomy in entity.LinkTaxonomies)
+                {
+                    if (linkTaxonomy.Taxonomy != null)
+                    {
+                        var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
+                        if (taxonomy != null)
+                        {
+                            linkTaxonomy.Taxonomy = taxonomy;
+                        }
+                    }
+                }
+            }
+
             _context.OpenReferralLocations.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);

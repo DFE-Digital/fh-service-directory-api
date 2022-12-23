@@ -60,14 +60,14 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
         try
         {
-            
+
             OpenReferralOrganisation org = _mapper.Map<OpenReferralOrganisation>(request.OpenReferralOrganisation);
             var organisationType = _context.OrganisationTypes.FirstOrDefault(x => x.Id == request.OpenReferralOrganisation.OrganisationType.Id);
             if (organisationType != null)
             {
                 org.OrganisationType = organisationType;
             }
-            
+
             entity.Update(org);
             AddOrUpdateAdministractiveDistrict(request, entity);
 
@@ -93,7 +93,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                     if (existingChild != null)
                     {
                         UpdateOpenReferralServiceCommand updateOpenReferralServiceCommand = new(existingChild.Id, childModel);
-                        var serviceUpdateResult = await _mediator.Send(updateOpenReferralServiceCommand, cancellationToken);  
+                        var serviceUpdateResult = await _mediator.Send(updateOpenReferralServiceCommand, cancellationToken);
                     }
                     else
                     {
@@ -119,6 +119,24 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
                                 }
                             }
 
+                            foreach (var serviceAtLocation in service.Service_at_locations)
+                            {
+                                if (serviceAtLocation.Location.LinkTaxonomies != null)
+                                {
+                                    foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
+                                    {
+                                        if (linkTaxonomy.Taxonomy != null)
+                                        {
+                                            var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
+                                            if (taxonomy != null)
+                                            {
+                                                linkTaxonomy.Taxonomy = taxonomy;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
                             entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(service));
                             _context.OpenReferralServices.Add(service);
                         }
@@ -184,7 +202,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
             {
                 organisationAdminDistrict.Code = request.OpenReferralOrganisation.AdministractiveDistrictCode;
             }
-            
+
         }
     }
 

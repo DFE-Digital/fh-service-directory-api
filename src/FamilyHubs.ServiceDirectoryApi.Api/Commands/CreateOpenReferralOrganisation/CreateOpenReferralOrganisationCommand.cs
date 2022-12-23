@@ -74,6 +74,40 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
                             }
                         }
                     }
+
+                    foreach (var serviceAtLocation in service.Service_at_locations)
+                    {
+                        if (serviceAtLocation.Regular_schedule != null)
+                        {
+                            foreach (var regularSchedules in serviceAtLocation.Regular_schedule)
+                            {
+                                regularSchedules.OpenReferralServiceAtLocationId = serviceAtLocation.Id;
+                            }
+                        }
+
+                        if (serviceAtLocation.HolidayScheduleCollection != null)
+                        {
+                            foreach (var holidaySchedules in serviceAtLocation.HolidayScheduleCollection)
+                            {
+                                holidaySchedules.OpenReferralServiceAtLocationId = serviceAtLocation.Id;
+                            }
+                        }
+
+                        if (serviceAtLocation.Location.LinkTaxonomies != null)
+                        {
+                            foreach(var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
+                            {
+                                if (linkTaxonomy.Taxonomy != null)
+                                {
+                                    var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
+                                    if (taxonomy != null)
+                                    {
+                                        linkTaxonomy.Taxonomy = taxonomy;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 

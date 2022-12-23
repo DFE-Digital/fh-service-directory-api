@@ -75,6 +75,21 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
                         holidaySchedules.OpenReferralServiceAtLocationId = serviceAtLocation.Id;
                     }
                 }
+
+                if (serviceAtLocation.Location.LinkTaxonomies != null)
+                {
+                    foreach(var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
+                    {
+                        if (linkTaxonomy.Taxonomy != null)
+                        {
+                            var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
+                            if (taxonomy != null)
+                            {
+                                linkTaxonomy.Taxonomy = taxonomy;
+                            }
+                        }
+                    }
+                }
             }
 
             entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(entity));
