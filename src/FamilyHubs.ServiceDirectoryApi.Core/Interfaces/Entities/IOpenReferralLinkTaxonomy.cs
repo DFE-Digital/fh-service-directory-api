@@ -5,7 +5,7 @@ namespace fh_service_directory_api.core.Interfaces.Entities
 {
     public interface IOpenReferralLinkTaxonomy : IEntityBase<string>
     {
-        OpenReferralTaxonomyDto? Taxonomy { get; set; }
+        OpenReferralTaxonomy? Taxonomy { get; set; }
         string LinkId { get; set; }
         string LinkType { get; set; }
     }

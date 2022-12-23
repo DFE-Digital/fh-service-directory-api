@@ -13,20 +13,6 @@ namespace fh_service_directory_api.api.Migrations
                 name: "OpenReferralLinktaxonomycollections");
 
             migrationBuilder.CreateTable(
-                name: "OpenReferralTaxonomyDto",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Vocabulary = table.Column<string>(type: "text", nullable: true),
-                    Parent = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OpenReferralTaxonomyDto", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OpenReferralLinkTaxonomies",
                 columns: table => new
                 {
@@ -36,7 +22,6 @@ namespace fh_service_directory_api.api.Migrations
                     LinkType = table.Column<string>(type: "text", nullable: false),
                     OpenReferralLocationId = table.Column<string>(type: "text", nullable: true),
                     OpenReferralParentId = table.Column<string>(type: "text", nullable: true),
-                    OpenReferralTaxonomyId = table.Column<string>(type: "text", nullable: true),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
                     LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -56,14 +41,9 @@ namespace fh_service_directory_api.api.Migrations
                         principalTable: "OpenReferralParents",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_OpenReferralLinkTaxonomies_OpenReferralTaxonomies_OpenRefer~",
-                        column: x => x.OpenReferralTaxonomyId,
-                        principalTable: "OpenReferralTaxonomies",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_OpenReferralLinkTaxonomies_OpenReferralTaxonomyDto_Taxonomy~",
+                        name: "FK_OpenReferralLinkTaxonomies_OpenReferralTaxonomies_TaxonomyId",
                         column: x => x.TaxonomyId,
-                        principalTable: "OpenReferralTaxonomyDto",
+                        principalTable: "OpenReferralTaxonomies",
                         principalColumn: "Id");
                 });
 
@@ -78,11 +58,6 @@ namespace fh_service_directory_api.api.Migrations
                 column: "OpenReferralParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OpenReferralLinkTaxonomies_OpenReferralTaxonomyId",
-                table: "OpenReferralLinkTaxonomies",
-                column: "OpenReferralTaxonomyId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OpenReferralLinkTaxonomies_TaxonomyId",
                 table: "OpenReferralLinkTaxonomies",
                 column: "TaxonomyId");
@@ -92,9 +67,6 @@ namespace fh_service_directory_api.api.Migrations
         {
             migrationBuilder.DropTable(
                 name: "OpenReferralLinkTaxonomies");
-
-            migrationBuilder.DropTable(
-                name: "OpenReferralTaxonomyDto");
 
             migrationBuilder.CreateTable(
                 name: "OpenReferralLinktaxonomycollections",

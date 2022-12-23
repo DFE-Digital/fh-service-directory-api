@@ -150,7 +150,7 @@ public class OpenReferralDtoHelper
     {
         if (location != null && location.LinkTaxonomies != null)
         {
-            var linkTaxonomies = location?.LinkTaxonomies?.Select(x => new OpenReferralLinkTaxonomyDto(x.Id, x.LinkType, x.LinkId, x.Taxonomy ?? new OpenReferralTaxonomyDto())).ToList();
+            var linkTaxonomies = location?.LinkTaxonomies?.Select(x => new OpenReferralLinkTaxonomyDto(x.Id, x.LinkType, x.LinkId, new OpenReferralTaxonomyDto(x.Taxonomy!.Id, x.Taxonomy.Name, x.Taxonomy.Vocabulary, x.Taxonomy.Parent))).ToList();
             if (linkTaxonomies != null)
                 return linkTaxonomies;
         }

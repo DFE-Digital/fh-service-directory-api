@@ -22,26 +22,6 @@ namespace fh_service_directory_api.api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys.OpenReferralTaxonomyDto", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Parent")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Vocabulary")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OpenReferralTaxonomyDto");
-                });
-
             modelBuilder.Entity("fh_service_directory_api.core.Entities.Accessibility_For_Disabilities", b =>
                 {
                     b.Property<string>("Id")
@@ -393,9 +373,6 @@ namespace fh_service_directory_api.api.Migrations
                     b.Property<string>("OpenReferralParentId")
                         .HasColumnType("text");
 
-                    b.Property<string>("OpenReferralTaxonomyId")
-                        .HasColumnType("text");
-
                     b.Property<string>("TaxonomyId")
                         .HasColumnType("text");
 
@@ -404,8 +381,6 @@ namespace fh_service_directory_api.api.Migrations
                     b.HasIndex("OpenReferralLocationId");
 
                     b.HasIndex("OpenReferralParentId");
-
-                    b.HasIndex("OpenReferralTaxonomyId");
 
                     b.HasIndex("TaxonomyId");
 
@@ -1249,12 +1224,8 @@ namespace fh_service_directory_api.api.Migrations
                         .WithMany("LinkTaxonomyCollection")
                         .HasForeignKey("OpenReferralParentId");
 
-                    b.HasOne("fh_service_directory_api.core.Entities.OpenReferralTaxonomy", null)
+                    b.HasOne("fh_service_directory_api.core.Entities.OpenReferralTaxonomy", "Taxonomy")
                         .WithMany("LinkTaxonomyCollection")
-                        .HasForeignKey("OpenReferralTaxonomyId");
-
-                    b.HasOne("FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys.OpenReferralTaxonomyDto", "Taxonomy")
-                        .WithMany()
                         .HasForeignKey("TaxonomyId");
 
                     b.Navigation("Taxonomy");
