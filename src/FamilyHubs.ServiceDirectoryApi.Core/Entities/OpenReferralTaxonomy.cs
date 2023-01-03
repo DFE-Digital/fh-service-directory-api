@@ -19,5 +19,4 @@ public class OpenReferralTaxonomy : EntityBase<string>, IOpenReferralTaxonomy, I
     public string Name { get; set; } = default!;
     public string? Vocabulary { get; set; }
     public string? Parent { get; set; }
-    public virtual ICollection<OpenReferralLinkTaxonomy>? LinkTaxonomyCollection { get; init; }
 }
