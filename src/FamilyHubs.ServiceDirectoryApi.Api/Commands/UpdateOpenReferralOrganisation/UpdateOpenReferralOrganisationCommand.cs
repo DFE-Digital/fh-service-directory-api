@@ -63,7 +63,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
             }
 
             entity.Update(org);
-            AddOrUpdateAdministractiveDistrict(request, entity);
+            AddOrUpdateAdministrativeDistrict(request, entity);
 
             if (entity.Services != null && request.OpenReferralOrganisation.Services != null)
             {
@@ -148,7 +148,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
         return entity.Id;
     }
 
-    private void AddOrUpdateAdministractiveDistrict(UpdateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
+    private void AddOrUpdateAdministrativeDistrict(UpdateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
     {
         if (!string.IsNullOrEmpty(request.OpenReferralOrganisation.AdministractiveDistrictCode))
         {
