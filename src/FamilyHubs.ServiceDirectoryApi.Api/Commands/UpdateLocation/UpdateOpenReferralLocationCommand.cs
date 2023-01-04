@@ -1,9 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.ModelLink;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
-using fh_service_directory_api.api.Commands.CreateModelLink;
-using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
@@ -14,29 +11,23 @@ namespace fh_service_directory_api.api.Commands.UpdateLocation;
 
 public class UpdateOpenReferralLocationCommand : IRequest<string>
 {
-    public UpdateOpenReferralLocationCommand(OpenReferralLocationDto openReferralLocationDto, string openReferralTaxonomyId, string openReferralOrganisationId)
+    public UpdateOpenReferralLocationCommand(OpenReferralLocationDto openReferralLocationDto)
     {
         OpenReferralLocationDto = openReferralLocationDto;
-        OpenReferralTaxonomyId = openReferralTaxonomyId;
-        OpenReferralOrganisationId = openReferralOrganisationId;
     }
 
     public OpenReferralLocationDto OpenReferralLocationDto { get; init; }
-    public string OpenReferralTaxonomyId { get; init; } = default!;
-    public string OpenReferralOrganisationId { get; init; } = default!;
 }
 
 public class UpdateOpenReferralLocationCommandHandler : IRequestHandler<UpdateOpenReferralLocationCommand, string>
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
-    private readonly ISender _mediator;
     private readonly ILogger<UpdateOpenReferralLocationCommandHandler> _logger;
-    public UpdateOpenReferralLocationCommandHandler(ApplicationDbContext context, IMapper mapper, ISender mediator, ILogger<UpdateOpenReferralLocationCommandHandler> logger)
+    public UpdateOpenReferralLocationCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<UpdateOpenReferralLocationCommandHandler> logger)
     {
         _context = context;
         _mapper = mapper;
-        _mediator = mediator;
         _logger = logger;
     }
 
@@ -44,58 +35,42 @@ public class UpdateOpenReferralLocationCommandHandler : IRequestHandler<UpdateOp
     {
         try
         {
-            var entity = await _context.OpenReferralLocations
-                        .SingleOrDefaultAsync(p => p.Id == request.OpenReferralLocationDto.Id, cancellationToken: cancellationToken);
             
-            if (entity == null)
+            var existingLocation = await _context.OpenReferralLocations
+                .Include(l => l.Physical_addresses)
+                .SingleOrDefaultAsync(p => p.Name == request.OpenReferralLocationDto.Name, cancellationToken);
+
+            if (existingLocation == null)
             {
                 throw new NotFoundException(nameof(OpenReferralTaxonomy), request.OpenReferralLocationDto.Id);
             }
 
-            entity.Name = request.OpenReferralLocationDto.Name;
-            entity.Description = request.OpenReferralLocationDto.Description;
-            entity.Latitude= request.OpenReferralLocationDto.Latitude;
-            entity.Longitude = request.OpenReferralLocationDto.Longitude;
+            existingLocation.Description = request.OpenReferralLocationDto.Description;
+            existingLocation.Latitude = request.OpenReferralLocationDto.Latitude;
+            existingLocation.Longitude = request.OpenReferralLocationDto.Longitude;
 
             if (request.OpenReferralLocationDto.Physical_addresses != null)
             {
                 foreach (var addressDto in request.OpenReferralLocationDto.Physical_addresses)
                 {
-                    var address = await _context.OpenReferralPhysical_Addresses.SingleOrDefaultAsync(p => p.Id == addressDto.Id, cancellationToken: cancellationToken);
-                    if (address != null) 
+                    var existingAddress = await _context.OpenReferralPhysical_Addresses.SingleOrDefaultAsync(p => p.Id == addressDto.Id, cancellationToken);
+                    if (existingAddress != null)
                     {
-                        address.Address_1 = addressDto.Address_1;
-                        address.City = addressDto.City;
-                        address.Postal_code = addressDto.Postal_code;
-                        address.Country = addressDto.Country;
-                        address.State_province = addressDto.State_province;
+                        existingAddress.Address_1 = addressDto.Address_1;
+                        existingAddress.City = addressDto.City;
+                        existingAddress.Postal_code = addressDto.Postal_code;
+                        existingAddress.Country = addressDto.Country;
+                        existingAddress.State_province = addressDto.State_province;
                     }
                     else
                     {
-                        var addressEntity = _mapper.Map<OpenReferralPhysical_Address>(addressDto);
-                        ArgumentNullException.ThrowIfNull(addressEntity, nameof(addressEntity));
-                        entity.RegisterDomainEvent(new OpenReferralPhysicalAddressCreatedEvent(addressEntity));
+                        var newAddress = _mapper.Map<OpenReferralPhysical_Address>(addressDto);
+                        ArgumentNullException.ThrowIfNull(newAddress, nameof(newAddress));
+                        existingLocation.RegisterDomainEvent(new OpenReferralPhysicalAddressCreatedEvent(newAddress));
 
-                        _context.OpenReferralPhysical_Addresses.Add(addressEntity);
+                        _context.OpenReferralPhysical_Addresses.Add(newAddress);
                     }
                 }
-            }
-
-            //Create Links if they do not already exist
-            if (!_context.ModelLinks.Where(x => x.ModelOneId == entity.Id && x.LinkType == fh_service_directory_api.core.LinkType.Location).Any())
-            {
-                ModelLinkDto modelLinkDto = new ModelLinkDto(Guid.NewGuid().ToString(), fh_service_directory_api.core.LinkType.Location, entity.Id, request.OpenReferralTaxonomyId);
-                CreateModelLinkCommand command = new CreateModelLinkCommand(modelLinkDto);
-                var taxonomyLinkresult = await _mediator.Send(command, cancellationToken);
-                ArgumentNullException.ThrowIfNull(taxonomyLinkresult, nameof(taxonomyLinkresult));
-            }
-
-            if (!_context.ModelLinks.Where(x => x.ModelOneId == entity.Id && x.LinkType == fh_service_directory_api.core.LinkType.Location_Organisation).Any())
-            {
-                ModelLinkDto modelLinkDto = new ModelLinkDto(Guid.NewGuid().ToString(), fh_service_directory_api.core.LinkType.Location_Organisation, entity.Id, request.OpenReferralOrganisationId);
-                CreateModelLinkCommand command = new CreateModelLinkCommand(modelLinkDto);
-                var organisationLinkresult = await _mediator.Send(command, cancellationToken);
-                ArgumentNullException.ThrowIfNull(organisationLinkresult, nameof(organisationLinkresult));
             }
 
             if (request.OpenReferralLocationDto.LinkTaxonomies != null && request.OpenReferralLocationDto.LinkTaxonomies.Any())
@@ -110,7 +85,7 @@ public class UpdateOpenReferralLocationCommandHandler : IRequestHandler<UpdateOp
 
                         if (linkTaxonomyDto.Taxonomy != null)
                         {
-                            var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
+                            var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => linkTaxonomy.Taxonomy != null && x.Id == linkTaxonomy.Taxonomy.Id);
                             if (taxonomy != null)
                             {
                                 linkTaxonomy.Taxonomy = taxonomy;
@@ -132,7 +107,7 @@ public class UpdateOpenReferralLocationCommandHandler : IRequestHandler<UpdateOp
 
                         ArgumentNullException.ThrowIfNull(linkTaxonomyEntity, nameof(linkTaxonomyEntity));
 
-                        entity.RegisterDomainEvent(new OpenReferralLinkTaxonomyCreatedEvent(linkTaxonomyEntity));
+                        existingLocation.RegisterDomainEvent(new OpenReferralLinkTaxonomyCreatedEvent(linkTaxonomyEntity));
 
                         await _context.OpenReferralLinkTaxonomies.AddAsync(linkTaxonomyEntity, cancellationToken);
                     }
@@ -147,10 +122,7 @@ public class UpdateOpenReferralLocationCommandHandler : IRequestHandler<UpdateOp
             throw new Exception(ex.Message, ex);
         }
 
-        if (request is not null && request.OpenReferralLocationDto is not null)
-            return request.OpenReferralLocationDto.Id;
-        else
-            return string.Empty;
+        return request.OpenReferralLocationDto.Id;
     }
 }
 

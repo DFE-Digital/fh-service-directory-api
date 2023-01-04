@@ -99,19 +99,16 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
                         {
                             serviceAtLocation.Location = existingLocation;
                         }
-                        else
+                        else if (serviceAtLocation.Location.LinkTaxonomies != null)
                         {
-                            if (serviceAtLocation.Location.LinkTaxonomies != null)
+                            foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
                             {
-                                foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
+                                if (linkTaxonomy.Taxonomy != null)
                                 {
-                                    if (linkTaxonomy.Taxonomy != null)
+                                    var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
+                                    if (taxonomy != null)
                                     {
-                                        var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
-                                        if (taxonomy != null)
-                                        {
-                                            linkTaxonomy.Taxonomy = taxonomy;
-                                        }
+                                        linkTaxonomy.Taxonomy = taxonomy;
                                     }
                                 }
                             }
@@ -159,15 +156,15 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
 
     private void AddRelatedOrganisation(CreateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
     {
-        if (string.IsNullOrEmpty(request.OpenReferralOrganisation.AdministractiveDistrictCode) || string.Compare(request.OpenReferralOrganisation.OrganisationType.Name,"LA", StringComparison.OrdinalIgnoreCase) == 0)
+        if (string.IsNullOrEmpty(request.OpenReferralOrganisation.AdministractiveDistrictCode) || string.Compare(request.OpenReferralOrganisation.OrganisationType.Name, "LA", StringComparison.OrdinalIgnoreCase) == 0)
             return;
 
         var result = (from admindis in _context.OrganisationAdminDistricts
-                  join org in _context.OpenReferralOrganisations
-                       on admindis.OpenReferralOrganisationId equals org.Id
-                       where admindis.Code == request.OpenReferralOrganisation.AdministractiveDistrictCode
-                       && org.OrganisationType.Name == "LA"
-                       select org).FirstOrDefault();
+                      join org in _context.OpenReferralOrganisations
+                           on admindis.OpenReferralOrganisationId equals org.Id
+                      where admindis.Code == request.OpenReferralOrganisation.AdministractiveDistrictCode
+                      && org.OrganisationType.Name == "LA"
+                      select org).FirstOrDefault();
 
         if (result == null)
         {

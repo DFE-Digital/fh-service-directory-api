@@ -10,16 +10,12 @@ namespace fh_service_directory_api.api.Commands.CreateLocation;
 
 public class CreateOpenReferralLocationCommand : IRequest<string>
 {
-    public CreateOpenReferralLocationCommand(OpenReferralLocationDto openReferralLocationDto, string openReferralTaxonomyId, string openReferralOrganisationId)
+    public CreateOpenReferralLocationCommand(OpenReferralLocationDto openReferralLocationDto)
     {
         OpenReferralLocationDto = openReferralLocationDto;
-        OpenReferralTaxonomyId = openReferralTaxonomyId;
-        OpenReferralOrganisationId = openReferralOrganisationId;
     }
 
     public OpenReferralLocationDto OpenReferralLocationDto { get; init; }
-    public string OpenReferralTaxonomyId { get; init; }
-    public string OpenReferralOrganisationId { get; init; }
 }
 
 public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOpenReferralLocationCommand, string>

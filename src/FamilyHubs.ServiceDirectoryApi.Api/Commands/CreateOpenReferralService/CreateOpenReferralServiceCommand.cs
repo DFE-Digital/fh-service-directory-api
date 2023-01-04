@@ -42,7 +42,7 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
             if (serviceType != null)
                 entity.ServiceType = serviceType;
 
-            foreach(var serviceTaxonomy in entity.Service_taxonomys)
+            foreach (var serviceTaxonomy in entity.Service_taxonomys)
             {
                 if (serviceTaxonomy.Taxonomy != null)
                 {
@@ -52,7 +52,6 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
                         serviceTaxonomy.Taxonomy = taxonomy;
                     }
                 }
-                    
             }
 
             foreach (var serviceAtLocation in entity.Service_at_locations)
@@ -84,19 +83,16 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
                 {
                     serviceAtLocation.Location = existingLocation;
                 }
-                else
+                else if (serviceAtLocation.Location.LinkTaxonomies != null)
                 {
-                    if (serviceAtLocation.Location.LinkTaxonomies != null)
+                    foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
                     {
-                        foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
+                        if (linkTaxonomy.Taxonomy != null)
                         {
-                            if (linkTaxonomy.Taxonomy != null)
+                            var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
+                            if (taxonomy != null)
                             {
-                                var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
-                                if (taxonomy != null)
-                                {
-                                    linkTaxonomy.Taxonomy = taxonomy;
-                                }
+                                linkTaxonomy.Taxonomy = taxonomy;
                             }
                         }
                     }
