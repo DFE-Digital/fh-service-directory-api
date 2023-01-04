@@ -50,6 +50,8 @@ public class DefaultCoreModule : Module
             .As<IOpenReferralTaxonomy>().InstancePerLifetimeScope();
         builder.RegisterType<Accessibility_For_Disabilities>()
             .As<IAccessibility_For_Disabilities>().InstancePerLifetimeScope();
+        builder.RegisterType<OpenReferralContactLink>()
+           .As<IOpenReferralContactLink>().InstancePerLifetimeScope();
 
 
     }

@@ -13,6 +13,7 @@ namespace fh_service_directory_api.core.Interfaces.Entities
         string? Deliverable_type { get; }
         string? Description { get; }
         ICollection<OpenReferralEligibility> Eligibilities { get; set; }
+        ICollection<OpenReferralContactLink>? ContactLinks { get; set; }
         string? Email { get; }
         string? Fees { get; }
         ICollection<OpenReferralFunding> Fundings { get; set; }

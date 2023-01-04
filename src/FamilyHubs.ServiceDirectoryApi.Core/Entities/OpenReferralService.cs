@@ -79,6 +79,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
     public virtual ICollection<OpenReferralService_Area> Service_areas { get; set; } = new Collection<OpenReferralService_Area>();
     public virtual ICollection<OpenReferralServiceAtLocation> Service_at_locations { get; set; } = new Collection<OpenReferralServiceAtLocation>();
     public virtual ICollection<OpenReferralService_Taxonomy> Service_taxonomys { get; set; } = new Collection<OpenReferralService_Taxonomy>();
+    public virtual ICollection<OpenReferralContactLink>? ContactLinks { get; set; } = new Collection<OpenReferralContactLink>();
 
     public void Update(OpenReferralService openReferralService)
     {
