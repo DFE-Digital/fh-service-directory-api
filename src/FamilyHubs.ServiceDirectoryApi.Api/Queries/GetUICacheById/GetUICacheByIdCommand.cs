@@ -29,7 +29,7 @@ public class GetUICacheByIdCommandHandler : IRequestHandler<GetUICacheByIdComman
     public async Task<UICacheDto> Handle(GetUICacheByIdCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.UICaches
-           .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
+           .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {

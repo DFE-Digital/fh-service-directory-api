@@ -77,7 +77,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         response.EnsureSuccessStatusCode();
 
         
-        var retVal = await JsonSerializer.DeserializeAsync<OpenReferralOrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<OpenReferralOrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             
        
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -104,7 +104,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<List<OpenReferralOrganisationDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<List<OpenReferralOrganisationDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
@@ -130,7 +130,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<List<OrganisationTypeDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<List<OrganisationTypeDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
@@ -184,7 +184,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         response.EnsureSuccessStatusCode();
 
 
-        var retVal = await JsonSerializer.DeserializeAsync<OpenReferralOrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<OpenReferralOrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
 
         var update = new OpenReferralOrganisationWithServicesDto(

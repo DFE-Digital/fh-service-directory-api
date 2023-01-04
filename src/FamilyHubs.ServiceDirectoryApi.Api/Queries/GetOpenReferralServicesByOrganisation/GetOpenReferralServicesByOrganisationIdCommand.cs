@@ -74,7 +74,7 @@ public class GetOpenReferralServicesByOrganisationIdCommandHandler : IRequestHan
             .Include(x => x.Service_taxonomys)
             .ThenInclude(x => x.Taxonomy)
             .Where(x => ids.Contains(x.Id))
-            .ToListAsync(cancellationToken: cancellationToken);
+            .ToListAsync(cancellationToken);
 
         if (entity == null)
         {

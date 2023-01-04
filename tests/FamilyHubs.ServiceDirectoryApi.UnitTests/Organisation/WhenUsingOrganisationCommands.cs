@@ -168,8 +168,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         //Assert
         result.Should().NotBeNull();
-        result.Count.Should().Be(4);
-        
+        result.Count.Should().Be(3);
     }
 
     [Fact]

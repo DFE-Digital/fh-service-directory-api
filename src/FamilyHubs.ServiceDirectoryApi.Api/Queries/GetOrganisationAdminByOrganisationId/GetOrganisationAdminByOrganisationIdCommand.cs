@@ -30,7 +30,7 @@ public class GetOrganisationAdminByOrganisationIdCommandHandler : IRequestHandle
     public async Task<string> Handle(GetOrganisationAdminByOrganisationIdCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.OrganisationAdminDistricts
-           .FirstOrDefaultAsync(p => p.OpenReferralOrganisationId == request.OpenReferralOrganisationId, cancellationToken: cancellationToken);
+           .FirstOrDefaultAsync(p => p.OpenReferralOrganisationId == request.OpenReferralOrganisationId, cancellationToken);
 
         if (entity == null)
         {

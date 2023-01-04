@@ -58,7 +58,7 @@ public class GetOpenReferralServiceByIdCommandHandler : IRequestHandler<GetOpenR
             .Include(x => x.Holiday_schedules)
             .Include(x => x.Service_taxonomys)
             .ThenInclude(x => x.Taxonomy)
-            .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {

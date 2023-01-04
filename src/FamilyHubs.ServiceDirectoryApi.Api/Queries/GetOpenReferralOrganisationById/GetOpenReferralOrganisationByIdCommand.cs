@@ -75,7 +75,7 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
            .Include(x => x.Services!)
            .ThenInclude(x => x.Service_taxonomys)
            .ThenInclude(x => x.Taxonomy)
-           .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
+           .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {

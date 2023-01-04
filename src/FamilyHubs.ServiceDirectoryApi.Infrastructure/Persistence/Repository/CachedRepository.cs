@@ -21,7 +21,7 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
             _sourceRepository = sourceRepository;
 
             _cacheOptions = new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(relative: TimeSpan.FromSeconds(10));
+                .SetAbsoluteExpiration(TimeSpan.FromSeconds(10));
         }
 
         public Task<T> AddAsync(T entity)

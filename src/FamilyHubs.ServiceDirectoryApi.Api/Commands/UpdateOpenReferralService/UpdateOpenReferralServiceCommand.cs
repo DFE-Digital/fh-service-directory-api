@@ -85,7 +85,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
 
            .Include(x => x.Service_taxonomys)
            .ThenInclude(x => x.Taxonomy)
-           .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
+           .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {
@@ -211,7 +211,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 entity.RegisterDomainEvent(new OpenReferralServiceAtLocationCreatedEvent(entity));
                 _context.OpenReferralServiceAtLocations.Add(entity);
                 list.Add(entity.Id);
-                if (entity != null && entity.Location != null && entity.Location.Physical_addresses != null)
+                if (entity.Location.Physical_addresses != null)
                 {
                     foreach (var address in entity.Location.Physical_addresses)
                     {

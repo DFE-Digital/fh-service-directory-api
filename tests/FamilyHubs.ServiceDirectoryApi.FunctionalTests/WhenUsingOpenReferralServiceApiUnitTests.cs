@@ -4,6 +4,7 @@ using FluentAssertions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json;
+using AutoMapper.Configuration.Annotations;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
@@ -28,7 +29,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<bool>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<bool>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().Be(true);
@@ -61,7 +62,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         response.EnsureSuccessStatusCode();
 
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var item = retVal?.Items.FirstOrDefault(x => x.Id == "4591d551-0d6a-4c0d-b109-002e67318231");
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -97,7 +98,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         response.EnsureSuccessStatusCode();
 
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var item = retVal?.Items.FirstOrDefault(x => x.Id == "4591d551-0d6a-4c0d-b109-002e67318231");
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -133,7 +134,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         response.EnsureSuccessStatusCode();
 
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var item = retVal?.Items.FirstOrDefault(x => x.Id == "4591d551-0d6a-4c0d-b109-002e67318231");
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -168,7 +169,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var item = retVal?.Items.FirstOrDefault(x => x.Id == "4591d551-0d6a-4c0d-b109-002e67318231");
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -203,7 +204,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var item = retVal?.Items.FirstOrDefault(x => x.Id == "4591d551-0d6a-4c0d-b109-002e67318231");
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -231,7 +232,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<OpenReferralServiceDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<OpenReferralServiceDto>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
@@ -257,7 +258,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         response.EnsureSuccessStatusCode();
 
 
-        var retVal = await JsonSerializer.DeserializeAsync<List<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<List<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var firstService = retVal?.FirstOrDefault();
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -296,7 +297,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         response.EnsureSuccessStatusCode();
 
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var item = retVal?.Items.FirstOrDefault(x => x.Id == "4591d551-0d6a-4c0d-b109-002e67318231");
         ArgumentNullException.ThrowIfNull(item, nameof(item));
 
@@ -352,11 +353,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
     }
 
-#if DEBUG
-    [Fact]
-#else
+//#if DEBUG
+//    [Fact]
+//#else
     [Fact(Skip = "This test should be run locally")]
-#endif
+//#endif
     public async Task ThenTheOpenReferralServicesWithFamilyHubsAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -379,18 +380,18 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         retVal?.Items.Count.Should().BeGreaterThan(2);
     }
 
-#if DEBUG
-    [Fact]
-#else
+//#if DEBUG
+//    [Fact]
+//#else
     [Fact(Skip = "This test should be run locally")]
-#endif
+//#endif
     public async Task ThenTheOpenReferralServicesWithOutFamilyHubsAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -413,18 +414,18 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         retVal?.Items.Count.Should().Be(2);
     }
 
-#if DEBUG
-    [Fact]
-#else
+//#if DEBUG
+//    [Fact]
+//#else
     [Fact(Skip = "This test should be run locally")]
-#endif
+//#endif
     public async Task ThenTheOpenReferralServicesWithLimitedFamilyHubsAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -448,18 +449,18 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         retVal?.Items.Count.Should().Be(1);
     }
 
-#if DEBUG
-    [Fact]
-#else
+//#if DEBUG
+//    [Fact]
+//#else
     [Fact(Skip = "This test should be run locally")]
-#endif
+//#endif
     public async Task ThenTheOpenReferralServicesWithOutLimitedFamilyHubsAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -483,18 +484,18 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         retVal?.Items.Count.Should().Be(2);
     }
 
-#if DEBUG
-    [Fact]
-#else
+//#if DEBUG
+//    [Fact]
+//#else
     [Fact(Skip = "This test should be run locally")]
-#endif
+//#endif
     public async Task ThenTheOpenReferralServicesLimitedByMaxFamilyHubsAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -515,7 +516,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var items = retVal?.Items;
    
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
