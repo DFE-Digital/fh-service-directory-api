@@ -1,10 +1,10 @@
-﻿using Autofac.Core;
-using AutoMapper;
+﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace fh_service_directory_api.api.Commands.CreateOpenReferralService;
 
@@ -42,20 +42,17 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
             if (serviceType != null)
                 entity.ServiceType = serviceType;
 
-            if (entity.Service_taxonomys != null)
+            foreach(var serviceTaxonomy in entity.Service_taxonomys)
             {
-                foreach(var servicetaxonomy in entity.Service_taxonomys)
+                if (serviceTaxonomy.Taxonomy != null)
                 {
-                    if (servicetaxonomy != null && servicetaxonomy.Taxonomy != null)
+                    var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == serviceTaxonomy.Taxonomy.Id);
+                    if (taxonomy != null)
                     {
-                        var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == servicetaxonomy.Taxonomy.Id);
-                        if (taxonomy != null)
-                        {
-                            servicetaxonomy.Taxonomy = taxonomy;
-                        }
+                        serviceTaxonomy.Taxonomy = taxonomy;
                     }
-                    
                 }
+                    
             }
 
             foreach (var serviceAtLocation in entity.Service_at_locations)
@@ -76,16 +73,30 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
                     }
                 }
 
-                if (serviceAtLocation.Location.LinkTaxonomies != null)
+                var existingLocation = await _context.OpenReferralLocations
+                    .Include(l => l.Physical_addresses)
+                    .Include(l => l.LinkTaxonomies)!
+                    .ThenInclude(l => l.Taxonomy)
+                    .Where(l => l.Name == serviceAtLocation.Location.Name)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                if (existingLocation != null)
                 {
-                    foreach(var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
+                    serviceAtLocation.Location = existingLocation;
+                }
+                else
+                {
+                    if (serviceAtLocation.Location.LinkTaxonomies != null)
                     {
-                        if (linkTaxonomy.Taxonomy != null)
+                        foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
                         {
-                            var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
-                            if (taxonomy != null)
+                            if (linkTaxonomy.Taxonomy != null)
                             {
-                                linkTaxonomy.Taxonomy = taxonomy;
+                                var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
+                                if (taxonomy != null)
+                                {
+                                    linkTaxonomy.Taxonomy = taxonomy;
+                                }
                             }
                         }
                     }
@@ -104,9 +115,6 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
             throw new Exception(ex.Message, ex);
         }
 
-        if (request is not null && request.OpenReferralService is not null)
-            return request.OpenReferralService.Id;
-        else
-            return string.Empty;
+        return request.OpenReferralService.Id;
     }
 }

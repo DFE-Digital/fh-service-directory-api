@@ -1,13 +1,11 @@
-﻿using Ardalis.GuardClauses;
-using Ardalis.Specification;
-using AutoMapper;
+﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
 using fh_service_directory_api.core.Interfaces.Commands;
-using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 
@@ -60,17 +58,14 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
                     if (serviceType != null)
                         service.ServiceType = serviceType;
 
-                    if (service.Service_taxonomys != null)
+                    foreach (var serviceTaxonomy in service.Service_taxonomys)
                     {
-                        foreach (var servicetaxonomy in service.Service_taxonomys)
+                        if (serviceTaxonomy.Taxonomy != null)
                         {
-                            if (servicetaxonomy != null && servicetaxonomy.Taxonomy != null)
+                            var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == serviceTaxonomy.Taxonomy.Id);
+                            if (taxonomy != null)
                             {
-                                var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == servicetaxonomy.Taxonomy.Id);
-                                if (taxonomy != null)
-                                {
-                                    servicetaxonomy.Taxonomy = taxonomy;
-                                }
+                                serviceTaxonomy.Taxonomy = taxonomy;
                             }
                         }
                     }
@@ -93,16 +88,30 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
                             }
                         }
 
-                        if (serviceAtLocation.Location.LinkTaxonomies != null)
+                        var existingLocation = await _context.OpenReferralLocations
+                            .Include(l => l.Physical_addresses)
+                            .Include(l => l.LinkTaxonomies)!
+                            .ThenInclude(l => l.Taxonomy)
+                            .Where(l => l.Name == serviceAtLocation.Location.Name)
+                            .FirstOrDefaultAsync(cancellationToken);
+
+                        if (existingLocation != null)
                         {
-                            foreach(var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
+                            serviceAtLocation.Location = existingLocation;
+                        }
+                        else
+                        {
+                            if (serviceAtLocation.Location.LinkTaxonomies != null)
                             {
-                                if (linkTaxonomy.Taxonomy != null)
+                                foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
                                 {
-                                    var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
-                                    if (taxonomy != null)
+                                    if (linkTaxonomy.Taxonomy != null)
                                     {
-                                        linkTaxonomy.Taxonomy = taxonomy;
+                                        var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
+                                        if (taxonomy != null)
+                                        {
+                                            linkTaxonomy.Taxonomy = taxonomy;
+                                        }
                                     }
                                 }
                             }
@@ -111,7 +120,7 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
                 }
             }
 
-            AddAdministractiveDistrict(request, entity);
+            AddAdministrativeDistrict(request, entity);
 
             AddRelatedOrganisation(request, entity);
 
@@ -127,13 +136,10 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
             throw new Exception(ex.Message, ex);
         }
 
-        if (request is not null && request.OpenReferralOrganisation is not null)
-            return request.OpenReferralOrganisation.Id;
-        else
-            return string.Empty;
+        return request.OpenReferralOrganisation.Id;
     }
 
-    private void AddAdministractiveDistrict(CreateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
+    private void AddAdministrativeDistrict(CreateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
     {
         if (!string.IsNullOrEmpty(request.OpenReferralOrganisation.AdministractiveDistrictCode))
         {

@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.ModelLink;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
-using fh_service_directory_api.api.Commands.CreateModelLink;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace fh_service_directory_api.api.Commands.CreateLocation;
 
@@ -19,21 +18,19 @@ public class CreateOpenReferralLocationCommand : IRequest<string>
     }
 
     public OpenReferralLocationDto OpenReferralLocationDto { get; init; }
-    public string OpenReferralTaxonomyId { get; init; } = default!;
-    public string OpenReferralOrganisationId { get; init; } = default!;
+    public string OpenReferralTaxonomyId { get; init; }
+    public string OpenReferralOrganisationId { get; init; }
 }
 
 public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOpenReferralLocationCommand, string>
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
-    private readonly ISender _mediator;
     private readonly ILogger<CreateOpenReferralLocationCommandHandler> _logger;
-    public CreateOpenReferralLocationCommandHandler(ApplicationDbContext context, IMapper mapper, ISender mediator, ILogger<CreateOpenReferralLocationCommandHandler> logger)
+    public CreateOpenReferralLocationCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<CreateOpenReferralLocationCommandHandler> logger)
     {
         _context = context;
         _mapper = mapper;
-        _mediator = mediator;   
         _logger = logger;
     }
 
@@ -41,14 +38,24 @@ public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOp
     {
         try
         {
+            var existingLocation = await _context.OpenReferralLocations
+                .Where(l => l.Name == request.OpenReferralLocationDto.Name)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (existingLocation != null)
+            {
+                throw new InvalidOperationException("Location Already Exists, Please use Update Location");
+            }
+
             var entity = _mapper.Map<OpenReferralLocation>(request.OpenReferralLocationDto);
+
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
 
             entity.RegisterDomainEvent(new OpenReferralLocationCreatedEvent(entity));
 
             if (entity.LinkTaxonomies != null)
             {
-                foreach(var linkTaxonomy in entity.LinkTaxonomies)
+                foreach (var linkTaxonomy in entity.LinkTaxonomies)
                 {
                     if (linkTaxonomy.Taxonomy != null)
                     {
@@ -64,18 +71,6 @@ public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOp
             _context.OpenReferralLocations.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
-
-            ModelLinkDto modelLinkDto = new ModelLinkDto(Guid.NewGuid().ToString(), fh_service_directory_api.core.LinkType.Location, entity.Id, request.OpenReferralTaxonomyId);
-            CreateModelLinkCommand command = new CreateModelLinkCommand(modelLinkDto);
-            var taxonomyLinkresult = await _mediator.Send(command, cancellationToken);
-            ArgumentNullException.ThrowIfNull(taxonomyLinkresult, nameof(taxonomyLinkresult));
-
-            modelLinkDto = new ModelLinkDto(Guid.NewGuid().ToString(), fh_service_directory_api.core.LinkType.Location_Organisation, entity.Id, request.OpenReferralOrganisationId);
-            command = new CreateModelLinkCommand(modelLinkDto);
-            var organisationLinkresult = await _mediator.Send(command, cancellationToken);
-            ArgumentNullException.ThrowIfNull(organisationLinkresult, nameof(organisationLinkresult));
-
-
         }
         catch (Exception ex)
         {
@@ -83,9 +78,6 @@ public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOp
             throw new Exception(ex.Message, ex);
         }
 
-        if (request is not null && request.OpenReferralLocationDto is not null)
-            return request.OpenReferralLocationDto.Id;
-        else
-            return string.Empty;
+        return request.OpenReferralLocationDto.Id;
     }
 }
