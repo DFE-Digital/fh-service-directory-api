@@ -146,7 +146,6 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 UpdateTaxonomies(entity.Service_taxonomys, request.OpenReferralService.Service_taxonomys ?? new Collection<OpenReferralServiceTaxonomyDto>());
             if (request.OpenReferralService.Cost_options != null && entity.Cost_options.Serialize() != request.OpenReferralService.Cost_options.Serialize())
                 UpdateCostOptions(entity.Cost_options, request.OpenReferralService.Cost_options ?? new Collection<OpenReferralCostOptionDto>());
-
             if (request.OpenReferralService.RegularSchedules != null && entity.Regular_schedules.Serialize() != request.OpenReferralService.RegularSchedules.Serialize())
                 UpdateRegularSchedule(entity.Regular_schedules, request.OpenReferralService.RegularSchedules ?? new Collection<OpenReferralRegularScheduleDto>(), null);
             if (request.OpenReferralService.HolidaySchedules != null && entity.Holiday_schedules.Serialize() != request.OpenReferralService.HolidaySchedules.Serialize())

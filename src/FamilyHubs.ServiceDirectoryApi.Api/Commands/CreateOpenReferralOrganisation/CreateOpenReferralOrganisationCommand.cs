@@ -93,11 +93,21 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
                             .Include(l => l.LinkTaxonomies)!
                             .ThenInclude(l => l.Taxonomy)
                             .Where(l => l.Name == serviceAtLocation.Location.Name)
-                            .Where(l => l.Physical_addresses.FirstOrDefault().Postal_code == serviceAtLocation.Location.Physical_addresses.FirstOrDefault().Postal_code)
                             .FirstOrDefaultAsync(cancellationToken);
 
                         if (existingLocation != null)
                         {
+                            if (serviceAtLocation.Location.Physical_addresses != null)
+                            {
+                                foreach (var newAddresses in serviceAtLocation.Location.Physical_addresses)
+                                {
+                                    existingLocation.Physical_addresses ??= new List<OpenReferralPhysical_Address>();
+                                    if (existingLocation.Physical_addresses.All(a => a.Postal_code != newAddresses.Postal_code))
+                                    {
+                                        existingLocation.Physical_addresses.Add(newAddresses);
+                                    }
+                                }
+                            }
                             serviceAtLocation.Location = existingLocation;
                         }
                         else if (serviceAtLocation.Location.LinkTaxonomies != null)
