@@ -231,7 +231,7 @@ public class OpenReferralOrganisationSeedData
         {
             new OpenReferralOrganisation(
             "b2446860-cff0-4fb7-a703-bc4a919b3417",
-            new OrganisationType("3", "FamilyHub", "Family Hub"),
+            new OrganisationType("1", "LA", "Local Authority"),
             "Central Family Hub",
             "Central Family Hub",
             null,
@@ -307,7 +307,7 @@ public class OpenReferralOrganisationSeedData
 
             new OpenReferralOrganisation(
             "18e95341-8464-4375-84fd-195af5fe7d9c",
-            new OrganisationType("3", "FamilyHub", "Family Hub"),
+            new OrganisationType("1", "LA", "Local Authority"),
             "North Family Hub",
             "North Family Hub",
             null,
@@ -382,7 +382,7 @@ public class OpenReferralOrganisationSeedData
 
             new OpenReferralOrganisation(
             "99d11261-5551-40c1-988e-59d13a377e75",
-            new OrganisationType("3", "FamilyHub", "Family Hub"),
+            new OrganisationType("1", "LA", "Local Authority"),
             "South Family Hub",
             "South Family Hub",
             null,
