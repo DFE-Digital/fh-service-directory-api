@@ -353,11 +353,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
     }
 
-//#if DEBUG
-//    [Fact]
-//#else
+#if DEBUG
+    [Fact]
+#else
     [Fact(Skip = "This test should be run locally")]
-//#endif
+#endif
     public async Task ThenTheOpenReferralServicesWithFamilyHubsAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -387,11 +387,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         retVal?.Items.Count.Should().BeGreaterThan(2);
     }
 
-//#if DEBUG
-//    [Fact]
-//#else
+#if DEBUG
+    [Fact]
+#else
     [Fact(Skip = "This test should be run locally")]
-//#endif
+#endif
     public async Task ThenTheOpenReferralServicesWithOutFamilyHubsAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -421,11 +421,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         retVal?.Items.Count.Should().Be(2);
     }
 
-//#if DEBUG
-//    [Fact]
-//#else
+#if DEBUG
+    [Fact]
+#else
     [Fact(Skip = "This test should be run locally")]
-//#endif
+#endif
     public async Task ThenTheOpenReferralServicesWithLimitedFamilyHubsAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -456,11 +456,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         retVal?.Items.Count.Should().Be(1);
     }
 
-//#if DEBUG
-//    [Fact]
-//#else
+#if DEBUG
+    [Fact]
+#else
     [Fact(Skip = "This test should be run locally")]
-//#endif
+#endif
     public async Task ThenTheOpenReferralServicesWithOutLimitedFamilyHubsAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
@@ -491,11 +491,11 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         retVal?.Items.Count.Should().Be(2);
     }
 
-//#if DEBUG
-//    [Fact]
-//#else
+#if DEBUG
+    [Fact]
+#else
     [Fact(Skip = "This test should be run locally")]
-//#endif
+#endif
     public async Task ThenTheOpenReferralServicesLimitedByMaxFamilyHubsAreRetrieved()
     {
         GetServicesUrlBuilder getServicesUrlBuilder = new GetServicesUrlBuilder();
