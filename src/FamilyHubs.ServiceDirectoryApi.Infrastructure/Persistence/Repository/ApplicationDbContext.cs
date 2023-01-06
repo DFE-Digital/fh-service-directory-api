@@ -57,7 +57,7 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
         public DbSet<OpenReferralServiceAtLocation> OpenReferralServiceAtLocations => Set<OpenReferralServiceAtLocation>();
         public DbSet<OpenReferralTaxonomy> OpenReferralTaxonomies => Set<OpenReferralTaxonomy>();
         public DbSet<OpenReferralServiceDelivery> OpenReferralServiceDeliveries => Set<OpenReferralServiceDelivery>();
-
+        public DbSet<OpenReferralContactLink> OpenReferralContactLinks => Set<OpenReferralContactLink>();
         public DbSet<ModelLink> ModelLinks => Set<ModelLink>();
         public DbSet<ServiceType> ServiceTypes => Set<ServiceType>();
         public DbSet<OrganisationType> OrganisationTypes => Set<OrganisationType>();
