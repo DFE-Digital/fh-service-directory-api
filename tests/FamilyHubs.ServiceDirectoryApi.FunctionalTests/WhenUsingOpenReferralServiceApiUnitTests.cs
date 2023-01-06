@@ -397,6 +397,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         string url = getServicesUrlBuilder
                     .WithStatus("active")
                     .WithServiceType("Family Experience")
+                    .WithFamilyHub(false)
                     .WithEligibility(0, 99)
                     .WithProximity(53.507025D, -2.259764D, 32186.9)
                     .WithPage(1, 10)
@@ -416,7 +417,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
-        retVal?.Items.Count.Should().Be(5);
+        retVal?.Items.Count.Should().Be(2);
     }
 
 #if DEBUG
@@ -430,6 +431,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         string url = getServicesUrlBuilder
                     .WithStatus("active")
                     .WithServiceType("Family Experience")
+                    .WithFamilyHub(true)
                     .WithMaxFamilyHubs(1)
                     .WithEligibility(0, 99)
                     .WithProximity(53.507025D, -2.259764D, 32186.9)
@@ -450,7 +452,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
-        retVal?.Items.Count.Should().Be(5);
+        retVal?.Items.Count.Should().Be(1);
     }
 
 #if DEBUG
@@ -464,6 +466,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         string url = getServicesUrlBuilder
                     .WithStatus("active")
                     .WithServiceType("Family Experience")
+                    .WithFamilyHub(false)
                     .WithMaxFamilyHubs(1)
                     .WithEligibility(0, 99)
                     .WithProximity(53.507025D, -2.259764D, 32186.9)
@@ -484,7 +487,7 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
-        retVal?.Items.Count.Should().Be(5);
+        retVal?.Items.Count.Should().Be(2);
     }
 
 #if DEBUG
@@ -519,6 +522,6 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         retVal.Should().NotBeNull();
         items.Should().NotBeNull();
 
-        items.Count().Should().BeGreaterThan(1);
+        items.Where(i => i.Description == "Family Hub").Should().HaveCount(1);
     }
 }

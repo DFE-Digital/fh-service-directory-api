@@ -148,46 +148,46 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
                 dbservices = new List<OpenReferralService>();
         }
 
-        //bool limitNumberOfFamilyHubs = request?.MaxFamilyHubs != null;
-        //int numberOfFamilyHubs = 0;
-        //if (request?.IsFamilyHub != null || limitNumberOfFamilyHubs)
-        //{
-        //    var organisationList = dbservices.Select(x => x.OpenReferralOrganisationId).Distinct().ToList();
-        //    IQueryable<OpenReferralOrganisation>? familyHubOrganisations = null;
+        bool limitNumberOfFamilyHubs = request?.MaxFamilyHubs != null;
+        int numberOfFamilyHubs = 0;
+        if (request?.IsFamilyHub != null || limitNumberOfFamilyHubs)
+        {
+            var organisationList = dbservices.Select(x => x.OpenReferralOrganisationId).Distinct().ToList();
+            IQueryable<OpenReferralOrganisation>? familyHubOrganisations = null;
 
-        //    if (request!.MaxFamilyHubs != null)
-        //    {
-        //        familyHubOrganisations = _context.OpenReferralOrganisations.Where(x => organisationList.Contains(x.Id) && x.OrganisationType.Name == "FamilyHub");
-        //    }
+            if (request!.MaxFamilyHubs != null)
+            {
+                familyHubOrganisations = _context.OpenReferralOrganisations.Where(x => organisationList.Contains(x.Id) && x.OrganisationType.Name == "FamilyHub");
+            }
 
-        //    if (request.IsFamilyHub != null)
-        //    {
-        //        IQueryable<OpenReferralOrganisation>? organisations;
-        //        if (request.IsFamilyHub.Value)
-        //        {
-        //            organisations = familyHubOrganisations ?? _context.OpenReferralOrganisations.Where(x =>
-        //                organisationList.Contains(x.Id) && x.OrganisationType.Name == "FamilyHub");
-        //        }
-        //        else
-        //        {
-        //            limitNumberOfFamilyHubs = false;
-        //            organisations = _context.OpenReferralOrganisations.Where(x =>
-        //                organisationList.Contains(x.Id) && x.OrganisationType.Name != "FamilyHub");
-        //        }
+            if (request.IsFamilyHub != null)
+            {
+                IQueryable<OpenReferralOrganisation>? organisations;
+                if (request.IsFamilyHub.Value)
+                {
+                    organisations = familyHubOrganisations ?? _context.OpenReferralOrganisations.Where(x =>
+                        organisationList.Contains(x.Id) && x.OrganisationType.Name == "FamilyHub");
+                }
+                else
+                {
+                    limitNumberOfFamilyHubs = false;
+                    organisations = _context.OpenReferralOrganisations.Where(x =>
+                        organisationList.Contains(x.Id) && x.OrganisationType.Name != "FamilyHub");
+                }
 
-        //        var filteredOrganisationIds = organisations.Select(x => x.Id).ToList();
-        //        dbservices = dbservices.Where(x => filteredOrganisationIds.Contains(x.OpenReferralOrganisationId));
-        //    }
+                var filteredOrganisationIds = organisations.Select(x => x.Id).ToList();
+                dbservices = dbservices.Where(x => filteredOrganisationIds.Contains(x.OpenReferralOrganisationId));
+            }
 
-        //    if (limitNumberOfFamilyHubs)
-        //    {
-        //        var familyHubOrganisationIds = familyHubOrganisations!.Select(x => x.Id).ToList();
-        //        var familyHubs = dbservices.Where(x => familyHubOrganisationIds.Contains(x.OpenReferralOrganisationId))
-        //            .Take(request.MaxFamilyHubs!.Value);
-        //        numberOfFamilyHubs = familyHubs.Count();
-        //        dbservices = familyHubs.Concat(dbservices.Where(x => !familyHubOrganisationIds.Contains(x.OpenReferralOrganisationId)));
-        //    }
-        //}
+            if (limitNumberOfFamilyHubs)
+            {
+                var familyHubOrganisationIds = familyHubOrganisations!.Select(x => x.Id).ToList();
+                var familyHubs = dbservices.Where(x => familyHubOrganisationIds.Contains(x.OpenReferralOrganisationId))
+                    .Take(request.MaxFamilyHubs!.Value);
+                numberOfFamilyHubs = familyHubs.Count();
+                dbservices = familyHubs.Concat(dbservices.Where(x => !familyHubOrganisationIds.Contains(x.OpenReferralOrganisationId)));
+            }
+        }
 
         //if (request?.Latitude != null && request?.Longtitude != null)
         //    dbservices = dbservices.OrderBy(x => core.Helper.GetDistance(
@@ -210,8 +210,16 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             }
 
             // special handling when we are limiting the number of family hubs, so that the hubs come first (and appear in the first page)
-          
-           filteredServices = filteredServices.OrderBy(x => x.Distance).ToList();
+            if (numberOfFamilyHubs > 0)
+            {
+                filteredServices = (filteredServices
+                    .Take(numberOfFamilyHubs).OrderBy(x => x.Distance)
+                    .Concat(filteredServices.Skip(request.MaxFamilyHubs!.Value).OrderBy(x => x.Distance))).ToList();
+            }
+            else
+            {
+                filteredServices = filteredServices.OrderBy(x => x.Distance).ToList();
+            }
         }
 
         if (request != null)
@@ -281,7 +289,6 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
            .ThenInclude(x => x.Physical_addresses)
-
 
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Regular_schedule)
