@@ -265,7 +265,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
           .Include(x => x.Service_at_locations)
           .ThenInclude(x => x.Location)
           .ThenInclude(x => x.LinkTaxonomies!)
-          // where linktype == location
+          // where linktype == location?
           .ThenInclude(x => x.Taxonomy)
 
           .Include(x => x.Service_at_locations)
@@ -295,6 +295,12 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
            .ThenInclude(x => x.Physical_addresses)
+
+           .Include(x => x.Service_at_locations)
+           .ThenInclude(x => x.Location)
+           .ThenInclude(x => x.LinkTaxonomies!)
+           // where linktype == location?
+           .ThenInclude(x => x.Taxonomy)
 
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Regular_schedule)

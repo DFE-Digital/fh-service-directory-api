@@ -327,6 +327,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                                     "Location",
                                     "a878aadc-6097-4a0f-b3e1-77fd4511175d",
                                     new OpenReferralTaxonomyDto(
+                                        //todo: real guid
                                         Guid.NewGuid().ToString(),
                                         "Family_hub",
                                         null,
@@ -459,6 +460,8 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                                     "Location",
                                     "86119575-017f-4eeb-b92e-cb3f62d54840",
                                     new OpenReferralTaxonomyDto(
+                                        //todo: real guid
+
                                         Guid.NewGuid().ToString(),
                                         "Family_hub",
                                         null,
