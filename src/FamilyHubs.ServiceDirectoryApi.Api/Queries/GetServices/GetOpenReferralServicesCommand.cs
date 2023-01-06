@@ -157,50 +157,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
                     ?.Any(lt => lt.Taxonomy is {Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869"}) == request?.IsFamilyHub);
         }
 
-        //bool limitNumberOfFamilyHubs = request?.MaxFamilyHubs != null;
-        //int numberOfFamilyHubs = 0;
-        //if (request?.IsFamilyHub != null || limitNumberOfFamilyHubs)
-        //{
-        //    //todo: const id
-        //    dbservices = dbservices.Where(s =>
-        //        s.Service_at_locations.FirstOrDefault()?.Location.LinkTaxonomies
-        //            ?.Any(lt => lt.Taxonomy is {Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869"}) == true);
-        //    //var organisationList = dbservices.Select(x => x.OpenReferralOrganisationId).Distinct().ToList();
-        //    //IQueryable<OpenReferralOrganisation>? familyHubOrganisations = null;
-
-        //    //if (request!.MaxFamilyHubs != null)
-        //    //{
-        //    //    familyHubOrganisations = _context.OpenReferralOrganisations.Where(x => organisationList.Contains(x.Id) && x.OrganisationType.Name == "FamilyHub");
-        //    //}
-
-        //    //if (request.IsFamilyHub != null)
-        //    //{
-        //    //    IQueryable<OpenReferralOrganisation>? organisations;
-        //    //    if (request.IsFamilyHub.Value)
-        //    //    {
-        //    //        organisations = familyHubOrganisations ?? _context.OpenReferralOrganisations.Where(x =>
-        //    //            organisationList.Contains(x.Id) && x.OrganisationType.Name == "FamilyHub");
-        //    //    }
-        //    //    else
-        //    //    {
-        //    //        limitNumberOfFamilyHubs = false;
-        //    //        organisations = _context.OpenReferralOrganisations.Where(x =>
-        //    //            organisationList.Contains(x.Id) && x.OrganisationType.Name != "FamilyHub");
-        //    //    }
-
-        //    //    var filteredOrganisationIds = organisations.Select(x => x.Id).ToList();
-        //    //    dbservices = dbservices.Where(x => filteredOrganisationIds.Contains(x.OpenReferralOrganisationId));
-        //    //}
-
-        //    //if (limitNumberOfFamilyHubs)
-        //    //{
-        //    //    var familyHubOrganisationIds = familyHubOrganisations!.Select(x => x.Id).ToList();
-        //    //    var familyHubs = dbservices.Where(x => familyHubOrganisationIds.Contains(x.OpenReferralOrganisationId))
-        //    //        .Take(request.MaxFamilyHubs!.Value);
-        //    //    numberOfFamilyHubs = familyHubs.Count();
-        //    //    dbservices = familyHubs.Concat(dbservices.Where(x => !familyHubOrganisationIds.Contains(x.OpenReferralOrganisationId)));
-        //    //}
-        //}
+        //todo: better to filter first, so we don't unnecessarily map?
 
         //if (request?.Latitude != null && request?.Longtitude != null)
         //    dbservices = dbservices.OrderBy(x => core.Helper.GetDistance(
@@ -222,21 +179,13 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
                     service.Service_at_locations?.FirstOrDefault()?.Location.Longitude);
             }
 
-            // special handling when we are limiting the number of family hubs, so that the hubs come first (and appear in the first page)
-            //if (numberOfFamilyHubs > 0)
-            //{
-            //    filteredServices = (filteredServices
-            //        .Take(numberOfFamilyHubs).OrderBy(x => x.Distance)
-            //        .Concat(filteredServices.Skip(request.MaxFamilyHubs!.Value).OrderBy(x => x.Distance))).ToList();
-            //}
-            //else
-            //{
-                filteredServices = filteredServices.OrderBy(x => x.Distance).ToList();
-            //}
+            filteredServices = filteredServices.OrderBy(x => x.Distance).ToList();
         }
 
         if (request?.MaxFamilyHubs != null)
         {
+            // special handling when we are limiting the number of family hubs, so that the hubs come first (and appear in the first page)
+            //todo: do the family hubs need to come first? the front end doesn't need it???
             filteredServices = FilterByFamilyHub(filteredServices, true)
                 .Take(request.MaxFamilyHubs.Value)
                 .Concat(FilterByFamilyHub(filteredServices, false))
