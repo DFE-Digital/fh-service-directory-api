@@ -6,20 +6,20 @@ using System.Collections.Generic;
 
 namespace fh_service_directory_api.core.Entities
 {
-    public  class OpenReferralContactLink : EntityBase<string>, IOpenReferralContactLink, IAggregateRoot
+    public  class OpenReferralLinkContact : EntityBase<string>, IOpenReferralLinkContact, IAggregateRoot
     {
 
-        private OpenReferralContactLink() { }
-        public OpenReferralContactLink(string id, string linkType, string linkId, string contactId)
+        private OpenReferralLinkContact() { }
+        public OpenReferralLinkContact(string id, string linkType, string linkId, OpenReferralContact contact)
         {
             Id = id;
             LinkType = linkType;
             LinkId = linkId;
-            ContactId = contactId;
+            Contact = contact;
         }
 
         public string LinkType { get; set; } = default!;
         public string LinkId { get; set; } = default!;
-        public string ContactId { get; set; } = default!;
+        public OpenReferralContact Contact { get; set; }
     }
 }

@@ -7,6 +7,6 @@ namespace fh_service_directory_api.core.Interfaces.Entities
         ICollection<OpenReferralHoliday_Schedule>? HolidayScheduleCollection { get; set; }
         OpenReferralLocation Location { get; set; }
         ICollection<OpenReferralRegular_Schedule>? Regular_schedule { get; set; }
-        ICollection<OpenReferralContactLink>? ContactLinks { get; set; }
+        ICollection<OpenReferralLinkContact>? LinkContact { get; set; }
     }
 }

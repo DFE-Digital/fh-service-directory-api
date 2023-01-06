@@ -108,6 +108,18 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
                         }
                     }
                 }
+                if (serviceAtLocation.Location.ContactLinks != null)
+                {
+                    foreach (var linkContact in serviceAtLocation.Location.ContactLinks)
+                    {
+                        var contact = _context.OpenReferralContacts.FirstOrDefault(x => x.Id == linkContact.Contact.Id);
+                         if (linkContact.Contact != null)
+                        {
+                            linkContact.Contact = contact;
+                        }
+                    }
+
+                }
             }
 
             entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(entity));

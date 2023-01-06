@@ -272,18 +272,6 @@ public class OpenReferralOrganisationSeedData
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
-                {
-                    new OpenReferralContact(
-                        "6a84d5af-2e5c-40fa-9689-6b11181db320",
-                        "Ms",
-                        "Kate Berry",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("8c1ea252-03ef-41d0-90e0-d12616853f80", "0161 778 0601")
-                        }
-                        ))
-                }),
                 new List<OpenReferralCost_Option>(),
                 new List<OpenReferralService_Area>()
                 {
@@ -299,7 +287,8 @@ public class OpenReferralOrganisationSeedData
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>()
+                new List<OpenReferralService_Taxonomy>(),
+                new List<OpenReferralLinkContact>()
                 )
             }
 
@@ -348,18 +337,6 @@ public class OpenReferralOrganisationSeedData
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
-                {
-                    new OpenReferralContact(
-                        "560e159d-c54c-4925-bd55-8bbfd5071520",
-                        "Ms",
-                        "Kate Berry",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("fe89304c-792d-4e64-877a-3f1a645ecdea", "0161 778 0495")
-                        }
-                        ))
-                }),
                 new List<OpenReferralCost_Option>(),
                 new List<OpenReferralService_Area>()
                 {
@@ -375,7 +352,8 @@ public class OpenReferralOrganisationSeedData
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>()
+                new List<OpenReferralService_Taxonomy>(),
+                   new List<OpenReferralLinkContact>()
                 )
             }
             ),
@@ -423,18 +401,6 @@ public class OpenReferralOrganisationSeedData
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
-                {
-                    new OpenReferralContact(
-                        "6596d609-8ba1-4188-a357-3d92ae9dec8f",
-                        "Ms",
-                        "Kate Berry",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("51a9f241-a666-43e1-91b8-7ebdaad614e0", "0161 686 5260")
-                        }
-                        ))
-                }),
                 new List<OpenReferralCost_Option>(),
                 new List<OpenReferralService_Area>()
                 {
@@ -450,7 +416,8 @@ public class OpenReferralOrganisationSeedData
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>()
+                new List<OpenReferralService_Taxonomy>(),
+                new List<OpenReferralLinkContact>()
                 )
             }
             )
@@ -499,18 +466,6 @@ public class OpenReferralOrganisationSeedData
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
-                {
-                    new OpenReferralContact(
-                        "7a488a62-6c5b-4fa7-88bc-f60f83627e38",
-                        "",
-                        "Broughton Hub",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("06e0df3a-5b13-4eef-984a-07b35471e99d", "0161 778 0601")
-                        }
-                        ))
-                }),
                 new List<OpenReferralCost_Option>(new List<OpenReferralCost_Option>()
                 {
                     new OpenReferralCost_Option("983764", "Session", 2.5m, null, null, null, null)
@@ -550,7 +505,8 @@ public class OpenReferralOrganisationSeedData
                     null,
                     new OpenReferralTaxonomy("231a2bf5-b05a-4da7-a338-a838b83806db", "Infant feeding support (including breastfeeding)","Infant feeding support (including breastfeeding)", "ff704172-db6a-4e7a-b612-cd925e0aa7a0"))
                 }
-                )
+                ),
+                new List<OpenReferralLinkContact>()
                 ),
 
             new OpenReferralService(
@@ -585,18 +541,6 @@ public class OpenReferralOrganisationSeedData
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
-                {
-                    new OpenReferralContact(
-                        "aaef3e12-849d-4a09-8606-17252cee6572",
-                        "Ms",
-                        "Kate Berry",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("939ade12-b54e-4a62-8367-0c07077968f9", "01619212880")
-                        }
-                        ))
-                }),
                 new List<OpenReferralCost_Option>(),
                 new List<OpenReferralService_Area>()
                 {
@@ -619,7 +563,8 @@ public class OpenReferralOrganisationSeedData
                     null,
                     new OpenReferralTaxonomy("dacf095a-83df-4d23-a20a-da751d956ab9", "Early years support","Early years support", "6c873b97-6978-4c0f-8e3c-0b2804dd3826"))
                 }
-                )
+                ),
+                new List<OpenReferralLinkContact>()
                 ),
         };
     }
@@ -665,18 +610,6 @@ public class OpenReferralOrganisationSeedData
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
-                {
-                    new OpenReferralContact(
-                        "1567",
-                        "Mr",
-                        "John Smith",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("1567", "01827 65778")
-                        }
-                        ))
-                }),
                 new List<OpenReferralCost_Option>(),
                 new List<OpenReferralService_Area>()
                 {
@@ -721,7 +654,9 @@ public class OpenReferralOrganisationSeedData
                         "32712b43-e4f7-484f-97d7-beb3bb463133"
                         ))
                 }
-                )),
+                ),
+                new List<OpenReferralLinkContact>()
+                ),
 
             new OpenReferralService(
                 "96781fd9-95a2-4196-8db6-0f083f1c38fc",
@@ -755,18 +690,6 @@ public class OpenReferralOrganisationSeedData
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
-                {
-                    new OpenReferralContact(
-                        "1561",
-                        "Mr",
-                        "John Smith",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("1561", "01827 65711")
-                        }
-                        ))
-                }),
                 new List<OpenReferralCost_Option>(),
                 new List<OpenReferralService_Area>()
                 {
@@ -814,7 +737,9 @@ public class OpenReferralOrganisationSeedData
                     //    )
                     )
                 }
-                )),
+                ),
+                new List<OpenReferralLinkContact>()
+                ),
 
             new OpenReferralService(
                 "207613c5-4cdf-46b2-a110-cf120a9412f9",
@@ -848,18 +773,7 @@ public class OpenReferralOrganisationSeedData
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
-                {
-                    new OpenReferralContact(
-                        "1562",
-                        "Mr",
-                        "John Smith",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("1562", "01827 64328")
-                        }
-                        ))
-                }),
+                
                 new List<OpenReferralCost_Option>(new List<OpenReferralCost_Option>()
                 {
                     new OpenReferralCost_Option("1345", "Session", 45.0m, null, null, null, null)
@@ -910,7 +824,8 @@ public class OpenReferralOrganisationSeedData
                     //    )
                     )
                 }
-                )),
+                ),
+                  new List<OpenReferralLinkContact>()),
 
             new OpenReferralService(
                 "39f211fc-73d4-4ea1-a1c9-d8fc063d6b51",
@@ -944,18 +859,6 @@ public class OpenReferralOrganisationSeedData
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
-                {
-                    new OpenReferralContact(
-                        "1563",
-                        "Mr",
-                        "John Smith",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("1563", "01827 64328")
-                        }
-                        ))
-                }),
                 new List<OpenReferralCost_Option>(new List<OpenReferralCost_Option>()
                 {
                     new OpenReferralCost_Option("1346", "Hour", 25.0m, null, null, null, null)
@@ -1006,7 +909,9 @@ public class OpenReferralOrganisationSeedData
                     //    )
                     )
                 }
-                )),
+                ),
+                new List<OpenReferralLinkContact>()
+                ),
 
         };
     }

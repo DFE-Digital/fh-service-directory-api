@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Config
 {
-    public class ContactLink : IEntityTypeConfiguration<OpenReferralContactLink>
+    public class ContactLink : IEntityTypeConfiguration<OpenReferralLinkContact>
     {
-        public void Configure(EntityTypeBuilder<OpenReferralContactLink> builder)
+        public void Configure(EntityTypeBuilder<OpenReferralLinkContact> builder)
         {
             builder.Property(t => t.LinkType)
                    .HasMaxLength(255)
                     .IsRequired();
             builder.Property(t => t.LinkId)
                    .IsRequired();
-            builder.Property(t => t.ContactId)
+            builder.Property(t => t.Contact)
                    .IsRequired();
         }
     }

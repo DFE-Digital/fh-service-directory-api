@@ -9,7 +9,7 @@ public interface IOpenReferralOrganisation : IEntityBase<string>
     string Name { get; }
     ICollection<OpenReferralReview>? Reviews { get; set; }
     ICollection<OpenReferralService>? Services { get; set; }
-    ICollection<OpenReferralContactLink>? ContactLinks { get; set; }
+    ICollection<OpenReferralLinkContact>? LinkContacts { get; set; }
     string? Uri { get; }
     string? Url { get; }
     OrganisationType OrganisationType { get; set; }

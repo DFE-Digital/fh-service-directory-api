@@ -5,12 +5,12 @@ namespace fh_service_directory_api.core.Events
 {
     public class OpenReferralContactLinkCreatedEvent : DomainEventBase
     {
-        public OpenReferralContactLinkCreatedEvent(OpenReferralContactLink item)
+        public OpenReferralContactLinkCreatedEvent(OpenReferralLinkContact item)
         {
             Item = item;
         }
 
-        public OpenReferralContactLink Item { get; }
+        public OpenReferralLinkContact Item { get; }
 
     }
 }
