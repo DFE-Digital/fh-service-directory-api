@@ -432,6 +432,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                             "",
                             52.6312,
                             -1.66526,
+                            new List<OpenReferralLinkTaxonomy>(),
                             new List<OpenReferralPhysical_Address>()
                             {
                                 new OpenReferralPhysical_Address(
