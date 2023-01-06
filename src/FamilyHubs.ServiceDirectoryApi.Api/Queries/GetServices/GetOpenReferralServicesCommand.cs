@@ -186,6 +186,8 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         {
             // special handling when we are limiting the number of family hubs, so that the hubs come first (and appear in the first page)
             //todo: do the family hubs need to come first? the front end doesn't need it???
+            //this will have the order wrong when showing both
+            //have a custom enumerable with yield that limits the number of family hubs, but leaves the ordering alone
             filteredServices = FilterByFamilyHub(filteredServices, true)
                 .Take(request.MaxFamilyHubs.Value)
                 .Concat(FilterByFamilyHub(filteredServices, false))
