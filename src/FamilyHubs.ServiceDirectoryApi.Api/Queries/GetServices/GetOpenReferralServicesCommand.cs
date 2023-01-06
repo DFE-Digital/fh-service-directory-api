@@ -2,6 +2,7 @@
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using fh_service_directory_api.api.Helper;
+using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
@@ -156,7 +157,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             //todo: const id
             dbservices = dbservices.Where(s =>
                 s.Service_at_locations.FirstOrDefault()?.Location.LinkTaxonomies
-                    ?.Any(lt => lt.Taxonomy?.Id == "4DC40D99-BA5D-45E1-886E-8D34F398B869") == true);
+                    ?.Any(lt => lt.Taxonomy is {Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869"}) == true);
             //var organisationList = dbservices.Select(x => x.OpenReferralOrganisationId).Distinct().ToList();
             //IQueryable<OpenReferralOrganisation>? familyHubOrganisations = null;
 
@@ -264,8 +265,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
           .Include(x => x.Service_at_locations)
           .ThenInclude(x => x.Location)
-          .ThenInclude(x => x.LinkTaxonomies!)
-          // where linktype == location?
+          .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
           .ThenInclude(x => x.Taxonomy)
 
           .Include(x => x.Service_at_locations)
@@ -298,8 +298,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
-           .ThenInclude(x => x.LinkTaxonomies!)
-           // where linktype == location?
+           .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
            .ThenInclude(x => x.Taxonomy)
 
            .Include(x => x.Service_at_locations)

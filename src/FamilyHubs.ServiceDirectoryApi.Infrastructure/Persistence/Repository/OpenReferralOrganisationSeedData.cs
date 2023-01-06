@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Enums;
+using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
 using Microsoft.EntityFrameworkCore.Query;
 
@@ -300,7 +301,7 @@ public class OpenReferralOrganisationSeedData
                             new List<OpenReferralLinkTaxonomy> {new
                             ("CD2324A3-AB3F-4707-9D38-34DFB7722B62",
                                 "964ea451-6146-4add-913e-dff23a1bd7b6",
-                                "location",
+                                LinkType.Location,
                                 new OpenReferralTaxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
                             new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("84c0a47a-08a1-4e54-814b-46ce26765c08", "50 Rigby Street", "Manchester", "M7 4BQ", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
                         new List<OpenReferralRegular_Schedule>(),
@@ -381,7 +382,7 @@ public class OpenReferralOrganisationSeedData
                             new List<OpenReferralLinkTaxonomy> {new
                             ("3A724AE8-8E9E-4AC5-95BC-E5B07795A8DD",
                                 "74c37f53-dbc0-4958-8c97-baee41a022bf",
-                                "location",
+                                LinkType.Location,
                                 new OpenReferralTaxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
                             new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("83bf4f64-fdcb-46bc-a32e-8b117bf5c19a", "100 Chorley Road", "Manchester", "M27 6BP", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
                         new List<OpenReferralRegular_Schedule>(),
@@ -462,7 +463,7 @@ public class OpenReferralOrganisationSeedData
                             new List<OpenReferralLinkTaxonomy> {new
                             ("4594A80C-42EC-4F80-AABE-E216E7732DC8",
                                 "1b4a625b-54bb-407d-a508-f90cade1e96f",
-                                "location",
+                                LinkType.Location,
                                 new OpenReferralTaxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
                             new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("45603703-5d3f-45f4-84f1-b294ac4d3290", "Brindley Street", "Manchester", "M30 8AB", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
                         new List<OpenReferralRegular_Schedule>(),
