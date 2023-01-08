@@ -108,9 +108,9 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
                         }
                     }
                 }
-                if (serviceAtLocation.Location.ContactLinks != null)
+                if (serviceAtLocation.Location.LinkContacts != null)
                 {
-                    foreach (var linkContact in serviceAtLocation.Location.ContactLinks)
+                    foreach (var linkContact in serviceAtLocation.Location.LinkContacts)
                     {
                         var contact = _context.OpenReferralContacts.FirstOrDefault(x => x.Id == linkContact.Contact.Id);
                          if (linkContact.Contact != null)

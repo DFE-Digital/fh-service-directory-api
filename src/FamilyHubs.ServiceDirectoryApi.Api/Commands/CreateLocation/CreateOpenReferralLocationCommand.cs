@@ -44,10 +44,7 @@ public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOp
             }
 
             var entity = _mapper.Map<OpenReferralLocation>(request.OpenReferralLocationDto);
-
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
-
-            entity.RegisterDomainEvent(new OpenReferralLocationCreatedEvent(entity));
 
             if (entity.LinkTaxonomies != null)
             {
@@ -65,8 +62,8 @@ public class CreateOpenReferralLocationCommandHandler : IRequestHandler<CreateOp
             }
 
             _context.OpenReferralLocations.Add(entity);
-
             await _context.SaveChangesAsync(cancellationToken);
+            entity.RegisterDomainEvent(new OpenReferralLocationCreatedEvent(entity));
         }
         catch (Exception ex)
         {

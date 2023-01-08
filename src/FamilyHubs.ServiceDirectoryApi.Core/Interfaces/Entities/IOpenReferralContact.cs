@@ -6,6 +6,6 @@ public interface IOpenReferralContact : IEntityBase<string>
 {
     string Name { get; set; }
     ICollection<OpenReferralPhone>? Phones { get; set; }
-    ICollection<OpenReferralLinkContact>? ContactLinks { get; set; }
+    ICollection<OpenReferralLinkContact>? LinkContacts { get; set; }
     string? Title { get; set; }
 }

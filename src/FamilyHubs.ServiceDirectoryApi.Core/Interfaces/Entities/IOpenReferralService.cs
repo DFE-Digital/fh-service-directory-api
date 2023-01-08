@@ -25,7 +25,7 @@ namespace fh_service_directory_api.core.Interfaces.Entities
         ICollection<OpenReferralServiceAtLocation> Service_at_locations { get; set; }
         ICollection<OpenReferralService_Taxonomy> Service_taxonomys { get; set; }
         ICollection<OpenReferralServiceDelivery> ServiceDelivery { get; set; }
-        ICollection<OpenReferralLinkContact> Link_Contact { get; set; }
+        ICollection<OpenReferralLinkContact> Link_Contacts { get; set; }
         string? Status { get; }
         string? Url { get; }
         ServiceType ServiceType { get; set; }
