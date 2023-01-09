@@ -258,7 +258,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                     }
                     )
             })
-            .WithCostOption(new List<OpenReferralCostOptionDto>())
+            .WithCostOption(new List<OpenReferralCostOptionDto> {new() {Id = Guid.NewGuid().ToString(), Amount = decimal.Zero, Option = "free", Amount_description = ""}})
             .WithLanguages(new List<OpenReferralLanguageDto>()
                 {
                     new OpenReferralLanguageDto("1bb6c313-648d-4226-9e96-b7d37eaeb3dd", "English")
@@ -295,6 +295,8 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                                     "Location",
                                     "6ea31a4f-7dcc-4350-9fba-20525efe092f",
                                     new OpenReferralTaxonomyDto(
+                                        //todo: real guid
+
                                         Guid.NewGuid().ToString(),
                                         "Family_hub",
                                         null,
@@ -432,6 +434,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                             "",
                             52.6312,
                             -1.66526,
+                            new List<OpenReferralLinkTaxonomy>(),
                             new List<OpenReferralPhysical_Address>()
                             {
                                 new OpenReferralPhysical_Address(

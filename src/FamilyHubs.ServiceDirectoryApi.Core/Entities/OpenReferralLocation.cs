@@ -7,8 +7,10 @@ namespace fh_service_directory_api.core.Entities;
 public class OpenReferralLocation : EntityBase<string>, IOpenReferralLocation, IAggregateRoot
 {
     private OpenReferralLocation() { }
-    public OpenReferralLocation(string id, string name, string? description, double latitude, double longitude
-        , ICollection<OpenReferralPhysical_Address>? physical_addresses, ICollection<Accessibility_For_Disabilities>? accessibility_for_disabilities
+    public OpenReferralLocation(string id, string name, string? description, double latitude, double longitude,
+        ICollection<OpenReferralLinkTaxonomy>? link_taxonomies,
+        ICollection<OpenReferralPhysical_Address>? physical_addresses,
+        ICollection<Accessibility_For_Disabilities>? accessibility_for_disabilities
         )
     {
         Id = id;
@@ -16,8 +18,9 @@ public class OpenReferralLocation : EntityBase<string>, IOpenReferralLocation, I
         Description = description;
         Latitude = latitude;
         Longitude = longitude;
-        Physical_addresses = physical_addresses as ICollection<OpenReferralPhysical_Address>;
-        Accessibility_for_disabilities = accessibility_for_disabilities as ICollection<Accessibility_For_Disabilities>;
+        LinkTaxonomies = link_taxonomies;
+        Physical_addresses = physical_addresses;
+        Accessibility_for_disabilities = accessibility_for_disabilities;
     }
     public string Name { get; set; } = default!;
     public string? Description { get; set; }

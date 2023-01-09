@@ -139,6 +139,18 @@ public class ApplicationDbContextInitialiser
                                 }
                             }
                         }
+
+                        foreach (var serviceAtLocation in service.Service_at_locations.Where(sal => sal.Location.LinkTaxonomies != null))
+                        {
+                            foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies!)
+                            {
+                                var taxonomy = taxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy?.Id);
+                                if (taxonomy != null)
+                                {
+                                    linkTaxonomy.Taxonomy = taxonomy;
+                                }
+                            }
+                        }
                     }
                 }
 
