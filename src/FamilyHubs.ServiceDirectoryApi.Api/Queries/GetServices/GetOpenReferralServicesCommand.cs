@@ -128,7 +128,6 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         {
             string[] parts = request.TaxonmyIds.Split(',');
             dbservices = dbservices.Where(x => x.Service_taxonomys.Any(x => parts.Contains(x.Taxonomy?.Id) ));
-
         }
 
         // filter before we calculate distance and map, for efficiency
