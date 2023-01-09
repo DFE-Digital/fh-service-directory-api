@@ -523,6 +523,6 @@ public class WhenUsingOpenReferralServiceApiUnitTests : BaseWhenUsingOpenReferra
         retVal.Should().NotBeNull();
         items.Should().NotBeNull();
 
-        items.Where(i => i.Description == "Family Hub").Should().HaveCount(1);
+        items!.Where(i => i.Description == "Family Hub").Should().HaveCount(1);
     }
 }
