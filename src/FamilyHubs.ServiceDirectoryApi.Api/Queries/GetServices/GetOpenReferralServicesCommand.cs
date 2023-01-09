@@ -134,14 +134,6 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
         }
 
-        //todo: remove this?
-        if (dbservices == null)
-        {
-            dbservices = entities.ToList();
-            if (dbservices == null)
-                dbservices = new List<OpenReferralService>();
-        }
-
         // filter before we calculate distance and map, for efficiency
         if (request?.IsFamilyHub != null)
         {
