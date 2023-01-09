@@ -150,7 +150,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
                 dbservices = new List<OpenReferralService>();
         }
 
-        // filter before we calcualte distance and map for efficiency
+        // filter before we calcualte distance and map, for efficiency
         if (request?.IsFamilyHub != null)
         {
             dbservices = dbservices.Where(s =>
@@ -195,11 +195,10 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         //        .ToList();
         //}
 
-        if (request?.IsFamilyHub != null || request?.MaxFamilyHubs != null)
+        if ((request?.IsFamilyHub == null || request.IsFamilyHub == true) && request?.MaxFamilyHubs != null)
         {
-            filteredServices = FilterByFamilyHub(filteredServices, request?.IsFamilyHub, request?.MaxFamilyHubs).ToList();
+            filteredServices = FilterByMaxFamilyHubs(filteredServices, request.MaxFamilyHubs.Value).ToList();
         }
-
 
         if (request != null)
         {
@@ -211,29 +210,23 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         return new PaginatedList<OpenReferralServiceDto>(filteredServices, filteredServices.Count, 1, 10);
     }
 
-    // this does filtering and maxfamilyhub limiting
-    private IEnumerable<OpenReferralServiceDto> FilterByFamilyHub(
-        IEnumerable<OpenReferralServiceDto> services,
-        bool? familyHubs,
-        int? maxFamilyHubs)
+    private IEnumerable<OpenReferralServiceDto> FilterByMaxFamilyHubs(IEnumerable<OpenReferralServiceDto> services, int maxFamilyHubs)
     {
-        //if (familyHubs == null && maxFamilyHubs == null)
-        //    return services;
-
         foreach (var service in services) 
         {
             bool serviceIsFamilyHub = service.Service_at_locations?.FirstOrDefault()?.Location.LinkTaxonomies
                    ?.Any(lt => lt.Taxonomy is { Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869" }) == true;
 
-            if (maxFamilyHubs.HasValue && serviceIsFamilyHub && --maxFamilyHubs < 0)
+            if (serviceIsFamilyHub && --maxFamilyHubs < 0)
             {
                 continue;
             }
 
-            if (familyHubs.HasValue && familyHubs.Value != serviceIsFamilyHub)
-            {
-                continue;
-            }
+            // we could do filtering here, but it's more efficient to do it earlier
+            //if (familyHubs.HasValue && familyHubs.Value != serviceIsFamilyHub)
+            //{
+            //    continue;
+            //}
 
             yield return service;
         }
