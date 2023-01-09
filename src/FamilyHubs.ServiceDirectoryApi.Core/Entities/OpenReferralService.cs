@@ -32,7 +32,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
         , ICollection<OpenReferralLanguage> languages
         , ICollection<OpenReferralRegular_Schedule> regular_schedules
         , ICollection<OpenReferralReview> reviews
-        , ICollection<OpenReferralContact> contacts
+//        , ICollection<OpenReferralContact> contacts
         , ICollection<OpenReferralCost_Option> cost_options
         , ICollection<OpenReferralService_Area> service_areas
         , ICollection<OpenReferralServiceAtLocation> service_at_locations
@@ -61,7 +61,7 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
         Languages = languages ?? new Collection<OpenReferralLanguage>();
         Regular_schedules = regular_schedules ?? new Collection<OpenReferralRegular_Schedule>();
         Reviews = reviews ?? new Collection<OpenReferralReview>();
-        Contacts = contacts ?? new Collection<OpenReferralContact>();
+//        Contacts = contacts ?? new Collection<OpenReferralContact>();
         Cost_options = cost_options ?? new Collection<OpenReferralCost_Option>();
         Service_areas = service_areas ?? new Collection<OpenReferralService_Area>();
         Service_at_locations = service_at_locations ?? new Collection<OpenReferralServiceAtLocation>();
