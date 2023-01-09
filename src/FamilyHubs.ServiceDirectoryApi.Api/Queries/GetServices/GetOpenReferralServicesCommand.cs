@@ -84,7 +84,6 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         if (!string.IsNullOrEmpty(request?.Text))
             entities = entities.Where(x => x.Name.Contains(request.Text) || x.Description != null && x.Description.Contains(request.Text));
 
-
         IEnumerable<OpenReferralService> dbservices = await entities.ToListAsync();
         if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
             dbservices = dbservices.Where(x => core.Helper.GetDistance(request.Latitude, request.Longtitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Latitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Longitude, x?.Name) < request.Meters);
@@ -116,14 +115,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
         if (request?.IsPaidFor != null)
         {
-            if (request?.IsPaidFor.Value == true)
-            {
-                dbservices = dbservices.Where(x => x.Cost_options.Any() == true);
-            }
-            if (request?.IsPaidFor.Value == false)
-            {
-                dbservices = dbservices.Where(x => x.Cost_options.Any() == false);
-            }
+            dbservices = dbservices.Where(x => IsPaidFor(x) == request.IsPaidFor);
         }
 
         //Can families choose location
@@ -150,7 +142,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
                 dbservices = new List<OpenReferralService>();
         }
 
-        // filter before we calcualte distance and map, for efficiency
+        // filter before we calculate distance and map, for efficiency
         if (request?.IsFamilyHub != null)
         {
             dbservices = dbservices.Where(s =>
@@ -183,18 +175,6 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             filteredServices = filteredServices.OrderBy(x => x.Distance).ToList();
         }
 
-        //if (request?.MaxFamilyHubs != null)
-        //{
-        //    // special handling when we are limiting the number of family hubs, so that the hubs come first (and appear in the first page)
-        //    //todo: do the family hubs need to come first? the front end doesn't need it???
-        //    //this will have the order wrong when showing both
-        //    //have a custom enumerable with yield that limits the number of family hubs, but leaves the ordering alone
-        //    filteredServices = FilterByFamilyHub(filteredServices, true)
-        //        .Take(request.MaxFamilyHubs.Value)
-        //        .Concat(FilterByFamilyHub(filteredServices, false))
-        //        .ToList();
-        //}
-
         if ((request?.IsFamilyHub == null || request.IsFamilyHub == true) && request?.MaxFamilyHubs != null)
         {
             filteredServices = FilterByMaxFamilyHubs(filteredServices, request.MaxFamilyHubs.Value).ToList();
@@ -208,6 +188,14 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         }
 
         return new PaginatedList<OpenReferralServiceDto>(filteredServices, filteredServices.Count, 1, 10);
+    }
+
+    private bool IsPaidFor(OpenReferralService service)
+    {
+        if (!service.Cost_options.Any())
+            return false;
+
+        return !(service.Cost_options.Any(co => co.Amount == decimal.Zero && string.Equals(co.Option, "Free", StringComparison.OrdinalIgnoreCase)));
     }
 
     private IEnumerable<OpenReferralServiceDto> FilterByMaxFamilyHubs(IEnumerable<OpenReferralServiceDto> services, int maxFamilyHubs)
@@ -231,20 +219,6 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             yield return service;
         }
     }
-
-    //private IEnumerable<OpenReferralServiceDto> FilterByFamilyHub(IEnumerable<OpenReferralServiceDto> services,
-    //    bool familyHubs)
-    //{
-    //    return services.Where(s => (s.Service_at_locations?.FirstOrDefault()?.Location.LinkTaxonomies
-    //               ?.Any(lt => lt.Taxonomy is {Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869"})).GetValueOrDefault(false) ==
-    //           familyHubs);
-    //}
-    //private IEnumerable<OpenReferralService> FilterByFamilyHub(IEnumerable<OpenReferralService> services, bool? )
-    //{
-    //    return services.Service_at_locations.FirstOrDefault()?.Location.LinkTaxonomies
-    //        ?.Any(lt => lt.Taxonomy is { Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869" }) == request?.IsFamilyHub);
-
-    //}
 
     private async Task<IQueryable<OpenReferralService>> GetOpenReferralServices(GetOpenReferralServicesCommand request)
     {
