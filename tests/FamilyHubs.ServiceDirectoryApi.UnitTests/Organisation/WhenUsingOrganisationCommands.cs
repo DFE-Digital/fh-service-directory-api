@@ -258,7 +258,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                     }
                     )
             })
-            .WithCostOption(new List<OpenReferralCostOptionDto>())
+            .WithCostOption(new List<OpenReferralCostOptionDto> {new() {Id = Guid.NewGuid().ToString(), Amount = decimal.Zero, Option = "free", Amount_description = ""}})
             .WithLanguages(new List<OpenReferralLanguageDto>()
                 {
                     new OpenReferralLanguageDto("1bb6c313-648d-4226-9e96-b7d37eaeb3dd", "English")

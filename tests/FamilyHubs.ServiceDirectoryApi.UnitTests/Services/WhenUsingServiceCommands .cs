@@ -66,6 +66,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         results.Items.Count().Should().Be(0);
     }
 
+    //todo: add similar test for no_cost options
     [Fact]
     public async Task ThenGetOpenReferralServiceThatAreFree()
     {
