@@ -64,6 +64,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
     {
         _context = context;
     }
+
     public async Task<PaginatedList<OpenReferralServiceDto>> Handle(GetOpenReferralServicesCommand request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(request.Status))
@@ -87,7 +88,6 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         IEnumerable<OpenReferralService> dbservices = await entities.ToListAsync();
         if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
             dbservices = dbservices.Where(x => core.Helper.GetDistance(request.Latitude, request.Longtitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Latitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Longitude, x?.Name) < request.Meters);
-
 
         //ServiceDeliveries
         if (!string.IsNullOrEmpty(request?.ServiceDeliveries))
@@ -150,11 +150,12 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
                 dbservices = new List<OpenReferralService>();
         }
 
+        // filter before we calcualte distance and map for efficiency
         if (request?.IsFamilyHub != null)
         {
             dbservices = dbservices.Where(s =>
                 s.Service_at_locations.FirstOrDefault()?.Location.LinkTaxonomies
-                    ?.Any(lt => lt.Taxonomy is {Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869"}) == request?.IsFamilyHub);
+                    ?.Any(lt => lt.Taxonomy is {Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869"}) == request.IsFamilyHub);
         }
 
         //todo: better to filter first, so we don't unnecessarily map?
@@ -182,17 +183,23 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             filteredServices = filteredServices.OrderBy(x => x.Distance).ToList();
         }
 
-        if (request?.MaxFamilyHubs != null)
+        //if (request?.MaxFamilyHubs != null)
+        //{
+        //    // special handling when we are limiting the number of family hubs, so that the hubs come first (and appear in the first page)
+        //    //todo: do the family hubs need to come first? the front end doesn't need it???
+        //    //this will have the order wrong when showing both
+        //    //have a custom enumerable with yield that limits the number of family hubs, but leaves the ordering alone
+        //    filteredServices = FilterByFamilyHub(filteredServices, true)
+        //        .Take(request.MaxFamilyHubs.Value)
+        //        .Concat(FilterByFamilyHub(filteredServices, false))
+        //        .ToList();
+        //}
+
+        if (request?.IsFamilyHub != null || request?.MaxFamilyHubs != null)
         {
-            // special handling when we are limiting the number of family hubs, so that the hubs come first (and appear in the first page)
-            //todo: do the family hubs need to come first? the front end doesn't need it???
-            //this will have the order wrong when showing both
-            //have a custom enumerable with yield that limits the number of family hubs, but leaves the ordering alone
-            filteredServices = FilterByFamilyHub(filteredServices, true)
-                .Take(request.MaxFamilyHubs.Value)
-                .Concat(FilterByFamilyHub(filteredServices, false))
-                .ToList();
+            filteredServices = FilterByFamilyHub(filteredServices, request?.IsFamilyHub, request?.MaxFamilyHubs).ToList();
         }
+
 
         if (request != null)
         {
@@ -204,13 +211,41 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         return new PaginatedList<OpenReferralServiceDto>(filteredServices, filteredServices.Count, 1, 10);
     }
 
-    private IEnumerable<OpenReferralServiceDto> FilterByFamilyHub(IEnumerable<OpenReferralServiceDto> services,
-        bool familyHubs)
+    // this does filtering and maxfamilyhub limiting
+    private IEnumerable<OpenReferralServiceDto> FilterByFamilyHub(
+        IEnumerable<OpenReferralServiceDto> services,
+        bool? familyHubs,
+        int? maxFamilyHubs)
     {
-        return services.Where(s => (s.Service_at_locations?.FirstOrDefault()?.Location.LinkTaxonomies
-                   ?.Any(lt => lt.Taxonomy is {Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869"})).GetValueOrDefault(false) ==
-               familyHubs);
+        //if (familyHubs == null && maxFamilyHubs == null)
+        //    return services;
+
+        foreach (var service in services) 
+        {
+            bool serviceIsFamilyHub = service.Service_at_locations?.FirstOrDefault()?.Location.LinkTaxonomies
+                   ?.Any(lt => lt.Taxonomy is { Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869" }) == true;
+
+            if (maxFamilyHubs.HasValue && serviceIsFamilyHub && --maxFamilyHubs < 0)
+            {
+                continue;
+            }
+
+            if (familyHubs.HasValue && familyHubs.Value != serviceIsFamilyHub)
+            {
+                continue;
+            }
+
+            yield return service;
+        }
     }
+
+    //private IEnumerable<OpenReferralServiceDto> FilterByFamilyHub(IEnumerable<OpenReferralServiceDto> services,
+    //    bool familyHubs)
+    //{
+    //    return services.Where(s => (s.Service_at_locations?.FirstOrDefault()?.Location.LinkTaxonomies
+    //               ?.Any(lt => lt.Taxonomy is {Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869"})).GetValueOrDefault(false) ==
+    //           familyHubs);
+    //}
     //private IEnumerable<OpenReferralService> FilterByFamilyHub(IEnumerable<OpenReferralService> services, bool? )
     //{
     //    return services.Service_at_locations.FirstOrDefault()?.Location.LinkTaxonomies
