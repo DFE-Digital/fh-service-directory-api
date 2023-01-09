@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using fh_service_directory_api.api.Helper;
 using fh_service_directory_api.core;
+using fh_service_directory_api.core.Constants;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
@@ -135,7 +136,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         {
             dbservices = dbservices.Where(s =>
                 s.Service_at_locations.FirstOrDefault()?.Location.LinkTaxonomies
-                    ?.Any(lt => lt.Taxonomy is {Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869"}) == request.IsFamilyHub);
+                    ?.Any(lt => string.Equals(lt.Taxonomy?.Id, OpenReferralTaxonomyDtoIds.FamilyHub, StringComparison.OrdinalIgnoreCase)) == request.IsFamilyHub);
         }
 
         //todo: better to filter first, so we don't unnecessarily map?
@@ -186,7 +187,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         foreach (var service in services) 
         {
             bool serviceIsFamilyHub = service.Service_at_locations?.FirstOrDefault()?.Location.LinkTaxonomies
-                   ?.Any(lt => lt.Taxonomy is { Id: "4DC40D99-BA5D-45E1-886E-8D34F398B869" }) == true;
+                ?.Any(lt => string.Equals(lt.Taxonomy?.Id, OpenReferralTaxonomyDtoIds.FamilyHub, StringComparison.OrdinalIgnoreCase)) == true;
 
             if (serviceIsFamilyHub && --maxFamilyHubs < 0)
             {
