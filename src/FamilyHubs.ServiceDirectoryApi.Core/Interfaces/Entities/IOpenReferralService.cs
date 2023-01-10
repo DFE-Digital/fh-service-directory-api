@@ -8,6 +8,7 @@ namespace fh_service_directory_api.core.Interfaces.Entities
         DateTime? Assured_date { get; }
         string? Attending_access { get; }
         string? Attending_type { get; }
+        ICollection<OpenReferralContact> Contacts { get; set; }
         ICollection<OpenReferralCost_Option> Cost_options { get; set; }
         string? Deliverable_type { get; }
         string? Description { get; }
@@ -25,7 +26,6 @@ namespace fh_service_directory_api.core.Interfaces.Entities
         ICollection<OpenReferralServiceAtLocation> Service_at_locations { get; set; }
         ICollection<OpenReferralService_Taxonomy> Service_taxonomys { get; set; }
         ICollection<OpenReferralServiceDelivery> ServiceDelivery { get; set; }
-        ICollection<OpenReferralLinkContact> Link_Contact { get; set; }
         string? Status { get; }
         string? Url { get; }
         ServiceType ServiceType { get; set; }

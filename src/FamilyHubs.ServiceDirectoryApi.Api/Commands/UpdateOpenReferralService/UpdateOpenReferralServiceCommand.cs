@@ -1,6 +1,5 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContactLinks;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContacts;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
@@ -58,7 +57,8 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
            .Include(x => x.ServiceType)
            .Include(x => x.ServiceDelivery)
            .Include(x => x.Eligibilities)
-           .Include(x => x.Link_Contact)
+           .Include(x => x.Contacts)
+           .ThenInclude(x => x.Phones)
            .Include(x => x.Cost_options)
            .Include(x => x.Languages)
            .Include(x => x.Service_areas)
@@ -136,8 +136,8 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 UpdateServiceArea(entity.Service_areas, request.OpenReferralService.Service_areas ?? new Collection<OpenReferralServiceAreaDto>());
             if (request.OpenReferralService.ServiceDelivery != null && entity.ServiceDelivery.Serialize() != request.OpenReferralService.ServiceDelivery.Serialize())
                 UpdateServiceDelivery(entity.ServiceDelivery, request.OpenReferralService.ServiceDelivery ?? new Collection<OpenReferralServiceDeliveryExDto>());
-            if (request.OpenReferralService.ContactLinks != null && entity.Link_Contact.Serialize() != request.OpenReferralService.ContactLinks.Serialize())
-                UpdateContacts(entity.Link_Contact, request.OpenReferralService.ContactLinks ?? new Collection<OpenReferralContactLinkDto>());
+            if (request.OpenReferralService.Contacts != null && entity.Contacts.Serialize() != request.OpenReferralService.Contacts.Serialize())
+                UpdateContacts(entity.Contacts, request.OpenReferralService.Contacts ?? new Collection<OpenReferralContactDto>());
             if (request.OpenReferralService.Languages != null && entity.Languages.Serialize() != request.OpenReferralService.Languages.Serialize())
                 UpdateLanguages(entity.Languages, request.OpenReferralService.Languages ?? new Collection<OpenReferralLanguageDto>());
             if (request.OpenReferralService.Service_at_locations != null && entity.Service_at_locations.Serialize() != request.OpenReferralService.Service_at_locations.Serialize())

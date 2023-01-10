@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.ModelLink;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContactLinks;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContacts;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
@@ -48,6 +47,5 @@ public class AutoMappingProfiles : Profile
         CreateMap<ModelLinkDto, ModelLink>();
         CreateMap<OpenReferralRegularScheduleDto, OpenReferralRegular_Schedule>();
         CreateMap<OpenReferralHolidayScheduleDto, OpenReferralHoliday_Schedule>();
-        CreateMap<OpenReferralContactLinkDto, OpenReferralLinkContact>();
     }
 }
