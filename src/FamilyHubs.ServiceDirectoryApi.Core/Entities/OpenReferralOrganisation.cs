@@ -39,7 +39,6 @@ public class OpenReferralOrganisation : EntityBase<string>, IOpenReferralOrganis
     public string? Url { get; set; } = string.Empty;
     public virtual ICollection<OpenReferralReview>? Reviews { get; set; } = new List<OpenReferralReview>();
     public virtual ICollection<OpenReferralService>? Services { get; set; } = new List<OpenReferralService>();
-    public virtual ICollection<OpenReferralLinkContact>? LinkContacts { get; set; } 
 
     public void Update(OpenReferralOrganisation openReferralOpenReferralOrganisation)
     {

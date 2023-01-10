@@ -18,5 +18,4 @@ public class OpenReferralContact : EntityBase<string>, IOpenReferralContact, IAg
     public string Name { get; set; } = default!;
     public string OpenReferralServiceId { get; set; } = default!;
     public virtual ICollection<OpenReferralPhone>? Phones { get; set; }
-    public virtual ICollection<OpenReferralLinkContact>? ContactLinks { get; set; }
 }

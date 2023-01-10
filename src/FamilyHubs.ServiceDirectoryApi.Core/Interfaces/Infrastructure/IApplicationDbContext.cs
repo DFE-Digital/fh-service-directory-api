@@ -9,7 +9,6 @@ namespace fh_service_directory_api.core.Interfaces.Infrastructure
         DbSet<UICache> UICaches { get; }
         DbSet<Accessibility_For_Disabilities> Accessibility_For_Disabilities { get; }
         DbSet<OpenReferralContact> OpenReferralContacts { get; }
-        DbSet<OpenReferralLinkContact> OpenReferralLinkContact { get; }
         DbSet<OpenReferralCost_Option> OpenReferralCost_Options { get; }
         DbSet<OpenReferralEligibility> OpenReferralEligibilities { get; }
         DbSet<OpenReferralFunding> OpenReferralFundings { get; }

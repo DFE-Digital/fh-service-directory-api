@@ -22,7 +22,6 @@ public class OpenReferralServiceAtLocation : EntityBase<string>, IOpenReferralSe
     public OpenReferralLocation Location { get; set; } = default!;
     public virtual ICollection<OpenReferralRegular_Schedule>? Regular_schedule { get; set; }
     public virtual ICollection<OpenReferralHoliday_Schedule>? HolidayScheduleCollection { get; set; }
-    public virtual ICollection<OpenReferralLinkContact>? LinkContact { get; set; }
     public string OpenReferralServiceId { get; set; } = default!;
 
 }
