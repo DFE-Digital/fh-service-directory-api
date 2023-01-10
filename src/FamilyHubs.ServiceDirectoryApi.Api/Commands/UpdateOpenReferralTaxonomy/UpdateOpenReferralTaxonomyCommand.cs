@@ -37,7 +37,7 @@ public class UpdateOpenReferralTaxonomyCommandHandler : IRequestHandler<UpdateOp
         ArgumentNullException.ThrowIfNull(request, nameof(request));
 
         var entity = await _context.OpenReferralTaxonomies
-          .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
+          .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {

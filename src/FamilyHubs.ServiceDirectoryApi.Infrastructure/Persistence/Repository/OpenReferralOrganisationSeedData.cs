@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Enums;
+using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
 using Microsoft.EntityFrameworkCore.Query;
 
@@ -39,8 +40,7 @@ public class OpenReferralOrganisationSeedData
         {
             new OrganisationType("1", "LA", "Local Authority"),
             new OrganisationType("2", "VCFS", "Voluntary, Charitable, Faith Sector"),
-            new OrganisationType("3", "FamilyHub", "Family Hub"),
-            new OrganisationType("4", "Company", "Public / Private Company eg: Child Care Centre")
+            new OrganisationType("3", "Company", "Public / Private Company eg: Child Care Centre")
         };
 
         return serviceTypes;
@@ -61,6 +61,7 @@ public class OpenReferralOrganisationSeedData
     {
         List<OpenReferralTaxonomy> openReferralTaxonomies = new()
         {
+            // categories and sub-categories
             new OpenReferralTaxonomy("16f3a451-e88d-4ad0-b53f-c8925d1cc9e4", "Activities, clubs and groups", "Activities, clubs and groups", null),
             new OpenReferralTaxonomy("aafa1cc3-b984-4b10-89d5-27388c5432de", "Activities", "Activities", "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
             new OpenReferralTaxonomy("3c207700-dc08-43bc-94ab-80c3d36d2e12", "Before and after school clubs", "Before and after school clubs", "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4"),
@@ -114,7 +115,10 @@ public class OpenReferralOrganisationSeedData
             new OpenReferralTaxonomy("4c219f95-21da-4222-8286-bbe1cfaf675c", "Visual impairment","Visual impairment", "6c873b97-6978-4c0f-8e3c-0b2804dd3826"),
 
             new OpenReferralTaxonomy("be261f9e-f024-46f8-8b5b-58251f25388d", "Transport","Transport", null),
-            new OpenReferralTaxonomy("93a29b1e-acd9-4abf-9f30-07dce3378558", "Community transport","Community transport", "be261f9e-f024-46f8-8b5b-58251f25388d")
+            new OpenReferralTaxonomy("93a29b1e-acd9-4abf-9f30-07dce3378558", "Community transport","Community transport", "be261f9e-f024-46f8-8b5b-58251f25388d"),
+
+            // location
+            new OpenReferralTaxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null),
         };
         
         return openReferralTaxonomies;
@@ -230,7 +234,7 @@ public class OpenReferralOrganisationSeedData
         {
             new OpenReferralOrganisation(
             "b2446860-cff0-4fb7-a703-bc4a919b3417",
-            new OrganisationType("3", "FamilyHub", "Family Hub"),
+            new OrganisationType("1", "LA", "Local Authority"),
             "Central Family Hub",
             "Central Family Hub",
             null,
@@ -241,20 +245,20 @@ public class OpenReferralOrganisationSeedData
             {
                 new OpenReferralService(
                 "6f4251a7-ae32-44cd-84fc-a632e944fccf",
-                serviceType: new ServiceType("2", "Family Experience", ""),
-                openReferralOrganisationId: "b2446860-cff0-4fb7-a703-bc4a919b3417",
-                name: "Central Family Hub",
-                description: "Family Hub",
-                accreditations: null,
-                assured_date: null,
-                attending_access: null,
-                attending_type: null,
-                deliverable_type: null,
-                status: "active",
-                url: "https://familyhubsnetwork.com/hub/central-family-hub-salford/",
-                email: "central.locality@salford.gov.uk",
-                fees: null,
-                canFamilyChooseDeliveryLocation: false,
+                new ServiceType("2", "Family Experience", ""),
+                "b2446860-cff0-4fb7-a703-bc4a919b3417",
+                "Central Family Hub",
+                "Family Hub",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                "https://familyhubsnetwork.com/hub/central-family-hub-salford/",
+                "central.locality@salford.gov.uk",
+                null,
+                false,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("c820ea55-14e9-4061-9c89-6906ec3064d1",ServiceDelivery.InPerson)
@@ -292,11 +296,16 @@ public class OpenReferralOrganisationSeedData
                 {
                     new OpenReferralServiceAtLocation(
                         "e234f5b5-fb74-4e68-bd29-88e736bfc317",
-                        new OpenReferralLocation("964ea451-6146-4add-913e-dff23a1bd7b6", "Central Family Hub", "Broughton Hub", 53.507025D, -2.259764D, new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("84c0a47a-08a1-4e54-814b-46ce26765c08", "50 Rigby Street", "Manchester", "M7 4BQ", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+                        new OpenReferralLocation("964ea451-6146-4add-913e-dff23a1bd7b6", "Central Family Hub", "Broughton Hub", 53.507025D, -2.259764D,
+                            new List<OpenReferralLinkTaxonomy> {new
+                            ("CD2324A3-AB3F-4707-9D38-34DFB7722B62",
+                                "964ea451-6146-4add-913e-dff23a1bd7b6",
+                                LinkType.Location,
+                                new OpenReferralTaxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
+                            new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("84c0a47a-08a1-4e54-814b-46ce26765c08", "50 Rigby Street", "Manchester", "M7 4BQ", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
                         new List<OpenReferralRegular_Schedule>(),
                         new List<OpenReferralHoliday_Schedule>()
                         )
-
                 }),
                 new List<OpenReferralService_Taxonomy>()
                 )
@@ -306,7 +315,7 @@ public class OpenReferralOrganisationSeedData
 
             new OpenReferralOrganisation(
             "18e95341-8464-4375-84fd-195af5fe7d9c",
-            new OrganisationType("3", "FamilyHub", "Family Hub"),
+            new OrganisationType("1", "LA", "Local Authority"),
             "North Family Hub",
             "North Family Hub",
             null,
@@ -317,20 +326,20 @@ public class OpenReferralOrganisationSeedData
             {
                 new OpenReferralService(
                 "57bde76b-885d-484d-869f-7e60faf4b1b2",
-                serviceType: new ServiceType("2", "Family Experience", ""),
-                openReferralOrganisationId: "18e95341-8464-4375-84fd-195af5fe7d9c",
-                name: "North Family Hub",
-                description: "Family Hub",
-                accreditations: null,
-                assured_date: null,
-                attending_access: null,
-                attending_type: null,
-                deliverable_type: null,
-                status: "active",
-                url: "https://familyhubsnetwork.com/hub/north-family-hub-salford/",
-                email: "north.locality@salford.gov.uk",
-                fees: null,
-                canFamilyChooseDeliveryLocation: false,
+                new ServiceType("2", "Family Experience", ""),
+                "18e95341-8464-4375-84fd-195af5fe7d9c",
+                "North Family Hub",
+                "Family Hub",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                "https://familyhubsnetwork.com/hub/north-family-hub-salford/",
+                "north.locality@salford.gov.uk",
+                null,
+                false,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("5432f1f5-b822-4501-a018-7581add71dbc",ServiceDelivery.InPerson)
@@ -368,7 +377,13 @@ public class OpenReferralOrganisationSeedData
                 {
                     new OpenReferralServiceAtLocation(
                         "2995a7a0-6552-4c71-9e91-7f860d5a993e",
-                        new OpenReferralLocation("74c37f53-dbc0-4958-8c97-baee41a022bf", "North Family Hub", "Swinton Gateway", 53.5124278D, -2.342044D, new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("83bf4f64-fdcb-46bc-a32e-8b117bf5c19a", "100 Chorley Road", "Manchester", "M27 6BP", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+                        new OpenReferralLocation("74c37f53-dbc0-4958-8c97-baee41a022bf", "North Family Hub", "Swinton Gateway", 53.5124278D, -2.342044D,
+                            new List<OpenReferralLinkTaxonomy> {new
+                            ("3A724AE8-8E9E-4AC5-95BC-E5B07795A8DD",
+                                "74c37f53-dbc0-4958-8c97-baee41a022bf",
+                                LinkType.Location,
+                                new OpenReferralTaxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
+                            new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("83bf4f64-fdcb-46bc-a32e-8b117bf5c19a", "100 Chorley Road", "Manchester", "M27 6BP", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
                         new List<OpenReferralRegular_Schedule>(),
                         new List<OpenReferralHoliday_Schedule>()
                         )
@@ -381,7 +396,7 @@ public class OpenReferralOrganisationSeedData
 
             new OpenReferralOrganisation(
             "99d11261-5551-40c1-988e-59d13a377e75",
-            new OrganisationType("3", "FamilyHub", "Family Hub"),
+            new OrganisationType("1", "LA", "Local Authority"),
             "South Family Hub",
             "South Family Hub",
             null,
@@ -392,20 +407,20 @@ public class OpenReferralOrganisationSeedData
             {
                 new OpenReferralService(
                 "06c16312-fa5f-4e82-b672-3a9ab099649a",
-                serviceType: new ServiceType("2", "Family Experience", ""),
-                openReferralOrganisationId: "99d11261-5551-40c1-988e-59d13a377e75",
-                name: "South Family Hub",
-                description: "Family Hub",
-                accreditations: null,
-                assured_date: null,
-                attending_access: null,
-                attending_type: null,
-                deliverable_type: null,
-                status: "active",
-                url: "https://familyhubsnetwork.com/hub/south-family-hub-central/",
-                email: "south.locality@salford.gov.uk",
-                fees: null,
-                canFamilyChooseDeliveryLocation: false,
+                new ServiceType("2", "Family Experience", ""),
+                "99d11261-5551-40c1-988e-59d13a377e75",
+                "South Family Hub",
+                "Family Hub",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                "https://familyhubsnetwork.com/hub/south-family-hub-central/",
+                "south.locality@salford.gov.uk",
+                null,
+                false,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("3af77d95-1e1a-412f-9daa-98dc74af8e54",ServiceDelivery.InPerson)
@@ -443,7 +458,13 @@ public class OpenReferralOrganisationSeedData
                 {
                     new OpenReferralServiceAtLocation(
                         "4e969589-e2b3-47d7-b079-1af1e3de5554",
-                        new OpenReferralLocation("1b4a625b-54bb-407d-a508-f90cade1e96f", "South Family Hub", "Winton Children’s Centre", 53.48801070060149D, -2.368140748303118D,  new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("45603703-5d3f-45f4-84f1-b294ac4d3290", "Brindley Street", "Manchester", "M30 8AB", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+                        new OpenReferralLocation("1b4a625b-54bb-407d-a508-f90cade1e96f", "South Family Hub", "Winton Children’s Centre", 53.48801070060149D, -2.368140748303118D,
+                            new List<OpenReferralLinkTaxonomy> {new
+                            ("4594A80C-42EC-4F80-AABE-E216E7732DC8",
+                                "1b4a625b-54bb-407d-a508-f90cade1e96f",
+                                LinkType.Location,
+                                new OpenReferralTaxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
+                            new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("45603703-5d3f-45f4-84f1-b294ac4d3290", "Brindley Street", "Manchester", "M30 8AB", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
                         new List<OpenReferralRegular_Schedule>(),
                         new List<OpenReferralHoliday_Schedule>()
                         )
@@ -453,7 +474,6 @@ public class OpenReferralOrganisationSeedData
                 )
             }
             )
-
         };
     }
 
@@ -468,20 +488,20 @@ public class OpenReferralOrganisationSeedData
 
             new OpenReferralService(
                 "1a000f89-6487-49ae-9f70-166070b02b48",
-                serviceType: new ServiceType("2", "Family Experience", ""),
-                openReferralOrganisationId: parentId,
-                name: "Baby Social at Ordsall Neighbourhood Centre",
-                description: "This session is for babies non mobile aged from birth to twelve months. Each week we will introduce you to one of our five to thrive key messages and a fun activity you can do at home with your baby. It will also give you the opportunity to connect with other parents and share your experiences.",
-                accreditations: null,
-                assured_date: null,
-                attending_access: null,
-                attending_type: null,
-                deliverable_type: null,
-                status: "active",
-                url: "https://directory.salford.gov.uk/kb5/salford/directory/service.page?id=B3Z2uCshOk4&localofferchannel=2_8",
-                email: null,
-                fees: null,
-                canFamilyChooseDeliveryLocation: false,
+                new ServiceType("2", "Family Experience", ""),
+                parentId,
+                "Baby Social at Ordsall Neighbourhood Centre",
+                "This session is for babies non mobile aged from birth to twelve months. Each week we will introduce you to one of our five to thrive key messages and a fun activity you can do at home with your baby. It will also give you the opportunity to connect with other parents and share your experiences.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                "https://directory.salford.gov.uk/kb5/salford/directory/service.page?id=B3Z2uCshOk4&localofferchannel=2_8",
+                null,
+                null,
+                false,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("71cdb1fc-324a-4161-9ced-13e9d504942b",ServiceDelivery.InPerson)
@@ -522,20 +542,22 @@ public class OpenReferralOrganisationSeedData
                 {
                     new OpenReferralServiceAtLocation(
                         "5fdbbefd-4cf4-4c4a-8178-c001fcb25570",
-                        new OpenReferralLocation("b405ae9a-5410-4136-86f3-dc1e85f1ec68", "Ordsall Neighbourhood Centre", "2, Robert Hall Street M5 3LT", 53.474103227856105D, -2.2721559641660787D, new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("67efce6d-248b-4e71-b08d-4c21009d01f0", "2, Robert Hall Street", "Ordsall", "M5 3LT", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+                        new OpenReferralLocation("b405ae9a-5410-4136-86f3-dc1e85f1ec68", "Ordsall Neighbourhood Centre", "2, Robert Hall Street M5 3LT", 53.474103227856105D, -2.2721559641660787D,
+                            new List<OpenReferralLinkTaxonomy>(),
+                            new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("67efce6d-248b-4e71-b08d-4c21009d01f0", "2, Robert Hall Street", "Ordsall", "M5 3LT", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
                         new List<OpenReferralRegular_Schedule>()
                         {
                             new OpenReferralRegular_Schedule("16785195-413f-417c-8c77-8f3e3fe08e6f",
-                            description: string.Empty,
-                            opens_at: null,
-                            closes_at: null,
-                            byday: "Friday 1.30pm - 2.30pm", 
-                            bymonthday: null, 
-                            dtstart: "1.30pm - 2.30pm",
-                            freq: "Every Friday", 
-                            interval: null,
-                            valid_from: null,
-                            valid_to: null
+                            string.Empty,
+                            null,
+                            null,
+                            "Friday 1.30pm - 2.30pm", 
+                            null, 
+                            "1.30pm - 2.30pm",
+                            "Every Friday", 
+                            null,
+                            null,
+                            null
                             )
                         },
                         new List<OpenReferralHoliday_Schedule>()
@@ -554,20 +576,20 @@ public class OpenReferralOrganisationSeedData
 
             new OpenReferralService(
                 "2dde869a-914a-4acc-915b-10d368808022",
-                serviceType: new ServiceType("2", "Family Experience", ""),
-                openReferralOrganisationId: parentId,
-                name: "Oakwood Academy",
-                description: "Oakwood Academy is a special school for pupils aged 9-18 years who have a range of moderate and/or complex learning difficulties. The school has Visual Arts, Technology and Sports Specialist status. \r\n\r\nAdmissions to Oakwood Academy are controlled by Salford Local Authority. We are unable to accept direct requests for placement from parents or carers or other local authorities. Pupils who attend Oakwood Academy have an Educational, Health and Care Plan which outlines the area of need and what provision and resources are needed to support the pupil. \r\n\r\nIn rare cases, a child may be admitted on an assessment placement to determine what the pupil's needs are and whether their needs can be met at Oakwood Academy. ",
-                accreditations: null,
-                assured_date: null,
-                attending_access: null,
-                attending_type: null,
-                deliverable_type: null,
-                status: "active",
-                url: "https://www.oakwoodacademy.co.uk/",
-                email: "enquiries@oakwoodacademy.co.uk",
-                fees: null,
-                canFamilyChooseDeliveryLocation: false,
+                new ServiceType("2", "Family Experience", ""),
+                parentId,
+                "Oakwood Academy",
+                "Oakwood Academy is a special school for pupils aged 9-18 years who have a range of moderate and/or complex learning difficulties. The school has Visual Arts, Technology and Sports Specialist status. \r\n\r\nAdmissions to Oakwood Academy are controlled by Salford Local Authority. We are unable to accept direct requests for placement from parents or carers or other local authorities. Pupils who attend Oakwood Academy have an Educational, Health and Care Plan which outlines the area of need and what provision and resources are needed to support the pupil. \r\n\r\nIn rare cases, a child may be admitted on an assessment placement to determine what the pupil's needs are and whether their needs can be met at Oakwood Academy. ",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                "https://www.oakwoodacademy.co.uk/",
+                "enquiries@oakwoodacademy.co.uk",
+                null,
+                false,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("31ac8379-1b1b-416f-a1e2-6c617c40cf32",ServiceDelivery.InPerson)
@@ -605,7 +627,9 @@ public class OpenReferralOrganisationSeedData
                 {
                     new OpenReferralServiceAtLocation(
                         "6e0bb978-fe9e-4c13-b8e7-50c97bf06ed7",
-                        new OpenReferralLocation("f7301eeb-3293-4d7b-9869-d1e8a6368a13", "Oakwood Academy", "", 53.493505779578605D, -2.336084327089324D, new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("387b5dff-a26a-42fe-84d6-1a744097cf4f", "Chatsworth Road", "Eccles", "M30 9DY", "United Kingdom", "Manchester") }, new List<Accessibility_For_Disabilities>()),
+                        new OpenReferralLocation("f7301eeb-3293-4d7b-9869-d1e8a6368a13", "Oakwood Academy", "", 53.493505779578605D, -2.336084327089324D, 
+                            new List<OpenReferralLinkTaxonomy>(),
+                            new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("387b5dff-a26a-42fe-84d6-1a744097cf4f", "Chatsworth Road", "Eccles", "M30 9DY", "United Kingdom", "Manchester") }, new List<Accessibility_For_Disabilities>()),
                         new List<OpenReferralRegular_Schedule>(),
                         new List<OpenReferralHoliday_Schedule>()
                         )
@@ -691,6 +715,7 @@ public class OpenReferralOrganisationSeedData
                             "",
                             52.6312,
                             -1.66526,
+                            new List<OpenReferralLinkTaxonomy>(),
                             new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
                             {
                                 new OpenReferralPhysical_Address(
@@ -781,6 +806,7 @@ public class OpenReferralOrganisationSeedData
                             "",
                             52.6312,
                             -1.66526,
+                            new List<OpenReferralLinkTaxonomy>(),
                             new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
                             {
                                 new OpenReferralPhysical_Address(
@@ -877,6 +903,7 @@ public class OpenReferralOrganisationSeedData
                             "",
                             52.63123,
                             -1.66519,
+                            new List<OpenReferralLinkTaxonomy>(),
                             new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
                             {
                                 new OpenReferralPhysical_Address(
@@ -973,6 +1000,7 @@ public class OpenReferralOrganisationSeedData
                             "",
                             52.63123,
                             -1.66519,
+                            new List<OpenReferralLinkTaxonomy>(),
                             new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
                             {
                                 new OpenReferralPhysical_Address(

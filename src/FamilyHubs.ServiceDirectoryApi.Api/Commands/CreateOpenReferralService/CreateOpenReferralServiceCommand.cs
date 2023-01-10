@@ -1,10 +1,10 @@
-﻿using Autofac.Core;
-using AutoMapper;
+﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace fh_service_directory_api.api.Commands.CreateOpenReferralService;
 
@@ -42,19 +42,15 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
             if (serviceType != null)
                 entity.ServiceType = serviceType;
 
-            if (entity.Service_taxonomys != null)
+            foreach (var serviceTaxonomy in entity.Service_taxonomys)
             {
-                foreach(var servicetaxonomy in entity.Service_taxonomys)
+                if (serviceTaxonomy.Taxonomy != null)
                 {
-                    if (servicetaxonomy != null && servicetaxonomy.Taxonomy != null)
+                    var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == serviceTaxonomy.Taxonomy.Id);
+                    if (taxonomy != null)
                     {
-                        var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == servicetaxonomy.Taxonomy.Id);
-                        if (taxonomy != null)
-                        {
-                            servicetaxonomy.Taxonomy = taxonomy;
-                        }
+                        serviceTaxonomy.Taxonomy = taxonomy;
                     }
-                    
                 }
             }
 
@@ -75,6 +71,43 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
                         holidaySchedules.OpenReferralServiceAtLocationId = serviceAtLocation.Id;
                     }
                 }
+
+                var existingLocation = await _context.OpenReferralLocations
+                    .Include(l => l.Physical_addresses)
+                    .Include(l => l.LinkTaxonomies)!
+                    .ThenInclude(l => l.Taxonomy)
+                    .Where(l => l.Name == serviceAtLocation.Location.Name)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                if (existingLocation != null)
+                {
+                    if (serviceAtLocation.Location.Physical_addresses != null)
+                    {
+                        foreach (var newAddresses in serviceAtLocation.Location.Physical_addresses)
+                        {
+                            existingLocation.Physical_addresses ??= new List<OpenReferralPhysical_Address>();
+                            if (existingLocation.Physical_addresses.All(a => a.Postal_code != newAddresses.Postal_code))
+                            {
+                                existingLocation.Physical_addresses.Add(newAddresses);
+                            }
+                        }
+                    }
+                    serviceAtLocation.Location = existingLocation;
+                }
+                else if (serviceAtLocation.Location.LinkTaxonomies != null)
+                {
+                    foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
+                    {
+                        if (linkTaxonomy.Taxonomy != null)
+                        {
+                            var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
+                            if (taxonomy != null)
+                            {
+                                linkTaxonomy.Taxonomy = taxonomy;
+                            }
+                        }
+                    }
+                }
             }
 
             entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(entity));
@@ -89,9 +122,6 @@ public class CreateOpenReferralServiceCommandHandler : IRequestHandler<CreateOpe
             throw new Exception(ex.Message, ex);
         }
 
-        if (request is not null && request.OpenReferralService is not null)
-            return request.OpenReferralService.Id;
-        else
-            return string.Empty;
+        return request.OpenReferralService.Id;
     }
 }

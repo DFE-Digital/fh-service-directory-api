@@ -55,13 +55,26 @@ public class GetOpenReferralServicesByOrganisationIdCommandHandler : IRequestHan
             .Include(x => x.Cost_options)
             .Include(x => x.Languages)
             .Include(x => x.Service_areas)
+            
             .Include(x => x.Service_at_locations)
             .ThenInclude(x => x.Location)
             .ThenInclude(x => x.Physical_addresses)
+
+            .Include(x => x.Service_at_locations)
+            .ThenInclude(x => x.Location)
+            .ThenInclude(x => x.LinkTaxonomies!)
+            .ThenInclude(x => x.Taxonomy)
+
+            .Include(x => x.Service_at_locations)
+            .ThenInclude(x => x.Regular_schedule)
+
+            .Include(x => x.Service_at_locations)
+            .ThenInclude(x => x.HolidayScheduleCollection)
+
             .Include(x => x.Service_taxonomys)
             .ThenInclude(x => x.Taxonomy)
             .Where(x => ids.Contains(x.Id))
-            .ToListAsync(cancellationToken: cancellationToken);
+            .ToListAsync(cancellationToken);
 
         if (entity == null)
         {

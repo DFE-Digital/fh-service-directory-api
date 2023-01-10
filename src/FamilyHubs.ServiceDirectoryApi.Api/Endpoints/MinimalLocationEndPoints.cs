@@ -16,7 +16,7 @@ public class MinimalLocationEndPoints
         {
             try
             {
-                CreateOpenReferralLocationCommand command = new(request, taxonomyId, organisationId);
+                CreateOpenReferralLocationCommand command = new(request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -32,7 +32,7 @@ public class MinimalLocationEndPoints
         {
             try
             {
-                UpdateOpenReferralLocationCommand command = new(request, taxonomyId, organisationId);
+                UpdateOpenReferralLocationCommand command = new(request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }

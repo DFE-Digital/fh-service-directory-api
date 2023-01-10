@@ -17,10 +17,10 @@ public class OpenReferralPhysical_Address : EntityBase<string>, IOpenReferralPhy
         State_province = state_province;
     }
 
+    public string OpenReferralLocationId { get; set; } = default!;
     public string Address_1 { get; set; } = default!;
     public string? City { get; set; }
     public string Postal_code { get; set; } = default!;
     public string? Country { get; set; }
     public string? State_province { get; set; }
-    //public string OpenReferralLocationId { get; set; } = default!;
 }

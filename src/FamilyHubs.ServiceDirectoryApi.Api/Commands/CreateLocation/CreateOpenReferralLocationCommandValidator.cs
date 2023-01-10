@@ -15,18 +15,6 @@ namespace fh_service_directory_api.api.Commands.CreateLocation
                 .MaximumLength(50)
                 .NotNull()
                 .NotEmpty();
-
-            RuleFor(v => v.OpenReferralTaxonomyId)
-                .MinimumLength(1)
-                .MaximumLength(50)
-                .NotNull()
-                .NotEmpty();
-
-            RuleFor(v => v.OpenReferralOrganisationId)
-                .MinimumLength(1)
-                .MaximumLength(50)
-                .NotNull()
-                .NotEmpty();
         }
     }
 }

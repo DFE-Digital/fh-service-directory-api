@@ -40,7 +40,7 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests
         }
 
         var token = new JwtSecurityToken(
-            issuer: configuration["JWT:ValidIssuer"],
+            configuration["JWT:ValidIssuer"],
             audience: configuration["JWT:ValidAudience"],
             expires: DateTime.Now.AddMinutes(tokenValidityInMinutes),
             claims: authClaims,

@@ -23,6 +23,7 @@ using FluentAssertions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
 
 namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
@@ -76,7 +77,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         response.EnsureSuccessStatusCode();
 
         
-        var retVal = await JsonSerializer.DeserializeAsync<OpenReferralOrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<OpenReferralOrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             
        
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -103,7 +104,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<List<OpenReferralOrganisationDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<List<OpenReferralOrganisationDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
@@ -129,13 +130,16 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<List<OrganisationTypeDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<List<OrganisationTypeDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
         retVal.Count.Should().BeGreaterThan(2);
     }
+
+    //todo: if data seeding fails, the tests should fail fast
+    //todo: if not found, server returns a 500, but should return a 404
 
 #if DEBUG
     [Fact]
@@ -183,7 +187,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         response.EnsureSuccessStatusCode();
 
 
-        var retVal = await JsonSerializer.DeserializeAsync<OpenReferralOrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<OpenReferralOrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
 
         var update = new OpenReferralOrganisationWithServicesDto(
@@ -315,8 +319,22 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                                     "England",
                                     null
                                     )
+                            },
+                            new List<OpenReferralLinkTaxonomyDto>()
+                            {
+                                new OpenReferralLinkTaxonomyDto(
+                                    Guid.NewGuid().ToString(),
+                                    "Location",
+                                    "a878aadc-6097-4a0f-b3e1-77fd4511175d",
+                                    new OpenReferralTaxonomyDto(
+                                        //todo: real guid
+                                        Guid.NewGuid().ToString(),
+                                        "Family_hub",
+                                        null,
+                                        null
+                                        )
+                                    )
                             }
-                            //new List<Accessibility_For_Disabilities>()
                             ),
                         new List<OpenReferralRegularScheduleDto>(),
                         new List<OpenReferralHolidayScheduleDto>()
@@ -391,7 +409,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                 })
             .WithEligibility(new List<OpenReferralEligibilityDto>
                 {
-                    new OpenReferralEligibilityDto("Test91091Children","",0,13) 
+                    new OpenReferralEligibilityDto("Test91091Children","",0,13)
                 })
             .WithContact(new List<OpenReferralContactDto>()
             {
@@ -434,9 +452,23 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                                     "England",
                                     null
                                     )
-                            }
-                            //new List<Accessibility_For_Disabilities>()
-                            ),
+                            },
+                            new List<OpenReferralLinkTaxonomyDto>()
+                            {
+                                new OpenReferralLinkTaxonomyDto(
+                                    Guid.NewGuid().ToString(),
+                                    "Location",
+                                    "86119575-017f-4eeb-b92e-cb3f62d54840",
+                                    new OpenReferralTaxonomyDto(
+                                        //todo: real guid
+
+                                        Guid.NewGuid().ToString(),
+                                        "Family_hub",
+                                        null,
+                                        null
+                                    )
+                                )
+                            }),
                         new List<OpenReferralRegularScheduleDto>(),
                         new List<OpenReferralHolidayScheduleDto>()
                         )
@@ -524,6 +556,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                             "",
                             52.6312,
                             -1.66526,
+                            new List<OpenReferralLinkTaxonomy>(),
                             new List<OpenReferralPhysical_Address>()
                             {
                                 new OpenReferralPhysical_Address(
