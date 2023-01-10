@@ -210,6 +210,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 {
                     foreach (var address in entity.Location.Physical_addresses)
                     {
+                        address.OpenReferralLocationId = entity.Location.Id;
                         listAddress.Add(address.Id);
                     }
                 }
@@ -229,12 +230,14 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                         if (currentAddress == null)
                         {
                             var entity = _mapper.Map<OpenReferralPhysical_Address>(address);
+                            entity.OpenReferralLocationId = updatedServiceLoc.Location.Id;
                             entity.RegisterDomainEvent(new OpenReferralPhysicalAddressCreatedEvent(entity));
                             _context.OpenReferralPhysical_Addresses.Add(entity);
                             listAddress.Add(entity.Id);
                         }
                         else
                         {
+                            currentAddress.OpenReferralLocationId = updatedServiceLoc.Location.Id;
                             currentAddress.Address_1 = address.Address_1;
                             currentAddress.City = address.City;
                             currentAddress.Postal_code = address.Postal_code;

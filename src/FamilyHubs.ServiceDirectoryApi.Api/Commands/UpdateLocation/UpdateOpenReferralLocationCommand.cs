@@ -56,6 +56,7 @@ public class UpdateOpenReferralLocationCommandHandler : IRequestHandler<UpdateOp
                     var existingAddress = await _context.OpenReferralPhysical_Addresses.SingleOrDefaultAsync(p => p.Id == addressDto.Id, cancellationToken);
                     if (existingAddress != null)
                     {
+                        existingAddress.OpenReferralLocationId = request.OpenReferralLocationDto.Id;
                         existingAddress.Address_1 = addressDto.Address_1;
                         existingAddress.City = addressDto.City;
                         existingAddress.Postal_code = addressDto.Postal_code;
@@ -65,6 +66,7 @@ public class UpdateOpenReferralLocationCommandHandler : IRequestHandler<UpdateOp
                     else
                     {
                         var newAddress = _mapper.Map<OpenReferralPhysical_Address>(addressDto);
+                        newAddress.OpenReferralLocationId = request.OpenReferralLocationDto.Id;
                         ArgumentNullException.ThrowIfNull(newAddress, nameof(newAddress));
                         existingLocation.RegisterDomainEvent(new OpenReferralPhysicalAddressCreatedEvent(newAddress));
 
