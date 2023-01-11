@@ -210,6 +210,7 @@ public class OpenReferralOrganisationSeedData
         if (!_isProduction) 
         {
             openReferralServices.AddRange(GetSalfordFamilyService(parentId));
+            openReferralServices.AddRange(GetSalfordFamilyHubs(parentId));
         }
         return openReferralServices;
     }
@@ -228,27 +229,22 @@ public class OpenReferralOrganisationSeedData
         };
     }
 
-    public IReadOnlyCollection<OpenReferralOrganisation> GetSalfordFamilyHubOrganisations()
+    public IReadOnlyCollection<OpenReferralService> GetSalfordFamilyHubs(string parentid)
     {
-        return new List<OpenReferralOrganisation>()
+        if (_isProduction)
         {
-            new OpenReferralOrganisation(
-            "b2446860-cff0-4fb7-a703-bc4a919b3417",
-            new OrganisationType("1", "LA", "Local Authority"),
-            "Central Family Hub",
-            "Central Family Hub",
-            null,
-            new Uri("https://familyhubsnetwork.com/hub/central-family-hub-salford/").ToString(),
-            "https://familyhubsnetwork.com/hub/central-family-hub-salford/",
-            new List<OpenReferralReview>(),
-            new List<OpenReferralService>()
-            {
+            return new List<OpenReferralService>();
+        }
+
+        return new List<OpenReferralService>()
+        {
+
                 new OpenReferralService(
                 "6f4251a7-ae32-44cd-84fc-a632e944fccf",
                 new ServiceType("2", "Family Experience", ""),
-                "b2446860-cff0-4fb7-a703-bc4a919b3417",
-                "Central Family Hub",
-                "Family Hub",
+                parentid,
+                "Service at Central Family Hub",
+                "service",
                 null,
                 null,
                 null,
@@ -308,28 +304,13 @@ public class OpenReferralOrganisationSeedData
                         )
                 }),
                 new List<OpenReferralService_Taxonomy>()
-                )
-            }
-
-            ),
-
-            new OpenReferralOrganisation(
-            "18e95341-8464-4375-84fd-195af5fe7d9c",
-            new OrganisationType("1", "LA", "Local Authority"),
-            "North Family Hub",
-            "North Family Hub",
-            null,
-            new Uri("https://familyhubsnetwork.com/hub/north-family-hub-salford/").ToString(),
-            "https://familyhubsnetwork.com/hub/north-family-hub-salford/",
-            new List<OpenReferralReview>(),
-            new List<OpenReferralService>()
-            {
+                ),
                 new OpenReferralService(
                 "57bde76b-885d-484d-869f-7e60faf4b1b2",
                 new ServiceType("2", "Family Experience", ""),
-                "18e95341-8464-4375-84fd-195af5fe7d9c",
-                "North Family Hub",
-                "Family Hub",
+                parentid,
+                "Service at North Family Hub",
+                "Service",
                 null,
                 null,
                 null,
@@ -340,7 +321,7 @@ public class OpenReferralOrganisationSeedData
                 "north.locality@salford.gov.uk",
                 null,
                 false,
-                new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
+                new List<OpenReferralServiceDelivery>(new List<OpenReferralServiceDelivery>
                 {
                     new OpenReferralServiceDelivery("5432f1f5-b822-4501-a018-7581add71dbc",ServiceDelivery.InPerson)
                 }),
@@ -373,7 +354,7 @@ public class OpenReferralOrganisationSeedData
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>(new List<OpenReferralServiceAtLocation>()
                 {
                     new OpenReferralServiceAtLocation(
                         "2995a7a0-6552-4c71-9e91-7f860d5a993e",
@@ -390,27 +371,15 @@ public class OpenReferralOrganisationSeedData
 
                 }),
                 new List<OpenReferralService_Taxonomy>()
-                )
-            }
-            ),
+                ),
 
-            new OpenReferralOrganisation(
-            "99d11261-5551-40c1-988e-59d13a377e75",
-            new OrganisationType("1", "LA", "Local Authority"),
-            "South Family Hub",
-            "South Family Hub",
-            null,
-            new Uri("https://familyhubsnetwork.com/hub/south-family-hub-central/").ToString(),
-            "https://familyhubsnetwork.com/hub/south-family-hub-central/",
-            new List<OpenReferralReview>(),
-            new List<OpenReferralService>()
-            {
+
                 new OpenReferralService(
                 "06c16312-fa5f-4e82-b672-3a9ab099649a",
                 new ServiceType("2", "Family Experience", ""),
-                "99d11261-5551-40c1-988e-59d13a377e75",
-                "South Family Hub",
-                "Family Hub",
+                parentid,
+                "Service at South Family Hub",
+                "Service",
                 null,
                 null,
                 null,
@@ -423,7 +392,7 @@ public class OpenReferralOrganisationSeedData
                 false,
                 new List<OpenReferralServiceDelivery>( new List<OpenReferralServiceDelivery>
                 {
-                    new OpenReferralServiceDelivery("3af77d95-1e1a-412f-9daa-98dc74af8e54",ServiceDelivery.InPerson)
+                    new OpenReferralServiceDelivery("3af77d95-1e1a-412f-9daa-98dc74af8e54", ServiceDelivery.InPerson)
                 }),
                 new List<OpenReferralEligibility>(new List<OpenReferralEligibility>
                 {
@@ -454,7 +423,7 @@ public class OpenReferralOrganisationSeedData
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>(new List<OpenReferralServiceAtLocation>()
                 {
                     new OpenReferralServiceAtLocation(
                         "4e969589-e2b3-47d7-b079-1af1e3de5554",
@@ -472,8 +441,6 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralService_Taxonomy>()
                 )
-            }
-            )
         };
     }
 
