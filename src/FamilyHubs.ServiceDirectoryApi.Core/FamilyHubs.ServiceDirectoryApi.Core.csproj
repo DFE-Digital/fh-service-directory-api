@@ -20,10 +20,4 @@
         <PackageReference Include="System.Linq" Version="4.3.0" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Old-Common\Services\Infrastructure\" />
-        <Folder Include="Old-Common\Interfaces\Services\Domain\Identity\" />
-        <Folder Include="Old-Common\Interfaces\Services\Ui\ViewModels\" />
-        <Folder Include="Old-Common\Services\Ui\ViewModels\" />
-    </ItemGroup>
 </Project>

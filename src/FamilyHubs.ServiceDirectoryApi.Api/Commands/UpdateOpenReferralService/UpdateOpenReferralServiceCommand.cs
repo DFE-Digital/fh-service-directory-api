@@ -183,6 +183,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 current.Eligibility = updatedEligibility.Eligibility;
                 current.Maximum_age = updatedEligibility.Maximum_age;
                 current.Minimum_age = updatedEligibility.Minimum_age;
+                currentIds.Add(current.Id);
             }
         }
 
@@ -344,6 +345,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 current.Start_date = updatedSchedule.Start_date;
                 current.End_date = updatedSchedule.End_date;
                 current.Opens_at = updatedSchedule.Opens_at;
+                currentIds.Add(current.Id);
             }
         }
 
@@ -379,6 +381,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 current.Interval = updatedSchedule.Interval;
                 current.Valid_from = updatedSchedule.Valid_from;
                 current.Valid_to = updatedSchedule.Valid_to;
+                currentIds.Add(current.Id);
             }
         }
 
@@ -406,6 +409,7 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
                 current.Service_area = updatedServiceArea.Service_area;
                 current.Extent = updatedServiceArea.Extent;
                 current.Uri = updatedServiceArea.Uri;
+                currentIds.Add(current.Id);
             }
         }
 
