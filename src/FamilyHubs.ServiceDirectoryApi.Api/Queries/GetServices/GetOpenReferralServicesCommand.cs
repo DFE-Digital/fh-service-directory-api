@@ -164,9 +164,11 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             filteredServices = filteredServices.OrderBy(x => x.Distance).ToList();
         }
 
-        if (request.IsFamilyHub is null or true && request.MaxFamilyHubs != null)
+        if (request.IsFamilyHub is null && request.MaxFamilyHubs != null)
         {
-            filteredServices = FilterByMaxFamilyHubs(filteredServices, request.MaxFamilyHubs.Value).ToList();
+            // MaxFamilyHubs is really a flag to only include the nearest max family hubs at the start of the results set (when not filtering by IsFamilyHub)
+            filteredServices = (filteredServices.Where(IsFamilyHub).Take(request.MaxFamilyHubs.Value)
+                .Concat(filteredServices.Where(s => !IsFamilyHub(s)))).ToList();
         }
 
         var pagelist = filteredServices.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToList();
@@ -182,26 +184,10 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         return !(service.Cost_options.Any(co => co.Amount == decimal.Zero && string.Equals(co.Option, "Free", StringComparison.OrdinalIgnoreCase)));
     }
 
-    private IEnumerable<OpenReferralServiceDto> FilterByMaxFamilyHubs(IEnumerable<OpenReferralServiceDto> services, int maxFamilyHubs)
+    private bool IsFamilyHub(OpenReferralServiceDto service)
     {
-        foreach (var service in services) 
-        {
-            bool serviceIsFamilyHub = service.Service_at_locations?.FirstOrDefault()?.Location.LinkTaxonomies
-                ?.Any(lt => string.Equals(lt.Taxonomy?.Id, OpenReferralTaxonomyDtoIds.FamilyHub, StringComparison.OrdinalIgnoreCase)) == true;
-
-            if (serviceIsFamilyHub && --maxFamilyHubs < 0)
-            {
-                continue;
-            }
-
-            // we could do filtering here, but it's more efficient to do it earlier
-            //if (familyHubs.HasValue && familyHubs.Value != serviceIsFamilyHub)
-            //{
-            //    continue;
-            //}
-
-            yield return service;
-        }
+        return service.Service_at_locations?.FirstOrDefault()?.Location.LinkTaxonomies
+            ?.Any(lt => string.Equals(lt.Taxonomy?.Id, OpenReferralTaxonomyDtoIds.FamilyHub, StringComparison.OrdinalIgnoreCase)) == true;
     }
 
     private async Task<IQueryable<OpenReferralService>> GetOpenReferralServices(GetOpenReferralServicesCommand request)
