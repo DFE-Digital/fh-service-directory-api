@@ -247,7 +247,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
             }
             );
 
-        bristolCountyCouncil.AdministractiveDistrictCode = "E06000023";
+        bristolCountyCouncil.AdminAreaCode = "E06000023";
 
         return bristolCountyCouncil;
     }

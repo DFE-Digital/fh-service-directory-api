@@ -100,7 +100,7 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
         var organisationAdminDistrict = _context.AdminAreas.FirstOrDefault(x => x.OpenReferralOrganisationId == entity.Id);
         if (organisationAdminDistrict != null)
         {
-            result.AdministractiveDistrictCode = organisationAdminDistrict.Code;
+            result.AdminAreaCode = organisationAdminDistrict.Code;
         }
         
         return result;

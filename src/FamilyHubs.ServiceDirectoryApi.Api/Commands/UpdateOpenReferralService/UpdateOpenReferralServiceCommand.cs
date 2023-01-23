@@ -512,8 +512,6 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
 
     private void UpdateContacts(ICollection<OpenReferralContact> existing, ICollection<OpenReferralContactDto> updated)
     {
-        List<string> phoneIds = new();
-
         foreach (var updatedContact in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedContact.Id);

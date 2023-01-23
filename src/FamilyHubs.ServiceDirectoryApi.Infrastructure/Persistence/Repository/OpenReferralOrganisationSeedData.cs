@@ -19,7 +19,7 @@ public class OpenReferralOrganisationSeedData
             new AdminArea(Guid.NewGuid().ToString(), "E10000017", "fc51795e-ea95-4af0-a0b2-4c06d5463678"), //Lancashire
             new AdminArea(Guid.NewGuid().ToString(), "E09000026", "1229cb45-0dc0-4f8a-81bd-2cd74c7cc9cc"), //Redbridge
             new AdminArea(Guid.NewGuid().ToString(), "E08000006", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"), //Salford
-            new AdminArea(Guid.NewGuid().ToString(), "E07000203", "6dc1c3ad-d077-46ff-9e0d-04fb263f0637"), //Suffolk
+            new AdminArea(Guid.NewGuid().ToString(), "E10000029", "6dc1c3ad-d077-46ff-9e0d-04fb263f0637"), //Suffolk
             new AdminArea(Guid.NewGuid().ToString(), "E09000030", "88e0bffd-ed0b-48ea-9a70-5f6ef729fc21"), //Tower Hamlets
         };
 

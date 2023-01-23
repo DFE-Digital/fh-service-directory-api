@@ -34,26 +34,8 @@ public class ListOpenReferralOrganisationCommandHandler : IRequestHandler<ListOp
                                 x.org.Url
                                 )
                                 {
-                                    AdministractiveDistrictCode = x.oad.Code
-                                }).ToListAsync();
-
-        //var organisations = await _context.OpenReferralOrganisations.Select(org => new OpenReferralOrganisationDto(
-        //org.Id,
-        //new OrganisationTypeDto(org.OrganisationType.Id, org.OrganisationType.Name, org.OrganisationType.Description),
-        //org.Name,
-        //org.Description,
-        //org.Logo,
-        //org.Uri,
-        //org.Url
-        //    ))
-        //.AsNoTracking().ToListAsync();
-
-        //_context.OrganisationAdminDistricts
-
-        //foreach(var organisation in organisations)
-        //{
-        //    organisation.AdministractiveDistrictCode =
-        //}
+                                    AdminAreaCode = x.oad.Code
+                                }).ToListAsync(cancellationToken);
 
         return organisations;
     }

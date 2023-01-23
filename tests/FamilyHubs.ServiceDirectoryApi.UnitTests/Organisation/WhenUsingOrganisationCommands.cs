@@ -113,7 +113,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.AdministractiveDistrictCode));
+        result.Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.AdminAreaCode));
     }
 
     [Fact]
@@ -139,7 +139,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         //Assert
         result.Should().NotBeNull();
-        result[0].Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.Services).Excluding(si => si.AdministractiveDistrictCode));
+        result[0].Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.Services).Excluding(si => si.AdminAreaCode));
     }
 
     [Fact]
@@ -212,7 +212,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             }
             );
 
-        testCountyCouncil.AdministractiveDistrictCode = "XTEST";
+        testCountyCouncil.AdminAreaCode = "XTEST";
 
         return testCountyCouncil;
     }
@@ -370,7 +370,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             }
             );
 
-        testCountyCouncil.AdministractiveDistrictCode = "XTEST";
+        testCountyCouncil.AdminAreaCode = "XTEST";
 
         return testCountyCouncil;
     }
