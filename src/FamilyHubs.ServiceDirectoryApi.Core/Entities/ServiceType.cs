@@ -1,10 +1,9 @@
 ﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class ServiceType : EntityBase<string>, IServiceType, IAggregateRoot
+public class ServiceType : EntityBase<string>, IAggregateRoot
 {
     private ServiceType() { }
     public ServiceType(string id, string name, string? description)
@@ -14,5 +13,5 @@ public class ServiceType : EntityBase<string>, IServiceType, IAggregateRoot
         Description = description;
     }
     public string Name { get; set; } = default!;
-    public string? Description { get; set; } = default!;
+    public string? Description { get; set; }
 }

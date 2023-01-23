@@ -1,10 +1,9 @@
 ﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class OpenReferralParent : EntityBase<string>, IOpenReferralParent, IAggregateRoot
+public class OpenReferralParent : EntityBase<string>, IAggregateRoot
 {
     private OpenReferralParent() { }
     public OpenReferralParent(string id, string name, string? vocabulary, ICollection<OpenReferralService_Taxonomy>? serviceTaxonomyCollection, ICollection<OpenReferralLinkTaxonomy>? linkTaxonomyCollection)
@@ -12,8 +11,8 @@ public class OpenReferralParent : EntityBase<string>, IOpenReferralParent, IAggr
         Id = id;
         Name = name;
         Vocabulary = vocabulary;
-        ServiceTaxonomyCollection = serviceTaxonomyCollection as ICollection<OpenReferralService_Taxonomy>;
-        LinkTaxonomyCollection = linkTaxonomyCollection as ICollection<OpenReferralLinkTaxonomy>;
+        ServiceTaxonomyCollection = serviceTaxonomyCollection;
+        LinkTaxonomyCollection = linkTaxonomyCollection;
     }
     public string Name { get; init; } = default!;
     public string? Vocabulary { get; init; }

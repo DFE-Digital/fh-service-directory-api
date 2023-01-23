@@ -1,6 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
-using fh_service_directory_api.core.Interfaces.Commands;
+﻿using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
@@ -26,7 +24,7 @@ public class WhenValidatingCreateOrganisationCommands
     public void ThenShouldErrorWhenModelHasNoId()
     {
         //Arrange
-        OpenReferralOrganisationWithServicesDto testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
+        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
         testOrganisation.Id = string.Empty;
         var validator = new CreateOpenReferralOrganisationCommandValidator();
         var testModel = new CreateOpenReferralOrganisationCommand(testOrganisation);
@@ -42,7 +40,7 @@ public class WhenValidatingCreateOrganisationCommands
     public void ThenShouldErrorWhenModelHasNoName()
     {
         //Arrange
-        OpenReferralOrganisationWithServicesDto testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
+        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
         testOrganisation.Name = string.Empty;
         var validator = new CreateOpenReferralOrganisationCommandValidator();
         var testModel = new CreateOpenReferralOrganisationCommand(testOrganisation);

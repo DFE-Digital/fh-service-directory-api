@@ -95,7 +95,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             List<OpenReferralService> servicesFilteredByDelMethod = new List<OpenReferralService>();
             string[] parts = request.ServiceDeliveries.Split(',');
             
-            foreach (string part in parts)
+            foreach (var part in parts)
                 if (Enum.TryParse(part, true, out ServiceDelivery serviceDelivery))
                     servicesFilteredByDelMethod.AddRange(dbservices.Where(x => x.ServiceDelivery.Any(x => x.ServiceDelivery == serviceDelivery)).ToList());
             
@@ -108,7 +108,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             List<OpenReferralService> servicesFilteredByLanguages = new List<OpenReferralService>();
             string[] parts = request.Languages.Split(',');
             
-            foreach (string part in parts)
+            foreach (var part in parts)
                 servicesFilteredByLanguages.AddRange(dbservices.Where(x => x.Languages.Any(x => x.Language == part)).ToList());
             
             dbservices = servicesFilteredByLanguages;
@@ -196,14 +196,13 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
         if (request.DistrictCode != null)
         {
-            List<string> organisationIds = await _context.OrganisationAdminDistricts.Where(x => x.Code == request.DistrictCode).Select(x => x.OpenReferralOrganisationId).ToListAsync();
+            List<string> organisationIds = await _context.AdminAreas.Where(x => x.Code == request.DistrictCode).Select(x => x.OpenReferralOrganisationId).ToListAsync();
 
            openReferralServices = _context.OpenReferralServices
           .Include(x => x.ServiceType)
           .Include(x => x.ServiceDelivery)
           .Include(x => x.Eligibilities)
           .Include(x => x.Contacts)
-          .ThenInclude(x => x.Phones)
           .Include(x => x.Languages)
           .Include(x => x.Service_areas)
           .Include(x => x.Service_taxonomys)
@@ -237,7 +236,6 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
            .Include(x => x.ServiceDelivery)
            .Include(x => x.Eligibilities)
            .Include(x => x.Contacts)
-           .ThenInclude(x => x.Phones)
            .Include(x => x.Languages)
            .Include(x => x.Service_areas)
            .Include(x => x.Service_taxonomys)
@@ -264,7 +262,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
         if (request.ServiceType != null)
         {
-            ServiceType? serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.ServiceType || x.Name == request.ServiceType);
+            var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.ServiceType || x.Name == request.ServiceType);
             if (serviceType != null)
             {
                 openReferralServices = openReferralServices.Where(x => x.ServiceType.Id == serviceType.Id);

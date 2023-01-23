@@ -24,14 +24,14 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
         CreateOpenReferralOrganisationCommand createcommand = new(testOrganisation);
         CreateOpenReferralOrganisationCommandHandler createhandler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await createhandler.Handle(createcommand, new System.Threading.CancellationToken());
+        var id = await createhandler.Handle(createcommand, new CancellationToken());
 
 
         GetOpenReferralServicesCommand command = new("Information Sharing", "active", "XTEST", null, null, null, null, null, null, 1, 10, null, null, null, null, null, null, null, null);
         GetOpenReferralServicesCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
-        var results = await handler.Handle(command, new System.Threading.CancellationToken());
+        var results = await handler.Handle(command, new CancellationToken());
 
         //Assert
         results.Should().NotBeNull();
@@ -52,14 +52,14 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
         CreateOpenReferralOrganisationCommand createcommand = new(testOrganisation);
         CreateOpenReferralOrganisationCommandHandler createhandler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await createhandler.Handle(createcommand, new System.Threading.CancellationToken());
+        var id = await createhandler.Handle(createcommand, new CancellationToken());
 
 
         GetOpenReferralServicesCommand command = new("Information Sharing", "active", "XTEST", null, null, null, null, null, null, 1, 10, null, null, true, null, null, null, null, null);
         GetOpenReferralServicesCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
-        var results = await handler.Handle(command, new System.Threading.CancellationToken());
+        var results = await handler.Handle(command, new CancellationToken());
 
         //Assert
         results.Should().NotBeNull();
@@ -79,14 +79,14 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
         CreateOpenReferralOrganisationCommand createcommand = new(testOrganisation);
         CreateOpenReferralOrganisationCommandHandler createhandler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await createhandler.Handle(createcommand, new System.Threading.CancellationToken());
+        var id = await createhandler.Handle(createcommand, new CancellationToken());
 
 
         GetOpenReferralServicesCommand command = new("Information Sharing", "active", "XTEST", null, null, null, null, null, null, 1, 10, null, null, false, null, null, null, null, null);
         GetOpenReferralServicesCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
-        var results = await handler.Handle(command, new System.Threading.CancellationToken());
+        var results = await handler.Handle(command, new CancellationToken());
 
         //Assert
         results.Should().NotBeNull();
@@ -107,14 +107,14 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
         CreateOpenReferralOrganisationCommand createcommand = new(testOrganisation);
         CreateOpenReferralOrganisationCommandHandler createhandler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await createhandler.Handle(createcommand, new System.Threading.CancellationToken());
+        var id = await createhandler.Handle(createcommand, new CancellationToken());
 
 
         DeleteOpenReferralServiceByIdCommand command = new("3010521b-6e0a-41b0-b610-200edbbeeb14");
         DeleteOpenReferralServiceByIdCommandHandler handler = new(mockApplicationDbContext, new Mock<ILogger<DeleteOpenReferralServiceByIdCommandHandler>>().Object);
 
         //Act
-        var results = await handler.Handle(command, new System.Threading.CancellationToken());
+        var results = await handler.Handle(command, new CancellationToken());
 
         //Assert
         results.Should().Be(true);

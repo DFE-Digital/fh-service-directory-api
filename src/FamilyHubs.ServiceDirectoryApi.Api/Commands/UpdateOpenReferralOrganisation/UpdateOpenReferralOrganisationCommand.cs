@@ -152,16 +152,15 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
     {
         if (!string.IsNullOrEmpty(request.OpenReferralOrganisation.AdministractiveDistrictCode))
         {
-            var organisationAdminDistrict = _context.OrganisationAdminDistricts.FirstOrDefault(x => x.OpenReferralOrganisationId == openReferralOrganisation.Id);
+            var organisationAdminDistrict = _context.AdminAreas.FirstOrDefault(x => x.OpenReferralOrganisationId == openReferralOrganisation.Id);
             if (organisationAdminDistrict == null)
             {
-                var entity = new OrganisationAdminDistrict(
+                var entity = new AdminArea(
                     Guid.NewGuid().ToString(),
                     request.OpenReferralOrganisation.AdministractiveDistrictCode,
                     openReferralOrganisation.Id);
 
-                entity.RegisterDomainEvent(new OrganisationAdminDistrictCreatedEvent(entity));
-                _context.OrganisationAdminDistricts.Add(entity);
+                _context.AdminAreas.Add(entity);
             }
             else
             {

@@ -5,7 +5,6 @@ using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace fh_service_directory_api.api.Commands.UpdateOpenReferralTaxonomy;
 
 public class UpdateOpenReferralTaxonomyCommand : IRequest<string>

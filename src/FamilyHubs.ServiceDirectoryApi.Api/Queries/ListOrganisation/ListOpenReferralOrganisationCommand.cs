@@ -1,7 +1,5 @@
-﻿using Ardalis.Specification;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
+﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
-using fh_service_directory_api.core.Interfaces.Infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +8,6 @@ namespace fh_service_directory_api.api.Queries.ListOrganisation;
 
 public class ListOpenReferralOrganisationCommand : IRequest<List<OpenReferralOrganisationDto>>
 {
-    public ListOpenReferralOrganisationCommand()
-    {
-
-    }
 }
 
 public class ListOpenReferralOrganisationCommandHandler : IRequestHandler<ListOpenReferralOrganisationCommand, List<OpenReferralOrganisationDto>>
@@ -28,7 +22,7 @@ public class ListOpenReferralOrganisationCommandHandler : IRequestHandler<ListOp
     public async Task<List<OpenReferralOrganisationDto>> Handle(ListOpenReferralOrganisationCommand request, CancellationToken cancellationToken)
     {
         var organisations = await _context.OpenReferralOrganisations
-                            .Join(_context.OrganisationAdminDistricts, org => org.Id, oad => oad.OpenReferralOrganisationId,
+                            .Join(_context.AdminAreas, org => org.Id, oad => oad.OpenReferralOrganisationId,
                             (org, oad) => new { org, oad }).Select(
                                 x => new OpenReferralOrganisationDto(
                                 x.org.Id,

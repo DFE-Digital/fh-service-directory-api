@@ -1,13 +1,16 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Builders;
+﻿using System.Net;
+using System.Text;
+using System.Text.Json;
+using FamilyHubs.ServiceDirectory.Shared.Builders;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContacts;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralHolidaySchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhones;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralRegularSchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAreas;
@@ -20,10 +23,8 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
 using fh_service_directory_api.core.Entities;
 using FluentAssertions;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using System.Text.Json;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
@@ -43,7 +44,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         {
             Method = HttpMethod.Post,
             RequestUri = new Uri(_client.BaseAddress + "api/organizations"),
-            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
+            Content = new StringContent(JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
         //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
@@ -54,8 +55,8 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 
         var stringResult = await response.Content.ReadAsStringAsync();
 
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        stringResult.ToString().Should().Be("ba1cca90-b02a-4a0b-afa0-d8aed1083c0d");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        stringResult.Should().Be("ba1cca90-b02a-4a0b-afa0-d8aed1083c0d");
     }
 
 #if DEBUG
@@ -80,7 +81,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         var retVal = await JsonSerializer.DeserializeAsync<OpenReferralOrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             
        
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
         retVal.Id.Should().Be("72e653e8-1d05-4821-84e9-9177571a6013");
@@ -106,7 +107,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 
         var retVal = await JsonSerializer.DeserializeAsync<List<OpenReferralOrganisationDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
         retVal.Count.Should().BeGreaterThan(0);
@@ -132,7 +133,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 
         var retVal = await JsonSerializer.DeserializeAsync<List<OrganisationTypeDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
         retVal.Count.Should().BeGreaterThan(2);
@@ -160,7 +161,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 
         var stringResult = await response.Content.ReadAsStringAsync();
 
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         stringResult.Should().NotBeNull();
         stringResult.Should().Be("E06000023");
     }
@@ -205,7 +206,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
         {
             Method = HttpMethod.Put,
             RequestUri = new Uri(_client.BaseAddress + "api/organizations/72e653e8-1d05-4821-84e9-9177571a6013"),
-            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(update), Encoding.UTF8, "application/json"),
+            Content = new StringContent(JsonConvert.SerializeObject(update), Encoding.UTF8, "application/json"),
         };
 
         //updaterequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
@@ -216,8 +217,8 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
 
         var stringResult = await updateresponse.Content.ReadAsStringAsync();
 
-        updateresponse.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        stringResult.ToString().Should().Be("72e653e8-1d05-4821-84e9-9177571a6013");
+        updateresponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        stringResult.Should().Be("72e653e8-1d05-4821-84e9-9177571a6013");
     }
 
     public IReadOnlyCollection<OpenReferralOrganisation> GetTestOpenReferralOrganistions()
@@ -255,8 +256,8 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
     {
         var contactId = Guid.NewGuid().ToString();
 
-        ServicesDtoBuilder builder = new ServicesDtoBuilder();
-        OpenReferralServiceDto service = builder.WithMainProperties("c1b5dd80-7506-4424-9711-fe175fa13eb8",
+        var builder = new ServicesDtoBuilder();
+        var service = builder.WithMainProperties("c1b5dd80-7506-4424-9711-fe175fa13eb8",
                 new ServiceTypeDto("1", "Information Sharing", ""),
                 parentId,
                 "Test Organisation for Children with Tracheostomies",
@@ -278,29 +279,27 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                 {
                     new OpenReferralEligibilityDto("Test9109Children","",0,13)
                 })
-            .WithContact(new List<OpenReferralContactDto>()
+            .WithContact(new List<OpenReferralContactDto>
             {
                 new OpenReferralContactDto(
                     contactId,
                     "Service",
                     string.Empty,
-                    new List<OpenReferralPhoneDto>()
-                    {
-                        new OpenReferralPhoneDto("1569", "01827 65780")
-                    }
+                    "01827 65780",
+                    "01827 65780"
                     )
             })
             .WithCostOption(new List<OpenReferralCostOptionDto>())
-            .WithLanguages(new List<OpenReferralLanguageDto>()
-                {
+            .WithLanguages(new List<OpenReferralLanguageDto>
+            {
                     new OpenReferralLanguageDto("442a06cd-aa14-4ea3-9f11-b45c1bc4861f", "English")
                 })
-            .WithServiceAreas(new List<OpenReferralServiceAreaDto>()
-                {
+            .WithServiceAreas(new List<OpenReferralServiceAreaDto>
+            {
                     new OpenReferralServiceAreaDto(Guid.NewGuid().ToString(), "National", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 })
-            .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>()
-                {
+            .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>
+            {
                     new OpenReferralServiceAtLocationDto(
                         "Test17499",
                         new OpenReferralLocationDto(
@@ -309,7 +308,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                             "",
                             52.6312,
                             -1.66526,
-                            new List<OpenReferralPhysicalAddressDto>()
+                            new List<OpenReferralPhysicalAddressDto>
                             {
                                 new OpenReferralPhysicalAddressDto(
                                     Guid.NewGuid().ToString(),
@@ -320,7 +319,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                                     null
                                     )
                             },
-                            new List<OpenReferralLinkTaxonomyDto>()
+                            new List<OpenReferralLinkTaxonomyDto>
                             {
                                 new OpenReferralLinkTaxonomyDto(
                                     Guid.NewGuid().ToString(),
@@ -341,8 +340,8 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                         )
 
                 })
-            .WithServiceTaxonomies(new List<OpenReferralServiceTaxonomyDto>()
-                {
+            .WithServiceTaxonomies(new List<OpenReferralServiceTaxonomyDto>
+            {
                     new OpenReferralServiceTaxonomyDto
                     ("Test9107",
                     new OpenReferralTaxonomyDto(
@@ -387,8 +386,8 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
     {
         var contactId = Guid.NewGuid().ToString();
 
-        ServicesDtoBuilder builder = new ServicesDtoBuilder();
-        OpenReferralServiceDto service = builder.WithMainProperties("9066bccb-79cb-401f-818f-86ad23b022cf",
+        var builder = new ServicesDtoBuilder();
+        var service = builder.WithMainProperties("9066bccb-79cb-401f-818f-86ad23b022cf",
                 new ServiceTypeDto("1", "Information Sharing", ""),
                 parentId,
                 "Test1 Organisation for Children with Tracheostomies",
@@ -411,29 +410,27 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                 {
                     new OpenReferralEligibilityDto("Test91091Children","",0,13)
                 })
-            .WithContact(new List<OpenReferralContactDto>()
+            .WithContact(new List<OpenReferralContactDto>
             {
                 new OpenReferralContactDto(
                     contactId,
                     "Service",
                     string.Empty,
-                    new List<OpenReferralPhoneDto>()
-                    {
-                        new OpenReferralPhoneDto("1570", "01827 65770")
-                    }
+                    "01827 65770",
+                    "01827 65770"
                     )
             })
             .WithCostOption(new List<OpenReferralCostOptionDto>())
-            .WithLanguages(new List<OpenReferralLanguageDto>()
-                {
+            .WithLanguages(new List<OpenReferralLanguageDto>
+            {
                     new OpenReferralLanguageDto("943bc803-39f4-4805-8805-bc7d3eeae3ff", "English")
                 })
-            .WithServiceAreas(new List<OpenReferralServiceAreaDto>()
-                {
+            .WithServiceAreas(new List<OpenReferralServiceAreaDto>
+            {
                     new OpenReferralServiceAreaDto(Guid.NewGuid().ToString(), "National", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 })
-            .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>()
-                {
+            .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>
+            {
                     new OpenReferralServiceAtLocationDto(
                         "Test1749",
                         new OpenReferralLocationDto(
@@ -442,7 +439,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                             "",
                             52.6312,
                             -1.66526,
-                            new List<OpenReferralPhysicalAddressDto>()
+                            new List<OpenReferralPhysicalAddressDto>
                             {
                                 new OpenReferralPhysicalAddressDto(
                                     Guid.NewGuid().ToString(),
@@ -453,7 +450,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                                     null
                                     )
                             },
-                            new List<OpenReferralLinkTaxonomyDto>()
+                            new List<OpenReferralLinkTaxonomyDto>
                             {
                                 new OpenReferralLinkTaxonomyDto(
                                     Guid.NewGuid().ToString(),
@@ -529,24 +526,22 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                 new List<OpenReferralLanguage>(),
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>()
+                new List<OpenReferralContact>
                 {
                     new OpenReferralContact(
                         "Test1567",
                         "",
                         "",
-                        new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("1568", "01827 65779")
-                        }
+                        "01827 65779",
+                        "01827 65779"
                         )
                 },
                 new List<OpenReferralCost_Option>(),
-                new List<OpenReferralService_Area>()
+                new List<OpenReferralService_Area>
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>
                 {
                     new OpenReferralServiceAtLocation(
                         "Test1749",
@@ -557,7 +552,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                             52.6312,
                             -1.66526,
                             new List<OpenReferralLinkTaxonomy>(),
-                            new List<OpenReferralPhysical_Address>()
+                            new List<OpenReferralPhysical_Address>
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
@@ -575,7 +570,7 @@ public class WhenUsingOpenReferralOrganisationApiUnitTests : BaseWhenUsingOpenRe
                         )
 
                 },
-                new List<OpenReferralService_Taxonomy>()
+                new List<OpenReferralService_Taxonomy>
                 {
                     new OpenReferralService_Taxonomy
                     ("Test9107",

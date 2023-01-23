@@ -1,10 +1,9 @@
 ﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class RelatedOrganisation : EntityBase<string>, IRelatedOrganisation, IAggregateRoot
+public class RelatedOrganisation : EntityBase<string>, IAggregateRoot
 {
     private RelatedOrganisation() { }
     public RelatedOrganisation(string id,string organisationId, string relatedOrganisationId)

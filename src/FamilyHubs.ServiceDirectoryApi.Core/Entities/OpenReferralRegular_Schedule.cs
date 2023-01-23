@@ -1,10 +1,9 @@
 ﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class OpenReferralRegular_Schedule : EntityBase<string>, IOpenReferralRegular_Schedule, IAggregateRoot
+public class OpenReferralRegular_Schedule : EntityBase<string>, IAggregateRoot
 {
     private OpenReferralRegular_Schedule() { }
     public OpenReferralRegular_Schedule(string id, string description, DateTime? opens_at, DateTime? closes_at, string? byday, string? bymonthday, string? dtstart, string? freq, string? interval, DateTime? valid_from, DateTime? valid_to

@@ -1,4 +1,5 @@
-﻿using Ardalis.GuardClauses;
+﻿using System.Collections.ObjectModel;
+using Ardalis.GuardClauses;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContacts;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
@@ -17,7 +18,6 @@ using fh_service_directory_api.core.Events;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.ObjectModel;
 
 namespace fh_service_directory_api.api.Commands.UpdateOpenReferralService;
 
@@ -58,7 +58,6 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
            .Include(x => x.ServiceDelivery)
            .Include(x => x.Eligibilities)
            .Include(x => x.Contacts)
-           .ThenInclude(x => x.Phones)
            .Include(x => x.Cost_options)
            .Include(x => x.Languages)
            .Include(x => x.Service_areas)
@@ -520,33 +519,8 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             var current = existing.FirstOrDefault(x => x.Id == updatedContact.Id);
             if (current == null)
             {
-                List<OpenReferralPhone> listPhones = new();
-                if (updatedContact.Phones != null && updatedContact.Phones.Any())
-                {
-                    foreach (var phone in updatedContact.Phones)
-                    {
-                        var existingPhone = _context.OpenReferralPhones.FirstOrDefault(x => x.Id == phone.Id);
-                        if (existingPhone == null)
-                        {
-                            var phoneEntity = _mapper.Map<OpenReferralPhone>(phone);
-                            phoneEntity.OpenReferralContactId = updatedContact.Id;
-                            phoneEntity.RegisterDomainEvent(new OpenReferralPhoneCreatedEvent(phoneEntity));
-                            _context.OpenReferralPhones.Add(phoneEntity);
-                            listPhones.Add(phoneEntity);
-                            phoneIds.Add(phoneEntity.Id);
-                        }
-                        else
-                        {
-                            existingPhone.Number = phone.Number;
-                            phoneIds.Add(existingPhone.Id);
-                        }
-
-                    }
-                }
-                
                 var entity = _mapper.Map<OpenReferralContact>(updatedContact);
                 entity.OpenReferralServiceId = _request.OpenReferralService.Id;
-                entity.Phones = listPhones;
                 entity.RegisterDomainEvent(new OpenReferralContactCreatedEvent(entity));
                 _context.OpenReferralContacts.Add(entity);
             }
@@ -554,42 +528,9 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
             {
                 current.Title = updatedContact.Title;
                 current.Name = updatedContact.Name;
-                if (updatedContact.Phones != null)
-                {
-                    foreach (var phone in updatedContact.Phones)
-                    {
-                        var existingPhone = _context.OpenReferralPhones.FirstOrDefault(x => x.Id == phone.Id);
-                        if (existingPhone == null)
-                        {
-                            var entity = _mapper.Map<OpenReferralPhone>(phone);
-                            entity.OpenReferralContactId = current.Id;
-                            entity.RegisterDomainEvent(new OpenReferralPhoneCreatedEvent(entity));
-                            _context.OpenReferralPhones.Add(entity);
-                            phoneIds.Add(entity.Id);
-                        }
-                        else
-                        {
-                            existingPhone.Number = phone.Number;
-                            phoneIds.Add(existingPhone.Id);
-                        }
-                    }
-                }
+                current.Telephone = updatedContact.Telephone;
+                current.TextPhone = updatedContact.TextPhone;
             }
-        }
-
-
-        foreach(var contact in existing)
-        {
-            if (contact.Phones != null)
-            {
-                foreach (var phone in contact.Phones)
-                {
-                    if (!phoneIds.Contains(phone.Id))
-                    {
-                        _context.OpenReferralPhones.Remove(phone);
-                    }
-                }
-            }   
         }
 
         var contactToDelete = existing.Where(a => !existing.Select(x => x.Id).Contains(a.Id)).ToList();

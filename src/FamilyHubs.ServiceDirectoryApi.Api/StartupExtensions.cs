@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Text;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using FamilyHubs.SharedKernel.Interfaces;
@@ -6,18 +7,17 @@ using fh_service_directory_api.api.Endpoints;
 using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Interfaces;
-using fh_service_directory_api.infrastructure.Persistence.Interceptors;
 using fh_service_directory_api.infrastructure;
+using fh_service_directory_api.infrastructure.Persistence.Interceptors;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using fh_service_directory_api.infrastructure.Services;
 using MediatR;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using System.Text;
-using Microsoft.ApplicationInsights.Extensibility;
 using Serilog.Events;
 
 namespace fh_service_directory_api.api;
@@ -194,7 +194,7 @@ public static class StartupExtensions
                 // Adding Jwt Bearer
                 options.SaveToken = true;
                 options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters()
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,

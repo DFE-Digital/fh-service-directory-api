@@ -71,9 +71,9 @@ public class GetServicesUrlBuilder
 
     public string Build()
     {
-        bool isFirst = true;
-        string url = string.Empty;
-        foreach(string param in _urlParameter)
+        var isFirst = true;
+        var url = string.Empty;
+        foreach(var param in _urlParameter)
         {
             if (isFirst)
             {

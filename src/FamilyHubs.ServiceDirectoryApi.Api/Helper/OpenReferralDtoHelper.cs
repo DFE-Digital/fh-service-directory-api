@@ -3,8 +3,8 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralHolidaySchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhones;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralRegularSchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAreas;
@@ -14,9 +14,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
 using fh_service_directory_api.core.Entities;
-using System.Collections.ObjectModel;
 
 namespace fh_service_directory_api.api.Helper;
 
@@ -58,13 +56,7 @@ public class OpenReferralDtoHelper
 
     public static ICollection<OpenReferralRegularScheduleDto> GetRegularSchedules(ICollection<OpenReferralRegular_Schedule>? schedules)
     {
-        if (schedules != null)
-        {
-            return schedules.Select(x => new OpenReferralRegularScheduleDto(x.Id, x.Description, x.Opens_at, x.Closes_at, x.Byday, x.Bymonthday, x.Dtstart, x.Freq, x.Interval, x.Valid_from, x.Valid_to)).ToList();
-        }
-
-        return new List<OpenReferralRegularScheduleDto>();
-
+        return schedules != null ? schedules.Select(x => new OpenReferralRegularScheduleDto(x.Id, x.Description, x.Opens_at, x.Closes_at, x.Byday, x.Bymonthday, x.Dtstart, x.Freq, x.Interval, x.Valid_from, x.Valid_to)).ToList() : new List<OpenReferralRegularScheduleDto>();
     }
 
     public static ICollection<OpenReferralHolidayScheduleDto> GetHolidaySchedules(ICollection<OpenReferralHoliday_Schedule>? schedules)
@@ -114,47 +106,21 @@ public class OpenReferralDtoHelper
 
     private static List<OpenReferralContactDto> GetContacts(ICollection<OpenReferralContact> contacts)
     {
-        var items = contacts.Select(x => new OpenReferralContactDto(x.Id, x.Title, x.Name,
-            GetPhones(x.Phones ?? new Collection<OpenReferralPhone>())
-            )).ToList();
+        var items = contacts.Select(x => new OpenReferralContactDto(x.Id, x.Title, x.Name, x.Telephone, x.TextPhone)).ToList();
 
-        if (items != null)
-            return items;
-
-        return new List<OpenReferralContactDto>();
-    }
-
-    private static List<OpenReferralPhoneDto> GetPhones(ICollection<OpenReferralPhone> phones)
-    {
-        var selectedPhones = phones?.Select(x => new OpenReferralPhoneDto(x.Id, x.Number)).ToList();
-        if (selectedPhones != null)
-        {
-            return selectedPhones;
-        }
-
-        return new List<OpenReferralPhoneDto>();
+        return items;
     }
 
     private static List<OpenReferralPhysicalAddressDto> GetAddresses(OpenReferralLocation location)
     {
-        if (location != null && location.Physical_addresses != null)
-        {
-            var addressList = location?.Physical_addresses?.Select(x => new OpenReferralPhysicalAddressDto(x.Id, x.Address_1, x.City, x.Postal_code, x.Country, x.State_province)).ToList();
-            if (addressList != null)
-                return addressList;
-        }
-
-        return new List<OpenReferralPhysicalAddressDto>();
+        var addressList = location?.Physical_addresses?.Select(x => new OpenReferralPhysicalAddressDto(x.Id, x.Address_1, x.City, x.Postal_code, x.Country, x.State_province)).ToList();
+        
+        return addressList ?? new List<OpenReferralPhysicalAddressDto>();
     }
     private static List<OpenReferralLinkTaxonomyDto> GetLinkTaxonomies(OpenReferralLocation location)
     {
-        if (location != null && location.LinkTaxonomies != null)
-        {
-            var linkTaxonomies = location?.LinkTaxonomies?.Select(x => new OpenReferralLinkTaxonomyDto(x.Id, x.LinkType, x.LinkId, new OpenReferralTaxonomyDto(x.Taxonomy!.Id, x.Taxonomy.Name, x.Taxonomy.Vocabulary, x.Taxonomy.Parent))).ToList();
-            if (linkTaxonomies != null)
-                return linkTaxonomies;
-        }
-
-        return new List<OpenReferralLinkTaxonomyDto>();
+        var linkTaxonomies = location?.LinkTaxonomies?.Select(x => new OpenReferralLinkTaxonomyDto(x.Id, x.LinkType, x.LinkId, new OpenReferralTaxonomyDto(x.Taxonomy!.Id, x.Taxonomy.Name, x.Taxonomy.Vocabulary, x.Taxonomy.Parent))).ToList();
+        
+        return linkTaxonomies ?? new List<OpenReferralLinkTaxonomyDto>();
     }
 }

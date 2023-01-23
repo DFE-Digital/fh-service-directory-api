@@ -1,5 +1,4 @@
 ﻿using Ardalis.GuardClauses;
-using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
