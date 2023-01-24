@@ -5,6 +5,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralHolidaySchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhones;
@@ -39,12 +40,12 @@ public class AutoMappingProfiles : Profile
         CreateMap<OpenReferralServiceAtLocationDto, OpenReferralServiceAtLocation>();
         CreateMap<OpenReferralServiceDeliveryExDto, OpenReferralServiceDelivery>();
         CreateMap<OpenReferralServiceDto, OpenReferralService>();
+        CreateMap<OpenReferralLinkTaxonomyDto, OpenReferralLinkTaxonomy>();
         CreateMap<OpenReferralTaxonomyDto, OpenReferralTaxonomy>();
         CreateMap<OrganisationTypeDto, OrganisationType>();
         CreateMap<ServiceTypeDto, ServiceType>();
         CreateMap<ModelLinkDto, ModelLink>();
         CreateMap<OpenReferralRegularScheduleDto, OpenReferralRegular_Schedule>();
         CreateMap<OpenReferralHolidayScheduleDto, OpenReferralHoliday_Schedule>();
-
     }
 }

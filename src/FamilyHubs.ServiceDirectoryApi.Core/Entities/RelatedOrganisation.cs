@@ -7,7 +7,7 @@ namespace fh_service_directory_api.core.Entities;
 public class RelatedOrganisation : EntityBase<string>, IRelatedOrganisation, IAggregateRoot
 {
     private RelatedOrganisation() { }
-    public RelatedOrganisation(string id, string organisationId, string relatedOrganisationId)
+    public RelatedOrganisation(string id,string organisationId, string relatedOrganisationId)
     {
         Id = id;
         OrganisationId = organisationId;

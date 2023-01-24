@@ -9,7 +9,7 @@ public class Helper
     public static Point CreatePoint(double latitude, double longitude)
     {
         // 4326 is most common coordinate system used by GPS/Maps
-        var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+        var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
         // see https://docs.microsoft.com/en-us/ef/core/modeling/spatial
         // Longitude and Latitude

@@ -2,6 +2,8 @@
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.SharedKernel;
 using fh_service_directory_api.api.Helper;
+using fh_service_directory_api.core;
+using fh_service_directory_api.core.Constants;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
@@ -11,8 +13,7 @@ namespace fh_service_directory_api.api.Queries.GetServices;
 
 public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferralServiceDto>>
 {
-    public GetOpenReferralServicesCommand() { }
-    public GetOpenReferralServicesCommand(string? serviceType, string? status, string? districtCode, int? minimum_age, int? maximum_age, int? given_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation)
+    public GetOpenReferralServicesCommand(string? serviceType, string? status, string? districtCode, int? minimum_age, int? maximum_age, int? given_age, double? latitude, double? longtitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonmyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs)
     {
         ServiceType = serviceType;
         Status = status;
@@ -24,13 +25,15 @@ public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferra
         Longtitude = longtitude;
         Meters = proximity;
         PageNumber = pageNumber != null ? pageNumber.Value : 1;
-        PageSize = pageSize != null ? pageSize.Value : 1;
+        PageSize = pageSize != null ? pageSize.Value : 10;
         Text = text;
         ServiceDeliveries = serviceDeliveries;
         IsPaidFor = isPaidFor;
         TaxonmyIds = taxonmyIds;
         Languages = languages;
         CanFamilyChooseLocation = canFamilyChooseLocation;
+        IsFamilyHub = isFamilyHub;
+        MaxFamilyHubs = maxFamilyHubs;
     }
 
     public string? ServiceType { get; set; }
@@ -50,7 +53,8 @@ public class GetOpenReferralServicesCommand : IRequest<PaginatedList<OpenReferra
     public string? TaxonmyIds { get; set; }
     public string? Languages { get; set; }
     public bool? CanFamilyChooseLocation { get; set; }
-
+    public bool? IsFamilyHub { get; set; }
+    public int? MaxFamilyHubs { get; set; }
 }
 
 public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenReferralServicesCommand, PaginatedList<OpenReferralServiceDto>>
@@ -61,6 +65,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
     {
         _context = context;
     }
+
     public async Task<PaginatedList<OpenReferralServiceDto>> Handle(GetOpenReferralServicesCommand request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(request.Status))
@@ -68,26 +73,24 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
         IQueryable<OpenReferralService> entities = await GetOpenReferralServices(request);
 
-        if (request?.MaximumAge != null)
+        if (request.MaximumAge != null)
             entities = entities.Where(x => x.Eligibilities.Any(x => x.Maximum_age <= request.MaximumAge.Value));
 
-        if (request?.MinimumAge != null)
+        if (request.MinimumAge != null)
             entities = entities.Where(x => x.Eligibilities.Any(x => x.Minimum_age >= request.MinimumAge.Value));
 
-        if (request?.GivenAge != null)
+        if (request.GivenAge != null)
             entities = entities.Where(x => x.Eligibilities.Any(x => x.Minimum_age <= request.GivenAge.Value && x.Maximum_age >= request.GivenAge.Value));
 
-        if (!string.IsNullOrEmpty(request?.Text))
+        if (!string.IsNullOrEmpty(request.Text))
             entities = entities.Where(x => x.Name.Contains(request.Text) || x.Description != null && x.Description.Contains(request.Text));
 
-
         IEnumerable<OpenReferralService> dbservices = await entities.ToListAsync();
-        if (request?.Latitude != null && request?.Longtitude != null && request?.Meters != null)
+        if (request.Latitude != null && request.Longtitude != null && request.Meters != null)
             dbservices = dbservices.Where(x => core.Helper.GetDistance(request.Latitude, request.Longtitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Latitude, x?.Service_at_locations?.FirstOrDefault()?.Location.Longitude, x?.Name) < request.Meters);
 
-        
         //ServiceDeliveries
-        if (!string.IsNullOrEmpty(request?.ServiceDeliveries))
+        if (!string.IsNullOrEmpty(request.ServiceDeliveries))
         {
             List<OpenReferralService> servicesFilteredByDelMethod = new List<OpenReferralService>();
             string[] parts = request.ServiceDeliveries.Split(',');
@@ -100,7 +103,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         }
 
         //Languages
-        if (!string.IsNullOrEmpty(request?.Languages))
+        if (!string.IsNullOrEmpty(request.Languages))
         {
             List<OpenReferralService> servicesFilteredByLanguages = new List<OpenReferralService>();
             string[] parts = request.Languages.Split(',');
@@ -111,40 +114,32 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
             dbservices = servicesFilteredByLanguages;
         }
 
-        if (request?.IsPaidFor != null)
+        if (request.IsPaidFor != null)
         {
-            if (request?.IsPaidFor.Value == true)
-            {
-                dbservices = dbservices.Where(x => x.Cost_options.Any() == true);
-            }
-            if (request?.IsPaidFor.Value == false)
-            {
-                dbservices = dbservices.Where(x => x.Cost_options.Any() == false);
-            }
+            dbservices = dbservices.Where(x => IsPaidFor(x) == request.IsPaidFor);
         }
 
         //Can families choose location
-        if (request?.CanFamilyChooseLocation != null)
+        if (request.CanFamilyChooseLocation is true)
         {
-            if (request?.CanFamilyChooseLocation.Value == true)
-            {
-                dbservices = dbservices.Where(x => x.CanFamilyChooseDeliveryLocation == true);
-            }
+            dbservices = dbservices.Where(x => x.CanFamilyChooseDeliveryLocation);
         }
 
-        if (!string.IsNullOrEmpty(request?.TaxonmyIds))
+        if (!string.IsNullOrEmpty(request.TaxonmyIds))
         {
             string[] parts = request.TaxonmyIds.Split(',');
             dbservices = dbservices.Where(x => x.Service_taxonomys.Any(x => parts.Contains(x.Taxonomy?.Id) ));
-
         }
 
-        if (dbservices == null)
+        // filter before we calculate distance and map, for efficiency
+        if (request.IsFamilyHub != null)
         {
-            dbservices = entities.ToList();
-            if (dbservices == null)
-                dbservices = new List<OpenReferralService>();
+            dbservices = dbservices.Where(s =>
+                s.Service_at_locations.FirstOrDefault()?.Location.LinkTaxonomies
+                    ?.Any(lt => string.Equals(lt.Taxonomy?.Id, OpenReferralTaxonomyDtoIds.FamilyHub, StringComparison.OrdinalIgnoreCase)) == request.IsFamilyHub);
         }
+
+        //todo: better to filter first, so we don't unnecessarily map?
 
         //if (request?.Latitude != null && request?.Longtitude != null)
         //    dbservices = dbservices.OrderBy(x => core.Helper.GetDistance(
@@ -155,7 +150,7 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
         //        x?.Name));
 
         var filteredServices = OpenReferralDtoHelper.GetOpenReferralServicesDto(dbservices);
-        if (request?.Latitude != null && request?.Longtitude != null)
+        if (request.Latitude != null && request.Longtitude != null)
         {
             foreach (var service in filteredServices)
             {
@@ -168,20 +163,33 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
 
             filteredServices = filteredServices.OrderBy(x => x.Distance).ToList();
         }
-        
 
-        if (request != null)
+        if (request.IsFamilyHub is null && request.MaxFamilyHubs != null)
         {
-            var pagelist = filteredServices.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToList();
-            var result = new PaginatedList<OpenReferralServiceDto>(filteredServices, pagelist.Count, request.PageNumber, request.PageSize);
-            return result;
+            // MaxFamilyHubs is really a flag to only include the nearest max family hubs at the start of the results set (when not filtering by IsFamilyHub)
+            filteredServices = (filteredServices.Where(IsFamilyHub).Take(request.MaxFamilyHubs.Value)
+                .Concat(filteredServices.Where(s => !IsFamilyHub(s)))).ToList();
         }
 
-        return new PaginatedList<OpenReferralServiceDto>(filteredServices, filteredServices.Count, 1, 10);
-
+        var pagelist = filteredServices.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToList();
+        var result = new PaginatedList<OpenReferralServiceDto>(pagelist, filteredServices.Count, request.PageNumber, request.PageSize);
+        return result;
     }
 
-    
+    private bool IsPaidFor(OpenReferralService service)
+    {
+        if (!service.Cost_options.Any())
+            return false;
+
+        return !(service.Cost_options.Any(co => co.Amount == decimal.Zero && string.Equals(co.Option, "Free", StringComparison.OrdinalIgnoreCase)));
+    }
+
+    private bool IsFamilyHub(OpenReferralServiceDto service)
+    {
+        return service.Service_at_locations?.FirstOrDefault()?.Location.LinkTaxonomies
+            ?.Any(lt => string.Equals(lt.Taxonomy?.Id, OpenReferralTaxonomyDtoIds.FamilyHub, StringComparison.OrdinalIgnoreCase)) == true;
+    }
+
     private async Task<IQueryable<OpenReferralService>> GetOpenReferralServices(GetOpenReferralServicesCommand request)
     {
         IQueryable<OpenReferralService> openReferralServices;
@@ -200,14 +208,22 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
           .Include(x => x.Service_areas)
           .Include(x => x.Service_taxonomys)
           .ThenInclude(x => x.Taxonomy)
+          
           .Include(x => x.Service_at_locations)
           .ThenInclude(x => x.Location)
           .ThenInclude(x => x.Physical_addresses)
 
           .Include(x => x.Service_at_locations)
+          .ThenInclude(x => x.Location)
+          .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
+          .ThenInclude(x => x.Taxonomy)
+
+          .Include(x => x.Service_at_locations)
           .ThenInclude(x => x.Regular_schedule)
+
           .Include(x => x.Service_at_locations)
           .ThenInclude(x => x.HolidayScheduleCollection)
+
           .Include(x => x.Regular_schedules)
           .Include(x => x.Holiday_schedules)
 
@@ -229,12 +245,19 @@ public class GetOpenReferralServicesCommandHandler : IRequestHandler<GetOpenRefe
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
            .ThenInclude(x => x.Physical_addresses)
+
+           .Include(x => x.Service_at_locations)
+           .ThenInclude(x => x.Location)
+           .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
+           .ThenInclude(x => x.Taxonomy)
+
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.Regular_schedule)
            .Include(x => x.Service_at_locations)
            .ThenInclude(x => x.HolidayScheduleCollection)
            .Include(x => x.Regular_schedules)
            .Include(x => x.Holiday_schedules)
+
            .Include(x => x.Cost_options)
            .Where(x => x.Status == request.Status && x.Status != "Deleted");
         }

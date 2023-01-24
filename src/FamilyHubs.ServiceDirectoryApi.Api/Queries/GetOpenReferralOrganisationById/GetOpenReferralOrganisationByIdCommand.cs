@@ -46,6 +46,21 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
            .ThenInclude(x => x.Languages)
            .Include(x => x.Services!)
            .ThenInclude(x => x.Service_areas)
+
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.Service_at_locations)
+           .ThenInclude(x => x.Regular_schedule)
+
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.Service_at_locations)
+           .ThenInclude(x => x.HolidayScheduleCollection)
+
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.Regular_schedules)
+
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.Holiday_schedules)
+
            .Include(x => x.Services!)
            .ThenInclude(x => x.Service_at_locations)
            .ThenInclude(x => x.Regular_schedule)
@@ -68,10 +83,17 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
            .ThenInclude(x => x.Service_at_locations)
            .ThenInclude(x => x.Location)
            .ThenInclude(x => x.Physical_addresses)
+           
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.Service_at_locations)
+           .ThenInclude(x => x.Location)
+           .ThenInclude(x => x.LinkTaxonomies!)
+           .ThenInclude(x => x.Taxonomy)
+
            .Include(x => x.Services!)
            .ThenInclude(x => x.Service_taxonomys)
            .ThenInclude(x => x.Taxonomy)
-           .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
+           .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {
@@ -96,6 +118,12 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
             entity.Uri,
             entity.Url,
             openReferralServices);
+
+        OrganisationAdminDistrict? organisationAdminDistrict = _context.OrganisationAdminDistricts.FirstOrDefault(x => x.OpenReferralOrganisationId == entity.Id);
+        if (organisationAdminDistrict != null)
+        {
+            result.AdministractiveDistrictCode = organisationAdminDistrict.Code;
+        }
         
         return result;
     }

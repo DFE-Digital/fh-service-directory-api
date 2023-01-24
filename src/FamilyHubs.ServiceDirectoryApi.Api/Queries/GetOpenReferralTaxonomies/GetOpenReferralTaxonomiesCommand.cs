@@ -1,6 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using FamilyHubs.SharedKernel;
-using fh_service_directory_api.core.Interfaces.Infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +48,7 @@ public class GetOpenReferralTaxonomiesCommandHandler : IRequestHandler<GetOpenRe
         if (request != null)
         {
             var pagelist = filteredTaxonomies.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToList();
-            var result = new PaginatedList<OpenReferralTaxonomyDto>(filteredTaxonomies, pagelist.Count, request.PageNumber, request.PageSize);
+            var result = new PaginatedList<OpenReferralTaxonomyDto>(pagelist, filteredTaxonomies.Count, request.PageNumber, request.PageSize);
             return result;
         }
 

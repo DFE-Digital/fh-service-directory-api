@@ -31,7 +31,7 @@ public class DeleteOpenReferralServiceByIdCommandHandler : IRequestHandler<Delet
         try
         {
             var entity = await _context.OpenReferralServices
-                .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
+                .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
             if (entity == null)
             {

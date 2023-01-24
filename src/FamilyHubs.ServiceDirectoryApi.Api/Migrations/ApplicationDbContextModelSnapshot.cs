@@ -342,7 +342,7 @@ namespace fh_service_directory_api.api.Migrations
                     b.ToTable("OpenReferralLanguages");
                 });
 
-            modelBuilder.Entity("fh_service_directory_api.core.Entities.OpenReferralLinktaxonomycollection", b =>
+            modelBuilder.Entity("fh_service_directory_api.core.Entities.OpenReferralLinkTaxonomy", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -359,31 +359,32 @@ namespace fh_service_directory_api.api.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
 
-                    b.Property<string>("Link_id")
+                    b.Property<string>("LinkId")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Link_type")
+                    b.Property<string>("LinkType")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OpenReferralLocationId")
                         .HasColumnType("text");
 
                     b.Property<string>("OpenReferralParentId")
                         .HasColumnType("text");
 
-                    b.Property<string>("OpenReferralServiceId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("OpenReferralTaxonomyId")
+                    b.Property<string>("TaxonomyId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OpenReferralLocationId");
+
                     b.HasIndex("OpenReferralParentId");
 
-                    b.HasIndex("OpenReferralTaxonomyId");
+                    b.HasIndex("TaxonomyId");
 
-                    b.ToTable("OpenReferralLinktaxonomycollections");
+                    b.ToTable("OpenReferralLinkTaxonomies");
                 });
 
             modelBuilder.Entity("fh_service_directory_api.core.Entities.OpenReferralLocation", b =>
@@ -1213,15 +1214,21 @@ namespace fh_service_directory_api.api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("fh_service_directory_api.core.Entities.OpenReferralLinktaxonomycollection", b =>
+            modelBuilder.Entity("fh_service_directory_api.core.Entities.OpenReferralLinkTaxonomy", b =>
                 {
+                    b.HasOne("fh_service_directory_api.core.Entities.OpenReferralLocation", null)
+                        .WithMany("LinkTaxonomies")
+                        .HasForeignKey("OpenReferralLocationId");
+
                     b.HasOne("fh_service_directory_api.core.Entities.OpenReferralParent", null)
                         .WithMany("LinkTaxonomyCollection")
                         .HasForeignKey("OpenReferralParentId");
 
-                    b.HasOne("fh_service_directory_api.core.Entities.OpenReferralTaxonomy", null)
+                    b.HasOne("fh_service_directory_api.core.Entities.OpenReferralTaxonomy", "Taxonomy")
                         .WithMany("LinkTaxonomyCollection")
-                        .HasForeignKey("OpenReferralTaxonomyId");
+                        .HasForeignKey("TaxonomyId");
+
+                    b.Navigation("Taxonomy");
                 });
 
             modelBuilder.Entity("fh_service_directory_api.core.Entities.OpenReferralOrganisation", b =>
@@ -1364,6 +1371,8 @@ namespace fh_service_directory_api.api.Migrations
             modelBuilder.Entity("fh_service_directory_api.core.Entities.OpenReferralLocation", b =>
                 {
                     b.Navigation("Accessibility_for_disabilities");
+
+                    b.Navigation("LinkTaxonomies");
 
                     b.Navigation("Physical_addresses");
                 });

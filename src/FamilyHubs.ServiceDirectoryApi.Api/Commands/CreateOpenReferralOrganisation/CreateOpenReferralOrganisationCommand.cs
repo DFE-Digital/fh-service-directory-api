@@ -1,13 +1,11 @@
-﻿using Ardalis.GuardClauses;
-using Ardalis.Specification;
-using AutoMapper;
+﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
 using fh_service_directory_api.core.Interfaces.Commands;
-using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 
@@ -60,16 +58,69 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
                     if (serviceType != null)
                         service.ServiceType = serviceType;
 
-                    if (service.Service_taxonomys != null)
+                    foreach (var serviceTaxonomy in service.Service_taxonomys)
                     {
-                        foreach (var servicetaxonomy in service.Service_taxonomys)
+                        if (serviceTaxonomy.Taxonomy != null)
                         {
-                            if (servicetaxonomy != null && servicetaxonomy.Taxonomy != null)
+                            var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == serviceTaxonomy.Taxonomy.Id);
+                            if (taxonomy != null)
                             {
-                                var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == servicetaxonomy.Taxonomy.Id);
-                                if (taxonomy != null)
+                                serviceTaxonomy.Taxonomy = taxonomy;
+                            }
+                        }
+                    }
+
+                    foreach (var serviceAtLocation in service.Service_at_locations)
+                    {
+                        if (serviceAtLocation.Regular_schedule != null)
+                        {
+                            foreach (var regularSchedules in serviceAtLocation.Regular_schedule)
+                            {
+                                regularSchedules.OpenReferralServiceAtLocationId = serviceAtLocation.Id;
+                            }
+                        }
+
+                        if (serviceAtLocation.HolidayScheduleCollection != null)
+                        {
+                            foreach (var holidaySchedules in serviceAtLocation.HolidayScheduleCollection)
+                            {
+                                holidaySchedules.OpenReferralServiceAtLocationId = serviceAtLocation.Id;
+                            }
+                        }
+
+                        var existingLocation = await _context.OpenReferralLocations
+                            .Include(l => l.Physical_addresses)
+                            .Include(l => l.LinkTaxonomies)!
+                            .ThenInclude(l => l.Taxonomy)
+                            .Where(l => l.Name == serviceAtLocation.Location.Name && serviceAtLocation.Location.Name != "")
+                            .FirstOrDefaultAsync(cancellationToken);
+
+                        if (existingLocation != null)
+                        {
+                            if (serviceAtLocation.Location.Physical_addresses != null)
+                            {
+                                foreach (var newAddresses in serviceAtLocation.Location.Physical_addresses)
                                 {
-                                    servicetaxonomy.Taxonomy = taxonomy;
+                                    existingLocation.Physical_addresses ??= new List<OpenReferralPhysical_Address>();
+                                    if (existingLocation.Physical_addresses.All(a => a.Postal_code != newAddresses.Postal_code))
+                                    {
+                                        existingLocation.Physical_addresses.Add(newAddresses);
+                                    }
+                                }
+                            }
+                            serviceAtLocation.Location = existingLocation;
+                        }
+                        else if (serviceAtLocation.Location.LinkTaxonomies != null)
+                        {
+                            foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
+                            {
+                                if (linkTaxonomy.Taxonomy != null)
+                                {
+                                    var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
+                                    if (taxonomy != null)
+                                    {
+                                        linkTaxonomy.Taxonomy = taxonomy;
+                                    }
                                 }
                             }
                         }
@@ -77,7 +128,7 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
                 }
             }
 
-            AddAdministractiveDistrict(request, entity);
+            AddAdministrativeDistrict(request, entity);
 
             AddRelatedOrganisation(request, entity);
 
@@ -93,13 +144,10 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
             throw new Exception(ex.Message, ex);
         }
 
-        if (request is not null && request.OpenReferralOrganisation is not null)
-            return request.OpenReferralOrganisation.Id;
-        else
-            return string.Empty;
+        return request.OpenReferralOrganisation.Id;
     }
 
-    private void AddAdministractiveDistrict(CreateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
+    private void AddAdministrativeDistrict(CreateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
     {
         if (!string.IsNullOrEmpty(request.OpenReferralOrganisation.AdministractiveDistrictCode))
         {
@@ -119,15 +167,15 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
 
     private void AddRelatedOrganisation(CreateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
     {
-        if (string.IsNullOrEmpty(request.OpenReferralOrganisation.AdministractiveDistrictCode) || string.Compare(request.OpenReferralOrganisation.OrganisationType.Name,"LA", StringComparison.OrdinalIgnoreCase) == 0)
+        if (string.IsNullOrEmpty(request.OpenReferralOrganisation.AdministractiveDistrictCode) || string.Compare(request.OpenReferralOrganisation.OrganisationType.Name, "LA", StringComparison.OrdinalIgnoreCase) == 0)
             return;
 
         var result = (from admindis in _context.OrganisationAdminDistricts
-                  join org in _context.OpenReferralOrganisations
-                       on admindis.OpenReferralOrganisationId equals org.Id
-                       where admindis.Code == request.OpenReferralOrganisation.AdministractiveDistrictCode
-                       && org.OrganisationType.Name == "LA"
-                       select org).FirstOrDefault();
+                      join org in _context.OpenReferralOrganisations
+                           on admindis.OpenReferralOrganisationId equals org.Id
+                      where admindis.Code == request.OpenReferralOrganisation.AdministractiveDistrictCode
+                      && org.OrganisationType.Name == "LA"
+                      select org).FirstOrDefault();
 
         if (result == null)
         {
@@ -135,7 +183,7 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
             return;
         }
 
-        var entity = new RelatedOrganisation(Guid.NewGuid().ToString(),result.Id, openReferralOrganisation.Id);
+        var entity = new RelatedOrganisation(Guid.NewGuid().ToString(), result.Id, openReferralOrganisation.Id);
         entity.RegisterDomainEvent(new RelatedOrganisationCreatedEvent(entity));
         _context.RelatedOrganisations.Add(entity);
     }
