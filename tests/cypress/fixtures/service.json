@@ -1,0 +1,106 @@
+{
+    "id": "string",
+    "serviceType": {
+      "id": "1",
+      "name": "Information Sharing",
+      "description": ""
+    },
+    "name": "string",
+    "openReferralOrganisationId": "string",
+    "description": "test description",
+    "accreditations": null,
+    "assured_date": null,
+    "attending_access": null,
+    "attending_type": null,
+    "deliverable_type": null,
+    "status": "active",
+    "url": "https://directory.salford.gov.uk/kb5/salford/directory/service.page?id=B3Z2uCshOk4&localofferchannel=2_8",
+    "email": null,
+    "fees": null,
+    "distance": null,
+    "canFamilyChooseDeliveryLocation": false,
+    "serviceDelivery": [
+      {
+        "serviceDelivery": 1
+      }
+    ],
+    "eligibilities": [
+      {
+        "eligibility": "Children",
+        "maximum_age": 16,
+        "minimum_age": 8
+      }
+    ],
+    "contacts": [
+      {
+        "title": "Mr",
+        "name": "Robert Walpole",
+        "phones": [
+          {
+            "number": "01676 01745"
+          }
+        ]
+      }
+    ],
+    "cost_options": [
+      {
+        "amount_description": "Session",
+        "amount": 45,
+        "linkId": null,
+        "option": null,
+        "valid_from": null,
+        "valid_to": null
+      }
+    ],
+    "languages": [
+      {
+        "language": "English"
+      }
+    ],
+    "service_areas": [
+      {
+        "service_area": "Local",
+        "extent": null,
+        "uri": "http://statistics.data.gov.uk/id/statistical-geography/K02000001"
+      }
+    ],
+    "service_at_locations": [
+      {
+        "location": {
+          "name": "Ordsall Neighbourhood Centre",
+          "description": "2, Robert Hall Street M5 3LT",
+          "latitude": 53.474103227856105,
+          "longitude": -2.2721559641660787,
+          "distance": null,
+          "physical_addresses": [
+            {
+              "address_1": "2, Robert Hall Street",
+              "city": "Ordsall",
+              "postal_code": "M5 3LT",
+              "country": "United Kingdom",
+              "state_province": "Salford"
+            }
+          ],
+          "linkTaxonomies": []
+        },
+        "regular_schedule": [
+          {
+            "description": "",
+            "opens_at": null,
+            "closes_at": null,
+            "byday": "Friday 1.30pm - 2.30pm",
+            "bymonthday": null,
+            "dtstart": "1.30pm - 2.30pm",
+            "freq": "Every Friday",
+            "interval": null,
+            "valid_from": null,
+            "valid_to": null
+          }
+        ],
+        "holidayScheduleCollection": []
+      }
+    ],
+    "service_taxonomys": [],
+    "regularSchedules": [],
+    "holidaySchedules": []
+}

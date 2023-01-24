@@ -27,7 +27,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var id = await createhandler.Handle(createcommand, new System.Threading.CancellationToken());
 
 
-        GetOpenReferralServicesCommand command = new("Information Sharing", "active", "XTEST", null, null, null, null, null, null, 1, 10, null, null, null, null, null, null);
+        GetOpenReferralServicesCommand command = new("Information Sharing", "active", "XTEST", null, null, null, null, null, null, 1, 10, null, null, null, null, null, null, null, null);
         GetOpenReferralServicesCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
@@ -55,7 +55,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var id = await createhandler.Handle(createcommand, new System.Threading.CancellationToken());
 
 
-        GetOpenReferralServicesCommand command = new("Information Sharing", "active", "XTEST", null, null, null, null, null, null, 1, 10, null, null, true, null, null, null);
+        GetOpenReferralServicesCommand command = new("Information Sharing", "active", "XTEST", null, null, null, null, null, null, 1, 10, null, null, true, null, null, null, null, null);
         GetOpenReferralServicesCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
@@ -66,6 +66,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         results.Items.Count().Should().Be(0);
     }
 
+    //todo: add similar test for no_cost options
     [Fact]
     public async Task ThenGetOpenReferralServiceThatAreFree()
     {
@@ -81,7 +82,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var id = await createhandler.Handle(createcommand, new System.Threading.CancellationToken());
 
 
-        GetOpenReferralServicesCommand command = new("Information Sharing", "active", "XTEST", null, null, null, null, null, null, 1, 10, null, null, false, null, null, null);
+        GetOpenReferralServicesCommand command = new("Information Sharing", "active", "XTEST", null, null, null, null, null, null, 1, 10, null, null, false, null, null, null, null, null);
         GetOpenReferralServicesCommandHandler handler = new(mockApplicationDbContext);
 
         //Act

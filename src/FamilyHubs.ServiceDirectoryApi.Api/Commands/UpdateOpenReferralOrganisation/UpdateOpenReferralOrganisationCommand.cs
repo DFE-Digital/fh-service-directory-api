@@ -1,18 +1,12 @@
 ﻿using Ardalis.GuardClauses;
-using Ardalis.Specification;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 using fh_service_directory_api.api.Commands.UpdateOpenReferralService;
-using fh_service_directory_api.api.Helper;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
-using fh_service_directory_api.core.Interfaces.Entities;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.ObjectModel;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
 
@@ -51,7 +45,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
         var entity = await _context.OpenReferralOrganisations
           .Include(x => x.OrganisationType)
           .Include(x => x.Services!)
-          .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
+          .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {
@@ -60,99 +54,88 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
 
         try
         {
-            
-            OpenReferralOrganisation org = _mapper.Map<OpenReferralOrganisation>(request.OpenReferralOrganisation);
+
+            var org = _mapper.Map<OpenReferralOrganisation>(request.OpenReferralOrganisation);
             var organisationType = _context.OrganisationTypes.FirstOrDefault(x => x.Id == request.OpenReferralOrganisation.OrganisationType.Id);
             if (organisationType != null)
             {
                 org.OrganisationType = organisationType;
             }
-            
+
             entity.Update(org);
-            AddOrUpdateAdministractiveDistrict(request, entity);
+            AddOrUpdateAdministrativeDistrict(request, entity);
 
             if (entity.Services != null && request.OpenReferralOrganisation.Services != null)
             {
-                // Delete children (does this need to be a soft delete)
-                foreach (var existingChild in entity.Services)
-                {
-                    if (!request.OpenReferralOrganisation.Services.Any(c => c.Id == existingChild.Id))
-                    {
-                        // Replace with soft delete
-                        //_context.OpenReferralServices.Remove(existingChild);
-                    }
-                }
-
                 // Update and Insert children
                 foreach (var childModel in request.OpenReferralOrganisation.Services)
                 {
                     var existingChild = entity.Services
-                        .Where(c => c.Id == childModel.Id && c.Id != default)
-                        .SingleOrDefault();
+                        .SingleOrDefault(c => c.Id == childModel.Id);
 
                     if (existingChild != null)
                     {
                         UpdateOpenReferralServiceCommand updateOpenReferralServiceCommand = new(existingChild.Id, childModel);
-                        var serviceUpdateResult = await _mediator.Send(updateOpenReferralServiceCommand, cancellationToken);  
+                        await _mediator.Send(updateOpenReferralServiceCommand, cancellationToken);
                     }
                     else
                     {
-                        if (childModel != null)
+                        var service = _mapper.Map<OpenReferralService>(childModel);
+
+                        var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == childModel.ServiceType.Id);
+                        if (serviceType != null)
+                            service.ServiceType = serviceType;
+
+                        if (childModel.Service_taxonomys != null)
                         {
-                            OpenReferralService service = _mapper.Map<OpenReferralService>(childModel);
-
-                            var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == childModel.ServiceType.Id);
-                            if (serviceType != null)
-                                service.ServiceType = serviceType;
-
-                            if (childModel.Service_taxonomys != null)
+                            for (var i = 0; i < childModel.Service_taxonomys.Count; i++)
                             {
-                                for (int i = 0; i < childModel?.Service_taxonomys.Count; i++)
+                                if (childModel.Service_taxonomys.ElementAt(i).Taxonomy != null)
                                 {
-                                    if (childModel.Service_taxonomys.ElementAt(i) != null && childModel.Service_taxonomys.ElementAt(i).Taxonomy != null)
+                                    var id = childModel.Service_taxonomys.ElementAt(i).Taxonomy?.Id ?? string.Empty;
+                                    var tx = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == id);
+                                    service.Service_taxonomys.ElementAt(i).Taxonomy = tx;
+                                }
+                            }
+                        }
+
+                        foreach (var serviceAtLocation in service.Service_at_locations)
+                        {
+                            var existingLocation = await _context.OpenReferralLocations
+                                .Include(l => l.Physical_addresses)
+                                .Include(l => l.LinkTaxonomies)!
+                                .ThenInclude(l => l.Taxonomy)
+                                .Where(l => l.Name == serviceAtLocation.Location.Name)
+                                .FirstOrDefaultAsync(cancellationToken);
+
+                            if (existingLocation != null)
+                            {
+                                serviceAtLocation.Location = existingLocation;
+                            }
+                            else
+                            {
+                                if (serviceAtLocation.Location.LinkTaxonomies != null)
+                                {
+                                    foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
                                     {
-                                        string id = childModel?.Service_taxonomys?.ElementAt(i)?.Taxonomy?.Id ?? string.Empty;
-                                        var tx = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == id);
-                                        if (childModel != null)
-                                            service.Service_taxonomys.ElementAt(i).Taxonomy = tx;
+                                        if (linkTaxonomy.Taxonomy != null)
+                                        {
+                                            var taxonomy = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
+                                            if (taxonomy != null)
+                                            {
+                                                linkTaxonomy.Taxonomy = taxonomy;
+                                            }
+                                        }
                                     }
                                 }
                             }
-
-                            entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(service));
-                            _context.OpenReferralServices.Add(service);
                         }
+
+                        entity.RegisterDomainEvent(new OpenReferralServiceCreatedEvent(service));
+                        _context.OpenReferralServices.Add(service);
                     }
                 }
             }
-
-            //Review not yet included
-            //if (entity.Reviews != null && request.OpenReferralOrganisation.Reviews != null) //TODO - also check for count=0 s if count==0, dont enter if block
-            //{
-            //    // Delete children (does this need to be a soft delete)
-            //    foreach (var existingChild in entity.Reviews)
-            //    {
-            //        if (!request.OpenReferralOrganisation.Reviews.Any(c => c.Id == existingChild.Id))
-            //            _context.OpenReferralReviews.Remove(existingChild as OpenReferralReview);
-            //    }
-
-            //    foreach (var childModel in request.OpenReferralOrganisation.Reviews)
-            //    {
-            //        var existingChild = entity.Reviews
-            //            .Where(c => c.Id == childModel.Id && c.Id != default)
-            //            .SingleOrDefault();
-
-            //        if (existingChild != null)
-            //            existingChild.Update(childModel);
-            //        else
-            //        {
-            //            entity.RegisterDomainEvent(new OpenReferralReviewCreatedEvent(childModel));
-
-            //            _context.OpenReferralReviews.Add(childModel as OpenReferralReview);
-
-            //        }
-            //    }
-            //}
 
             await _context.SaveChangesAsync(cancellationToken);
         }
@@ -165,7 +148,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
         return entity.Id;
     }
 
-    private void AddOrUpdateAdministractiveDistrict(UpdateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
+    private void AddOrUpdateAdministrativeDistrict(UpdateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
     {
         if (!string.IsNullOrEmpty(request.OpenReferralOrganisation.AdministractiveDistrictCode))
         {
@@ -184,7 +167,7 @@ public class UpdateOpenReferralOrganisationCommandHandler : IRequestHandler<Upda
             {
                 organisationAdminDistrict.Code = request.OpenReferralOrganisation.AdministractiveDistrictCode;
             }
-            
+
         }
     }
 

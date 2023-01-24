@@ -57,6 +57,18 @@ public class GetServicesUrlBuilder
         return this;
     }
 
+    public GetServicesUrlBuilder WithFamilyHub(bool isFamilyHub)
+    {
+        _urlParameter.Add($"isFamilyHub={isFamilyHub}");
+        return this;
+    }
+
+    public GetServicesUrlBuilder WithMaxFamilyHubs(int maxFamilyHubs)
+    {
+        _urlParameter.Add($"maxFamilyHubs={maxFamilyHubs}");
+        return this;
+    }
+
     public string Build()
     {
         bool isFirst = true;

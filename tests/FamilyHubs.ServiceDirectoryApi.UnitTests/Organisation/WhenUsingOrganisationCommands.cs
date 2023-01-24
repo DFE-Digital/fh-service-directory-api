@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralHolidaySchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhones;
@@ -167,8 +168,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         //Assert
         result.Should().NotBeNull();
-        result.Count.Should().Be(4);
-        
+        result.Count.Should().Be(3);
     }
 
     [Fact]
@@ -258,7 +258,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                     }
                     )
             })
-            .WithCostOption(new List<OpenReferralCostOptionDto>())
+            .WithCostOption(new List<OpenReferralCostOptionDto> {new() {Id = Guid.NewGuid().ToString(), Amount = decimal.Zero, Option = "free", Amount_description = ""}})
             .WithLanguages(new List<OpenReferralLanguageDto>()
                 {
                     new OpenReferralLanguageDto("1bb6c313-648d-4226-9e96-b7d37eaeb3dd", "English")
@@ -287,9 +287,23 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                                     "England",
                                     null
                                     )
-                            }
-                            //new List<Accessibility_For_Disabilities>()
-                            ),
+                            },
+                            new List<OpenReferralLinkTaxonomyDto>()
+                            {
+                                new OpenReferralLinkTaxonomyDto(
+                                    Guid.NewGuid().ToString(),
+                                    "Location",
+                                    "6ea31a4f-7dcc-4350-9fba-20525efe092f",
+                                    new OpenReferralTaxonomyDto(
+                                        //todo: real guid
+
+                                        Guid.NewGuid().ToString(),
+                                        "Family_hub",
+                                        null,
+                                        null
+                                    )
+                                )
+                            }),
                         new List<OpenReferralRegularScheduleDto>(),
                         new List<OpenReferralHolidayScheduleDto>()
                         )
@@ -420,6 +434,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                             "",
                             52.6312,
                             -1.66526,
+                            new List<OpenReferralLinkTaxonomy>(),
                             new List<OpenReferralPhysical_Address>()
                             {
                                 new OpenReferralPhysical_Address(

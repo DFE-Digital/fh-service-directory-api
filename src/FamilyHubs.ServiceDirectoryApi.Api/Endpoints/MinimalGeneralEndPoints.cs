@@ -1,5 +1,5 @@
 ﻿using fh_service_directory_api.infrastructure.Persistence.Repository;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
 
 namespace fh_service_directory_api.api.Endpoints;

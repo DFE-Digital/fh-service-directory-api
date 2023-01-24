@@ -36,7 +36,7 @@ public class UpdateUICacheCommandHandler : IRequestHandler<UpdateUICacheCommand,
         ArgumentNullException.ThrowIfNull(request, nameof(request));
 
         var entity = await _context.UICaches
-          .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken: cancellationToken);
+          .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {

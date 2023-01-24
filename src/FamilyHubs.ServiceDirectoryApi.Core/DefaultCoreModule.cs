@@ -20,8 +20,8 @@ public class DefaultCoreModule : Module
             .As<IOpenReferralHoliday_Schedule>().InstancePerLifetimeScope();
         builder.RegisterType<OpenReferralLanguage>()
             .As<IOpenReferralLanguage>().InstancePerLifetimeScope();
-        builder.RegisterType<OpenReferralLinktaxonomycollection>()
-            .As<IOpenReferralLinktaxonomycollection>().InstancePerLifetimeScope();
+        builder.RegisterType<OpenReferralLinkTaxonomy>()
+            .As<IOpenReferralLinkTaxonomy>().InstancePerLifetimeScope();
         builder.RegisterType<OpenReferralLocation>()
             .As<IOpenReferralLocation>().InstancePerLifetimeScope();
         builder.RegisterType<OpenReferralOrganisation>()
