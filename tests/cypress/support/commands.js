@@ -46,12 +46,42 @@ Cypress.Commands.add('insertTestService', (service) => {
       }) 
 })
 
-Cypress.Commands.add('getTaxonomy', (searchFor) => {
-  cy.request('GET',`api/taxonomies?test=${searchFor}`)
-      .then((response) =>{ 
-        expect(response.status).to.eq(200); 
-        return response.body.items[0];
-      }) 
+Cypress.Commands.add('getTestTaxonomy', (searchFor) => {
+  // This will retrieve a test taxonomy if it exists or create and return it if it doesn't
+  cy.request('GET','api/taxonomies?text=childTaxonomyForServicesTest')
+    .then((response) =>{ 
+      expect(response.status).to.eq(200); 
+
+      if(response.body.items.length == 0){
+
+        var parentTaxonomy = {
+          "id" : createUUID(),
+          "name" : "parenttaxonomyForServicesTest",
+          "vocabulary":"parenttaxonomyForServicesTest"
+        };
+        var childTaxonomy = {
+          "id" : createUUID(),
+          "name" : "childTaxonomyForServicesTest",
+          "vocabulary":"childTaxonomyForServicesTest",
+          "parent":parentTaxonomy.id
+        };
+
+        //  Create Parent
+        cy.request('POST','api/taxonomies', parentTaxonomy)
+        .then((responseParentTaxonomy) =>{ 
+          expect(responseParentTaxonomy.status).to.eq(200); 
+    
+          //  Create Child
+          cy.request('POST','api/taxonomies', childTaxonomy)
+          .then((responseChildTaxonomy) =>{ 
+            expect(responseChildTaxonomy.status).to.eq(200); 
+            return childTaxonomy;
+          }) 
+        }) 
+
+      }
+      return response.body.items[0];
+    }) 
 })
 
 Cypress.Commands.add('compareServiceObject', (expected, actual) => {
@@ -122,4 +152,19 @@ Cypress.Commands.add('compareServiceAtLocationArray', (expected, actual) => {
     expect(actual[i].regular_schedule).to.deep.equal(expected[i].regular_schedule);
     expect(actual[i].holidayScheduleCollection).to.deep.equal(expected[i].holidayScheduleCollection);
   }
+})
+
+Cypress.Commands.add('createTaxonomyJson', (parent) => {
+
+  cy.fixture('taxonomy').then(taxonomy=>{
+
+    taxonomy.id = createUUID();
+    taxonomy.name += taxonomy.id;
+    taxonomy.vocabulary += taxonomy.id;
+    if(parent != null || parent != undefined){
+      taxonomy.parent = parent;
+    }
+    return taxonomy;
+
+  })
 })

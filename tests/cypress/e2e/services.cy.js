@@ -72,11 +72,11 @@ describe('Service endpoints end to end test', () => {
 
         cy.createTestServiceJson('Test Get Services', organisation.id , true).then((serviceJson) =>{
             
-            cy.getTaxonomy('Before and after school clubs').then((taxonomy) =>{
+            cy.getTestTaxonomy().then((taxonomy) =>{
                 serviceJson.service_taxonomys = [
                     {
                         "id":createUUID(),
-                        "taxonomy" :{"id":taxonomy.id}, 
+                        "taxonomy" : taxonomy, 
                 }];
 
                 cy.insertTestService(serviceJson).then((response)=>{
