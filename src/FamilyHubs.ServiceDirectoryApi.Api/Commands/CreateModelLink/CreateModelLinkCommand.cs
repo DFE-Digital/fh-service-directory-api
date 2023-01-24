@@ -44,7 +44,7 @@ public class CreateModelLinkCommandHandler : IRequestHandler<CreateModelLinkComm
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred creating UICache. {exceptionMessage}", ex.Message);
+            _logger.LogError(ex, "An error occurred creating ModelLink. {exceptionMessage}", ex.Message);
             throw new Exception(ex.Message, ex);
         }
 
