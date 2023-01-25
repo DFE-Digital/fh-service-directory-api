@@ -1,7 +1,6 @@
 ﻿using fh_service_directory_api.api.Data;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using FluentAssertions;
-using System;
 using Xunit;
 
 namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence;
@@ -12,7 +11,7 @@ public class WhenUsingDatabaseContextFactory
     public void ThenApplicationDbContextIsReturned()
     {
         //Arrange
-        DatabaseContextFactory databaseContextFactory = new DatabaseContextFactory();
+        var databaseContextFactory = new DatabaseContextFactory();
         string[] args = new string[0];
 
         //Act

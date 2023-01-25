@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
+﻿using System.Diagnostics;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using fh_service_directory_api.api.Commands.CreateOpenReferralService;
 using fh_service_directory_api.api.Commands.DeleteOpenReferralService;
 using fh_service_directory_api.api.Commands.UpdateOpenReferralService;
@@ -27,7 +28,7 @@ public class MinimalServiceEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred listing open referral services. {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Services", "List Services") { Tags = new[] { "Services" } });
@@ -43,7 +44,7 @@ public class MinimalServiceEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred getting open referral service by id. {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Service by Id", "Get Service by Id") { Tags = new[] { "Services" } });
@@ -59,7 +60,7 @@ public class MinimalServiceEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred deleting open referral service by id. {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Delete Service by Id", "Delete Service by Id") { Tags = new[] { "Services" } });
@@ -75,7 +76,7 @@ public class MinimalServiceEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred getting open referral service by id. {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Services by Organisation Id", "Get Service by Organisation Id") { Tags = new[] { "Services" } });
@@ -91,7 +92,7 @@ public class MinimalServiceEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred creating service (api). {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Create a Service", "Create a Service") { Tags = new[] { "Services" } });
@@ -107,7 +108,7 @@ public class MinimalServiceEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred updating service (api). {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Update a Service", "Update a Service") { Tags = new[] { "Services" } });

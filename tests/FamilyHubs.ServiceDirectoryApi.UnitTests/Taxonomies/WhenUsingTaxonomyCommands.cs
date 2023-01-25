@@ -27,7 +27,7 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         CreateOpenReferralTaxonomyCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
-        var result = await handler.Handle(command, new System.Threading.CancellationToken());
+        var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
@@ -48,7 +48,7 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         UpdateOpenReferralTaxonomyCommandHandler handler = new(mockApplicationDbContext, logger.Object);
 
         //Act
-        var result = await handler.Handle(command, new System.Threading.CancellationToken());
+        var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
@@ -68,7 +68,7 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         GetOpenReferralTaxonomiesCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
-        var result = await handler.Handle(command, new System.Threading.CancellationToken());
+        var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();

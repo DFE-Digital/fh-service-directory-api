@@ -1,4 +1,4 @@
-﻿namespace fh_service_directory_api.core.Common.Interfaces.Security
+﻿namespace fh_service_directory_api.core.Security
 {
     public interface IAuthoriseAttribute
     {

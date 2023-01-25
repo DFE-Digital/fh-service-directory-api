@@ -1,5 +1,4 @@
-﻿using fh_service_directory_api.core.Interfaces.Commands;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 

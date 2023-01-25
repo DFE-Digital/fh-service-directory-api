@@ -1,11 +1,9 @@
-﻿using fh_service_directory_api.core.Common.Interfaces.Security;
-
-namespace fh_service_directory_api.core.Common.Security;
+﻿namespace fh_service_directory_api.core.Security;
 
 /// <summary>
 /// Specifies the class this attribute is applied to requires authorization.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class AuthoriseAttribute : Attribute, IAuthoriseAttribute
 {
     /// <summary>

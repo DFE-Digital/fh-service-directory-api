@@ -4,7 +4,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Builders;
 
 public class ServicesBuilder
 {
-    private OpenReferralService _openReferralService;
+    private readonly OpenReferralService _openReferralService;
 
     public ServicesBuilder()
     {

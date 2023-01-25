@@ -123,9 +123,9 @@ public class ApplicationDbContextInitialiser
             _context.OpenReferralOrganisations.Add(openReferralOrganisation);
         }
 
-        if (!_context.OrganisationAdminDistricts.Any())
+        if (!_context.AdminAreas.Any())
         {
-            _context.OrganisationAdminDistricts.AddRange(openReferralOrganisationSeedData.SeedOrganisationAdminDistrict());
+            _context.AdminAreas.AddRange(openReferralOrganisationSeedData.SeedOrganisationAdminDistrict());
         }
 
         await _context.SaveChangesAsync();

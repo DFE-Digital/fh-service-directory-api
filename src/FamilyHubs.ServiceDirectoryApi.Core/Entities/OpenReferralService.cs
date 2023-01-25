@@ -1,11 +1,10 @@
-﻿using FamilyHubs.SharedKernel;
+﻿using System.Collections.ObjectModel;
+using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.core.Interfaces.Entities;
-using System.Collections.ObjectModel;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAggregateRoot
+public class OpenReferralService : EntityBase<string>, IAggregateRoot
 {
     public OpenReferralService() { }
 
@@ -39,18 +38,18 @@ public class OpenReferralService : EntityBase<string>, IOpenReferralService, IAg
         Email = email;
         Fees = fees;
         CanFamilyChooseDeliveryLocation = canFamilyChooseDeliveryLocation;
-        Eligibilities = eligibilitys as ICollection<OpenReferralEligibility> ?? new Collection<OpenReferralEligibility>();
-        Fundings = fundings as ICollection<OpenReferralFunding> ?? new Collection<OpenReferralFunding>();
-        Holiday_schedules = holiday_schedules as ICollection<OpenReferralHoliday_Schedule> ?? new Collection<OpenReferralHoliday_Schedule>();
-        Languages = languages as ICollection<OpenReferralLanguage> ?? new Collection<OpenReferralLanguage>();
-        Regular_schedules = regular_schedules as ICollection<OpenReferralRegular_Schedule> ?? new Collection<OpenReferralRegular_Schedule>();
-        Reviews = reviews as ICollection<OpenReferralReview> ?? new Collection<OpenReferralReview>();
-        Contacts = contacts as ICollection<OpenReferralContact> ?? new Collection<OpenReferralContact>();
-        Cost_options = cost_options as ICollection<OpenReferralCost_Option> ?? new Collection<OpenReferralCost_Option>();
-        Service_areas = service_areas as ICollection<OpenReferralService_Area> ?? new Collection<OpenReferralService_Area>();
-        Service_at_locations = service_at_locations as ICollection<OpenReferralServiceAtLocation> ?? new Collection<OpenReferralServiceAtLocation>();
-        Service_taxonomys = service_taxonomys as ICollection<OpenReferralService_Taxonomy> ?? new Collection<OpenReferralService_Taxonomy>();
-        ServiceDelivery = serviceDelivery as ICollection<OpenReferralServiceDelivery> ?? new Collection<OpenReferralServiceDelivery>();
+        Eligibilities = eligibilitys ?? new Collection<OpenReferralEligibility>();
+        Fundings = fundings ?? new Collection<OpenReferralFunding>();
+        Holiday_schedules = holiday_schedules ?? new Collection<OpenReferralHoliday_Schedule>();
+        Languages = languages ?? new Collection<OpenReferralLanguage>();
+        Regular_schedules = regular_schedules ?? new Collection<OpenReferralRegular_Schedule>();
+        Reviews = reviews ?? new Collection<OpenReferralReview>();
+        Contacts = contacts ?? new Collection<OpenReferralContact>();
+        Cost_options = cost_options ?? new Collection<OpenReferralCost_Option>();
+        Service_areas = service_areas ?? new Collection<OpenReferralService_Area>();
+        Service_at_locations = service_at_locations ?? new Collection<OpenReferralServiceAtLocation>();
+        Service_taxonomys = service_taxonomys ?? new Collection<OpenReferralService_Taxonomy>();
+        ServiceDelivery = serviceDelivery ?? new Collection<OpenReferralServiceDelivery>();
     }
 
     public ServiceType ServiceType { get; set; } = default!;

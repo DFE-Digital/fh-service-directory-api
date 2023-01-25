@@ -75,7 +75,7 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
                 }
 
             // This should be set for each individual test run
-                string inMemoryCollectionName = Guid.NewGuid().ToString();
+                var inMemoryCollectionName = Guid.NewGuid().ToString();
 
             // Add ApplicationDbContext using an in-memory database for testing.
                 services.AddDbContext<ApplicationDbContext>(options =>

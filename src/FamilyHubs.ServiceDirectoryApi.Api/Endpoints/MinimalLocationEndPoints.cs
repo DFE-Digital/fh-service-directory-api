@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
+﻿using System.Diagnostics;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
 using fh_service_directory_api.api.Commands.CreateLocation;
 using fh_service_directory_api.api.Commands.UpdateLocation;
 using MediatR;
@@ -23,7 +24,7 @@ public class MinimalLocationEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred creating location. {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Location", "Create Location") { Tags = new[] { "Locations" } });
@@ -39,7 +40,7 @@ public class MinimalLocationEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred updating location. {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Location", "Update Location As Family Hub") { Tags = new[] { "Locations" } });

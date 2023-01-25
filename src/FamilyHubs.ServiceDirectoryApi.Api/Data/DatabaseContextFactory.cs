@@ -1,9 +1,6 @@
-﻿using FamilyHubs.SharedKernel;
-using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.infrastructure.Persistence.Interceptors;
+﻿using fh_service_directory_api.infrastructure.Persistence.Interceptors;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using fh_service_directory_api.infrastructure.Services;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -13,14 +10,14 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<ApplicationDbC
 {
     public ApplicationDbContext CreateDbContext(string[] args)
     {
-        IConfigurationRoot configuration = new ConfigurationBuilder()
+        var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
             .Build();
 
         var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-        string useDbType = configuration.GetValue<string>("UseDbType");
+        var useDbType = configuration.GetValue<string>("UseDbType");
 
         switch (useDbType)
         {

@@ -1,27 +1,26 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Enums;
 using fh_service_directory_api.core;
 using fh_service_directory_api.core.Entities;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Repository;
 
 public class OpenReferralOrganisationSeedData
 {
-    private bool _isProduction {  get; set; }
+    private bool IsProduction {  get; set; }
     public OpenReferralOrganisationSeedData(bool isProduction)
     {
-        _isProduction = isProduction;
+        IsProduction = isProduction;
     }
-    public IReadOnlyCollection<OrganisationAdminDistrict> SeedOrganisationAdminDistrict()
+    public IReadOnlyCollection<AdminArea> SeedOrganisationAdminDistrict()
     {
-        List<OrganisationAdminDistrict> adminDistricts = new()
+        List<AdminArea> adminDistricts = new()
         {
-            new OrganisationAdminDistrict(Guid.NewGuid().ToString(),"E06000023", "72e653e8-1d05-4821-84e9-9177571a6013"), //Bristol
-            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E07000127", "fc51795e-ea95-4af0-a0b2-4c06d5463678"), //Lancashire
-            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E09000026", "1229cb45-0dc0-4f8a-81bd-2cd74c7cc9cc"), //Redbridge
-            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E08000006", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"), //Salford
-            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E07000203", "6dc1c3ad-d077-46ff-9e0d-04fb263f0637"), //Suffolk
-            new OrganisationAdminDistrict(Guid.NewGuid().ToString(), "E09000030", "88e0bffd-ed0b-48ea-9a70-5f6ef729fc21"), //Tower Hamlets
+            new AdminArea(Guid.NewGuid().ToString(),"E06000023", "72e653e8-1d05-4821-84e9-9177571a6013"), //Bristol
+            new AdminArea(Guid.NewGuid().ToString(), "E10000017", "fc51795e-ea95-4af0-a0b2-4c06d5463678"), //Lancashire
+            new AdminArea(Guid.NewGuid().ToString(), "E09000026", "1229cb45-0dc0-4f8a-81bd-2cd74c7cc9cc"), //Redbridge
+            new AdminArea(Guid.NewGuid().ToString(), "E08000006", "ca8ddaeb-b5e5-46c4-b94d-43a8e2ccc066"), //Salford
+            new AdminArea(Guid.NewGuid().ToString(), "E10000029", "6dc1c3ad-d077-46ff-9e0d-04fb263f0637"), //Suffolk
+            new AdminArea(Guid.NewGuid().ToString(), "E09000030", "88e0bffd-ed0b-48ea-9a70-5f6ef729fc21"), //Tower Hamlets
         };
 
         return adminDistricts;
@@ -200,7 +199,7 @@ public class OpenReferralOrganisationSeedData
     private List<OpenReferralService> GetSalfordHubsAndServices(string parentId)
     {
         List<OpenReferralService> openReferralServices= new();
-        if (!_isProduction) 
+        if (!IsProduction) 
         {
             openReferralServices.AddRange(GetSalfordFamilyService(parentId));
         }
@@ -209,7 +208,7 @@ public class OpenReferralOrganisationSeedData
 
     private List<OpenReferralService> GetSalfordFamilyService(string parentId)
     {
-        if (_isProduction)
+        if (IsProduction)
         {
             return new List<OpenReferralService>();
         }
@@ -242,40 +241,37 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
-                new List<OpenReferralLanguage>()
+                new List<OpenReferralLanguage>
                 {
                     new OpenReferralLanguage("705b93e5-f70d-4237-84ab-36aef2c864e3","English")
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                new List<OpenReferralContact>(new List<OpenReferralContact>
                 {
                     new OpenReferralContact(
                         "7a488a62-6c5b-4fa7-88bc-f60f83627e38",
                         "",
                         "Broughton Hub",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("06e0df3a-5b13-4eef-984a-07b35471e99d", "0161 778 0601")
-                        }
-                        ))
+                        "0161 778 0601",
+                        "0161 778 0601")
                 }),
-                new List<OpenReferralCost_Option>(new List<OpenReferralCost_Option>()
+                new List<OpenReferralCost_Option>(new List<OpenReferralCost_Option>
                 {
                     new OpenReferralCost_Option("983764", "Session", 2.5m, null, null, null, null)
                 }),
-                new List<OpenReferralService_Area>()
+                new List<OpenReferralService_Area>
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>
                 {
                     new OpenReferralServiceAtLocation(
                         "5fdbbefd-4cf4-4c4a-8178-c001fcb25570",
                         new OpenReferralLocation("b405ae9a-5410-4136-86f3-dc1e85f1ec68", "Ordsall Neighbourhood Centre", "2, Robert Hall Street M5 3LT", 53.474103227856105D, -2.2721559641660787D,
                             new List<OpenReferralLinkTaxonomy>(),
-                            new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("67efce6d-248b-4e71-b08d-4c21009d01f0", "2, Robert Hall Street", "Ordsall", "M5 3LT", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
-                        new List<OpenReferralRegular_Schedule>()
+                            new List<OpenReferralPhysical_Address> { new OpenReferralPhysical_Address("67efce6d-248b-4e71-b08d-4c21009d01f0", "2, Robert Hall Street", "Ordsall", "M5 3LT", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+                        new List<OpenReferralRegular_Schedule>
                         {
                             new OpenReferralRegular_Schedule("16785195-413f-417c-8c77-8f3e3fe08e6f",
                             string.Empty,
@@ -294,7 +290,7 @@ public class OpenReferralOrganisationSeedData
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>
                 {
                     new OpenReferralService_Taxonomy
                     ("ae95b14e-2559-4ba0-8c31-3085777bfdd4",
@@ -329,42 +325,39 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
-                new List<OpenReferralLanguage>()
+                new List<OpenReferralLanguage>
                 {
                     new OpenReferralLanguage("fa4183e5-006d-45f4-89a0-f285e1d33575","English")
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                new List<OpenReferralContact>(new List<OpenReferralContact>
                 {
                     new OpenReferralContact(
                         "aaef3e12-849d-4a09-8606-17252cee6572",
                         "Ms",
                         "Kate Berry",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("939ade12-b54e-4a62-8367-0c07077968f9", "01619212880")
-                        }
-                        ))
+                        "01619212880",
+                        "01619212880")
                 }),
                 new List<OpenReferralCost_Option>(),
-                new List<OpenReferralService_Area>()
+                new List<OpenReferralService_Area>
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>
                 {
                     new OpenReferralServiceAtLocation(
                         "6e0bb978-fe9e-4c13-b8e7-50c97bf06ed7",
                         new OpenReferralLocation("f7301eeb-3293-4d7b-9869-d1e8a6368a13", "Oakwood Academy", "", 53.493505779578605D, -2.336084327089324D, 
                             new List<OpenReferralLinkTaxonomy>(),
-                            new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("387b5dff-a26a-42fe-84d6-1a744097cf4f", "Chatsworth Road", "Eccles", "M30 9DY", "United Kingdom", "Manchester") }, new List<Accessibility_For_Disabilities>()),
+                            new List<OpenReferralPhysical_Address> { new OpenReferralPhysical_Address("387b5dff-a26a-42fe-84d6-1a744097cf4f", "Chatsworth Road", "Eccles", "M30 9DY", "United Kingdom", "Manchester") }, new List<Accessibility_For_Disabilities>()),
                         new List<OpenReferralRegular_Schedule>(),
                         new List<OpenReferralHoliday_Schedule>()
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>
                 {
                     new OpenReferralService_Taxonomy
                     ("5b9eb3b7-aace-4161-aee1-e5ae5c6fd767",
@@ -399,30 +392,27 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
-                new List<OpenReferralLanguage>()
+                new List<OpenReferralLanguage>
                 {
                     new OpenReferralLanguage("41814ec8-410a-4f37-aa9f-7b3a83b7f33b","English")
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                new List<OpenReferralContact>(new List<OpenReferralContact>
                 {
                     new OpenReferralContact(
                         "6a84d5af-2e5c-40fa-9689-6b11181db320",
                         "Ms",
                         "Kate Berry",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("8c1ea252-03ef-41d0-90e0-d12616853f80", "0161 778 0601")
-                        }
-                        ))
+                        "0161 778 0601"
+                        , "0161 778 0601")
                 }),
                 new List<OpenReferralCost_Option>(),
-                new List<OpenReferralService_Area>()
+                new List<OpenReferralService_Area>
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>
                 {
                     new OpenReferralServiceAtLocation(
                         "e234f5b5-fb74-4e68-bd29-88e736bfc317",
@@ -432,7 +422,7 @@ public class OpenReferralOrganisationSeedData
                                 "964ea451-6146-4add-913e-dff23a1bd7b6",
                                 LinkType.Location,
                                 new OpenReferralTaxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
-                            new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("84c0a47a-08a1-4e54-814b-46ce26765c08", "50 Rigby Street", "Manchester", "M7 4BQ", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+                            new List<OpenReferralPhysical_Address> { new OpenReferralPhysical_Address("84c0a47a-08a1-4e54-814b-46ce26765c08", "50 Rigby Street", "Manchester", "M7 4BQ", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
                         new List<OpenReferralRegular_Schedule>(),
                         new List<OpenReferralHoliday_Schedule>()
                         )
@@ -466,30 +456,27 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
-                new List<OpenReferralLanguage>()
+                new List<OpenReferralLanguage>
                 {
                     new OpenReferralLanguage("c3ee6046-6caf-4204-8eaf-db9bc192c7da","English")
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                new List<OpenReferralContact>(new List<OpenReferralContact>
                 {
                     new OpenReferralContact(
                         "560e159d-c54c-4925-bd55-8bbfd5071520",
                         "Ms",
                         "Kate Berry",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("fe89304c-792d-4e64-877a-3f1a645ecdea", "0161 778 0495")
-                        }
-                        ))
+                        "0161 778 0495",
+                        "0161 778 0495")
                 }),
                 new List<OpenReferralCost_Option>(),
-                new List<OpenReferralService_Area>()
+                new List<OpenReferralService_Area>
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>
                 {
                     new OpenReferralServiceAtLocation(
                         "2995a7a0-6552-4c71-9e91-7f860d5a993e",
@@ -499,7 +486,7 @@ public class OpenReferralOrganisationSeedData
                                 "74c37f53-dbc0-4958-8c97-baee41a022bf",
                                 LinkType.Location,
                                 new OpenReferralTaxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
-                            new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("83bf4f64-fdcb-46bc-a32e-8b117bf5c19a", "100 Chorley Road", "Manchester", "M27 6BP", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+                            new List<OpenReferralPhysical_Address> { new OpenReferralPhysical_Address("83bf4f64-fdcb-46bc-a32e-8b117bf5c19a", "100 Chorley Road", "Manchester", "M27 6BP", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
                         new List<OpenReferralRegular_Schedule>(),
                         new List<OpenReferralHoliday_Schedule>()
                         )
@@ -534,30 +521,27 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
-                new List<OpenReferralLanguage>()
+                new List<OpenReferralLanguage>
                 {
                     new OpenReferralLanguage("724630f7-4c8b-4864-96be-bc74891f2b4a","English")
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                new List<OpenReferralContact>(new List<OpenReferralContact>
                 {
                     new OpenReferralContact(
                         "6596d609-8ba1-4188-a357-3d92ae9dec8f",
                         "Ms",
                         "Kate Berry",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("51a9f241-a666-43e1-91b8-7ebdaad614e0", "0161 686 5260")
-                        }
-                        ))
+                        "0161 686 5260",
+                        "0161 686 5260")
                 }),
                 new List<OpenReferralCost_Option>(),
-                new List<OpenReferralService_Area>()
+                new List<OpenReferralService_Area>
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "Local", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>
                 {
                     new OpenReferralServiceAtLocation(
                         "4e969589-e2b3-47d7-b079-1af1e3de5554",
@@ -567,7 +551,7 @@ public class OpenReferralOrganisationSeedData
                                 "1b4a625b-54bb-407d-a508-f90cade1e96f",
                                 LinkType.Location,
                                 new OpenReferralTaxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
-                            new List<OpenReferralPhysical_Address>() { new OpenReferralPhysical_Address("45603703-5d3f-45f4-84f1-b294ac4d3290", "Brindley Street", "Manchester", "M30 8AB", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
+                            new List<OpenReferralPhysical_Address> { new OpenReferralPhysical_Address("45603703-5d3f-45f4-84f1-b294ac4d3290", "Brindley Street", "Manchester", "M30 8AB", "United Kingdom", "Salford") }, new List<Accessibility_For_Disabilities>()),
                         new List<OpenReferralRegular_Schedule>(),
                         new List<OpenReferralHoliday_Schedule>()
                         )
@@ -580,7 +564,7 @@ public class OpenReferralOrganisationSeedData
 
     private List<OpenReferralService> GetBristolCountyCouncilServices(string parentId)
     {
-        if(_isProduction)
+        if(IsProduction)
         {
             return new List<OpenReferralService>();
         }
@@ -613,30 +597,27 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
-                new List<OpenReferralLanguage>()
+                new List<OpenReferralLanguage>
                 {
                     new OpenReferralLanguage("29794770-11bc-400f-82b7-f03d256ca5dc","English")
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                new List<OpenReferralContact>(new List<OpenReferralContact>
                 {
                     new OpenReferralContact(
                         "1567",
                         "Mr",
                         "John Smith",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("1567", "01827 65778")
-                        }
-                        ))
+                        "01827 65778", 
+                        "01827 65778")
                 }),
                 new List<OpenReferralCost_Option>(),
-                new List<OpenReferralService_Area>()
+                new List<OpenReferralService_Area>
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>
                 {
                     new OpenReferralServiceAtLocation(
                         "1749",
@@ -647,7 +628,7 @@ public class OpenReferralOrganisationSeedData
                             52.6312,
                             -1.66526,
                             new List<OpenReferralLinkTaxonomy>(),
-                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
+                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
@@ -665,8 +646,8 @@ public class OpenReferralOrganisationSeedData
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
-                {
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>
+                    {
                     new OpenReferralService_Taxonomy
                     ("9109",
                     null,
@@ -704,30 +685,27 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
-                new List<OpenReferralLanguage>()
+                new List<OpenReferralLanguage>
                 {
                     new OpenReferralLanguage("c3b81a2c-14c7-43f3-8ed0-a8fc2087b942","English")
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                new List<OpenReferralContact>(new List<OpenReferralContact>
                 {
                     new OpenReferralContact(
                         "1561",
                         "Mr",
                         "John Smith",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("1561", "01827 65711")
-                        }
-                        ))
+                        "01827 65711", 
+                        "01827 65711")
                 }),
                 new List<OpenReferralCost_Option>(),
-                new List<OpenReferralService_Area>()
+                new List<OpenReferralService_Area>
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>
                 {
                     new OpenReferralServiceAtLocation(
                         "1849",
@@ -738,7 +716,7 @@ public class OpenReferralOrganisationSeedData
                             52.6312,
                             -1.66526,
                             new List<OpenReferralLinkTaxonomy>(),
-                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
+                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
@@ -756,8 +734,8 @@ public class OpenReferralOrganisationSeedData
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
-                {
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>
+                    {
                     new OpenReferralService_Taxonomy
                     ("9110TestDelete",
                     null,
@@ -798,33 +776,30 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
-                new List<OpenReferralLanguage>()
+                new List<OpenReferralLanguage>
                 {
                     new OpenReferralLanguage("51e75b71-56b9-4cde-9a14-f2a520deff5e","English")
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                new List<OpenReferralContact>(new List<OpenReferralContact>
                 {
                     new OpenReferralContact(
                         "1562",
                         "Mr",
                         "John Smith",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("1562", "01827 64328")
-                        }
-                        ))
+                        "01827 64328", 
+                        "01827 64328")
                 }),
-                new List<OpenReferralCost_Option>(new List<OpenReferralCost_Option>()
+                new List<OpenReferralCost_Option>(new List<OpenReferralCost_Option>
                 {
                     new OpenReferralCost_Option("1345", "Session", 45.0m, null, null, null, null)
                 }),
-                new List<OpenReferralService_Area>()
+                new List<OpenReferralService_Area>
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>
                 {
                     new OpenReferralServiceAtLocation(
                         "1867",
@@ -835,7 +810,7 @@ public class OpenReferralOrganisationSeedData
                             52.63123,
                             -1.66519,
                             new List<OpenReferralLinkTaxonomy>(),
-                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
+                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
@@ -853,8 +828,8 @@ public class OpenReferralOrganisationSeedData
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
-                {
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>
+                    {
                     new OpenReferralService_Taxonomy
                     ("9120TestDelete",
                     null,
@@ -895,33 +870,30 @@ public class OpenReferralOrganisationSeedData
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
-                new List<OpenReferralLanguage>()
+                new List<OpenReferralLanguage>
                 {
                     new OpenReferralLanguage("73a688a2-0dad-4674-ac63-5115c990ea1f","Afrikaans")
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                new List<OpenReferralContact>(new List<OpenReferralContact>
                 {
                     new OpenReferralContact(
                         "1563",
                         "Mr",
                         "John Smith",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("1563", "01827 64328")
-                        }
-                        ))
+                        "01827 64328", 
+                        "01827 64328")
                 }),
-                new List<OpenReferralCost_Option>(new List<OpenReferralCost_Option>()
+                new List<OpenReferralCost_Option>(new List<OpenReferralCost_Option>
                 {
                     new OpenReferralCost_Option("1346", "Hour", 25.0m, null, null, null, null)
                 }),
-                new List<OpenReferralService_Area>()
+                new List<OpenReferralService_Area>
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>
                 {
                     new OpenReferralServiceAtLocation(
                         "1868",
@@ -932,7 +904,7 @@ public class OpenReferralOrganisationSeedData
                             52.63123,
                             -1.66519,
                             new List<OpenReferralLinkTaxonomy>(),
-                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
+                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
@@ -950,8 +922,8 @@ public class OpenReferralOrganisationSeedData
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
-                {
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>
+                    {
                     new OpenReferralService_Taxonomy
                     ("9121TestDelete",
                     null,

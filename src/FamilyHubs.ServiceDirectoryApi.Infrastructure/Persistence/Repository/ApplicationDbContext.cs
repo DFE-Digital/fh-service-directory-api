@@ -1,10 +1,10 @@
-﻿using FamilyHubs.SharedKernel;
+﻿using System.Reflection;
+using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Interfaces.Infrastructure;
 using fh_service_directory_api.infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Repository
 {
@@ -47,7 +47,6 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
         public DbSet<OpenReferralLocation> OpenReferralLocations => Set<OpenReferralLocation>();
         public DbSet<OpenReferralOrganisation> OpenReferralOrganisations => Set<OpenReferralOrganisation>();
         public DbSet<OpenReferralParent> OpenReferralParents => Set<OpenReferralParent>();
-        public DbSet<OpenReferralPhone> OpenReferralPhones => Set<OpenReferralPhone>();
         public DbSet<OpenReferralPhysical_Address> OpenReferralPhysical_Addresses => Set<OpenReferralPhysical_Address>();
         public DbSet<OpenReferralRegular_Schedule> OpenReferralRegular_Schedules => Set<OpenReferralRegular_Schedule>();
         public DbSet<OpenReferralReview> OpenReferralReviews => Set<OpenReferralReview>();
@@ -57,19 +56,14 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
         public DbSet<OpenReferralServiceAtLocation> OpenReferralServiceAtLocations => Set<OpenReferralServiceAtLocation>();
         public DbSet<OpenReferralTaxonomy> OpenReferralTaxonomies => Set<OpenReferralTaxonomy>();
         public DbSet<OpenReferralServiceDelivery> OpenReferralServiceDeliveries => Set<OpenReferralServiceDelivery>();
-
-        public DbSet<ModelLink> ModelLinks => Set<ModelLink>();
         public DbSet<ServiceType> ServiceTypes => Set<ServiceType>();
         public DbSet<OrganisationType> OrganisationTypes => Set<OrganisationType>();
-        public DbSet<OrganisationAdminDistrict> OrganisationAdminDistricts => Set<OrganisationAdminDistrict>();
+        public DbSet<AdminArea> AdminAreas => Set<AdminArea>();
         public DbSet<RelatedOrganisation> RelatedOrganisations => Set<RelatedOrganisation>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            int result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-            // ignore events if no dispatcher provided
-            if (_dispatcher == null) return result;
+            var result = await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             // dispatch events only if save was successful
             var entitiesWithEvents = ChangeTracker.Entries<EntityBase<string>>()

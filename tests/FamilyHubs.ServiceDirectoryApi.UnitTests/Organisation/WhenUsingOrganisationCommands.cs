@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections.ObjectModel;
+using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Builders;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContacts;
@@ -9,7 +10,6 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhones;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralRegularSchedule;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAreas;
@@ -34,7 +34,6 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Collections.ObjectModel;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
 
@@ -54,7 +53,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
-        var result = await handler.Handle(command, new System.Threading.CancellationToken());
+        var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
@@ -75,16 +74,16 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var mockMediator = new Mock<ISender>();
         CreateOpenReferralOrganisationCommand command = new(testOrganisation);
         CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await handler.Handle(command, new System.Threading.CancellationToken());
+        var id = await handler.Handle(command, new CancellationToken());
         
-        OpenReferralOrganisationWithServicesDto updateTestOrganisation = GetTestCountyCouncilRecord();
+        var updateTestOrganisation = GetTestCountyCouncilRecord();
         updateTestOrganisation.Name = "Unit Test B County Council";
         updateTestOrganisation.Description = "Unit Test B County Council Descrition";
         UpdateOpenReferralOrganisationCommand updatecommand = new(updateTestOrganisation.Id, updateTestOrganisation);
         UpdateOpenReferralOrganisationCommandHandler updatehandler = new(mockApplicationDbContext, updatelogger.Object, mockMediator.Object, mapper);
 
         ////Act
-        var result = await updatehandler.Handle(updatecommand, new System.Threading.CancellationToken());
+        var result = await updatehandler.Handle(updatecommand, new CancellationToken());
 
         ////Assert
         result.Should().NotBeNull();
@@ -103,18 +102,18 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var testOrganisation = GetTestCountyCouncilDto();
         CreateOpenReferralOrganisationCommand command = new(testOrganisation);
         CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await handler.Handle(command, new System.Threading.CancellationToken());
+        var id = await handler.Handle(command, new CancellationToken());
 
         GetOpenReferralOrganisationByIdCommand getcommand = new() { Id = testOrganisation.Id };
-        GetOpenReferralOrganisationByIdHandler gethandler = new(mockApplicationDbContext, mapper);
+        GetOpenReferralOrganisationByIdHandler gethandler = new(mockApplicationDbContext);
         testOrganisation.Logo = "";
 
         //Act
-        var result = await gethandler.Handle(getcommand, new System.Threading.CancellationToken());
+        var result = await gethandler.Handle(getcommand, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.AdministractiveDistrictCode));
+        result.Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.AdminAreaCode));
     }
 
     [Fact]
@@ -129,18 +128,18 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var testOrganisation = GetTestCountyCouncilDto();
         CreateOpenReferralOrganisationCommand command = new(testOrganisation);
         CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await handler.Handle(command, new System.Threading.CancellationToken());
+        var id = await handler.Handle(command, new CancellationToken());
 
         ListOpenReferralOrganisationCommand getcommand = new();
         ListOpenReferralOrganisationCommandHandler gethandler = new(mockApplicationDbContext);
         testOrganisation.Logo = "";
 
         //Act
-        var result = await gethandler.Handle(getcommand, new System.Threading.CancellationToken());
+        var result = await gethandler.Handle(getcommand, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
-        result[0].Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.Services).Excluding(si => si.AdministractiveDistrictCode));
+        result[0].Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.Services).Excluding(si => si.AdminAreaCode));
     }
 
     [Fact]
@@ -153,7 +152,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData(false);
-        if (!mockApplicationDbContext.OrganisationAdminDistricts.Any())
+        if (!mockApplicationDbContext.AdminAreas.Any())
         {
             mockApplicationDbContext.OrganisationTypes.AddRange(openReferralOrganisationSeedData.SeedOrganisationTypes());
             mockApplicationDbContext.SaveChanges();
@@ -164,7 +163,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         
 
         //Act
-        var result = await gethandler.Handle(getcommand, new System.Threading.CancellationToken());
+        var result = await gethandler.Handle(getcommand, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
@@ -183,14 +182,14 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var testOrganisation = GetTestCountyCouncilDto();
         CreateOpenReferralOrganisationCommand command = new(testOrganisation);
         CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await handler.Handle(command, new System.Threading.CancellationToken());
+        var id = await handler.Handle(command, new CancellationToken());
 
         GetOrganisationAdminByOrganisationIdCommand getcommand = new(testOrganisation.Id);
         GetOrganisationAdminByOrganisationIdCommandHandler gethandler = new(mockApplicationDbContext, mapper);
         testOrganisation.Logo = "";
 
         //Act
-        var result = await gethandler.Handle(getcommand, new System.Threading.CancellationToken());
+        var result = await gethandler.Handle(getcommand, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
@@ -213,7 +212,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             }
             );
 
-        testCountyCouncil.AdministractiveDistrictCode = "XTEST";
+        testCountyCouncil.AdminAreaCode = "XTEST";
 
         return testCountyCouncil;
     }
@@ -222,8 +221,8 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     {
         var contactId = Guid.NewGuid().ToString();
 
-        ServicesDtoBuilder builder = new ServicesDtoBuilder();
-        OpenReferralServiceDto service = builder.WithMainProperties("3010521b-6e0a-41b0-b610-200edbbeeb14",
+        var builder = new ServicesDtoBuilder();
+        var service = builder.WithMainProperties("3010521b-6e0a-41b0-b610-200edbbeeb14",
                 new ServiceTypeDto("1", "Information Sharing", ""),
                 parentId,
                 "Unit Test Service",
@@ -246,29 +245,27 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                 {
                     new OpenReferralEligibilityDto("Test9111Children","",0,13)
                 })
-            .WithContact(new List<OpenReferralContactDto>()
+            .WithContact(new List<OpenReferralContactDto>
             {
                 new OpenReferralContactDto(
                     contactId,
                     "Contact",
                     string.Empty,
-                    new List<OpenReferralPhoneDto>()
-                    {
-                        new OpenReferralPhoneDto("1567", "01827 65777")
-                    }
+                    "01827 65777",
+                    "01827 65777"
                     )
             })
             .WithCostOption(new List<OpenReferralCostOptionDto> {new() {Id = Guid.NewGuid().ToString(), Amount = decimal.Zero, Option = "free", Amount_description = ""}})
-            .WithLanguages(new List<OpenReferralLanguageDto>()
-                {
+            .WithLanguages(new List<OpenReferralLanguageDto>
+            {
                     new OpenReferralLanguageDto("1bb6c313-648d-4226-9e96-b7d37eaeb3dd", "English")
                 })
-            .WithServiceAreas(new List<OpenReferralServiceAreaDto>()
-                {
+            .WithServiceAreas(new List<OpenReferralServiceAreaDto>
+            {
                     new OpenReferralServiceAreaDto(Guid.NewGuid().ToString(), "National", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 })
-            .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>()
-                {
+            .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>
+            {
                     new OpenReferralServiceAtLocationDto(
                         "Test1749",
                         new OpenReferralLocationDto(
@@ -277,7 +274,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                             "",
                             52.6312,
                             -1.66526,
-                            new List<OpenReferralPhysicalAddressDto>()
+                            new List<OpenReferralPhysicalAddressDto>
                             {
                                 new OpenReferralPhysicalAddressDto(
                                     Guid.NewGuid().ToString(),
@@ -288,7 +285,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                                     null
                                     )
                             },
-                            new List<OpenReferralLinkTaxonomyDto>()
+                            new List<OpenReferralLinkTaxonomyDto>
                             {
                                 new OpenReferralLinkTaxonomyDto(
                                     Guid.NewGuid().ToString(),
@@ -309,8 +306,8 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                         )
 
                 })
-            .WithServiceTaxonomies(new List<OpenReferralServiceTaxonomyDto>()
-                {
+            .WithServiceTaxonomies(new List<OpenReferralServiceTaxonomyDto>
+            {
                     new OpenReferralServiceTaxonomyDto
                     ("UnitTest9107",
                     new OpenReferralTaxonomyDto(
@@ -373,7 +370,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             }
             );
 
-        testCountyCouncil.AdministractiveDistrictCode = "XTEST";
+        testCountyCouncil.AdminAreaCode = "XTEST";
 
         return testCountyCouncil;
     }
@@ -382,8 +379,8 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     {
         var contactId = Guid.NewGuid().ToString();
 
-        ServicesBuilder builder = new ServicesBuilder();
-        OpenReferralService service = builder.WithMainProperties("3010521b-6e0a-41b0-b610-200edbbeeb14",
+        var builder = new ServicesBuilder();
+        var service = builder.WithMainProperties("3010521b-6e0a-41b0-b610-200edbbeeb14",
                 "Unit Test Organisation for Children with Tracheostomies",
                 @"Unit Test Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
                 null,
@@ -403,29 +400,27 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                 {
                     new OpenReferralEligibility("Test9120Children","eligability","",0,13, new Collection<OpenReferralTaxonomy>())
                 })
-            .WithContact(new List<OpenReferralContact>()
+            .WithContact(new List<OpenReferralContact>
             {
                 new OpenReferralContact(
                     contactId,
                     "New Contact",
                     string.Empty,
-                    new List<OpenReferralPhone>()
-                    {
-                        new OpenReferralPhone("1565", "01827 65776")
-                    }
+                    "01827 65776", 
+                    "01827 65776"
                     )
             })
             .WithCostOption(new List<OpenReferralCost_Option>())
-            .WithLanguages(new List<OpenReferralLanguage>()
-                {
+            .WithLanguages(new List<OpenReferralLanguage>
+            {
                     new OpenReferralLanguage("386b9b56-4bb0-4ff9-817f-99e4d94f77f5", "English")
                 })
-            .WithServiceAreas(new List<OpenReferralService_Area>()
-                {
+            .WithServiceAreas(new List<OpenReferralService_Area>
+            {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null,"extent","http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 })
-            .WithServiceAtLocations(new List<OpenReferralServiceAtLocation>()
-                {
+            .WithServiceAtLocations(new List<OpenReferralServiceAtLocation>
+            {
                     new OpenReferralServiceAtLocation(
                         "Test1750",
                         new OpenReferralLocation(
@@ -435,7 +430,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                             52.6312,
                             -1.66526,
                             new List<OpenReferralLinkTaxonomy>(),
-                            new List<OpenReferralPhysical_Address>()
+                            new List<OpenReferralPhysical_Address>
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
@@ -453,8 +448,8 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                         )
 
                 })
-            .WithServiceTaxonomies(new List<OpenReferralService_Taxonomy>()
-                {
+            .WithServiceTaxonomies(new List<OpenReferralService_Taxonomy>
+            {
                     new OpenReferralService_Taxonomy
                     ("UnitTestA9107",
                     null,

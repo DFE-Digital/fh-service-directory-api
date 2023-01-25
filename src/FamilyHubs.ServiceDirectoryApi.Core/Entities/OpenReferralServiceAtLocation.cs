@@ -1,10 +1,9 @@
 ﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class OpenReferralServiceAtLocation : EntityBase<string>, IOpenReferralServiceAtLocation, IAggregateRoot
+public class OpenReferralServiceAtLocation : EntityBase<string>, IAggregateRoot
 {
     private OpenReferralServiceAtLocation() { }
     public OpenReferralServiceAtLocation(string id,
@@ -15,8 +14,8 @@ public class OpenReferralServiceAtLocation : EntityBase<string>, IOpenReferralSe
     {
         Id = id;
         Location = location;
-        HolidayScheduleCollection = holidayScheduleCollection as ICollection<OpenReferralHoliday_Schedule>;
-        Regular_schedule = regular_schedule as ICollection<OpenReferralRegular_Schedule>;
+        HolidayScheduleCollection = holidayScheduleCollection;
+        Regular_schedule = regular_schedule;
     }
 
     public OpenReferralLocation Location { get; set; } = default!;

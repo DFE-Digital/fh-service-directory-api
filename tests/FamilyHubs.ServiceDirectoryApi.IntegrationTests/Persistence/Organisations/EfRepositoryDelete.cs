@@ -1,5 +1,4 @@
-﻿using AutoFixture;
-using fh_service_directory_api.core.Entities;
+﻿using fh_service_directory_api.core.Entities;
 using Xunit;
 
 namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence.OpenReferralOrganisations;
@@ -10,7 +9,7 @@ public class EfRepositoryDelete : BaseEfRepositoryTestFixture
     public async Task DeletesOrOganisationAfterAddingIt()
     {
         // Arrange
-        OpenReferralData openReferralData = new OpenReferralData();
+        var openReferralData = new OpenReferralData();
         var newOpenReferralOrganisation = openReferralData.GetTestCountyCouncil();
         ArgumentNullException.ThrowIfNull(newOpenReferralOrganisation, nameof(newOpenReferralOrganisation));
         var OpenReferralOrganisationId = newOpenReferralOrganisation.Id;

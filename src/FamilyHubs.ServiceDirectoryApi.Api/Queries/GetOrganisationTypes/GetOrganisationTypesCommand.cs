@@ -1,5 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
+﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +7,6 @@ namespace fh_service_directory_api.api.Queries.GetOrganisationTypes;
 
 public class GetOrganisationTypesCommand : IRequest<List<OrganisationTypeDto>>
 {
-    public GetOrganisationTypesCommand()
-    {
-
-    }
 }
 
 public class GetOrganisationTypesCommandHandler : IRequestHandler<GetOrganisationTypesCommand, List<OrganisationTypeDto>>

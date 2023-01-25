@@ -1,6 +1,4 @@
-﻿using fh_service_directory_api.infrastructure.Persistence.Repository;
-using Microsoft.AspNetCore.Authorization;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace fh_service_directory_api.api.Endpoints;
 
@@ -17,11 +15,11 @@ public class MinimalGeneralEndPoints
                 var creationDate = File.GetCreationTime(assembly.Location);
                 var version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
 
-                string useDbType = configuration.GetValue<string>("UseDbType");
+                var useDbType = configuration.GetValue<string>("UseDbType");
                 if (useDbType != "UseInMemoryDatabase")
                 {
-                    string? connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
-                    bool connectionStringOK = false;
+                    var connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
+                    var connectionStringOK = false;
                     if (!string.IsNullOrEmpty(connectionString) && connectionString.Contains("Database"))
                         connectionStringOK = true;
 

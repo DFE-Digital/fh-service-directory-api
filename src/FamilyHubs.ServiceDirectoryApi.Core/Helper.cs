@@ -1,4 +1,5 @@
-﻿using GeoCoordinatePortable;
+﻿using System.Diagnostics;
+using GeoCoordinatePortable;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 
@@ -23,7 +24,7 @@ public class Helper
     {
         if (!string.IsNullOrEmpty(name))
         {
-            System.Diagnostics.Debug.WriteLine(name);
+            Debug.WriteLine(name);
         }
         latitude1 ??= 0.0;
         longitude1 ??= 0.0;

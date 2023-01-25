@@ -1,9 +1,10 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api;
-using FluentAssertions;
-using RTools_NTS.Util;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.Net;
 using System.Text;
 using System.Text.Json;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api;
+using FluentAssertions;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
@@ -23,7 +24,7 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
         {
             Method = HttpMethod.Post,
             RequestUri = new Uri(_client.BaseAddress + "api/uicaches"),
-            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
+            Content = new StringContent(JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
         //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
@@ -34,8 +35,8 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
 
         var stringResult = await response.Content.ReadAsStringAsync();
 
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        stringResult.ToString().Should().Be(command.Id);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        stringResult.Should().Be(command.Id);
     }
 
 #if DEBUG
@@ -45,7 +46,7 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
 #endif
     public async Task ThenTheUICacheIsUpdated()
     {
-        string id = await CreateUICache();
+        var id = await CreateUICache();
 
         var testViewModel = new TestViewModel
         {
@@ -53,7 +54,7 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
             Name = "Name Changed View Model"
         };
 
-        var value = Newtonsoft.Json.JsonConvert.SerializeObject(testViewModel);
+        var value = JsonConvert.SerializeObject(testViewModel);
 
         var command = new UICacheDto(id, value);
         
@@ -61,7 +62,7 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
         {
             Method = HttpMethod.Put,
             RequestUri = new Uri(_client.BaseAddress + $"api/uicaches/{id}"),
-            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
+            Content = new StringContent(JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
         //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
@@ -72,8 +73,8 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
 
         var stringResult = await response.Content.ReadAsStringAsync();
 
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        stringResult.ToString().Should().Be(command.Id);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        stringResult.Should().Be(command.Id);
     }
 
 #if DEBUG
@@ -83,7 +84,7 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
 #endif
     public async Task ThenGetUICacheById()
     {
-        string id = await CreateUICache();
+        var id = await CreateUICache();
 
         var request = new HttpRequestMessage
         {
@@ -97,9 +98,9 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<UICacheDto>(await response.Content.ReadAsStreamAsync(), new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<UICacheDto>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
         retVal.Id.Should().Be(id);
@@ -113,7 +114,7 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
         {
             Method = HttpMethod.Post,
             RequestUri = new Uri(_client.BaseAddress + "api/uicaches"),
-            Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
+            Content = new StringContent(JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
         //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
@@ -136,7 +137,7 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTest
             Name = "Test View Model"
         };
 
-        return Newtonsoft.Json.JsonConvert.SerializeObject(testViewModel);
+        return JsonConvert.SerializeObject(testViewModel);
     }
 }
 

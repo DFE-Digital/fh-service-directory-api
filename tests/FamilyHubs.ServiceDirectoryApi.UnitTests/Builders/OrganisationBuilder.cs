@@ -4,7 +4,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Builders;
 
 public class OrganisationBuilder
 {
-    private OpenReferralOrganisation _openReferralOrganisation;
+    private readonly OpenReferralOrganisation _openReferralOrganisation;
 
     public OrganisationBuilder()
     {

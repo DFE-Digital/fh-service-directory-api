@@ -1,5 +1,4 @@
 ﻿using Ardalis.GuardClauses;
-using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
@@ -20,12 +19,10 @@ public class GetOpenReferralOrganisationByIdCommand : IRequest<OpenReferralOrgan
 public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenReferralOrganisationByIdCommand, OpenReferralOrganisationWithServicesDto>
 {
     private readonly ApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public GetOpenReferralOrganisationByIdHandler(ApplicationDbContext context, IMapper mapper)
+    public GetOpenReferralOrganisationByIdHandler(ApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
     public async Task<OpenReferralOrganisationWithServicesDto> Handle(GetOpenReferralOrganisationByIdCommand request, CancellationToken cancellationToken)
     {
@@ -39,7 +36,6 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
            .ThenInclude(x => x.Eligibilities)
            .Include(x => x.Services!)
            .ThenInclude(x => x.Contacts)
-           .ThenInclude(x => x.Phones)
            .Include(x => x.Services!)
            .ThenInclude(x => x.Cost_options)
            .Include(x => x.Services!)
@@ -85,7 +81,7 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
         List<OpenReferralServiceDto> openReferralServices = new();
         if (entity.Services != null)
         {
-            foreach (OpenReferralService openReferralService in entity.Services)
+            foreach (var openReferralService in entity.Services)
             {
                 openReferralServices.Add(OpenReferralDtoHelper.GetOpenReferralServiceDto(openReferralService));
             }
@@ -101,10 +97,10 @@ public class GetOpenReferralOrganisationByIdHandler : IRequestHandler<GetOpenRef
             entity.Url,
             openReferralServices);
 
-        OrganisationAdminDistrict? organisationAdminDistrict = _context.OrganisationAdminDistricts.FirstOrDefault(x => x.OpenReferralOrganisationId == entity.Id);
+        var organisationAdminDistrict = _context.AdminAreas.FirstOrDefault(x => x.OpenReferralOrganisationId == entity.Id);
         if (organisationAdminDistrict != null)
         {
-            result.AdministractiveDistrictCode = organisationAdminDistrict.Code;
+            result.AdminAreaCode = organisationAdminDistrict.Code;
         }
         
         return result;
