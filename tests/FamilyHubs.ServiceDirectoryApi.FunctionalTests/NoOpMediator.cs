@@ -1,5 +1,5 @@
-﻿using MediatR;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
+using MediatR;
 
 namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 

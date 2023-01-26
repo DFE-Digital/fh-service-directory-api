@@ -1,5 +1,4 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Enums;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
 using fh_service_directory_api.core.Entities;
 
 namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests;
@@ -44,13 +43,6 @@ public class OpenReferralData
             bristolCountyCouncil.Services.ElementAt(0).Languages.ElementAt(0).Created = DateTime.UtcNow;
             bristolCountyCouncil.Services.ElementAt(0).Contacts.ElementAt(0).CreatedBy = "TestSystem";
             bristolCountyCouncil.Services.ElementAt(0).Contacts.ElementAt(0).Created = DateTime.UtcNow;
-            if (bristolCountyCouncil.Services.ElementAt(0).Contacts.ElementAt(0).Phones != null)
-            {
-#pragma warning disable CS8604 // Possible null reference argument.
-                bristolCountyCouncil.Services.ElementAt(0).Contacts.ElementAt(0).Phones.ElementAt(0).CreatedBy = "TestSystem";
-                bristolCountyCouncil.Services.ElementAt(0).Contacts.ElementAt(0).Phones.ElementAt(0).Created = DateTime.UtcNow;
-#pragma warning restore CS8604 // Possible null reference argument.
-            }
             bristolCountyCouncil.Services.ElementAt(0).Service_at_locations.ElementAt(0).CreatedBy = "TestSystem";
             bristolCountyCouncil.Services.ElementAt(0).Service_at_locations.ElementAt(0).Created = DateTime.UtcNow;
 
@@ -90,30 +82,27 @@ public class OpenReferralData
                 }),
                 new List<OpenReferralFunding>(),
                 new List<OpenReferralHoliday_Schedule>(),
-                new List<OpenReferralLanguage>()
+                new List<OpenReferralLanguage>
                 {
                     new OpenReferralLanguage("724630f7-4c8b-4864-96be-bc74891f2b4a","English")
                 },
                 new List<OpenReferralRegular_Schedule>(),
                 new List<OpenReferralReview>(),
-                new List<OpenReferralContact>(new List<OpenReferralContact>()
+                new List<OpenReferralContact>(new List<OpenReferralContact>
                 {
                     new OpenReferralContact(
                         "1568",
                         "Mr",
                         "John Smith",
-                        new List<OpenReferralPhone>(new List<OpenReferralPhone>()
-                        {
-                            new OpenReferralPhone("1568", "01827 65779")
-                        }
-                        ))
+                        "01827 65779",
+                        "01827 65779")
                 }),
                 new List<OpenReferralCost_Option>(),
-                new List<OpenReferralService_Area>()
+                new List<OpenReferralService_Area>
                 {
                     new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 },
-                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>()
+                new List<OpenReferralServiceAtLocation>( new List<OpenReferralServiceAtLocation>
                 {
                     new OpenReferralServiceAtLocation(
                         "1749",
@@ -124,7 +113,7 @@ public class OpenReferralData
                             52.6312,
                             -1.66526,
                             new List<OpenReferralLinkTaxonomy>(),
-                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>()
+                            new List<OpenReferralPhysical_Address>(new List<OpenReferralPhysical_Address>
                             {
                                 new OpenReferralPhysical_Address(
                                     Guid.NewGuid().ToString(),
@@ -142,8 +131,8 @@ public class OpenReferralData
                         )
 
                 }),
-                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>()
-                {
+                new List<OpenReferralService_Taxonomy>( new List<OpenReferralService_Taxonomy>
+                    {
                     new OpenReferralService_Taxonomy
                     ("9111",
                     null,

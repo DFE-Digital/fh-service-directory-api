@@ -149,37 +149,36 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
 
     private void AddAdministrativeDistrict(CreateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
     {
-        if (!string.IsNullOrEmpty(request.OpenReferralOrganisation.AdministractiveDistrictCode))
+        if (!string.IsNullOrEmpty(request.OpenReferralOrganisation.AdminAreaCode))
         {
-            var organisationAdminDistrict = _context.OrganisationAdminDistricts.FirstOrDefault(x => x.OpenReferralOrganisationId == openReferralOrganisation.Id);
+            var organisationAdminDistrict = _context.AdminAreas.FirstOrDefault(x => x.OpenReferralOrganisationId == openReferralOrganisation.Id);
             if (organisationAdminDistrict == null)
             {
-                var entity = new OrganisationAdminDistrict(
+                var entity = new AdminArea(
                     Guid.NewGuid().ToString(),
-                    request.OpenReferralOrganisation.AdministractiveDistrictCode,
+                    request.OpenReferralOrganisation.AdminAreaCode,
                     openReferralOrganisation.Id);
 
-                entity.RegisterDomainEvent(new OrganisationAdminDistrictCreatedEvent(entity));
-                _context.OrganisationAdminDistricts.Add(entity);
+                _context.AdminAreas.Add(entity);
             }
         }
     }
 
     private void AddRelatedOrganisation(CreateOpenReferralOrganisationCommand request, OpenReferralOrganisation openReferralOrganisation)
     {
-        if (string.IsNullOrEmpty(request.OpenReferralOrganisation.AdministractiveDistrictCode) || string.Compare(request.OpenReferralOrganisation.OrganisationType.Name, "LA", StringComparison.OrdinalIgnoreCase) == 0)
+        if (string.IsNullOrEmpty(request.OpenReferralOrganisation.AdminAreaCode) || string.Compare(request.OpenReferralOrganisation.OrganisationType.Name, "LA", StringComparison.OrdinalIgnoreCase) == 0)
             return;
 
-        var result = (from admindis in _context.OrganisationAdminDistricts
+        var result = (from admindis in _context.AdminAreas
                       join org in _context.OpenReferralOrganisations
                            on admindis.OpenReferralOrganisationId equals org.Id
-                      where admindis.Code == request.OpenReferralOrganisation.AdministractiveDistrictCode
+                      where admindis.Code == request.OpenReferralOrganisation.AdminAreaCode
                       && org.OrganisationType.Name == "LA"
                       select org).FirstOrDefault();
 
         if (result == null)
         {
-            _logger.LogError($"Unable to find Local Authority for: {request.OpenReferralOrganisation.AdministractiveDistrictCode}");
+            _logger.LogError($"Unable to find Local Authority for: {request.OpenReferralOrganisation.AdminAreaCode}");
             return;
         }
 

@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
@@ -32,9 +30,9 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests
 
     private JwtSecurityToken CreateToken(List<Claim> authClaims, IConfiguration configuration)
     {
-        string secret = configuration["JWT:Secret"] ?? "JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xzyr";
+        var secret = configuration["JWT:Secret"] ?? "JWTAuthenticationHIGHsecuredPasswordVVVp1OH7Xzyr";
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
-        if (!int.TryParse(configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes))
+        if (!int.TryParse(configuration["JWT:TokenValidityInMinutes"], out var tokenValidityInMinutes))
         {
             tokenValidityInMinutes = 30;
         }

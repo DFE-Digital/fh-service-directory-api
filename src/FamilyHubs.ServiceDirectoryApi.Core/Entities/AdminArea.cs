@@ -1,13 +1,12 @@
 ﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.core.Interfaces.Entities;
 
 namespace fh_service_directory_api.core.Entities;
 
-public class OrganisationAdminDistrict : EntityBase<string>, IOrganisationAdminDistrict, IAggregateRoot
+public class AdminArea : EntityBase<string>, IAggregateRoot
 {
-    private OrganisationAdminDistrict() { }
-    public OrganisationAdminDistrict(string id, string code, string openReferralOrganisationId)
+    private AdminArea() { }
+    public AdminArea(string id, string code, string openReferralOrganisationId)
     {
         Id = id;
         Code = code;

@@ -6,6 +6,7 @@ using fh_service_directory_api.core.Entities;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Newtonsoft.Json;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.UICaches;
 
@@ -22,7 +23,7 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
         CreateUICacheCommandHandler handler = new(mockApplicationDbContext, logger.Object);
 
         //Act
-        var result = await handler.Handle(command, new System.Threading.CancellationToken());
+        var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().Be("6e23bc85-fff9-49f9-99e4-98160a9a2b56");
@@ -44,13 +45,13 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
             Name = "New Test View Model"
         };
 
-        var newViewModel = Newtonsoft.Json.JsonConvert.SerializeObject(testViewModel);
+        var newViewModel = JsonConvert.SerializeObject(testViewModel);
 
         UpdateUICacheCommand command = new(id, new UICacheDto(id, newViewModel ));
         UpdateUICacheCommandHandler handler = new(mockApplicationDbContext, logger.Object);
 
         //Act
-        var result = await handler.Handle(command, new System.Threading.CancellationToken());
+        var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
@@ -69,7 +70,7 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
         GetUICacheByIdCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
-        UICacheDto result = await handler.Handle(command, new System.Threading.CancellationToken());
+        var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
@@ -91,6 +92,6 @@ internal class TestViewModel
             Name = "Test View Model"
         };
 
-        return Newtonsoft.Json.JsonConvert.SerializeObject(testViewModel);
+        return JsonConvert.SerializeObject(testViewModel);
     }
 }

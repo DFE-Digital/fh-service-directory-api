@@ -31,7 +31,7 @@ public class GetOpenReferralServicesByOrganisationIdCommandHandler : IRequestHan
     {
         var organisation = _context.OpenReferralOrganisations
             .Include(x => x.OrganisationType)
-            .Include(x => x.Services!.Where(x => x.Status != "Deleted"))
+            .Include(x => x.Services!.Where(s => s.Status != "Deleted"))
             .FirstOrDefault(x => x.Id == request.Id);
 
         if (organisation == null)
@@ -39,7 +39,7 @@ public class GetOpenReferralServicesByOrganisationIdCommandHandler : IRequestHan
             throw new NotFoundException(nameof(OpenReferralService), request.Id);
         }
 
-        List<string>? ids = organisation?.Services?.Select(x => x.Id).ToList();
+        var ids = organisation.Services?.Select(x => x.Id).ToList();
 
         if (ids == null)
         {
@@ -51,7 +51,6 @@ public class GetOpenReferralServicesByOrganisationIdCommandHandler : IRequestHan
             .Include(x => x.ServiceDelivery)
             .Include(x => x.Eligibilities)
             .Include(x => x.Contacts)
-            .ThenInclude(x => x.Phones)
             .Include(x => x.Cost_options)
             .Include(x => x.Languages)
             .Include(x => x.Service_areas)

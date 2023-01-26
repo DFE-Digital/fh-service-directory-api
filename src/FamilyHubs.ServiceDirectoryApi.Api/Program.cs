@@ -30,6 +30,12 @@ public class Program
         }
         catch (Exception e)
         {
+            if (e.GetType().Name.Equals("StopTheHostException", StringComparison.Ordinal))
+            {
+                //this error only occurs when DB migration is running on its own
+                throw;
+            }
+            
             Log.Fatal(e, "An unhandled exception occurred during bootstrapping");
         }
         finally

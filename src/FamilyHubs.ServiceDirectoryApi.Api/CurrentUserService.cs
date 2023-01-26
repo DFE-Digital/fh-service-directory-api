@@ -1,5 +1,5 @@
-﻿using fh_service_directory_api.core.Interfaces;
-using System.Security.Claims;
+﻿using System.Security.Claims;
+using fh_service_directory_api.core.Interfaces;
 
 namespace fh_service_directory_api.api;
 

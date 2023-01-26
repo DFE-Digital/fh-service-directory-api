@@ -170,29 +170,29 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
     public static OpenReferralLocationDto GetTestOpenReferralLocationDto()
     {
         return new OpenReferralLocationDto(
-        id: "661cab6d-81f6-46cd-a05b-4ec2e19b03fa",
-        name: "Test Location",
-        description: "Unit Test Location",
-        latitude: 53.474103227856105D,
-        longitude: -2.2721559641660787D,
+        "661cab6d-81f6-46cd-a05b-4ec2e19b03fa",
+        "Test Location",
+        "Unit Test Location",
+        53.474103227856105D,
+        -2.2721559641660787D,
         new List<OpenReferralPhysicalAddressDto>
         {
             new OpenReferralPhysicalAddressDto(
-                id: "e2c83465-70f4-4252-92d8-487ea7da97e0",
-                address_1: "Address Line 1",
-                city: "City1",
-                postal_code: "E14 2BG",
-                country: "United Kingdom",
-                state_province: "County"
+                "e2c83465-70f4-4252-92d8-487ea7da97e0",
+                "Address Line 1",
+                "City1",
+                "E14 2BG",
+                "United Kingdom",
+                "County"
                 )
         },
         new List<OpenReferralLinkTaxonomyDto>
         {
             new OpenReferralLinkTaxonomyDto(
-                id: "a8587b60-e9cd-4527-9bdd-d55955faa8c1",
-                linkType: "Location",
-                linkId: "661cab6d-81f6-46cd-a05b-4ec2e19b03fa",
-                taxonomy: new OpenReferralTaxonomyDto("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", "Test Vocabulary", null)
+                "a8587b60-e9cd-4527-9bdd-d55955faa8c1",
+                "Location",
+                "661cab6d-81f6-46cd-a05b-4ec2e19b03fa",
+                new OpenReferralTaxonomyDto("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", "Test Vocabulary", null)
                 )
 
         });

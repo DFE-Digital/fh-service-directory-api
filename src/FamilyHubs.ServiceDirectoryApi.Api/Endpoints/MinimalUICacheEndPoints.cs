@@ -1,11 +1,12 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api;
-using Swashbuckle.AspNetCore.Annotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api;
 using fh_service_directory_api.api.Commands.CreateUICache;
-using MediatR;
-using fh_service_directory_api.api.Queries.GetUICacheById;
 using fh_service_directory_api.api.Commands.UpdateUICache;
+using fh_service_directory_api.api.Queries.GetUICacheById;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace fh_service_directory_api.api.Endpoints;
 
@@ -24,7 +25,7 @@ public class MinimalUICacheEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred creating UICache. {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("UICaches", "Create UICache") { Tags = new[] { "UICaches" } });
@@ -40,7 +41,7 @@ public class MinimalUICacheEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred getting UICache by Id. {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get UICache", "Get UICache By Id") { Tags = new[] { "UICaches" } });
@@ -56,7 +57,7 @@ public class MinimalUICacheEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred updating UICache. {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Update UICache", "Update UICache By Id") { Tags = new[] { "UICaches" } });

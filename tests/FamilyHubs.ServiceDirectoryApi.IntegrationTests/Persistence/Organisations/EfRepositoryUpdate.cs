@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
+using fh_service_directory_api.core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
-using fh_service_directory_api.core.Entities;
 
 namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence.OpenReferralOrganisations;
 
@@ -13,7 +13,7 @@ public class EfRepositoryUpdate : BaseEfRepositoryTestFixture
     public async Task UpdatesOpenReferralOrganisationAfterAddingIt()
     {
         // Arrange
-        OpenReferralData openReferralData = new OpenReferralData();
+        var openReferralData = new OpenReferralData();
         var OpenReferralOrganisation = openReferralData.GetTestCountyCouncil();
         ArgumentNullException.ThrowIfNull(OpenReferralOrganisation, nameof(OpenReferralOrganisation));
 

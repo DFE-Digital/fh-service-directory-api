@@ -12,11 +12,14 @@ public class ContactConfiguration : IEntityTypeConfiguration<OpenReferralContact
             .HasMaxLength(50);
         builder.Property(t => t.Name)
             .HasMaxLength(50);
+        builder.Property(t => t.Telephone)
+            .HasMaxLength(50);
+        builder.Property(t => t.TextPhone)
+            .HasMaxLength(50);
         builder.Property(t => t.Created)
             .IsRequired();
         builder.Property(t => t.CreatedBy)
             .HasMaxLength(255)
             .IsRequired();
-        
     }
 }

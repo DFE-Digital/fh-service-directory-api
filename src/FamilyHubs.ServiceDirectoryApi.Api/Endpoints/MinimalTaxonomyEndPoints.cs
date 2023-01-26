@@ -1,12 +1,13 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
+﻿using System.Diagnostics;
+using AutoMapper;
+using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using fh_service_directory_api.api.Commands.CreateOpenReferralTaxonomy;
-using fh_service_directory_api.api.Queries.GetOpenReferralTaxonomies;
 using fh_service_directory_api.api.Commands.UpdateOpenReferralTaxonomy;
+using fh_service_directory_api.api.Queries.GetOpenReferralTaxonomies;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 
 namespace fh_service_directory_api.api.Endpoints;
 
@@ -25,7 +26,7 @@ public class MinimalTaxonomyEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred creating taxonomy. {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Taxonomy", "Create Taxonomy") { Tags = new[] { "Taxonomies" } });
@@ -41,7 +42,7 @@ public class MinimalTaxonomyEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred updating taxonomy. {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Update Taxonomy", "Update Taxonomy") { Tags = new[] { "Taxonomies" } });
@@ -57,7 +58,7 @@ public class MinimalTaxonomyEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred getting taxonomies. {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get All Taxonomies", "Get All Taxonomies") { Tags = new[] { "Taxonomies" } });

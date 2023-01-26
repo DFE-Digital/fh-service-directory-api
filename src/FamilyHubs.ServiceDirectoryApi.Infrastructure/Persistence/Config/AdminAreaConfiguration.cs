@@ -4,17 +4,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace fh_service_directory_api.infrastructure.Persistence.Config;
 
-public class ModelLinkConfiguration : IEntityTypeConfiguration<ModelLink>
+public class AdminAreaConfiguration : IEntityTypeConfiguration<AdminArea>
 {
-    public void Configure(EntityTypeBuilder<ModelLink> builder)
+    public void Configure(EntityTypeBuilder<AdminArea> builder)
     {
-        builder.Property(t => t.LinkType)
-            .HasMaxLength(500)
-            .IsRequired();
-        builder.Property(t => t.ModelOneId)
+        builder.Property(t => t.Code)
             .HasMaxLength(50)
             .IsRequired();
-        builder.Property(t => t.ModelOneId)
+        builder.Property(t => t.OpenReferralOrganisationId)
             .HasMaxLength(50)
             .IsRequired();
         builder.Property(t => t.Created)

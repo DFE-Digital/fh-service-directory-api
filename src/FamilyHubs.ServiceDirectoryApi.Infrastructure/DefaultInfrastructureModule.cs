@@ -1,17 +1,17 @@
-﻿using Autofac;
+﻿using System.Reflection;
+using Autofac;
 using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using MediatR.Pipeline;
-using System.Reflection;
 using Module = Autofac.Module;
 
 namespace fh_service_directory_api.infrastructure;
 
 public class DefaultInfrastructureModule : Module
 {
-    private readonly bool _isDevelopment = false;
+    private readonly bool _isDevelopment;
     private readonly List<Assembly> _assemblies = new List<Assembly>();
 
     public DefaultInfrastructureModule(bool isDevelopment, Assembly? callingAssembly = null)

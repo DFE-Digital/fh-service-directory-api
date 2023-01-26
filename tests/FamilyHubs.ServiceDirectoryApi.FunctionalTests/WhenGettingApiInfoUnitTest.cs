@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc.Testing;
-
 namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
 [Collection("Sequential")]
