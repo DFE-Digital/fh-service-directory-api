@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace fh_service_directory_api.api.Commands.CreateUICache;
+namespace FamilyHubs.ServiceDirectory.Api.Commands.CreateUICache;
 
 public class CreateUICacheCommandValidator : AbstractValidator<CreateUICacheCommand>
 {

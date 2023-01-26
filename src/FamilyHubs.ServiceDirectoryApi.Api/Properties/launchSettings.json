@@ -1,6 +1,6 @@
 {
     "profiles": {
-        "vcf_service_directory_admin_api.api": {
+        "FamilyHubs.ServiceDirectory.Api": {
             "commandName": "Project",
             "launchBrowser": true,
             "launchUrl": "swagger",

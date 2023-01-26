@@ -1,9 +1,9 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
+﻿using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.api.Queries.GetOrganisationTypes;
+namespace FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationTypes;
 
 public class GetOrganisationTypesCommand : IRequest<List<OrganisationTypeDto>>
 {

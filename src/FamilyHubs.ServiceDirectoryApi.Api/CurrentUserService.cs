@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
-using fh_service_directory_api.core.Interfaces;
+using FamilyHubs.ServiceDirectory.Core.Interfaces;
 
-namespace fh_service_directory_api.api;
+namespace FamilyHubs.ServiceDirectory.Api;
 
 public class CurrentUserService : ICurrentUserService
 {

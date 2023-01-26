@@ -1,21 +1,21 @@
-﻿using FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
-using fh_service_directory_api.api.Commands.CreateOpenReferralService;
-using fh_service_directory_api.api.Commands.DeleteOpenReferralService;
-using fh_service_directory_api.api.Commands.UpdateOpenReferralService;
-using fh_service_directory_api.api.Queries.GetOpenReferralService;
+﻿using FamilyHubs.ServiceDirectory.Api.Commands.CreateService;
+using FamilyHubs.ServiceDirectory.Api.Commands.DeleteService;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
+using FamilyHubs.ServiceDirectory.Api.Queries.GetService;
+using FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
 using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Services;
 
-public class WhenValidatingOpenReferralServiceCommands
+public class WhenValidatingServiceCommands
 {
     [Fact]
-    public void ThenShouldCreateOpenReferralServiceCommandNotErrorWhenModelIsValid()
+    public void ThenShouldCreateServiceCommandNotErrorWhenModelIsValid()
     {
         //Arrange
         var testService = WhenUsingOrganisationCommands.GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc");
-        var validator = new CreateOpenReferralServiceCommandValidator();
-        var testModel = new CreateOpenReferralServiceCommand(testService);
+        var validator = new CreateServiceCommandValidator();
+        var testModel = new CreateServiceCommand(testService);
 
         //Act
         var result = validator.Validate(testModel);
@@ -25,12 +25,12 @@ public class WhenValidatingOpenReferralServiceCommands
     }
 
     [Fact]
-    public void ThenShouldUpdateOpenReferralServiceCommandNotErrorWhenModelIsValid()
+    public void ThenShouldUpdateServiceCommandNotErrorWhenModelIsValid()
     {
         //Arrange
         var testService = WhenUsingOrganisationCommands.GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc");
-        var validator = new UpdateOpenReferralServiceCommandValidator();
-        var testModel = new UpdateOpenReferralServiceCommand(testService.Id, testService);
+        var validator = new UpdateServiceCommandValidator();
+        var testModel = new UpdateServiceCommand(testService.Id, testService);
 
         //Act
         var result = validator.Validate(testModel);
@@ -40,11 +40,11 @@ public class WhenValidatingOpenReferralServiceCommands
     }
 
     [Fact]
-    public void ThenShouldDeleteOpenReferralServiceByIdCommandNotErrorWhenModelIsValid()
+    public void ThenShouldDeleteServiceByIdCommandNotErrorWhenModelIsValid()
     {
         //Arrange
-        var validator = new DeleteOpenReferralServiceByIdCommandValidator();
-        var testModel = new DeleteOpenReferralServiceByIdCommand("1");
+        var validator = new DeleteServiceByIdCommandValidator();
+        var testModel = new DeleteServiceByIdCommand("1");
 
         //Act
         var result = validator.Validate(testModel);
@@ -54,11 +54,11 @@ public class WhenValidatingOpenReferralServiceCommands
     }
 
     [Fact]
-    public void ThenShouldGetOpenReferralServiceByIdCommandNotErrorWhenModelIsValid()
+    public void ThenShouldGetServiceByIdCommandNotErrorWhenModelIsValid()
     {
         //Arrange
-        var validator = new GetOpenReferralServiceByIdCommandValidator();
-        var testModel = new GetOpenReferralServiceByIdCommand("3010521b-6e0a-41b0-b610-200edbbeeb14");
+        var validator = new GetServiceByIdCommandValidator();
+        var testModel = new GetServiceByIdCommand("3010521b-6e0a-41b0-b610-200edbbeeb14");
 
         //Act
         var result = validator.Validate(testModel);

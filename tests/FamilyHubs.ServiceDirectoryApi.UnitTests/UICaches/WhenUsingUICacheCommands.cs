@@ -1,8 +1,8 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api;
-using fh_service_directory_api.api.Commands.CreateUICache;
-using fh_service_directory_api.api.Commands.UpdateUICache;
-using fh_service_directory_api.api.Queries.GetUICacheById;
-using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Api.Commands.CreateUICache;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpdateUICache;
+using FamilyHubs.ServiceDirectory.Api.Queries.GetUICacheById;
+using FamilyHubs.ServiceDirectory.Core.Entities;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -37,7 +37,7 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
         var logger = new Mock<ILogger<UpdateUICacheCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         mockApplicationDbContext.UICaches.Add(new UICache(id, TestViewModel.GetTestViewModel()));
-        mockApplicationDbContext.SaveChanges();
+        await mockApplicationDbContext.SaveChangesAsync();
 
         var testViewModel = new TestViewModel
         {
@@ -65,7 +65,7 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
         const string id = "9ae3237d-73fd-46fc-afa3-f178250e0c09";
         var mockApplicationDbContext = GetApplicationDbContext();
         mockApplicationDbContext.UICaches.Add(new UICache(id, TestViewModel.GetTestViewModel()));
-        mockApplicationDbContext.SaveChanges();
+        await mockApplicationDbContext.SaveChangesAsync();
         var command = new GetUICacheByIdCommand(id);
         GetUICacheByIdCommandHandler handler = new(mockApplicationDbContext);
 

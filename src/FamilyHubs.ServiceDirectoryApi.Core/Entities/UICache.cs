@@ -1,6 +1,6 @@
 ﻿using FamilyHubs.SharedKernel;
 
-namespace fh_service_directory_api.core.Entities;
+namespace FamilyHubs.ServiceDirectory.Core.Entities;
 
 public class UICache : EntityBase<string>
 {

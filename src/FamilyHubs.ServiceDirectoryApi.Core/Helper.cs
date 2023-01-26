@@ -3,7 +3,7 @@ using GeoCoordinatePortable;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 
-namespace fh_service_directory_api.core;
+namespace FamilyHubs.ServiceDirectory.Core;
 
 public class Helper
 {

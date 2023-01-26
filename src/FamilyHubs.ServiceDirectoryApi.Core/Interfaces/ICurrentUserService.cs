@@ -1,4 +1,4 @@
-﻿namespace fh_service_directory_api.core.Interfaces;
+﻿namespace FamilyHubs.ServiceDirectory.Core.Interfaces;
 
 public interface ICurrentUserService
 {

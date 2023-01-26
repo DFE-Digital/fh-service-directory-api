@@ -1,6 +1,6 @@
 using Serilog;
 
-namespace fh_service_directory_api.api;
+namespace FamilyHubs.ServiceDirectory.Api;
 
 public class Program
 {

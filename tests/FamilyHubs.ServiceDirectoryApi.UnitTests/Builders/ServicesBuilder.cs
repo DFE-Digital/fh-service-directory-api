@@ -1,91 +1,99 @@
-﻿using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Builders;
 
 public class ServicesBuilder
 {
-    private readonly OpenReferralService _openReferralService;
+    private readonly Service _service;
 
     public ServicesBuilder()
     {
-        _openReferralService = new OpenReferralService();
+        _service = new Service();
     }
 
-    public ServicesBuilder WithMainProperties(string id, string name, string? description, string? accreditations, DateTime? assured_date, string? attending_access, string? attending_type, string? deliverable_type, string? status, string? url, string? email, string? fees)
+    public ServicesBuilder WithMainProperties(
+        string id, 
+        string name, 
+        string? description, 
+        string? accreditations, 
+        DateTime? assuredDate, 
+        string? attendingAccess, 
+        string? attendingType, 
+        string? deliverableType, 
+        string? status, 
+        string? fees)
     {
-        _openReferralService.Id = id;
-        _openReferralService.Name = name;
-        _openReferralService.Description = description;
-        _openReferralService.Accreditations = accreditations;
-        _openReferralService.Assured_date = assured_date;
-        _openReferralService.Attending_access = attending_access;
-        _openReferralService.Attending_type = attending_type;
-        _openReferralService.Deliverable_type = deliverable_type;
-        _openReferralService.Status = status;
-        _openReferralService.Url = url;
-        _openReferralService.Email = email;
-        _openReferralService.Fees = fees;
+        _service.Id = id;
+        _service.Name = name;
+        _service.Description = description;
+        _service.Accreditations = accreditations;
+        _service.AssuredDate = assuredDate;
+        _service.AttendingAccess = attendingAccess;
+        _service.AttendingType = attendingType;
+        _service.DeliverableType = deliverableType;
+        _service.Status = status;
+        _service.Fees = fees;
         return this;
     }
 
-    public ServicesBuilder WithServiceDelivery(ICollection<OpenReferralServiceDelivery>? serviceDelivery)
+    public ServicesBuilder WithServiceDelivery(ICollection<ServiceDelivery>? serviceDelivery)
     {
         if (serviceDelivery != null && serviceDelivery.Any())
-            _openReferralService.ServiceDelivery = serviceDelivery;
+            _service.ServiceDeliveries = serviceDelivery;
         return this;
     }
 
-    public ServicesBuilder WithEligibility(ICollection<OpenReferralEligibility>? eligibilities)
+    public ServicesBuilder WithEligibility(ICollection<Eligibility>? eligibilities)
     {
         if (eligibilities != null && eligibilities.Any())
-            _openReferralService.Eligibilities = eligibilities;
+            _service.Eligibilities = eligibilities;
         return this;
     }
 
-    public ServicesBuilder WithContact(ICollection<OpenReferralContact>? contacts)
+    public ServicesBuilder WithContact(ICollection<Contact>? contacts)
     {
         if (contacts != null && contacts.Any())
-            _openReferralService.Contacts = contacts;
+            _service.Contacts = contacts;
         return this;
     }
 
-    public ServicesBuilder WithCostOption(ICollection<OpenReferralCost_Option> cost_options)
+    public ServicesBuilder WithCostOption(ICollection<CostOption>? costOptions)
     {
-        if (cost_options != null && cost_options.Any())
-            _openReferralService.Cost_options = cost_options;
+        if (costOptions != null && costOptions.Any())
+            _service.CostOptions = costOptions;
         return this;
     }
 
-    public ServicesBuilder WithLanguages(ICollection<OpenReferralLanguage>? languages)
+    public ServicesBuilder WithLanguages(ICollection<Language>? languages)
     {
         if (languages != null && languages.Any())
-            _openReferralService.Languages = languages;
+            _service.Languages = languages;
         return this;
     }
 
-    public ServicesBuilder WithServiceAreas(ICollection<OpenReferralService_Area>? service_areas)
+    public ServicesBuilder WithServiceAreas(ICollection<ServiceArea>? serviceAreas)
     {
-        if (service_areas != null && service_areas.Any())
-            _openReferralService.Service_areas = service_areas;
+        if (serviceAreas != null && serviceAreas.Any())
+            _service.ServiceAreas = serviceAreas;
         return this;
     }
 
-    public ServicesBuilder WithServiceAtLocations(ICollection<OpenReferralServiceAtLocation>? service_at_locations)
+    public ServicesBuilder WithServiceAtLocations(ICollection<ServiceAtLocation>? serviceAtLocations)
     {
-        if (service_at_locations != null && service_at_locations.Any())
-            _openReferralService.Service_at_locations = service_at_locations;
+        if (serviceAtLocations != null && serviceAtLocations.Any())
+            _service.ServiceAtLocations = serviceAtLocations;
         return this;
     }
 
-    public ServicesBuilder WithServiceTaxonomies(ICollection<OpenReferralService_Taxonomy>? service_taxonomys)
+    public ServicesBuilder WithServiceTaxonomies(ICollection<ServiceTaxonomy>? serviceTaxonomies)
     {
-        if (service_taxonomys != null && service_taxonomys.Any())
-            _openReferralService.Service_taxonomys = service_taxonomys;
+        if (serviceTaxonomies != null && serviceTaxonomies.Any())
+            _service.ServiceTaxonomies = serviceTaxonomies;
         return this;
     }
 
-    public OpenReferralService Build()
+    public Service Build()
     {
-        return _openReferralService;
+        return _service;
     }
 }

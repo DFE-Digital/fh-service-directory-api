@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace fh_service_directory_api.api.Queries.GetUICacheById;
+namespace FamilyHubs.ServiceDirectory.Api.Queries.GetUICacheById;
 
 public class GetUICacheByIdCommandValidator : AbstractValidator<GetUICacheByIdCommand>
 {

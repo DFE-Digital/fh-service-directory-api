@@ -1,5 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api;
-using fh_service_directory_api.api.Commands.CreateUICache;
+﻿using FamilyHubs.ServiceDirectory.Api.Commands.CreateUICache;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.UICaches;

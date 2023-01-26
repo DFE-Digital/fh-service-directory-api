@@ -2,15 +2,15 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using FamilyHubs.ServiceDirectory.Api.Endpoints;
+using FamilyHubs.ServiceDirectory.Core;
+using FamilyHubs.ServiceDirectory.Core.Entities;
+using FamilyHubs.ServiceDirectory.Core.Interfaces;
+using FamilyHubs.ServiceDirectory.Infrastructure;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Infrastructure.Services;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.api.Endpoints;
-using fh_service_directory_api.core;
-using fh_service_directory_api.core.Entities;
-using fh_service_directory_api.core.Interfaces;
-using fh_service_directory_api.infrastructure;
-using fh_service_directory_api.infrastructure.Persistence.Interceptors;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
-using fh_service_directory_api.infrastructure.Services;
 using MediatR;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,7 +20,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 
-namespace fh_service_directory_api.api;
+namespace FamilyHubs.ServiceDirectory.Api;
 
 public static class StartupExtensions
 {
@@ -175,7 +175,7 @@ public static class StartupExtensions
         {
             typeof(Program).Assembly,
             typeof(ApplicationDbContext).Assembly,
-            typeof(OpenReferralOrganisation).Assembly
+            typeof(Organisation).Assembly
         };
 
         services.AddMediatR(assemblies);

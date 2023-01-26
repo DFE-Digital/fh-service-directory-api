@@ -1,17 +1,12 @@
 ﻿using AutoMapper;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
-using fh_service_directory_api.api.Commands.CreateLocation;
-using fh_service_directory_api.api.Commands.UpdateLocation;
-using fh_service_directory_api.core;
-using fh_service_directory_api.core.Entities;
+using FamilyHubs.ServiceDirectory.Api.Commands.CreateLocation;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpdateLocation;
+using FamilyHubs.ServiceDirectory.Core;
+using FamilyHubs.ServiceDirectory.Core.Entities;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Xml.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Locations;
 
@@ -24,16 +19,16 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralLocationCommandHandler>>();
+        var logger = new Mock<ILogger<CreateLocationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        mockApplicationDbContext.OpenReferralTaxonomies.Add(GetTestTaxonomy());
-        mockApplicationDbContext.SaveChanges();
-        var testLocation = GetTestOpenReferralLocationDto();
-        CreateOpenReferralLocationCommand command = new(testLocation);
-        CreateOpenReferralLocationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
+        mockApplicationDbContext.Taxonomies.Add(GetTestTaxonomy());
+        await mockApplicationDbContext.SaveChangesAsync();
+        var testLocation = GetTestLocationDto();
+        CreateLocationCommand command = new(testLocation);
+        CreateLocationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
-        var result = await handler.Handle(command, new System.Threading.CancellationToken());
+        var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
@@ -47,19 +42,19 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<UpdateOpenReferralLocationCommandHandler>>();
+        var logger = new Mock<ILogger<UpdateLocationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        mockApplicationDbContext.OpenReferralTaxonomies.Add(GetTestTaxonomy());
-        mockApplicationDbContext.SaveChanges();
-        var testLocation = GetTestOpenReferralLocationDto();
-        CreateOpenReferralLocationCommand createcommand = new(testLocation);
-        CreateOpenReferralLocationCommandHandler createHandler = new(mockApplicationDbContext, mapper, new Mock<ILogger<CreateOpenReferralLocationCommandHandler>>().Object);
-        await createHandler.Handle(createcommand, new System.Threading.CancellationToken());
-        UpdateOpenReferralLocationCommand command = new(testLocation);
-        UpdateOpenReferralLocationCommandHandler handler = new UpdateOpenReferralLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
+        mockApplicationDbContext.Taxonomies.Add(GetTestTaxonomy());
+        await mockApplicationDbContext.SaveChangesAsync();
+        var testLocation = GetTestLocationDto();
+        CreateLocationCommand createcommand = new(testLocation);
+        CreateLocationCommandHandler createHandler = new(mockApplicationDbContext, mapper, new Mock<ILogger<CreateLocationCommandHandler>>().Object);
+        await createHandler.Handle(createcommand, new CancellationToken());
+        UpdateLocationCommand command = new(testLocation);
+        var handler = new UpdateLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
-        var result = await handler.Handle(command, new System.Threading.CancellationToken());
+        var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
@@ -73,45 +68,45 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<UpdateOpenReferralLocationCommandHandler>>();
+        var logger = new Mock<ILogger<UpdateLocationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        mockApplicationDbContext.OpenReferralTaxonomies.Add(GetTestTaxonomy());
-        mockApplicationDbContext.SaveChanges();
-        var testLocation = GetTestOpenReferralLocationDto();
-        CreateOpenReferralLocationCommand createcommand = new(testLocation);
-        CreateOpenReferralLocationCommandHandler createHandler = new(mockApplicationDbContext, mapper, new Mock<ILogger<CreateOpenReferralLocationCommandHandler>>().Object);
-        await createHandler.Handle(createcommand, new System.Threading.CancellationToken());
+        mockApplicationDbContext.Taxonomies.Add(GetTestTaxonomy());
+        await mockApplicationDbContext.SaveChangesAsync();
+        var testLocation = GetTestLocationDto();
+        CreateLocationCommand createcommand = new(testLocation);
+        CreateLocationCommandHandler createHandler = new(mockApplicationDbContext, mapper, new Mock<ILogger<CreateLocationCommandHandler>>().Object);
+        await createHandler.Handle(createcommand, new CancellationToken());
 
-        var physicalAddresses = new List<OpenReferralPhysicalAddressDto>
+        var physicalAddresses = new List<PhysicalAddressDto>
         {
-            new OpenReferralPhysicalAddressDto(
-                id: "fa4f96b1-a9f8-4cd9-8c2b-de40794e0fb0",
-                address_1: "New Address Line 1",
-                city: "New City1",
-                postal_code: "E14 3BG",
-                country: "United Kingdom",
-                state_province: "New County"
+            new PhysicalAddressDto(
+                "fa4f96b1-a9f8-4cd9-8c2b-de40794e0fb0",
+                "New Address Line 1",
+                "New City1",
+                "E14 3BG",
+                "United Kingdom",
+                "New County"
             )
         };
 
-        var newTaxonomyList = new List<OpenReferralLinkTaxonomyDto>
+        var newTaxonomyList = new List<LinkTaxonomyDto>
         {
-            new OpenReferralLinkTaxonomyDto(
-                id: "491a553a-8f97-4ac7-941d-8eafa981042b",
-                linkType: "Location",
-                linkId: "661cab6d-81f6-46cd-a05b-4ec2e19b03fa",
-                taxonomy: new OpenReferralTaxonomyDto("eeca6a0b-36d9-4a7f-9f74-d6bc3913cddd", "Test Taxonomy Update", "Test Vocabulary Update", null)
+            new LinkTaxonomyDto(
+                "491a553a-8f97-4ac7-941d-8eafa981042b",
+                "Location",
+                "661cab6d-81f6-46cd-a05b-4ec2e19b03fa",
+                new TaxonomyDto("eeca6a0b-36d9-4a7f-9f74-d6bc3913cddd", "Test Taxonomy Update", "Test Vocabulary Update", null)
                 )
 
         };
 
-        var updateLocation = new OpenReferralLocationDto(testLocation.Id, testLocation.Name, testLocation.Description, testLocation.Latitude, testLocation.Longitude, physicalAddresses, newTaxonomyList);
+        var updateLocation = new LocationDto(testLocation.Id, testLocation.Name, testLocation.Description, testLocation.Latitude, testLocation.Longitude, physicalAddresses, newTaxonomyList);
 
-        UpdateOpenReferralLocationCommand command = new(updateLocation);
-        UpdateOpenReferralLocationCommandHandler handler = new UpdateOpenReferralLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
+        UpdateLocationCommand command = new(updateLocation);
+        var handler = new UpdateLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
-        var result = await handler.Handle(command, new System.Threading.CancellationToken());
+        var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
@@ -125,22 +120,22 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<UpdateOpenReferralLocationCommandHandler>>();
+        var logger = new Mock<ILogger<UpdateLocationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        mockApplicationDbContext.OpenReferralTaxonomies.Add(GetTestTaxonomy());
-        mockApplicationDbContext.SaveChanges();
-        var testLocation = GetTestOpenReferralLocationDto();
-        var updateLocation = new OpenReferralLocationDto("d3948216-3b71-49a4-86b0-0d6d63758a3c", testLocation.Name, testLocation.Description, testLocation.Latitude, testLocation.Longitude, testLocation.Physical_addresses, testLocation.LinkTaxonomies);
+        mockApplicationDbContext.Taxonomies.Add(GetTestTaxonomy());
+        await mockApplicationDbContext.SaveChangesAsync();
+        var testLocation = GetTestLocationDto();
+        var updateLocation = new LocationDto("d3948216-3b71-49a4-86b0-0d6d63758a3c", testLocation.Name, testLocation.Description, testLocation.Latitude, testLocation.Longitude, testLocation.PhysicalAddresses, testLocation.LinkTaxonomies);
 
-        UpdateOpenReferralLocationCommand command = new(updateLocation);
-        UpdateOpenReferralLocationCommandHandler handler = new UpdateOpenReferralLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
+        UpdateLocationCommand command = new(updateLocation);
+        var handler = new UpdateLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
-        Func<Task> act = async () => { await handler.Handle(command, new System.Threading.CancellationToken()); };
+        Func<Task> act = async () => { await handler.Handle(command, new CancellationToken()); };
 
 
         //Assert
-        await act.Should().ThrowAsync<System.Exception>();
+        await act.Should().ThrowAsync<Exception>();
     }
 
     [Fact]
@@ -149,35 +144,35 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralLocationCommandHandler>>();
+        var logger = new Mock<ILogger<CreateLocationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testLocation = GetTestOpenReferralLocationDto();
-        var entity = mapper.Map<OpenReferralLocation>(testLocation);
-        mockApplicationDbContext.OpenReferralLocations.Add(entity);
-        mockApplicationDbContext.SaveChanges();
+        var testLocation = GetTestLocationDto();
+        var entity = mapper.Map<Location>(testLocation);
+        mockApplicationDbContext.Locations.Add(entity);
+        await mockApplicationDbContext.SaveChangesAsync();
 
-        CreateOpenReferralLocationCommand command = new(testLocation);
-        CreateOpenReferralLocationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
+        CreateLocationCommand command = new(testLocation);
+        CreateLocationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
-        Func<Task> act = async () => { await handler.Handle(command, new System.Threading.CancellationToken()); };
+        Func<Task> act = async () => { await handler.Handle(command, new CancellationToken()); };
         
 
         //Assert
-        await act.Should().ThrowAsync<System.Exception>().WithMessage("Location Already Exists, Please use Update Location");
+        await act.Should().ThrowAsync<Exception>().WithMessage("Location Already Exists, Please use Update Location");
         
     }
-    public static OpenReferralLocationDto GetTestOpenReferralLocationDto()
+    public static LocationDto GetTestLocationDto()
     {
-        return new OpenReferralLocationDto(
+        return new LocationDto(
         "661cab6d-81f6-46cd-a05b-4ec2e19b03fa",
         "Test Location",
         "Unit Test Location",
         53.474103227856105D,
         -2.2721559641660787D,
-        new List<OpenReferralPhysicalAddressDto>
+        new List<PhysicalAddressDto>
         {
-            new OpenReferralPhysicalAddressDto(
+            new PhysicalAddressDto(
                 "e2c83465-70f4-4252-92d8-487ea7da97e0",
                 "Address Line 1",
                 "City1",
@@ -186,21 +181,21 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
                 "County"
                 )
         },
-        new List<OpenReferralLinkTaxonomyDto>
+        new List<LinkTaxonomyDto>
         {
-            new OpenReferralLinkTaxonomyDto(
+            new LinkTaxonomyDto(
                 "a8587b60-e9cd-4527-9bdd-d55955faa8c1",
                 "Location",
                 "661cab6d-81f6-46cd-a05b-4ec2e19b03fa",
-                new OpenReferralTaxonomyDto("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", "Test Vocabulary", null)
+                new TaxonomyDto("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", "Test Vocabulary", null)
                 )
 
         });
         
     }
 
-    public static OpenReferralTaxonomy GetTestTaxonomy()
+    public static Taxonomy GetTestTaxonomy()
     {
-        return new OpenReferralTaxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", "Test Vocabulary", null);
+        return new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", "Test Vocabulary", null);
     }
 }

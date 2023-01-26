@@ -1,11 +1,11 @@
 ﻿using Ardalis.GuardClauses;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api;
-using fh_service_directory_api.core.Entities;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Core.Entities;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.api.Commands.UpdateUICache;
+namespace FamilyHubs.ServiceDirectory.Api.Commands.UpdateUICache;
 
 public class UpdateUICacheCommand : IRequest<string>
 {

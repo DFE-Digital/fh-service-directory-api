@@ -1,31 +1,31 @@
-﻿using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.core.Interfaces.Infrastructure
+namespace FamilyHubs.ServiceDirectory.Core.Interfaces.Infrastructure
 {
     public interface IApplicationDbContext
     {
         DbSet<UICache> UICaches { get; }
-        DbSet<Accessibility_For_Disabilities> Accessibility_For_Disabilities { get; }
-        DbSet<OpenReferralContact> OpenReferralContacts { get; }
-        DbSet<OpenReferralCost_Option> OpenReferralCost_Options { get; }
-        DbSet<OpenReferralEligibility> OpenReferralEligibilities { get; }
-        DbSet<OpenReferralFunding> OpenReferralFundings { get; }
-        DbSet<OpenReferralHoliday_Schedule> OpenReferralHoliday_Schedules { get; }
-        DbSet<OpenReferralLanguage> OpenReferralLanguages { get; }
-        DbSet<OpenReferralLinkTaxonomy> OpenReferralLinkTaxonomies { get; }
-        DbSet<OpenReferralLocation> OpenReferralLocations { get; }
-        DbSet<OpenReferralOrganisation> OpenReferralOrganisations { get; }
-        DbSet<OpenReferralParent> OpenReferralParents { get; }
-        DbSet<OpenReferralPhysical_Address> OpenReferralPhysical_Addresses { get; }
-        DbSet<OpenReferralRegular_Schedule> OpenReferralRegular_Schedules { get; }
-        DbSet<OpenReferralReview> OpenReferralReviews { get; }
-        DbSet<OpenReferralService_Area> OpenReferralService_Areas { get; }
-        DbSet<OpenReferralService_Taxonomy> OpenReferralService_Taxonomies { get; }
-        DbSet<OpenReferralServiceAtLocation> OpenReferralServiceAtLocations { get; }
-        DbSet<OpenReferralServiceDelivery> OpenReferralServiceDeliveries { get; }
-        DbSet<OpenReferralService> OpenReferralServices { get; }
-        DbSet<OpenReferralTaxonomy> OpenReferralTaxonomies { get; }
+        DbSet<AccessibilityForDisabilities> AccessibilityForDisabilities { get; }
+        DbSet<Contact> Contacts { get; }
+        DbSet<CostOption> CostOptions { get; }
+        DbSet<Eligibility> Eligibilities { get; }
+        DbSet<Funding> Fundings { get; }
+        DbSet<HolidaySchedule> HolidaySchedules { get; }
+        DbSet<Language> Languages { get; }
+        DbSet<LinkTaxonomy> LinkTaxonomies { get; }
+        DbSet<Location> Locations { get; }
+        DbSet<Organisation> Organisations { get; }
+        DbSet<Parent> Parents { get; }
+        DbSet<PhysicalAddress> PhysicalAddresses { get; }
+        DbSet<RegularSchedule> RegularSchedules { get; }
+        DbSet<Review> Reviews { get; }
+        DbSet<ServiceArea> ServiceAreas { get; }
+        DbSet<ServiceTaxonomy> ServiceTaxonomies { get; }
+        DbSet<ServiceAtLocation> ServiceAtLocations { get; }
+        DbSet<ServiceDelivery> ServiceDeliveries { get; }
+        DbSet<Service> Services { get; }
+        DbSet<Taxonomy> Taxonomies { get; }
         DbSet<OrganisationType> OrganisationTypes { get; }
         DbSet<ServiceType> ServiceTypes { get; }
         DbSet<AdminArea> AdminAreas { get; }

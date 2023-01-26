@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 using System.Text.Json;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -9,7 +9,7 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
 [Collection("Sequential")]
-public class WhenUsingUICacheApiUnitTests : BaseWhenUsingOpenReferralApiUnitTests
+public class WhenUsingUICacheApiUnitTests : BaseWhenUsingApiUnitTests
 {
 #if DEBUG
     [Fact]

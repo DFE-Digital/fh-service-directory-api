@@ -1,14 +1,14 @@
 ﻿using System.Diagnostics;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api;
-using fh_service_directory_api.api.Commands.CreateUICache;
-using fh_service_directory_api.api.Commands.UpdateUICache;
-using fh_service_directory_api.api.Queries.GetUICacheById;
+using FamilyHubs.ServiceDirectory.Api.Commands.CreateUICache;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpdateUICache;
+using FamilyHubs.ServiceDirectory.Api.Queries.GetUICacheById;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace fh_service_directory_api.api.Endpoints;
+namespace FamilyHubs.ServiceDirectory.Api.Endpoints;
 
 public class MinimalUICacheEndPoints
 {

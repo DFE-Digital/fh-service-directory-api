@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace fh_service_directory_api.api.Endpoints;
+namespace FamilyHubs.ServiceDirectory.Api.Endpoints;
 
 public class MinimalGeneralEndPoints
 {
@@ -10,7 +10,7 @@ public class MinimalGeneralEndPoints
         {
             try
             {
-                var assembly = typeof(WebMarker).Assembly;
+                var assembly = typeof(MinimalGeneralEndPoints).Assembly;
 
                 var creationDate = File.GetCreationTime(assembly.Location);
                 var version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
@@ -19,11 +19,9 @@ public class MinimalGeneralEndPoints
                 if (useDbType != "UseInMemoryDatabase")
                 {
                     var connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
-                    var connectionStringOK = false;
-                    if (!string.IsNullOrEmpty(connectionString) && connectionString.Contains("Database"))
-                        connectionStringOK = true;
+                    var connectionStringOk = !string.IsNullOrEmpty(connectionString) && connectionString.Contains("Database");
 
-                    return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Db Type: {useDbType}, Is Connection String OK: {connectionStringOK}");
+                    return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Db Type: {useDbType}, Is Connection String OK: {connectionStringOk}");
                 }
                 
 

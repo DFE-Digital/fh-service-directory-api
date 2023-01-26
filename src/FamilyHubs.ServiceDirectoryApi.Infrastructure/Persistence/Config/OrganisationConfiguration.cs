@@ -1,13 +1,13 @@
-﻿using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Config;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Config;
 
 
-public class OrganisationConfiguration : IEntityTypeConfiguration<OpenReferralOrganisation>
+public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
 {
-    public void Configure(EntityTypeBuilder<OpenReferralOrganisation> builder)
+    public void Configure(EntityTypeBuilder<Organisation> builder)
     {
         builder.Property(p => p.Id).ValueGeneratedNever();
         builder.Property(t => t.Name)

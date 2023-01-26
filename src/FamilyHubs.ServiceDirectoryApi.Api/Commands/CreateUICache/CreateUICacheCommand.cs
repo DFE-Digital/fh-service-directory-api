@@ -1,10 +1,10 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api;
-using fh_service_directory_api.core.Entities;
-using fh_service_directory_api.core.Events;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
+using FamilyHubs.ServiceDirectory.Core.Events;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 
-namespace fh_service_directory_api.api.Commands.CreateUICache;
+namespace FamilyHubs.ServiceDirectory.Api.Commands.CreateUICache;
 
 public class CreateUICacheCommand : IRequest<string>
 {

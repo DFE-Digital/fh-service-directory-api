@@ -1,11 +1,10 @@
-﻿using FamilyHubs.SharedKernel;
-using fh_service_directory_api.core.Entities;
-using fh_service_directory_api.core.Interfaces.Events;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
+using FamilyHubs.SharedKernel;
 
-namespace fh_service_directory_api.core.Events;
+namespace FamilyHubs.ServiceDirectory.Core.Events;
 
 
-public class UICacheCreatedEvent : DomainEventBase, IUICacheCreatedEvent
+public class UICacheCreatedEvent : DomainEventBase
 {
     public UICacheCreatedEvent(UICache item)
     {

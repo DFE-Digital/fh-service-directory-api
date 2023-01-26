@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using Autofac;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
 using MediatR;
 using MediatR.Pipeline;
 using Module = Autofac.Module;
 
-namespace fh_service_directory_api.infrastructure;
+namespace FamilyHubs.ServiceDirectory.Infrastructure;
 
 public class DefaultInfrastructureModule : Module
 {

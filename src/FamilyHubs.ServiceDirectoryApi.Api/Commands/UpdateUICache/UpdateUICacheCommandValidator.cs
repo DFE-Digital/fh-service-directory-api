@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace fh_service_directory_api.api.Commands.UpdateUICache;
+namespace FamilyHubs.ServiceDirectory.Api.Commands.UpdateUICache;
 
 public class UpdateUICacheCommandValidator : AbstractValidator<UpdateUICacheCommand>
 {

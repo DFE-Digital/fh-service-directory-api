@@ -1,20 +1,20 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
-using fh_service_directory_api.core.Entities;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Core.Entities;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.api.Queries.GetOrganisationAdminByOrganisationId;
+namespace FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationAdminByOrganisationId;
 
 public class GetOrganisationAdminByOrganisationIdCommand : IRequest<string>
 {
-    public GetOrganisationAdminByOrganisationIdCommand(string openReferralOrganisationId)
+    public GetOrganisationAdminByOrganisationIdCommand(string organisationId)
     {
-        OpenReferralOrganisationId = openReferralOrganisationId;
+        OrganisationId = organisationId;
     }
 
-    public string OpenReferralOrganisationId { get; init; } = default!;
+    public string OrganisationId { get; init; } = default!;
 }
 
 public class GetOrganisationAdminByOrganisationIdCommandHandler : IRequestHandler<GetOrganisationAdminByOrganisationIdCommand, string>
@@ -30,11 +30,11 @@ public class GetOrganisationAdminByOrganisationIdCommandHandler : IRequestHandle
     public async Task<string> Handle(GetOrganisationAdminByOrganisationIdCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.AdminAreas
-           .FirstOrDefaultAsync(p => p.OpenReferralOrganisationId == request.OpenReferralOrganisationId, cancellationToken);
+           .FirstOrDefaultAsync(p => p.OrganisationId == request.OrganisationId, cancellationToken);
 
         if (entity == null)
         {
-            throw new NotFoundException(nameof(OpenReferralOrganisation), request.OpenReferralOrganisationId);
+            throw new NotFoundException(nameof(Organisation), request.OrganisationId);
         }
 
         return entity.Code;

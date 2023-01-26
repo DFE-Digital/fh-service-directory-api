@@ -2,7 +2,7 @@
 
 #nullable disable
 
-using fh_service_directory_api.infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;

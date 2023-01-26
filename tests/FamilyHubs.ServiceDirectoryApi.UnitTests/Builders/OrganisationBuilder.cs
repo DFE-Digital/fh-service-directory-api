@@ -1,35 +1,35 @@
-﻿using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Builders;
 
 public class OrganisationBuilder
 {
-    private readonly OpenReferralOrganisation _openReferralOrganisation;
+    private readonly ServiceDirectory.Core.Entities.Organisation _organisation;
 
     public OrganisationBuilder()
     {
-        _openReferralOrganisation = new OpenReferralOrganisation();
+        _organisation = new ServiceDirectory.Core.Entities.Organisation();
     }
 
     public OrganisationBuilder WithMainProperties(string id, string name, string? description, string? logo, string? uri, string? url)
     {
-        _openReferralOrganisation.Id = id;
-        _openReferralOrganisation.Name = name;
-        _openReferralOrganisation.Description = description;
-        _openReferralOrganisation.Logo = logo;
-        _openReferralOrganisation.Uri = uri;
-        _openReferralOrganisation.Url = url;
+        _organisation.Id = id;
+        _organisation.Name = name;
+        _organisation.Description = description;
+        _organisation.Logo = logo;
+        _organisation.Uri = uri;
+        _organisation.Url = url;
         return this;
     }
 
-    public OrganisationBuilder WithServices(ICollection<OpenReferralService>? Services)
+    public OrganisationBuilder WithServices(ICollection<Service>? Services)
     {
-        _openReferralOrganisation.Services = Services;
+        _organisation.Services = Services;
         return this;
     }
 
-    public OpenReferralOrganisation Build()
+    public ServiceDirectory.Core.Entities.Organisation Build()
     {
-        return _openReferralOrganisation;
+        return _organisation;
     }
 }

@@ -1,12 +1,12 @@
-﻿using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Config;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Config;
 
-public class TaxonomyConfiguration : IEntityTypeConfiguration<OpenReferralTaxonomy>
+public class TaxonomyConfiguration : IEntityTypeConfiguration<Taxonomy>
 {
-    public void Configure(EntityTypeBuilder<OpenReferralTaxonomy> builder)
+    public void Configure(EntityTypeBuilder<Taxonomy> builder)
     {
         builder.Property(t => t.Name)
             .HasMaxLength(255)

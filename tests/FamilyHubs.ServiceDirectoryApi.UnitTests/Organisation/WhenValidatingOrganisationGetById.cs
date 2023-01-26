@@ -1,4 +1,4 @@
-﻿using fh_service_directory_api.api.Queries.GetOpenReferralOrganisationById;
+﻿using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationById;
 using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
@@ -9,8 +9,8 @@ public class WhenValidatingOrganisationGetById
     public void ThenShouldNotErrorWhenModelIsValid()
     {
         //Arrange
-        var validator = new GetOpenReferralOrganisationByIdCommandValidator();
-        var testModel = new GetOpenReferralOrganisationByIdCommand { Id = "Id"};
+        var validator = new GetOrganisationByIdCommandValidator();
+        var testModel = new GetOrganisationByIdCommand { Id = "Id"};
 
         //Act
         var result = validator.Validate(testModel);
@@ -23,8 +23,8 @@ public class WhenValidatingOrganisationGetById
     public void ThenShouldErrorWhenThereIsNoId()
     {
         //Arrange
-        var validator = new GetOpenReferralOrganisationByIdCommandValidator();
-        var testModel = new GetOpenReferralOrganisationByIdCommand();
+        var validator = new GetOrganisationByIdCommandValidator();
+        var testModel = new GetOrganisationByIdCommand();
 
         //Act
         var result = validator.Validate(testModel);

@@ -1,4 +1,4 @@
-﻿using fh_service_directory_api.api.Queries.GetUICacheById;
+﻿using FamilyHubs.ServiceDirectory.Api.Queries.GetUICacheById;
 using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.UICaches;

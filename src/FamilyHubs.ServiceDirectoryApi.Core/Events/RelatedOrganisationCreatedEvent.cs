@@ -1,7 +1,7 @@
-﻿using FamilyHubs.SharedKernel;
-using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
+using FamilyHubs.SharedKernel;
 
-namespace fh_service_directory_api.core.Events;
+namespace FamilyHubs.ServiceDirectory.Core.Events;
 
 public class RelatedOrganisationCreatedEvent : DomainEventBase
 {

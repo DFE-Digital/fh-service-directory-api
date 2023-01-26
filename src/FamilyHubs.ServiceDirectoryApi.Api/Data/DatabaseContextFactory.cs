@@ -1,10 +1,10 @@
-﻿using fh_service_directory_api.infrastructure.Persistence.Interceptors;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
-using fh_service_directory_api.infrastructure.Services;
+﻿using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace fh_service_directory_api.api.Data;
+namespace FamilyHubs.ServiceDirectory.Api.Data;
 
 public class DatabaseContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
