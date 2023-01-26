@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
+using FamilyHubs.SharedKernel;
 using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 using fh_service_directory_api.api.Commands.DeleteOpenReferralService;
 using fh_service_directory_api.api.Queries.GetServices;
@@ -12,6 +13,27 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Services;
 
 public class WhenUsingServiceCommands : BaseCreateDbUnitTest
 {
+    [Fact]
+    public async Task ThenCreateOpenReferralService()
+    {
+        //Arange
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
+        var mockApplicationDbContext = GetApplicationDbContext();
+        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
+        CreateOpenReferralOrganisationCommand command = new(testOrganisation);
+        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
+        
+        //Act
+        var result = await handler.Handle(command, new System.Threading.CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be(testOrganisation.Id);
+    }
+
     [Fact]
     public async Task ThenGetOpenReferralService()
     {
