@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿using Ardalis.GuardClauses;
+using AutoMapper;
 using FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
 using FamilyHubs.SharedKernel;
 using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 using fh_service_directory_api.api.Commands.DeleteOpenReferralService;
+using fh_service_directory_api.api.Queries.GetOpenReferralServicesByOrganisation;
 using fh_service_directory_api.api.Queries.GetServices;
 using fh_service_directory_api.core;
 using FluentAssertions;
@@ -60,6 +62,83 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         ArgumentNullException.ThrowIfNull(testOrganisation, nameof(testOrganisation));
         ArgumentNullException.ThrowIfNull(testOrganisation.Services, nameof(testOrganisation.Services));
         results.Items[0].Should().BeEquivalentTo(testOrganisation.Services.ElementAt(0));
+    }
+
+    [Fact]
+    public async Task ThenGetOpenReferralServicesByOrganisationId()
+    {
+        //Arange
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
+        var mockApplicationDbContext = GetApplicationDbContext();
+        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
+        CreateOpenReferralOrganisationCommand createcommand = new(testOrganisation);
+        CreateOpenReferralOrganisationCommandHandler createhandler = new(mockApplicationDbContext, mapper, logger.Object);
+        var id = await createhandler.Handle(createcommand, new CancellationToken());
+
+
+        GetOpenReferralServicesByOrganisationIdCommand command = new(testOrganisation.Id);
+        GetOpenReferralServicesByOrganisationIdCommandHandler handler = new(mockApplicationDbContext);
+
+        //Act
+        var results = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        results.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(testOrganisation, nameof(testOrganisation));
+        ArgumentNullException.ThrowIfNull(testOrganisation.Services, nameof(testOrganisation.Services));
+        results[0].Should().BeEquivalentTo(testOrganisation.Services.ElementAt(0));
+    }
+
+    [Fact]
+    public async Task ThenGetOpenReferralServicesByOrganisationId_ShouldThrowExceptionWhenNoOrgaisations()
+    {
+        //Arange
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
+        var mockApplicationDbContext = GetApplicationDbContext();
+        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
+        GetOpenReferralServicesByOrganisationIdCommand command = new(testOrganisation.Id);
+        GetOpenReferralServicesByOrganisationIdCommandHandler handler = new(mockApplicationDbContext);
+
+        // Act 
+        Func<Task> act = () => handler.Handle(command, new CancellationToken());
+
+
+        // Assert
+        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
+
+    }
+
+    [Fact]
+    public async Task ThenGetOpenReferralServicesByOrganisationId_ShouldThrowExceptionWhenNoServices()
+    {
+        //Arange
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
+        var mockApplicationDbContext = GetApplicationDbContext();
+        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
+        testOrganisation.Services = default!;
+        CreateOpenReferralOrganisationCommand createcommand = new(testOrganisation);
+        CreateOpenReferralOrganisationCommandHandler createhandler = new(mockApplicationDbContext, mapper, logger.Object);
+        var id = await createhandler.Handle(createcommand, new CancellationToken());
+
+        GetOpenReferralServicesByOrganisationIdCommand command = new(testOrganisation.Id);
+        GetOpenReferralServicesByOrganisationIdCommandHandler handler = new(mockApplicationDbContext);
+
+        // Act 
+        Func<Task> act = () => handler.Handle(command, new CancellationToken());
+
+
+        // Assert
+        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
+
     }
 
     [Fact]
@@ -141,5 +220,26 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         //Assert
         results.Should().Be(true);
         
+    }
+
+    [Fact]
+    public async Task ThenDeleteOpenReferralServiceThatDoesNotExist()
+    {
+        //Arange
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
+        var mockApplicationDbContext = GetApplicationDbContext();
+        DeleteOpenReferralServiceByIdCommand command = new(Guid.NewGuid().ToString());
+        DeleteOpenReferralServiceByIdCommandHandler handler = new(mockApplicationDbContext, new Mock<ILogger<DeleteOpenReferralServiceByIdCommandHandler>>().Object);
+
+        // Act 
+        Func<Task> act = () => handler.Handle(command, new CancellationToken());
+
+
+        // Assert
+        var exception = await Assert.ThrowsAsync<Exception>(act);
+
     }
 }

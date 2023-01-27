@@ -41,7 +41,7 @@ public class GetOpenReferralServicesByOrganisationIdCommandHandler : IRequestHan
 
         var ids = organisation.Services?.Select(x => x.Id).ToList();
 
-        if (ids == null)
+        if (ids == null || !ids.Any())
         {
             throw new NotFoundException(nameof(OpenReferralService), request.Id);
         }
@@ -75,10 +75,10 @@ public class GetOpenReferralServicesByOrganisationIdCommandHandler : IRequestHan
             .Where(x => ids.Contains(x.Id))
             .ToListAsync(cancellationToken);
 
-        if (entity == null)
-        {
-            throw new NotFoundException(nameof(OpenReferralService), request.Id);
-        }
+        //if (entity == null)
+        //{
+        //    throw new NotFoundException(nameof(OpenReferralService), request.Id);
+        //}
 
         var result = OpenReferralDtoHelper.GetOpenReferralServicesDto(entity);
         return result;

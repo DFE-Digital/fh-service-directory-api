@@ -125,11 +125,30 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         mockApplicationDbContext.SaveChanges();
 
 
-        GetOpenReferralTaxonomiesCommand command = new(1, 1, null);
+        GetOpenReferralTaxonomiesCommand command = new(1, 1, "Test 1 Taxonomy");
         GetOpenReferralTaxonomiesCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Items[0].Id.Should().Be("a3226044-5c89-4257-8b07-f29745a22e2c");
+        result.Items[0].Name.Should().Be("Test 1 Taxonomy");
+        result.Items[0].Vocabulary.Should().Be("Test 1 Vocabulary");
+    }
+
+    [Fact]
+    public async Task ThenGetTaxonomiesWithNullRequest()
+    {
+        var mockApplicationDbContext = GetApplicationDbContext();
+        var dbTaxonomy = new OpenReferralTaxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", "Test 1 Vocabulary", null);
+        mockApplicationDbContext.OpenReferralTaxonomies.Add(dbTaxonomy);
+        mockApplicationDbContext.SaveChanges();
+        GetOpenReferralTaxonomiesCommandHandler handler = new(mockApplicationDbContext);
+
+        //Act
+        var result = await handler.Handle(default!, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();

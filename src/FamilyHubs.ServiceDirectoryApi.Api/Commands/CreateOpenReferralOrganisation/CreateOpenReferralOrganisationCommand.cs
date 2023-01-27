@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Autofac.Core;
+using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
 using fh_service_directory_api.core.Entities;
 using fh_service_directory_api.core.Events;
@@ -88,11 +89,13 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
                             }
                         }
 
+                        var locations = _context.OpenReferralLocations.ToList();
+
                         var existingLocation = await _context.OpenReferralLocations
                             .Include(l => l.Physical_addresses)
                             .Include(l => l.LinkTaxonomies)!
                             .ThenInclude(l => l.Taxonomy)
-                            .Where(l => l.Name == serviceAtLocation.Location.Name && serviceAtLocation.Location.Name != "")
+                            .Where(l => (l.Name == serviceAtLocation.Location.Name && serviceAtLocation.Location.Name != "") || l.Id == serviceAtLocation.Location.Id)
                             .FirstOrDefaultAsync(cancellationToken);
 
                         if (existingLocation != null)
@@ -112,6 +115,7 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
                         }
                         else if (serviceAtLocation.Location.LinkTaxonomies != null)
                         {
+                            var taxonomies = _context.OpenReferralTaxonomies;
                             foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
                             {
                                 if (linkTaxonomy.Taxonomy != null)
@@ -123,6 +127,50 @@ public class CreateOpenReferralOrganisationCommandHandler : IRequestHandler<Crea
                                     }
                                 }
                             }
+                        }
+                    }
+
+                    for(int i = service.Eligibilities.Count - 1; i >= 0; i--)
+                    {
+                        if (service.Eligibilities.ElementAt(i) != null) 
+                        {
+                            var eligibility = _context.OpenReferralEligibilities.FirstOrDefault(x => x.Id == service.Eligibilities.ElementAt(i).Id);
+                            if (eligibility != null)
+                            {
+                                service.Eligibilities.Remove(service.Eligibilities.ElementAt(i));
+
+                                service.Eligibilities.Add(eligibility);
+                            }
+                        }
+                    }
+
+                    for (int i = service.Languages.Count - 1; i >= 0; i--)
+                    {
+                        if (service.Languages.ElementAt(i) != null)
+                        {
+                            var language = _context.OpenReferralLanguages.FirstOrDefault(x => x.Id == service.Languages.ElementAt(i).Id);
+                            if (language != null)
+                            {
+                                service.Languages.Remove(service.Languages.ElementAt(i));
+                                service.Languages.Add(language);
+                            }
+                        }
+                    }
+
+                    for (int i = service.Service_taxonomys.Count - 1; i >= 0; i--)
+                    {
+                        if (service.Service_taxonomys.ElementAt(i) != null && service.Service_taxonomys.ElementAt(i).Taxonomy != null)
+                        {
+                            var listTaxonomy = service.Service_taxonomys.ElementAt(i).Taxonomy;
+                            if (listTaxonomy != null) 
+                            {
+                                var tax = _context.OpenReferralTaxonomies.FirstOrDefault(x => x.Id == listTaxonomy.Id);
+                                if (tax != null)
+                                {
+                                    service.Service_taxonomys.ElementAt(i).Taxonomy = tax;
+                                }
+                            }
+                            
                         }
                     }
                 }
