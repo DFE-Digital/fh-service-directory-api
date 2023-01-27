@@ -49,8 +49,6 @@ public class CreateOpenReferralTaxonomyCommandHandler : IRequestHandler<CreateOp
             throw new Exception(ex.Message, ex);
         }
 
-        if (request is not null && request.OpenReferralTaxonomy is not null)
-            return request.OpenReferralTaxonomy.Id;
-        return string.Empty;
+        return request.OpenReferralTaxonomy.Id;
     }
 }

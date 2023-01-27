@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Shared.Builders;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
@@ -34,6 +35,7 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
 
@@ -301,8 +303,33 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                                     )
                                 )
                             }),
-                        new List<OpenReferralRegularScheduleDto>(),
+                        new List<OpenReferralRegularScheduleDto>()
+                        {
+                            new OpenReferralRegularScheduleDto(
+                                id: "5e5ba093-a5f9-49ce-826c-52851e626288", 
+                                description: "Description",
+                                opens_at: DateTime.UtcNow,
+                                closes_at: DateTime.UtcNow.AddHours(8),
+                                byday: "byDay", 
+                                bymonthday: "byMonth",
+                                dtstart: "dtStart",
+                                freq: "freq",
+                                interval: "interval",
+                                valid_from: DateTime.UtcNow,
+                                valid_to: DateTime.UtcNow.AddMonths(6)
+                                )
+                        },
                         new List<OpenReferralHolidayScheduleDto>()
+                        {
+                            new OpenReferralHolidayScheduleDto(
+                                id: "bc946512-7f8c-4c54-b7ed-ad8fefde7b48",
+                                closed: false,
+                                closes_at: DateTime.UtcNow,
+                                start_date: DateTime.UtcNow,
+                                end_date: DateTime.UtcNow.AddDays(5) ,
+                                opens_at: DateTime.UtcNow 
+                                )
+                        }
                         )
 
                 })
