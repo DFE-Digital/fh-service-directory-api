@@ -21,7 +21,6 @@ using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
 using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
 using FamilyHubs.ServiceDirectoryApi.UnitTests.Builders;
-using FamilyHubs.SharedKernel.Interfaces;
 using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
 using fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
 using fh_service_directory_api.api.Queries.GetOpenReferralOrganisationById;
@@ -60,6 +59,47 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         //Assert
         result.Should().NotBeNull();
         result.Should().Be(testOrganisation.Id);
+    }
+
+    [Fact]
+    public async Task ThenCreateRelatedOpenReferralOrganisation()
+    {
+        //Arange
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        IMapper mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
+        var mockApplicationDbContext = GetApplicationDbContext();
+        var testCountyCouncil = GetTestCountyCouncilDto();
+        CreateOpenReferralOrganisationCommand createcommand = new(testCountyCouncil);
+        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
+        var createresult = await handler.Handle(createcommand, new CancellationToken());
+
+        var testOrgaisation = new OpenReferralOrganisationWithServicesDto(
+            "e0dc6a0c-2f9c-48c6-a222-1232abbf9000",
+            new OrganisationTypeDto("2", "VCFS", "Voluntary, Charitable, Faith Sector"),
+            "Related VCS",
+            "Related VCS",
+            null,
+            new Uri("https://www.relatedvcs.gov.uk/").ToString(),
+            "https://www.related.gov.uk/",
+            new List<OpenReferralServiceDto>
+            {
+                 
+            }
+            );
+
+        testOrgaisation.AdminAreaCode = "XTEST";
+
+        CreateOpenReferralOrganisationCommand command = new(testOrgaisation);
+        
+
+        //Act
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be(testOrgaisation.Id);
     }
 
     [Fact]
@@ -308,7 +348,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         result.Should().Be("XTEST");
     }
 
-    public static OpenReferralOrganisationWithServicesDto GetTestCountyCouncilDto(bool updated = false)
+    public static OpenReferralOrganisationWithServicesDto GetTestCountyCouncilDto(bool updated = false, bool newGuid = false)
     {
         var testCountyCouncil = new OpenReferralOrganisationWithServicesDto(
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
@@ -320,7 +360,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             "https://www.unittest.gov.uk/",
             new List<OpenReferralServiceDto>
             {
-                 GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc", updated)
+                 GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc", updated, newGuid)
             }
             );
 
@@ -350,7 +390,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         return testCountyCouncil;
     }
 
-    public static OpenReferralServiceDto GetTestCountyCouncilServicesDto(string parentId, bool updated = false)
+    public static OpenReferralServiceDto GetTestCountyCouncilServicesDto(string parentId, bool updated = false, bool newGuid = false)
     {
         var contactId = Guid.NewGuid().ToString();
 
@@ -372,46 +412,54 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                 false)
             .WithServiceDelivery(new List<OpenReferralServiceDeliveryExDto>
                 {
-                    new OpenReferralServiceDeliveryExDto("77cc3815-6b95-4618-ab27-ac9f35c44614",(updated == false) ? ServiceDelivery.Online : ServiceDelivery.Telephone)
+                    new OpenReferralServiceDeliveryExDto((newGuid == false) ? "77cc3815-6b95-4618-ab27-ac9f35c44614" : Guid.NewGuid().ToString(),(updated == false) ? ServiceDelivery.Online : ServiceDelivery.Telephone)
                 })
             .WithEligibility(new List<OpenReferralEligibilityDto>
                 {
-                    new OpenReferralEligibilityDto("Test9111Children","",(updated == false) ? 0 : 1,(updated == false) ? 13 : 14)
+                    new OpenReferralEligibilityDto((newGuid == false) ? "Test9111Children" : Guid.NewGuid().ToString(),"",(updated == false) ? 0 : 1,(updated == false) ? 13 : 14)
                 })
             .WithContact(new List<OpenReferralContactDto>
             {
                 new OpenReferralContactDto(
-                    contactId,
+                    (newGuid == false) ? contactId : Guid.NewGuid().ToString(),
                     (updated == false) ? "Contact" : "Updated Contact",
                     string.Empty,
                     "01827 65777",
                     "01827 65777"
-                    )
+                )
             })
-            .WithCostOption(new List<OpenReferralCostOptionDto> {new() {Id = Guid.NewGuid().ToString(), Amount = decimal.Zero, Option = "free", Amount_description = ""}})
+            .WithCostOption(new List<OpenReferralCostOptionDto> {  new(
+                    id: (newGuid == false) ? "22001144-26d5-4dcc-a6a5-62ce2ce98cc0" : Guid.NewGuid().ToString(),
+                    amount_description: (updated == false) ? "amount_description1" : "amount_description2",
+                    amount: decimal.Zero,
+                    linkId: default!,
+                    option: "free",
+                    valid_from: DateTime.UtcNow,
+                    valid_to: DateTime.UtcNow.AddHours(8))
+            })
             .WithLanguages(new List<OpenReferralLanguageDto>
             {
-                    new OpenReferralLanguageDto("1bb6c313-648d-4226-9e96-b7d37eaeb3dd", "English")
-                })
+                    new OpenReferralLanguageDto((newGuid == false) ? "1bb6c313-648d-4226-9e96-b7d37eaeb3dd" : Guid.NewGuid().ToString(), (updated == false) ? "English"  : "French")
+            })
             .WithServiceAreas(new List<OpenReferralServiceAreaDto>
             {
-                    new OpenReferralServiceAreaDto(Guid.NewGuid().ToString(), "National", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                    new OpenReferralServiceAreaDto((newGuid == false) ? "a302aea4-fe0c-4ccc-9178-bea39f3edc30" : Guid.NewGuid().ToString(), (updated == false) ? "National" : "Local", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
                 })
             .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>
             {
                     new OpenReferralServiceAtLocationDto(
                         "Test1749",
                         new OpenReferralLocationDto(
-                            "6ea31a4f-7dcc-4350-9fba-20525efe092f",
-                            "Test Location",
+                            (newGuid == false) ? "6ea31a4f-7dcc-4350-9fba-20525efe092f" : Guid.NewGuid().ToString(),
+                            (updated == false) ? "Test Location" : "Test New Location",
                             "",
                             52.6312,
                             -1.66526,
                             new List<OpenReferralPhysicalAddressDto>
                             {
                                 new OpenReferralPhysicalAddressDto(
-                                    Guid.NewGuid().ToString(),
-                                    "77 Sheepcote Lane",
+                                    (newGuid == false) ? "c576191d-9f14-4963-885e-2889a7a2b48f" : Guid.NewGuid().ToString(),
+                                    (updated == false) ? "77 Sheepcote Lane" : "78 Sheepcote Lane",
                                     ", Stathe, Tamworth, Staffordshire, ",
                                     "B77 3JN",
                                     "England",
@@ -421,14 +469,12 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                             new List<OpenReferralLinkTaxonomyDto>
                             {
                                 new OpenReferralLinkTaxonomyDto(
-                                    Guid.NewGuid().ToString(),
+                                    "d53b3524-bd3e-443c-ae14-69482afc7d2a",
                                     "Location",
                                     "6ea31a4f-7dcc-4350-9fba-20525efe092f",
                                     new OpenReferralTaxonomyDto(
-                                        //todo: real guid
-
-                                        Guid.NewGuid().ToString(),
-                                        "Family_hub",
+                                        (newGuid == false) ? "b60b7f3e-9ff4-48b2-bded-b00272ed3aba" : Guid.NewGuid().ToString(),
+                                        (updated == false) ? "Family_hub 1" : "Family_hub 2",
                                         null,
                                         null
                                     )
@@ -437,11 +483,11 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                         new List<OpenReferralRegularScheduleDto>()
                         {
                             new OpenReferralRegularScheduleDto(
-                                id: "5e5ba093-a5f9-49ce-826c-52851e626288", 
+                                id: (newGuid == false) ? "5e5ba093-a5f9-49ce-826c-52851e626288" : Guid.NewGuid().ToString(), 
                                 description: "Description",
                                 opens_at: DateTime.UtcNow,
                                 closes_at: DateTime.UtcNow.AddHours(8),
-                                byday: "byDay", 
+                                byday: (updated == false) ?  "byDay1" : "byDay2", 
                                 bymonthday: "byMonth",
                                 dtstart: "dtStart",
                                 freq: "freq",
@@ -453,8 +499,8 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                         new List<OpenReferralHolidayScheduleDto>()
                         {
                             new OpenReferralHolidayScheduleDto(
-                                id: "bc946512-7f8c-4c54-b7ed-ad8fefde7b48",
-                                closed: false,
+                                id: (newGuid == false) ?  "bc946512-7f8c-4c54-b7ed-ad8fefde7b48" : Guid.NewGuid().ToString(),
+                                closed: (updated == false) ? false : true,
                                 closes_at: DateTime.UtcNow,
                                 start_date: DateTime.UtcNow,
                                 end_date: DateTime.UtcNow.AddDays(5) ,
@@ -470,7 +516,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                     ("UnitTest9107",
                     new OpenReferralTaxonomyDto(
                         "UnitTest bccsource:Organisation",
-                        "Organisation",
+                        (updated == false) ? "Organisation" : "Organisation Updated",
                         "Test BCC Data Sources",
                         null
                         )),
@@ -479,7 +525,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                     ("UnitTest9108",
                     new OpenReferralTaxonomyDto(
                         "UnitTest bccprimaryservicetype:38",
-                        "Support",
+                        (updated == false) ? "Support" : "Support Updated",
                         "Test BCC Primary Services",
                         null
                         )),
