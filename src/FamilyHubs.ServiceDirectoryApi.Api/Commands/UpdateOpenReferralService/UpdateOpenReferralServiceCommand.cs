@@ -488,7 +488,8 @@ public class UpdateOpenReferralServiceCommandHandler : IRequestHandler<UpdateOpe
         List<string> currentIds = new();
         foreach (var updatedLanguage in updated)
         {
-            var current = existing.FirstOrDefault(x => x.Language == updatedLanguage.Language && x.OpenReferralServiceId == _request.OpenReferralService.Id);
+            
+            var current = existing.FirstOrDefault(x => x.Id == updatedLanguage.Id && x.OpenReferralServiceId == _request.OpenReferralService.Id);
             if (current == null)
             {
                 var entity = _mapper.Map<OpenReferralLanguage>(updatedLanguage);

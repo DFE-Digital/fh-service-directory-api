@@ -1,8 +1,11 @@
 ﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 
 namespace fh_service_directory_api.core.Entities;
 
+//Currently not used
+[ExcludeFromCodeCoverage]
 public class OpenReferralReview : EntityBase<string>, IAggregateRoot
 {
     private OpenReferralReview() { }

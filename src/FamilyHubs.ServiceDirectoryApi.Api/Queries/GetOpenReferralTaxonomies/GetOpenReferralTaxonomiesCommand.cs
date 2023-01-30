@@ -33,7 +33,7 @@ public class GetOpenReferralTaxonomiesCommandHandler : IRequestHandler<GetOpenRe
     {
         var entities = await _context.OpenReferralTaxonomies.ToListAsync();
 
-        if (request.Text != null)
+        if (request != null && request.Text != null)
         {
             entities = entities.Where(x => x.Name.Contains(request.Text)).ToList();
         }
