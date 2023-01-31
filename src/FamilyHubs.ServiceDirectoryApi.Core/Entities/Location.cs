@@ -9,7 +9,8 @@ public class Location : EntityBase<string>, IAggregateRoot
     public Location(string id, string name, string? description, double latitude, double longitude,
         ICollection<LinkTaxonomy>? linkTaxonomies,
         ICollection<PhysicalAddress>? physicalAddresses,
-        ICollection<AccessibilityForDisabilities>? accessibilityForDisabilities
+        ICollection<AccessibilityForDisabilities>? accessibilityForDisabilities,
+        ICollection<LinkContact>? linkContacts
         )
     {
         Id = id;
@@ -20,12 +21,14 @@ public class Location : EntityBase<string>, IAggregateRoot
         LinkTaxonomies = linkTaxonomies;
         PhysicalAddresses = physicalAddresses;
         AccessibilityForDisabilities = accessibilityForDisabilities;
+        LinkContacts = linkContacts;
     }
     public string Name { get; set; } = default!;
     public string? Description { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public virtual ICollection<LinkTaxonomy>? LinkTaxonomies { get; set; }
-    public virtual ICollection<PhysicalAddress>? PhysicalAddresses { get; set; }
-    public virtual ICollection<AccessibilityForDisabilities>? AccessibilityForDisabilities { get; set; }
+    public ICollection<LinkTaxonomy>? LinkTaxonomies { get; set; }
+    public ICollection<PhysicalAddress>? PhysicalAddresses { get; set; }
+    public ICollection<AccessibilityForDisabilities>? AccessibilityForDisabilities { get; set; }
+    public ICollection<LinkContact>? LinkContacts { get; set; }
 }

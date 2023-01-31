@@ -33,7 +33,7 @@ public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCom
            .Include(x => x.Services!)
            .ThenInclude(x => x.Eligibilities)
            .Include(x => x.Services!)
-           .ThenInclude(x => x.Contacts)
+           .ThenInclude(x => x.LinkContacts)
            .Include(x => x.Services!)
            .ThenInclude(x => x.CostOptions)
            .Include(x => x.Services!)

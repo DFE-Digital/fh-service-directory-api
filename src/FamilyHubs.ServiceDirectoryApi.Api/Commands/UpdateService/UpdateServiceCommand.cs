@@ -47,7 +47,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
            .Include(x => x.ServiceType)
            .Include(x => x.ServiceDeliveries)
            .Include(x => x.Eligibilities)
-           .Include(x => x.Contacts)
+           .Include(x => x.LinkContacts)
            .Include(x => x.CostOptions)
            .Include(x => x.Languages)
            .Include(x => x.ServiceAreas)
@@ -123,8 +123,8 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
                 UpdateServiceArea(entity.ServiceAreas, request.Service.ServiceAreas ?? new Collection<ServiceAreaDto>());
             if (request.Service.ServiceDeliveries != null && entity.ServiceDeliveries.Serialize() != request.Service.ServiceDeliveries.Serialize())
                 UpdateServiceDelivery(entity.ServiceDeliveries, request.Service.ServiceDeliveries ?? new Collection<ServiceDeliveryDto>());
-            if (request.Service.Contacts != null && entity.Contacts.Serialize() != request.Service.Contacts.Serialize())
-                UpdateContacts(entity.Contacts, request.Service.Contacts ?? new Collection<ContactDto>());
+            if (request.Service.LinkContacts != null && entity.LinkContacts.Serialize() != request.Service.LinkContacts.Serialize())
+                UpdateContacts(entity.LinkContacts, request.Service.LinkContacts ?? new Collection<LinkContactDto>());
             if (request.Service.Languages != null && entity.Languages.Serialize() != request.Service.Languages.Serialize())
                 UpdateLanguages(entity.Languages, request.Service.Languages ?? new Collection<LanguageDto>());
             if (request.Service.ServiceAtLocations != null && entity.ServiceAtLocations.Serialize() != request.Service.ServiceAtLocations.Serialize())
@@ -498,7 +498,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     
 
-    private void UpdateContacts(ICollection<Contact> existing, ICollection<ContactDto> updated)
+    private void UpdateContacts(ICollection<LinkContact> existing, ICollection<LinkContactDto> updated)
     {
         foreach (var updatedContact in updated)
         {
@@ -510,23 +510,22 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
                 entity.RegisterDomainEvent(new ContactCreatedEvent(entity));
                 _context.Contacts.Add(entity);
             }
-            else
+            else if (current.Contact != null)
             {
-                current.Title = updatedContact.Title;
-                current.Name = updatedContact.Name;
-                current.Telephone = updatedContact.Telephone;
-                current.TextPhone = updatedContact.TextPhone;
-                current.Url =   updatedContact.Url;
-                current.Email = updatedContact.Email;
+                current.Contact.Title     = updatedContact.Contact.Title;
+                current.Contact.Name      = updatedContact.Contact.Name;
+                current.Contact.Telephone = updatedContact.Contact.Telephone;
+                current.Contact.TextPhone = updatedContact.Contact.TextPhone;
+                current.Contact.Url       = updatedContact.Contact.Url;
+                current.Contact.Email     = updatedContact.Contact.Email;
             }
         }
 
         var contactToDelete = existing.Where(a => !existing.Select(x => x.Id).Contains(a.Id)).ToList();
         if (contactToDelete.Any())
         {
-            _context.Contacts.RemoveRange(contactToDelete);
+            _context.LinkContacts.RemoveRange(contactToDelete);
         }
-            
     }
 
     private void UpdateServiceDelivery(ICollection<ServiceDelivery> existing, ICollection<ServiceDeliveryDto> updated)

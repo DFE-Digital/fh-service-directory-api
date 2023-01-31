@@ -168,7 +168,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var id = await handler.Handle(command, new CancellationToken());
 
         GetOrganisationAdminByOrganisationIdCommand getcommand = new(testOrganisation.Id);
-        GetOrganisationAdminByOrganisationIdCommandHandler gethandler = new(mockApplicationDbContext, mapper);
+        GetOrganisationAdminByOrganisationIdCommandHandler gethandler = new(mockApplicationDbContext);
         testOrganisation.Logo = "";
 
         //Act
@@ -226,8 +226,12 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                 {
                     new EligibilityDto("Test9111Children","Test9111Children",0,13)
                 })
-            .WithContact(new List<ContactDto>
+            .WithLinkContact(new List<LinkContactDto>
             {
+                new LinkContactDto(
+                    "3010521b-6e0a-41b0-b610-200edbbeeb14",
+                    "3010521b-6e0a-41b0-b610-200edbbeeb11",
+                    "Service",
                 new ContactDto(
                     contactId,
                     "Contact",
@@ -236,7 +240,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                     "01827 65777",
                     "www.unittestservice.com",
                     "support@unittestservice.com"
-                    )
+                    ))
             })
             .WithCostOption(new List<CostOptionDto> {new() {Id = Guid.NewGuid().ToString(), Amount = decimal.Zero, Option = "free", AmountDescription = ""}})
             .WithLanguages(new List<LanguageDto>
@@ -283,9 +287,11 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                                         null
                                     )
                                 )
-                            }),
+                            },
+                            new List<LinkContactDto>()),
                         new List<RegularScheduleDto>(),
-                        new List<HolidayScheduleDto>()
+                        new List<HolidayScheduleDto>(),
+                        new List<LinkContactDto>()
                         )
 
                 })
@@ -381,8 +387,12 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                 {
                     new Eligibility("Test9120Children","eligability","",0,13, new Collection<Taxonomy>())
                 })
-            .WithContact(new List<Contact>
+            .WithContact(new List<LinkContact>
             {
+                new LinkContact(
+                    "3010521b-6e0a-41b0-b610-200edbbeeb14",
+                    "3010521b-6e0a-41b0-b610-200edbbeeb11",
+                    "Service",
                 new Contact(
                     contactId,
                     "New Contact",
@@ -390,7 +400,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                     "01827 65776", 
                     "01827 65776",
                     "www.gov.uk",
-                    "help@gov.uk")
+                    "help@gov.uk"))
             })
             .WithCostOption(new List<CostOption>())
             .WithLanguages(new List<Language>
@@ -421,13 +431,13 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                                     "B77 3JN",
                                     "England",
                                     null
-                                    )
+                                )
                             },
-                            new List<AccessibilityForDisabilities>()
-                            ),
+                            new List<AccessibilityForDisabilities>(), 
+                            new List<LinkContact>()),
                         new List<RegularSchedule>(),
-                        new List<HolidaySchedule>()
-                        )
+                        new List<HolidaySchedule>(), 
+                        new List<LinkContact>())
 
                 })
             .WithServiceTaxonomies(new List<ServiceTaxonomy>

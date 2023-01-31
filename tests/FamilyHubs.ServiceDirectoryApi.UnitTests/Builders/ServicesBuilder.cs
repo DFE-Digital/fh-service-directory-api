@@ -50,10 +50,10 @@ public class ServicesBuilder
         return this;
     }
 
-    public ServicesBuilder WithContact(ICollection<Contact>? contacts)
+    public ServicesBuilder WithContact(ICollection<LinkContact>? linkContacts)
     {
-        if (contacts != null && contacts.Any())
-            _service.Contacts = contacts;
+        if (linkContacts != null && linkContacts.Any())
+            _service.LinkContacts = linkContacts;
         return this;
     }
 

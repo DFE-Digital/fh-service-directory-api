@@ -45,8 +45,6 @@ public class CreateUICacheCommandHandler : IRequestHandler<CreateUICacheCommand,
             throw new Exception(ex.Message, ex);
         }
 
-        if (request is not null && request.UICacheDto is not null)
-            return request.UICacheDto.Id;
-        return string.Empty;
+        return request.UICacheDto.Id;
     }
 }

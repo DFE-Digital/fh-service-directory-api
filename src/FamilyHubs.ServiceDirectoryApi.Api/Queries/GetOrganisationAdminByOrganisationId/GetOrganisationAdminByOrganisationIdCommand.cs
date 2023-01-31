@@ -1,5 +1,4 @@
 ﻿using Ardalis.GuardClauses;
-using AutoMapper;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using MediatR;
@@ -14,18 +13,16 @@ public class GetOrganisationAdminByOrganisationIdCommand : IRequest<string>
         OrganisationId = organisationId;
     }
 
-    public string OrganisationId { get; init; } = default!;
+    public string OrganisationId { get; init; }
 }
 
 public class GetOrganisationAdminByOrganisationIdCommandHandler : IRequestHandler<GetOrganisationAdminByOrganisationIdCommand, string>
 {
     private readonly ApplicationDbContext _context;
-    private readonly IMapper _mapper;
 
-    public GetOrganisationAdminByOrganisationIdCommandHandler(ApplicationDbContext context, IMapper mapper)
+    public GetOrganisationAdminByOrganisationIdCommandHandler(ApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
     public async Task<string> Handle(GetOrganisationAdminByOrganisationIdCommand request, CancellationToken cancellationToken)
     {

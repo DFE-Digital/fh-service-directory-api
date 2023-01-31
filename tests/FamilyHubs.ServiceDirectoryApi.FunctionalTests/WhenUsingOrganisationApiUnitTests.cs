@@ -53,17 +53,17 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
         {
             Method = HttpMethod.Get,
             RequestUri = new Uri(_client.BaseAddress + "api/organizations/72e653e8-1d05-4821-84e9-9177571a6013"),
-            
+
         };
 
         using var response = await _client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
 
-        
+
         var retVal = await JsonSerializer.DeserializeAsync<OrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            
-       
+
+
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
@@ -260,8 +260,12 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                 {
                     new EligibilityDto("Test9109Children","Test9109Children",0,13)
                 })
-            .WithContact(new List<ContactDto>
+            .WithLinkContact(new List<LinkContactDto>
             {
+                new LinkContactDto(
+                    "c1b5dd80-7506-4424-9711-fe175fa13eb8",
+                    "c1b5dd80-7506-4424-9711-fe175fa13eb1",
+                    "Service",
                 new ContactDto(
                     contactId,
                     "Service",
@@ -270,7 +274,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                     "01827 65780",
                     "www.testservice.com",
                     "support@testservice.com"
-                    )
+                    ))
             })
             .WithCostOption(new List<CostOptionDto>())
             .WithLanguages(new List<LanguageDto>
@@ -316,17 +320,18 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                                         null
                                         )
                                     )
-                            }
+                            },
+                            new List<LinkContactDto>()
                             ),
                         new List<RegularScheduleDto>(),
-                        new List<HolidayScheduleDto>()
+                        new List<HolidayScheduleDto>(),
+                        new List<LinkContactDto>()
                         )
 
                 })
             .WithServiceTaxonomies(new List<ServiceTaxonomyDto>
             {
-                    new ServiceTaxonomyDto
-                    ("Test9107",
+                    new ServiceTaxonomyDto("Test9107",
                     new TaxonomyDto(
                         "Test bccsource:Organisation",
                         "Organisation",
@@ -334,8 +339,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                         null
                         )),
 
-                    new ServiceTaxonomyDto
-                    ("Test9108",
+                    new ServiceTaxonomyDto("Test9108",
                     new TaxonomyDto(
                         "Test bccprimaryservicetype:38",
                         "Support",
@@ -343,8 +347,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                         null
                         )),
 
-                    new ServiceTaxonomyDto
-                    ("Test9109",
+                    new ServiceTaxonomyDto("Test9109",
                     new TaxonomyDto(
                         "Test bccagegroup:37",
                         "Children",
@@ -352,8 +355,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                         null
                         )),
 
-                    new ServiceTaxonomyDto
-                    ("Test9110",
+                    new ServiceTaxonomyDto("Test9110",
                     new TaxonomyDto(
                         "Testbccusergroup:56",
                         "Long Term Health Conditions",
@@ -391,8 +393,12 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                 {
                     new EligibilityDto("Test91091Children","Test91091Children",0,13)
                 })
-            .WithContact(new List<ContactDto>
+            .WithLinkContact(new List<LinkContactDto>
             {
+                new LinkContactDto(
+                    "9066bccb-79cb-401f-818f-86ad23b022cf",
+                    "9066bccb-79cb-401f-818f-86ad23b022ca",
+                    "Service",
                 new ContactDto(
                     contactId,
                     "Service",
@@ -401,7 +407,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                     "01827 65770",
                     "www.testservice1.com",
                     "support@testservice1.com"
-                    )
+                    ))
             })
             .WithCostOption(new List<CostOptionDto>())
             .WithLanguages(new List<LanguageDto>
@@ -448,12 +454,14 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                                         null
                                     )
                                 )
-                            }),
+                            },
+                            new List<LinkContactDto>()
+                            ),
                         new List<RegularScheduleDto>(),
-                        new List<HolidayScheduleDto>()
+                        new List<HolidayScheduleDto>(),
+                        new List<LinkContactDto>()
                         )
-
-                })
+            })
             .Build();
 
         return service;
@@ -470,8 +478,8 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
             new Uri("https://www.test.gov.uk/").ToString(),
             "https://www.test.gov.uk/",
             null,
-            GetTestCountyCouncilServices()
-            );
+            GetTestCountyCouncilServices(),
+            new List<LinkContact>());
 
         return bristolCountyCouncil;
     }
@@ -503,22 +511,9 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                     new Eligibility("Test9109Children","",null,0,13,new List<Taxonomy>())
                 },
                 new List<Funding>(),
-                new List<HolidaySchedule>(),
-                new List<Language>(),
-                new List<RegularSchedule>(),
-                new List<Review>(),
-                new List<Contact>
-                {
-                    new Contact(
-                        "Test1567",
-                        "",
-                        "",
-                        "01827 65779",
-                        "01827 65779",
-                        "www.gov.uk",
-                        "help@gov.uk")
-                },
                 new List<CostOption>(),
+                new List<Language>(),
+                new List<Review>(),
                 new List<ServiceArea>
                 {
                     new ServiceArea(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
@@ -543,58 +538,74 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                                     "B77 3JN",
                                     "England",
                                     null
-                                    )
+                                )
                             },
-                            new List<AccessibilityForDisabilities>()
-                            ),
+                            new List<AccessibilityForDisabilities>(),
+                            new List<LinkContact>()),
                         new List<RegularSchedule>(),
-                        new List<HolidaySchedule>()
-                        )
+                        new List<HolidaySchedule>(),
+                        new List<LinkContact>())
 
                 },
                 new List<ServiceTaxonomy>
                 {
                     new ServiceTaxonomy
                     ("Test9107",
-                    null,
-                    new Taxonomy(
-                        "Test bccsource:Organisation",
-                        "Organisation",
-                        "Test BCC Data Sources",
-                        null
+                        null,
+                        new Taxonomy(
+                            "Test bccsource:Organisation",
+                            "Organisation",
+                            "Test BCC Data Sources",
+                            null
                         )),
 
                     new ServiceTaxonomy
                     ("Test9108",
-                    null,
-                    new Taxonomy(
-                        "Test bccprimaryservicetype:38",
-                        "Support",
-                        "Test BCC Primary Services",
-                        null
+                        null,
+                        new Taxonomy(
+                            "Test bccprimaryservicetype:38",
+                            "Support",
+                            "Test BCC Primary Services",
+                            null
                         )),
 
                     new ServiceTaxonomy
                     ("Test9109",
-                    null,
-                    new Taxonomy(
-                        "Test bccagegroup:37",
-                        "Children",
-                        "Test BCC Age Groups",
-                        null
+                        null,
+                        new Taxonomy(
+                            "Test bccagegroup:37",
+                            "Children",
+                            "Test BCC Age Groups",
+                            null
                         )),
 
                     new ServiceTaxonomy
                     ("Test9110",
-                    null,
-                    new Taxonomy(
-                        "Testbccusergroup:56",
-                        "Long Term Health Conditions",
-                        "Test BCC User Groups",
-                        null
+                        null,
+                        new Taxonomy(
+                            "Testbccusergroup:56",
+                            "Long Term Health Conditions",
+                            "Test BCC User Groups",
+                            null
                         ))
-                }
-                )
+                },
+                new List<HolidaySchedule>(),
+                new List<RegularSchedule>(),
+                new List<LinkContact>
+                {
+                    new LinkContact(
+                        "c1b5dd80-7506-4424-9711-fe175fa13eb8",
+                        "c1b5dd80-7506-4424-9711-fe175fa13eb1",
+                        "Service",
+                    new Contact(
+                        "Test1567",
+                        "",
+                        "",
+                        "01827 65779",
+                        "01827 65779",
+                        "www.gov.uk",
+                        "help@gov.uk"))
+                })
 
         };
     }

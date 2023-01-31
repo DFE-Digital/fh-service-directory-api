@@ -30,6 +30,7 @@ namespace FamilyHubs.ServiceDirectory.Core.Interfaces.Infrastructure
         DbSet<ServiceType> ServiceTypes { get; }
         DbSet<AdminArea> AdminAreas { get; }
         DbSet<RelatedOrganisation> RelatedOrganisations { get; }
+        DbSet<LinkContact> LinkContacts { get; }
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

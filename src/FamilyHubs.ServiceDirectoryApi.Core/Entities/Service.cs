@@ -8,33 +8,31 @@ public class Service : EntityBase<string>, IAggregateRoot
 {
     public Service() { }
 
-    public Service(
-        string id, 
-        ServiceType serviceType, 
-        string organisationId, 
-        string name, 
-        string? description, 
-        string? accreditations, 
-        DateTime? assuredDate, 
-        string? attendingAccess, 
-        string? attendingType, 
-        string? deliverableType, 
-        string? status, 
-        string? fees, 
-        bool canFamilyChooseDeliveryLocation, 
-        ICollection<ServiceDelivery> serviceDeliveries, 
-        ICollection<Eligibility> eligibilities, 
-        ICollection<Funding> fundings, 
-        ICollection<HolidaySchedule> holidaySchedules, 
-        ICollection<Language> languages, 
-        ICollection<RegularSchedule> regularSchedules, 
-        ICollection<Review> reviews, 
-        ICollection<Contact> contacts, 
-        ICollection<CostOption> costOptions, 
-        ICollection<ServiceArea> serviceAreas, 
-        ICollection<ServiceAtLocation> serviceAtLocations, 
-        ICollection<ServiceTaxonomy> serviceTaxonomies
-        )
+    public Service(string id,
+        ServiceType serviceType,
+        string organisationId,
+        string name,
+        string? description,
+        string? accreditations,
+        DateTime? assuredDate,
+        string? attendingAccess,
+        string? attendingType,
+        string? deliverableType,
+        string? status,
+        string? fees,
+        bool canFamilyChooseDeliveryLocation,
+        ICollection<ServiceDelivery> serviceDeliveries,
+        ICollection<Eligibility> eligibilities,
+        ICollection<Funding> fundings,
+        ICollection<CostOption> costOptions,
+        ICollection<Language> languages,
+        ICollection<Review> reviews,
+        ICollection<ServiceArea> serviceAreas,
+        ICollection<ServiceAtLocation> serviceAtLocations,
+        ICollection<ServiceTaxonomy> serviceTaxonomies,
+        ICollection<HolidaySchedule> holidaySchedules,
+        ICollection<RegularSchedule> regularSchedules,
+        ICollection<LinkContact> linkContacts)
     {
         Id = id;
         ServiceType = serviceType;
@@ -55,12 +53,12 @@ public class Service : EntityBase<string>, IAggregateRoot
         Languages = languages;
         RegularSchedules = regularSchedules;
         Reviews = reviews;
-        Contacts = contacts;
         CostOptions = costOptions;
         ServiceAreas = serviceAreas;
         ServiceAtLocations = serviceAtLocations;
         ServiceTaxonomies = serviceTaxonomies;
         ServiceDeliveries = serviceDeliveries;
+        LinkContacts = linkContacts;
     }
 
     public ServiceType ServiceType { get; set; } = default!;
@@ -75,18 +73,18 @@ public class Service : EntityBase<string>, IAggregateRoot
     public string? Status { get; set; }
     public string? Fees { get; set; }
     public bool CanFamilyChooseDeliveryLocation { get; set; }
-    public virtual ICollection<ServiceDelivery> ServiceDeliveries { get; set; } = new Collection<ServiceDelivery>();
-    public virtual ICollection<Eligibility> Eligibilities { get; set; } = new Collection<Eligibility>();
-    public virtual ICollection<Funding> Fundings { get; set; } = new Collection<Funding>();
-    public virtual ICollection<HolidaySchedule> HolidaySchedules { get; set; } = new Collection<HolidaySchedule>();
-    public virtual ICollection<Language> Languages { get; set; } = new Collection<Language>();
-    public virtual ICollection<RegularSchedule> RegularSchedules { get; set; } = new Collection<RegularSchedule>();
-    public virtual ICollection<Review> Reviews { get; set; } = new Collection<Review>();
-    public virtual ICollection<Contact> Contacts { get; set; } = new Collection<Contact>();
-    public virtual ICollection<CostOption> CostOptions { get; set; } = new Collection<CostOption>();
-    public virtual ICollection<ServiceArea> ServiceAreas { get; set; } = new Collection<ServiceArea>();
-    public virtual ICollection<ServiceAtLocation> ServiceAtLocations { get; set; } = new Collection<ServiceAtLocation>();
-    public virtual ICollection<ServiceTaxonomy> ServiceTaxonomies { get; set; } = new Collection<ServiceTaxonomy>();
+    public ICollection<ServiceDelivery> ServiceDeliveries { get; set; } = new Collection<ServiceDelivery>();
+    public ICollection<Eligibility> Eligibilities { get; set; } = new Collection<Eligibility>();
+    public ICollection<Funding> Fundings { get; set; } = new Collection<Funding>();
+    public ICollection<HolidaySchedule> HolidaySchedules { get; set; } = new Collection<HolidaySchedule>();
+    public ICollection<Language> Languages { get; set; } = new Collection<Language>();
+    public ICollection<RegularSchedule> RegularSchedules { get; set; } = new Collection<RegularSchedule>();
+    public ICollection<Review> Reviews { get; set; } = new Collection<Review>();
+    public ICollection<LinkContact> LinkContacts { get; set; } = new Collection<LinkContact>();
+    public ICollection<CostOption> CostOptions { get; set; } = new Collection<CostOption>();
+    public ICollection<ServiceArea> ServiceAreas { get; set; } = new Collection<ServiceArea>();
+    public ICollection<ServiceAtLocation> ServiceAtLocations { get; set; } = new Collection<ServiceAtLocation>();
+    public ICollection<ServiceTaxonomy> ServiceTaxonomies { get; set; } = new Collection<ServiceTaxonomy>();
 
     public void Update(Service service)
     {

@@ -16,6 +16,6 @@ public class Parent : EntityBase<string>, IAggregateRoot
     }
     public string Name { get; init; } = default!;
     public string? Vocabulary { get; init; }
-    public virtual ICollection<ServiceTaxonomy>? ServiceTaxonomies { get; init; }
-    public virtual ICollection<LinkTaxonomy>? LinkTaxonomies { get; init; }
+    public ICollection<ServiceTaxonomy>? ServiceTaxonomies { get; init; }
+    public ICollection<LinkTaxonomy>? LinkTaxonomies { get; init; }
 }

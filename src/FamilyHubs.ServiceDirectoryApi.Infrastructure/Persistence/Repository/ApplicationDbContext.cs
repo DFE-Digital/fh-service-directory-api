@@ -44,6 +44,7 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository
         public DbSet<HolidaySchedule> HolidaySchedules => Set<HolidaySchedule>();
         public DbSet<Language> Languages => Set<Language>();
         public DbSet<LinkTaxonomy> LinkTaxonomies => Set<LinkTaxonomy>();
+        public DbSet<LinkContact> LinkContacts => Set<LinkContact>();
         public DbSet<Location> Locations => Set<Location>();
         public DbSet<Organisation> Organisations => Set<Organisation>();
         public DbSet<Parent> Parents => Set<Parent>();

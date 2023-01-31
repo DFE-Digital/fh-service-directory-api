@@ -33,7 +33,7 @@ public class GetServiceByIdCommandHandler : IRequestHandler<GetServiceByIdComman
             .Include(x => x.ServiceType)
             .Include(x => x.ServiceDeliveries)
             .Include(x => x.Eligibilities)
-            .Include(x => x.Contacts)
+            .Include(x => x.LinkContacts)
             .Include(x => x.CostOptions)
             .Include(x => x.Languages)
             .Include(x => x.ServiceAreas)

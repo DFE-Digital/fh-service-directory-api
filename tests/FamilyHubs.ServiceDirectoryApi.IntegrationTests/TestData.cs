@@ -26,8 +26,8 @@ public class TestData
             new Uri("https://www.testcouncil.gov.uk/").ToString(),
             "https://www.testcouncil.gov.uk/",
             new List<Review>(),
-            GetBristolCountyCouncilServices("dcf1d9a2-004f-40e8-82aa-8a2660765d6e")
-            );
+            GetBristolCountyCouncilServices("dcf1d9a2-004f-40e8-82aa-8a2660765d6e"),
+            new List<LinkContact>());
 
         bristolCountyCouncil.CreatedBy = "TestSystem";
         bristolCountyCouncil.Created = DateTime.UtcNow;
@@ -41,12 +41,10 @@ public class TestData
             bristolCountyCouncil.Services.ElementAt(0).Eligibilities.ElementAt(0).Created = DateTime.UtcNow;
             bristolCountyCouncil.Services.ElementAt(0).Languages.ElementAt(0).CreatedBy = "TestSystem";
             bristolCountyCouncil.Services.ElementAt(0).Languages.ElementAt(0).Created = DateTime.UtcNow;
-            bristolCountyCouncil.Services.ElementAt(0).Contacts.ElementAt(0).CreatedBy = "TestSystem";
-            bristolCountyCouncil.Services.ElementAt(0).Contacts.ElementAt(0).Created = DateTime.UtcNow;
+            bristolCountyCouncil.Services.ElementAt(0).LinkContacts.ElementAt(0).CreatedBy = "TestSystem";
+            bristolCountyCouncil.Services.ElementAt(0).LinkContacts.ElementAt(0).Created = DateTime.UtcNow;
             bristolCountyCouncil.Services.ElementAt(0).ServiceAtLocations.ElementAt(0).CreatedBy = "TestSystem";
             bristolCountyCouncil.Services.ElementAt(0).ServiceAtLocations.ElementAt(0).Created = DateTime.UtcNow;
-
-
         }
 
         return bristolCountyCouncil;
@@ -79,25 +77,12 @@ public class TestData
                     new Eligibility("9109TestChildren","",null,0,13,new List<Taxonomy>())
                 }),
                 new List<Funding>(),
-                new List<HolidaySchedule>(),
+                new List<CostOption>(),
                 new List<Language>
                 {
                     new Language("724630f7-4c8b-4864-96be-bc74891f2b4a","English")
                 },
-                new List<RegularSchedule>(),
                 new List<Review>(),
-                new List<Contact>(new List<Contact>
-                {
-                    new Contact(
-                        "1568",
-                        "Mr",
-                        "John Smith",
-                        "01827 65779",
-                        "01827 65779",
-                        "www.testservice.com",
-                        "support@testservice.com")
-                }),
-                new List<CostOption>(),
                 new List<ServiceArea>
                 {
                     new ServiceArea(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
@@ -122,58 +107,68 @@ public class TestData
                                     "B77 3JN",
                                     "England",
                                     null
-                                    )
+                                )
                             }),
-                            new List<AccessibilityForDisabilities>()
-                            ),
+                            new List<AccessibilityForDisabilities>(), 
+                            new List<LinkContact>()),
                         new List<RegularSchedule>(),
-                        new List<HolidaySchedule>()
-                        )
+                        new List<HolidaySchedule>(), 
+                        new List<LinkContact>())
 
                 }),
                 new List<ServiceTaxonomy>( new List<ServiceTaxonomy>
-                    {
-                    new ServiceTaxonomy
-                    ("9111",
-                    null,
-                    new Taxonomy(
-                        "bccsource:Organisation",
-                        "Organisation",
-                        "BCC Data Sources",
-                        null
+                {
+                    new ServiceTaxonomy("9111",
+                        null,
+                        new Taxonomy(
+                            "bccsource:Organisation",
+                            "Organisation",
+                            "BCC Data Sources",
+                            null
                         )),
-
-                    new ServiceTaxonomy
-                    ("9112",
-                    null,
-                    new Taxonomy(
-                        "bccprimaryservicetype:38",
-                        "Support",
-                        "BCC Primary Services",
-                        null
+                    new ServiceTaxonomy("9112",
+                        null,
+                        new Taxonomy(
+                            "bccprimaryservicetype:38",
+                            "Support",
+                            "BCC Primary Services",
+                            null
                         )),
-
-                    new ServiceTaxonomy
-                    ("9113",
-                    null,
-                    new Taxonomy(
-                        "bccagegroup:37",
-                        "Children",
-                        "BCC Age Groups",
-                        null
+                    new ServiceTaxonomy("9113",
+                        null,
+                        new Taxonomy(
+                            "bccagegroup:37",
+                            "Children",
+                            "BCC Age Groups",
+                            null
                         )),
-
-                    new ServiceTaxonomy
-                    ("9114",
-                    null,
-                    new Taxonomy(
-                        "bccusergroup:56",
-                        "Long Term Health Conditions",
-                        "BCC User Groups",
-                        null
+                    new ServiceTaxonomy("9114",
+                        null,
+                        new Taxonomy(
+                            "bccusergroup:56",
+                            "Long Term Health Conditions",
+                            "BCC User Groups",
+                            null
                         ))
-                }
-                ))
+                    }
+                ),
+                new List<HolidaySchedule>(),
+                new List<RegularSchedule>(),
+                new List<LinkContact>(new List<LinkContact>
+                {
+                    new LinkContact(
+                        "3010521b-6e0a-41b0-b610-200edbbeeb14",
+                        "3010521b-6e0a-41b0-b610-200edbbeeb11",
+                        "Service",
+                    new Contact(
+                        "1568",
+                        "Mr",
+                        "John Smith",
+                        "01827 65779",
+                        "01827 65779",
+                        "www.testservice.com",
+                        "support@testservice.com"))
+                }))
 
         };
     }

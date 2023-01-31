@@ -100,7 +100,7 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
 
         };
 
-        var updateLocation = new LocationDto(testLocation.Id, testLocation.Name, testLocation.Description, testLocation.Latitude, testLocation.Longitude, physicalAddresses, newTaxonomyList);
+        var updateLocation = new LocationDto(testLocation.Id, testLocation.Name, testLocation.Description, testLocation.Latitude, testLocation.Longitude, physicalAddresses, newTaxonomyList, new List<LinkContactDto>());
 
         UpdateLocationCommand command = new(updateLocation);
         var handler = new UpdateLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
@@ -125,7 +125,7 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         mockApplicationDbContext.Taxonomies.Add(GetTestTaxonomy());
         await mockApplicationDbContext.SaveChangesAsync();
         var testLocation = GetTestLocationDto();
-        var updateLocation = new LocationDto("d3948216-3b71-49a4-86b0-0d6d63758a3c", testLocation.Name, testLocation.Description, testLocation.Latitude, testLocation.Longitude, testLocation.PhysicalAddresses, testLocation.LinkTaxonomies);
+        var updateLocation = new LocationDto("d3948216-3b71-49a4-86b0-0d6d63758a3c", testLocation.Name, testLocation.Description, testLocation.Latitude, testLocation.Longitude, testLocation.PhysicalAddresses, testLocation.LinkTaxonomies, new List<LinkContactDto>());
 
         UpdateLocationCommand command = new(updateLocation);
         var handler = new UpdateLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
@@ -190,7 +190,8 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
                 new TaxonomyDto("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", "Test Vocabulary", null)
                 )
 
-        });
+        },
+        new List<LinkContactDto>());
         
     }
 
