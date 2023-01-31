@@ -13,7 +13,7 @@ public class WhenValidatingServiceCommands
     public void ThenShouldCreateServiceCommandNotErrorWhenModelIsValid()
     {
         //Arrange
-        var testService = WhenUsingOrganisationCommands.GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc");
+        var testService = WhenUsingOrganisationCommands.GetTestCountyCouncilServicesDto2("56e62852-1b0b-40e5-ac97-54a67ea957dc");
         var validator = new CreateServiceCommandValidator();
         var testModel = new CreateServiceCommand(testService);
 
@@ -28,7 +28,7 @@ public class WhenValidatingServiceCommands
     public void ThenShouldUpdateServiceCommandNotErrorWhenModelIsValid()
     {
         //Arrange
-        var testService = WhenUsingOrganisationCommands.GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc");
+        var testService = WhenUsingOrganisationCommands.GetTestCountyCouncilServicesDto2("56e62852-1b0b-40e5-ac97-54a67ea957dc");
         var validator = new UpdateServiceCommandValidator();
         var testModel = new UpdateServiceCommand(testService.Id, testService);
 

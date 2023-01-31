@@ -27,7 +27,7 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         CreateOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
         var id = await handler.Handle(command, new CancellationToken());
 
-        var service = WhenUsingOrganisationCommands.GetTestCountyCouncilServicesDto(testOrganisation.Id);
+        var service = WhenUsingOrganisationCommands.GetTestCountyCouncilServicesDto2(testOrganisation.Id);
 
 
         service.Name = "Unit Test Update Service Name";

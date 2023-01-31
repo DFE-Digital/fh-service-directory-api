@@ -92,7 +92,7 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
                             .Include(l => l.PhysicalAddresses)
                             .Include(l => l.LinkTaxonomies)!
                             .ThenInclude(l => l.Taxonomy)
-                            .Where(l => l.Name == serviceAtLocation.Location.Name && serviceAtLocation.Location.Name != "")
+                            .Where(l => (l.Name == serviceAtLocation.Location.Name && serviceAtLocation.Location.Name != "") || l.Id == serviceAtLocation.Location.Id)
                             .FirstOrDefaultAsync(cancellationToken);
 
                         if (existingLocation != null)
@@ -123,6 +123,44 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
                                     }
                                 }
                             }
+                        }
+                    }
+
+                    for(var i = service.Eligibilities.Count - 1; i >= 0; i--)
+                    {
+                        var eligibility = _context.Eligibilities.FirstOrDefault(x => x.Id == service.Eligibilities.ElementAt(i).Id);
+                        if (eligibility != null)
+                        {
+                            service.Eligibilities.Remove(service.Eligibilities.ElementAt(i));
+
+                            service.Eligibilities.Add(eligibility);
+                        }
+                    }
+
+                    for (var i = service.Languages.Count - 1; i >= 0; i--)
+                    {
+                        var language = _context.Languages.FirstOrDefault(x => x.Id == service.Languages.ElementAt(i).Id);
+                        if (language != null)
+                        {
+                            service.Languages.Remove(service.Languages.ElementAt(i));
+                            service.Languages.Add(language);
+                        }
+                    }
+
+                    for (var i = service.ServiceTaxonomies.Count - 1; i >= 0; i--)
+                    {
+                        if (service.ServiceTaxonomies.ElementAt(i).Taxonomy != null)
+                        {
+                            var listTaxonomy = service.ServiceTaxonomies.ElementAt(i).Taxonomy;
+                            if (listTaxonomy != null) 
+                            {
+                                var tax = _context.Taxonomies.FirstOrDefault(x => x.Id == listTaxonomy.Id);
+                                if (tax != null)
+                                {
+                                    service.ServiceTaxonomies.ElementAt(i).Taxonomy = tax;
+                                }
+                            }
+                            
                         }
                     }
                 }

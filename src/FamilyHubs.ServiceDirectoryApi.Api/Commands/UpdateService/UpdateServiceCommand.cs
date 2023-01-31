@@ -455,14 +455,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             }
             else
             {
-                if (current.Taxonomy != null && updatedServiceTaxonomy.Taxonomy != null)
-                {
-                    current.Taxonomy.Name = updatedServiceTaxonomy.Taxonomy.Name;
-                    current.Taxonomy.Vocabulary = updatedServiceTaxonomy.Taxonomy.Vocabulary;
-                    current.Taxonomy.Parent = updatedServiceTaxonomy.Taxonomy.Parent;
-                }
-
-                currentIds.Add(current.Id);
+              currentIds.Add(current.Id);
             }
         }
 

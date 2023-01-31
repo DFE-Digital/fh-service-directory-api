@@ -33,7 +33,7 @@ public class GetTaxonomiesCommandHandler : IRequestHandler<GetTaxonomiesCommand,
     {
         var entities = await _context.Taxonomies.ToListAsync();
 
-        if (request.Text != null)
+        if (request != null && request.Text != null)
         {
             entities = entities.Where(x => x.Name.Contains(request.Text)).ToList();
         }

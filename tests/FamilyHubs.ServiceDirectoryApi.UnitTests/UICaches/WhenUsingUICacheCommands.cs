@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Api.Commands.CreateUICache;
+﻿using Ardalis.GuardClauses;
+using FamilyHubs.ServiceDirectory.Api.Commands.CreateUICache;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateUICache;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetUICacheById;
 using FamilyHubs.ServiceDirectory.Core.Entities;
@@ -30,6 +31,23 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
     }
 
     [Fact]
+    public async Task ThenCreateUICacheShouldThrowAnException()
+    {
+        //Arange
+        var mockApplicationDbContext = GetApplicationDbContext();
+        var logger = new Mock<ILogger<CreateUICacheCommandHandler>>();
+        CreateUICacheCommand command = new(new UICacheDto("6e23bc85-fff9-49f9-99e4-98160a9a2b56", default!));
+        CreateUICacheCommandHandler handler = new(mockApplicationDbContext, logger.Object);
+
+
+        // Act
+        Func<Task> act = () => handler.Handle(command, CancellationToken.None);
+
+        //Assert
+        var exception = await Assert.ThrowsAsync<Exception>(act);
+    }
+
+    [Fact]
     public async Task ThenUpdateUICache()
     {
         //Arange
@@ -56,6 +74,51 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
         //Assert
         result.Should().NotBeNull();
         result.Should().Be(id);
+    }
+
+    [Fact]
+    public async Task ThenUpdateUICacheShouldThrowANotFoundException()
+    {
+        //Arange
+        const string id = "9ae3237d-73fd-46fc-afa3-f178250e0c09";
+        var logger = new Mock<ILogger<UpdateUICacheCommandHandler>>();
+        var mockApplicationDbContext = GetApplicationDbContext();
+
+        var testViewModel = new TestViewModel
+        {
+            Id = new Guid("e5f0299a-a676-4d27-a4b9-1608c0d6d3db"),
+            Name = "New Test View Model"
+        };
+
+        UpdateUICacheCommand command = new(id, new UICacheDto(id, default!));
+        UpdateUICacheCommandHandler handler = new(mockApplicationDbContext, logger.Object);
+
+
+        // Act
+        Func<Task> act = () => handler.Handle(command, CancellationToken.None);
+
+        //Assert
+        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
+    }
+
+    [Fact]
+    public async Task ThenUpdateUICacheShouldThrowAnException()
+    {
+        //Arange
+        const string id = "9ae3237d-73fd-46fc-afa3-f178250e0c09";
+        var logger = new Mock<ILogger<UpdateUICacheCommandHandler>>();
+        var mockApplicationDbContext = GetApplicationDbContext();
+        mockApplicationDbContext.UICaches.Add(new UICache(id, TestViewModel.GetTestViewModel()));
+        mockApplicationDbContext.SaveChanges();
+
+        UpdateUICacheCommand command = new(id, default!); //new UICacheDto(id, newViewModel));
+        UpdateUICacheCommandHandler handler = new(mockApplicationDbContext, logger.Object);
+
+        // Act
+        Func<Task> act = () => handler.Handle(command, CancellationToken.None);
+
+        //Assert
+        var exception = await Assert.ThrowsAsync<Exception>(act);
     }
 
     [Fact]

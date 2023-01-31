@@ -41,7 +41,7 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
 
         var ids = organisation.Services?.Select(x => x.Id).ToList();
 
-        if (ids == null)
+        if (ids == null || !ids.Any())
         {
             throw new NotFoundException(nameof(Service), request.Id);
         }
@@ -75,12 +75,8 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
             .Where(x => ids.Contains(x.Id))
             .ToListAsync(cancellationToken);
 
-        if (entity == null)
-        {
-            throw new NotFoundException(nameof(Service), request.Id);
-        }
-
         var result = DtoHelper.GetServicesDto(entity);
+
         return result;
     }
 }
