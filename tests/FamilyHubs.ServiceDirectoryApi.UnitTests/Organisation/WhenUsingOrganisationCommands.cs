@@ -542,11 +542,11 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                         null
                         ))
                 })
+            .WithFundings(new List<FundingDto>())
             .Build();
 
         service.RegularSchedules = new List<RegularScheduleDto>();
         service.HolidaySchedules = new List<HolidayScheduleDto>();
-        service.Fundings = new List<FundingDto>();
 
         return service;
     }
