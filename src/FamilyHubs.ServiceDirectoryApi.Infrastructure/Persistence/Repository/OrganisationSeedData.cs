@@ -238,7 +238,7 @@ public class OrganisationSeedData
                 }),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>(new List<LinkContact>
+                new List<LinkContact>
                 {
                     new LinkContact(
                         "1a000f89-6487-49ae-9f70-166070b02b47",
@@ -252,7 +252,7 @@ public class OrganisationSeedData
                         "0161 778 0601",
                         "www.gov.uk",
                         "help@gov.uk"))
-                })),
+                }),
 
             new Service(
                 "2dde869a-914a-4acc-915b-10d368808022",
@@ -308,7 +308,7 @@ public class OrganisationSeedData
                 }),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>(new List<LinkContact>
+                new List<LinkContact>
                 {
                     new LinkContact(
                         "2dde869a-914a-4acc-915b-10d368808011",
@@ -322,7 +322,7 @@ public class OrganisationSeedData
                         "01619212880",
                         "www.gov.uk",
                         "help@gov.uk"))
-                })),
+                }),
 
             new Service(
                 "6f4251a7-ae32-44cd-84fc-a632e944fccf",
@@ -375,7 +375,7 @@ public class OrganisationSeedData
                 new List<ServiceTaxonomy>(),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>(new List<LinkContact>
+                new List<LinkContact>
                 {
                     new LinkContact(
                         "6f4251a7-ae32-44cd-84fc-a632e944fccc",
@@ -389,7 +389,7 @@ public class OrganisationSeedData
                         , "0161 778 0601",
                         "www.gov.uk",
                         "help@gov.uk"))
-                })),
+                }),
 
             new Service(
                 "57bde76b-885d-484d-869f-7e60faf4b1b2",
@@ -443,7 +443,7 @@ public class OrganisationSeedData
                 new List<ServiceTaxonomy>(),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>(new List<LinkContact>
+                new List<LinkContact>
                 {
                     new LinkContact(
                         "57bde76b-885d-484d-869f-7e60faf4b1a1",
@@ -457,7 +457,7 @@ public class OrganisationSeedData
                         "0161 778 0495",
                         "www.gov.uk",
                         "help@gov.uk"))
-                })),
+                }),
 
             new Service(
                 "06c16312-fa5f-4e82-b672-3a9ab099649a",
@@ -511,7 +511,7 @@ public class OrganisationSeedData
                 new List<ServiceTaxonomy>(),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>(new List<LinkContact>
+                new List<LinkContact>
                 {
                     new LinkContact(
                         "06c16312-fa5f-4e82-b672-3a9ab099640b",
@@ -525,7 +525,7 @@ public class OrganisationSeedData
                         "0161 686 5260",
                         "www.gov.uk",
                         "help@gov.uk"))
-                }))
+                })
         };
     }
 
@@ -613,7 +613,8 @@ public class OrganisationSeedData
                     }),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>(new List<LinkContact> {
+                new List<LinkContact>
+                {
                     new LinkContact(
                         "4591d551-0d6a-4c0d-b109-002e67318232",
                         "4591d551-0d6a-4c0d-b109-002e67318231",
@@ -626,7 +627,7 @@ public class OrganisationSeedData
                         "01827 65778",
                         "www.gov.uk",
                         "help@gov.uk"))
-                })),
+                }),
 
             new Service(
                 "96781fd9-95a2-4196-8db6-0f083f1c38fc",
@@ -700,7 +701,7 @@ public class OrganisationSeedData
                     }),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>(new List<LinkContact>
+                new List<LinkContact>
                 {
                     new LinkContact(
                         "96781fd9-95a2-4196-8db6-0f083f1c38ab",
@@ -714,7 +715,7 @@ public class OrganisationSeedData
                         "01827 65711",
                         "www.gov.uk",
                         "help@gov.uk"))
-                })),
+                }),
 
             new Service(
                 "207613c5-4cdf-46b2-a110-cf120a9412f9",
@@ -791,7 +792,8 @@ public class OrganisationSeedData
                     }),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>(new List<LinkContact> {
+                new List<LinkContact>
+                {
                     new LinkContact(
                         "207613c5-4cdf-46b2-a110-cf120a9412f1",
                         "207613c5-4cdf-46b2-a110-cf120a9412f9",
@@ -804,7 +806,7 @@ public class OrganisationSeedData
                         "01827 64328",
                         "www.gov.uk",
                         "help@gov.uk"))
-                })),
+                }),
 
             new Service(
                 "39f211fc-73d4-4ea1-a1c9-d8fc063d6b51",
@@ -881,7 +883,8 @@ public class OrganisationSeedData
                     }),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>(new List<LinkContact> {
+                new List<LinkContact>
+                {
                     new LinkContact(
                         "39f211fc-73d4-4ea1-a1c9-d8fc063d6b52",
                         "39f211fc-73d4-4ea1-a1c9-d8fc063d6b51",
@@ -895,7 +898,7 @@ public class OrganisationSeedData
                             "www.gov.uk",
                             "help@gov.uk")
                         )
-                })),
+                }),
         };
     }
 }

@@ -154,7 +154,7 @@ public class TestData
                 ),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>(new List<LinkContact>
+                new List<LinkContact>
                 {
                     new LinkContact(
                         "3010521b-6e0a-41b0-b610-200edbbeeb14",
@@ -168,8 +168,7 @@ public class TestData
                         "01827 65779",
                         "www.testservice.com",
                         "support@testservice.com"))
-                }))
-
+                })
         };
     }
 }
