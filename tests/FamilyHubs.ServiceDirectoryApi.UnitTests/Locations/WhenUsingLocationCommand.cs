@@ -19,14 +19,14 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
+        var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateLocationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         mockApplicationDbContext.Taxonomies.Add(GetTestTaxonomy());
         await mockApplicationDbContext.SaveChangesAsync();
         var testLocation = GetTestLocationDto();
-        CreateLocationCommand command = new(testLocation);
-        CreateLocationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
+        var command = new CreateLocationCommand(testLocation);
+        var handler = new CreateLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
@@ -42,16 +42,16 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
+        var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<UpdateLocationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         mockApplicationDbContext.Taxonomies.Add(GetTestTaxonomy());
         await mockApplicationDbContext.SaveChangesAsync();
         var testLocation = GetTestLocationDto();
-        CreateLocationCommand createcommand = new(testLocation);
-        CreateLocationCommandHandler createHandler = new(mockApplicationDbContext, mapper, new Mock<ILogger<CreateLocationCommandHandler>>().Object);
-        await createHandler.Handle(createcommand, new CancellationToken());
-        UpdateLocationCommand command = new(testLocation);
+        var createCommand = new CreateLocationCommand(testLocation);
+        var createHandler = new CreateLocationCommandHandler(mockApplicationDbContext, mapper, new Mock<ILogger<CreateLocationCommandHandler>>().Object);
+        await createHandler.Handle(createCommand, new CancellationToken());
+        var command = new UpdateLocationCommand(testLocation);
         var handler = new UpdateLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
@@ -68,15 +68,15 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
+        var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<UpdateLocationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         mockApplicationDbContext.Taxonomies.Add(GetTestTaxonomy());
         await mockApplicationDbContext.SaveChangesAsync();
         var testLocation = GetTestLocationDto();
-        CreateLocationCommand createcommand = new(testLocation);
-        CreateLocationCommandHandler createHandler = new(mockApplicationDbContext, mapper, new Mock<ILogger<CreateLocationCommandHandler>>().Object);
-        await createHandler.Handle(createcommand, new CancellationToken());
+        var createCommand = new CreateLocationCommand(testLocation);
+        var createHandler = new CreateLocationCommandHandler(mockApplicationDbContext, mapper, new Mock<ILogger<CreateLocationCommandHandler>>().Object);
+        await createHandler.Handle(createCommand, new CancellationToken());
 
         var physicalAddresses = new List<PhysicalAddressDto>
         {
@@ -103,7 +103,7 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
 
         var updateLocation = new LocationDto(testLocation.Id, testLocation.Name, testLocation.Description, testLocation.Latitude, testLocation.Longitude, physicalAddresses, newTaxonomyList, new List<LinkContactDto>());
 
-        UpdateLocationCommand command = new(updateLocation);
+        var command = new UpdateLocationCommand(updateLocation);
         var handler = new UpdateLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
@@ -120,7 +120,7 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
+        var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<UpdateLocationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         mockApplicationDbContext.Taxonomies.Add(GetTestTaxonomy());
@@ -128,7 +128,7 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         var testLocation = GetTestLocationDto();
         var updateLocation = new LocationDto("d3948216-3b71-49a4-86b0-0d6d63758a3c", testLocation.Name, testLocation.Description, testLocation.Latitude, testLocation.Longitude, testLocation.PhysicalAddresses, testLocation.LinkTaxonomies, new List<LinkContactDto>());
 
-        UpdateLocationCommand command = new(updateLocation);
+        var command = new UpdateLocationCommand(updateLocation);
         var handler = new UpdateLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
@@ -141,7 +141,7 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
     {
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
+        var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateLocationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         var testLocation = GetTestLocationDto();
@@ -149,8 +149,8 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         mockApplicationDbContext.Locations.Add(entity);
         await mockApplicationDbContext.SaveChangesAsync();
 
-        CreateLocationCommand command = new(testLocation);
-        CreateLocationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
+        var command = new CreateLocationCommand(testLocation);
+        var handler = new CreateLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
         //Assert

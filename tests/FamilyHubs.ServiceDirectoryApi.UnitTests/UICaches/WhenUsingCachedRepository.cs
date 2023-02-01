@@ -22,7 +22,7 @@ public class TestResult : IAggregateRoot
 
 public class TestSpecificationWithResult : ISpecification<TestEntity, TestResult>
 {
-    private bool IsCacheEnabled;
+    private bool _isCacheEnabled;
     public ISpecificationBuilder<TestEntity, TestResult> Query => throw new NotImplementedException();
 
     public Expression<Func<TestEntity, TestResult>>? Selector => throw new NotImplementedException();
@@ -45,17 +45,14 @@ public class TestSpecificationWithResult : ISpecification<TestEntity, TestResult
 
     public int? Skip => throw new NotImplementedException();
 
-    public bool CacheEnabled { get { return IsCacheEnabled; } }
+    public bool CacheEnabled => _isCacheEnabled;
 
     public void SetCacheEnabled(bool isCacheEnabled)
     {
-        IsCacheEnabled = isCacheEnabled;
+        _isCacheEnabled = isCacheEnabled;
     }
 
-    public string? CacheKey
-    {
-        get { return "Test"; }
-    }
+    public string? CacheKey => "Test";
 
     public bool AsNoTracking => throw new NotImplementedException();
 
@@ -87,7 +84,7 @@ public class TestSpecificationWithResult : ISpecification<TestEntity, TestResult
 
 public class TestSpecification : ISpecification<TestEntity>
 {
-    private bool IsCacheEnabled;
+    private bool _isCacheEnabled;
     public ISpecificationBuilder<TestEntity> Query => throw new NotImplementedException();
 
     public IDictionary<string, object> Items { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -108,17 +105,14 @@ public class TestSpecification : ISpecification<TestEntity>
 
     public Func<IEnumerable<TestEntity>, IEnumerable<TestEntity>>? PostProcessingAction => throw new NotImplementedException();
 
-    public bool CacheEnabled { get { return IsCacheEnabled; } }
+    public bool CacheEnabled => _isCacheEnabled;
 
     public void SetCacheEnabled(bool isCacheEnabled)
     {
-        IsCacheEnabled = isCacheEnabled;
+        _isCacheEnabled = isCacheEnabled;
     }
 
-    public string? CacheKey
-    {
-        get { return "Test"; }
-    }
+    public string? CacheKey => "Test";
 
     public bool AsNoTracking => throw new NotImplementedException();
 
@@ -147,10 +141,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
 
@@ -173,10 +167,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         var list = new List<TestEntity> { new TestEntity { Id = 1, Name = "Test1" }, new TestEntity { Id = 2, Name = "Test2" } };
@@ -186,7 +180,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
 
         // Act
-        var result = await repository.ListAsync();
+        await repository.ListAsync();
 
         // Assert
         mockSourceRepository.Verify(x => x.ListAsync(It.IsAny<CancellationToken>()), Times.Once);
@@ -198,10 +192,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         var list = new List<TestEntity> { new TestEntity { Id = 1, Name = "Test1" }, new TestEntity { Id = 2, Name = "Test2" } };
@@ -214,7 +208,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
         ISpecification<TestEntity> specification = spec;
 
         // Act
-        var result = await repository.ListAsync(specification);
+        await repository.ListAsync(specification);
 
         // Assert
         mockSourceRepository.Verify(x => x.ListAsync(It.IsAny<ISpecification<TestEntity>>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -226,10 +220,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         var list = new List<TestEntity> { new TestEntity { Id = 1, Name = "Test1" }, new TestEntity { Id = 2, Name = "Test2" } };
@@ -240,7 +234,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
         ISpecification<TestEntity> specification = new TestSpecification();
 
         // Act
-        var result = await repository.ListAsync(specification);
+        await repository.ListAsync(specification);
 
         // Assert
         mockSourceRepository.Verify(x => x.ListAsync(It.IsAny<ISpecification<TestEntity>>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -252,13 +246,13 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
-        var list = new List<TestEntity> { new TestEntity { Id = 1, Name = "Test1" }, new TestEntity { Id = 2, Name = "Test2" } };
+        new List<TestEntity> { new TestEntity { Id = 1, Name = "Test1" }, new TestEntity { Id = 2, Name = "Test2" } };
         mockSourceRepository.Setup(x => x.ListAsync(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<TestResult>());
 
@@ -268,7 +262,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
         ISpecification<TestEntity, TestResult> specification = spec;
 
         // Act
-        var result = await repository.ListAsync(specification);
+        await repository.ListAsync(specification);
 
         // Assert
         mockSourceRepository.Verify(x => x.ListAsync(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -280,13 +274,13 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
-        var list = new List<TestEntity> { new TestEntity { Id = 1, Name = "Test1" }, new TestEntity { Id = 2, Name = "Test2" } };
+        new List<TestEntity> { new TestEntity { Id = 1, Name = "Test1" }, new TestEntity { Id = 2, Name = "Test2" } };
         mockSourceRepository.Setup(x => x.ListAsync(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<TestResult>());
 
@@ -294,7 +288,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
         ISpecification<TestEntity, TestResult> specification = new TestSpecificationWithResult();
 
         // Act
-        var result = await repository.ListAsync(specification);
+        await repository.ListAsync(specification);
 
         // Assert
         mockSourceRepository.Verify(x => x.ListAsync(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -306,10 +300,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         mockSourceRepository.Setup(x => x.AddAsync(It.IsAny<TestEntity>(), It.IsAny<CancellationToken>()))
@@ -318,7 +312,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
 
         // Act
-        var result = await repository.AddAsync(entity);
+        await repository.AddAsync(entity);
 
         // Assert
         mockSourceRepository.Verify(x => x.AddAsync(It.IsAny<TestEntity>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -330,14 +324,14 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
-        CancellationTokenSource source = new CancellationTokenSource();
+        var source = new CancellationTokenSource();
 
 
         // Act 
@@ -345,7 +339,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
 
 
         // Assert
-        var exception = await Assert.ThrowsAsync<NotImplementedException>(act);
+        await Assert.ThrowsAsync<NotImplementedException>(act);
         myCache.Dispose();
     }
 
@@ -354,10 +348,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         var list = new List<TestEntity> { new TestEntity { Id = 1, Name = "Test1" }, new TestEntity { Id = 2, Name = "Test2" } };
@@ -365,7 +359,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
             .ReturnsAsync(list);
 
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
-        CancellationTokenSource source = new CancellationTokenSource();
+        var source = new CancellationTokenSource();
         ISpecification<TestEntity> spec = default!;
 
 
@@ -374,7 +368,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
 
 
         // Assert
-        var exception = await Assert.ThrowsAsync<NotImplementedException>(act);
+        await Assert.ThrowsAsync<NotImplementedException>(act);
         myCache.Dispose();
     }
 
@@ -383,10 +377,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
 
@@ -394,7 +388,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
         Func<Task> act = () => repository.CountAsync();
 
         // Assert
-        var exception = await Assert.ThrowsAsync<NotImplementedException>(act);
+        await Assert.ThrowsAsync<NotImplementedException>(act);
         myCache.Dispose();
     }
 
@@ -403,17 +397,17 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
-        CancellationTokenSource source = new CancellationTokenSource();
+        var source = new CancellationTokenSource();
         ISpecification<TestEntity> spec = default!;
 
         // Act
-        var result = await repository.CountAsync(spec, source.Token);
+        await repository.CountAsync(spec, source.Token);
 
         // Assert
         mockSourceRepository.Verify(x => x.CountAsync(It.IsAny<ISpecification<TestEntity>>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -425,10 +419,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         mockSourceRepository.Setup(x => x.DeleteAsync(It.IsAny<TestEntity>(), It.IsAny<CancellationToken>()));
@@ -448,10 +442,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         var list = new List<TestEntity> { new TestEntity { Id = 1, Name = "Test1" }, new TestEntity { Id = 2, Name = "Test2" } };
@@ -472,17 +466,17 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         mockSourceRepository.Setup(x => x.FirstOrDefaultAsync(It.IsAny<ISpecification<TestEntity>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(entity);
 
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
-        CancellationTokenSource source = new CancellationTokenSource();
+        var source = new CancellationTokenSource();
         ISpecification<TestEntity> spec = default!;
 
 
@@ -491,7 +485,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
 
 
         // Assert
-        var exception = await Assert.ThrowsAsync<NotImplementedException>(act);
+        await Assert.ThrowsAsync<NotImplementedException>(act);
         myCache.Dispose();
     }
 
@@ -500,17 +494,17 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         mockSourceRepository.Setup(x => x.FirstOrDefaultAsync(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new TestResult());
 
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
-        CancellationTokenSource source = new CancellationTokenSource();
+        var source = new CancellationTokenSource();
         ISpecification<TestEntity, TestResult> spec = default!;
 
 
@@ -519,7 +513,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
 
 
         // Assert
-        var exception = await Assert.ThrowsAsync<NotImplementedException>(act);
+        await Assert.ThrowsAsync<NotImplementedException>(act);
         myCache.Dispose();
     }
 
@@ -528,10 +522,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
 #pragma warning disable CS0612
@@ -540,7 +534,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
 #pragma warning restore CS0612
 
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
-        CancellationTokenSource source = new CancellationTokenSource();
+        var source = new CancellationTokenSource();
         ISpecification<TestEntity> spec = default!;
 
 
@@ -549,7 +543,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
 
 
         // Assert
-        var exception = await Assert.ThrowsAsync<NotImplementedException>(act);
+        await Assert.ThrowsAsync<NotImplementedException>(act);
         myCache.Dispose();
     }
 
@@ -558,10 +552,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
 #pragma warning disable CS0612 
@@ -572,7 +566,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
 
 
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
-        CancellationTokenSource source = new CancellationTokenSource();
+        var source = new CancellationTokenSource();
         ISpecification<TestEntity, TestResult> spec = default!;
 
 
@@ -581,7 +575,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
 
 
         // Assert
-        var exception = await Assert.ThrowsAsync<NotImplementedException>(act);
+        await Assert.ThrowsAsync<NotImplementedException>(act);
         myCache.Dispose();
     }
 
@@ -590,17 +584,17 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         mockSourceRepository.Setup(x => x.SingleOrDefaultAsync(It.IsAny<ISingleResultSpecification<TestEntity>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(entity);
 
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
-        CancellationTokenSource source = new CancellationTokenSource();
+        var source = new CancellationTokenSource();
         ISingleResultSpecification<TestEntity> spec = default!;
 
 
@@ -609,7 +603,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
 
 
         // Assert
-        var exception = await Assert.ThrowsAsync<NotImplementedException>(act);
+        await Assert.ThrowsAsync<NotImplementedException>(act);
         myCache.Dispose();
     }
 
@@ -618,17 +612,17 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         mockSourceRepository.Setup(x => x.FirstOrDefaultAsync(It.IsAny<ISingleResultSpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new TestResult());
 
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
-        CancellationTokenSource source = new CancellationTokenSource();
+        var source = new CancellationTokenSource();
         ISingleResultSpecification<TestEntity, TestResult> spec = default!;
 
 
@@ -637,7 +631,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
 
 
         // Assert
-        var exception = await Assert.ThrowsAsync<NotImplementedException>(act);
+        await Assert.ThrowsAsync<NotImplementedException>(act);
         myCache.Dispose();
     }
 
@@ -646,10 +640,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         mockSourceRepository.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()));
@@ -669,10 +663,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
     {
         // Arrange
         var entity = new TestEntity { Id = 1, Name = "Test" };
-        MemoryCache myCache = new MemoryCache(new MemoryCacheOptions());
+        var myCache = new MemoryCache(new MemoryCacheOptions());
         myCache.CreateEntry(entity);
         var mockLogger = new Mock<ILogger<CachedRepository<TestEntity>>>();
-        ApplicationDbContext appDbContext = GetApplicationDbContext();
+        var appDbContext = GetApplicationDbContext();
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         mockSourceRepository.Setup(x => x.UpdateAsync(It.IsAny<TestEntity>(), It.IsAny<CancellationToken>()));

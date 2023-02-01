@@ -7,7 +7,7 @@ public class TestData
 {
     public IReadOnlyCollection<Organisation> SeedOrganisations()
     {
-        List<Organisation> organisations = new()
+        List<Organisation> organisations = new List<Organisation>
         {
             GetTestCountyCouncil()
         };
@@ -27,10 +27,12 @@ public class TestData
             "https://www.testcouncil.gov.uk/",
             new List<Review>(),
             GetBristolCountyCouncilServices("dcf1d9a2-004f-40e8-82aa-8a2660765d6e"),
-            new List<LinkContact>());
+            new List<LinkContact>())
+        {
+            CreatedBy = "TestSystem",
+            Created = DateTime.UtcNow
+        };
 
-        bristolCountyCouncil.CreatedBy = "TestSystem";
-        bristolCountyCouncil.Created = DateTime.UtcNow;
         if (bristolCountyCouncil.Services != null)
         {
             bristolCountyCouncil.Services.ElementAt(0).CreatedBy = "TestSystem";
@@ -52,7 +54,7 @@ public class TestData
 
     private List<Service> GetBristolCountyCouncilServices(string parentId)
     {
-        return new()
+        return new List<Service>
         {
             new Service(
                 "9f01190b-429c-41fd-ba38-936d2995398b",

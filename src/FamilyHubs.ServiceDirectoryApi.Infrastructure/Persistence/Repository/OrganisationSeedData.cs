@@ -13,7 +13,7 @@ public class OrganisationSeedData
     }
     public IReadOnlyCollection<AdminArea> SeedOrganisationAdminDistrict()
     {
-        List<AdminArea> adminDistricts = new()
+        List<AdminArea> adminDistricts = new List<AdminArea>
         {
             new AdminArea(Guid.NewGuid().ToString(),"E06000023", "72e653e8-1d05-4821-84e9-9177571a6013"), //Bristol
             new AdminArea(Guid.NewGuid().ToString(), "E10000017", "fc51795e-ea95-4af0-a0b2-4c06d5463678"), //Lancashire
@@ -28,7 +28,7 @@ public class OrganisationSeedData
 
     public IReadOnlyCollection<OrganisationType> SeedOrganisationTypes()
     {
-        List<OrganisationType> serviceTypes = new()
+        List<OrganisationType> serviceTypes = new List<OrganisationType>
         {
             new OrganisationType("1", "LA", "Local Authority"),
             new OrganisationType("2", "VCFS", "Voluntary, Charitable, Faith Sector"),
@@ -40,7 +40,7 @@ public class OrganisationSeedData
 
     public IReadOnlyCollection<ServiceType> SeedServiceTypes()
     {
-        List<ServiceType> serviceTypes = new()
+        List<ServiceType> serviceTypes = new List<ServiceType>
         {
             new ServiceType("1", "Information Sharing", ""),
             new ServiceType("2", "Family Experience", "")
@@ -51,7 +51,7 @@ public class OrganisationSeedData
 
     public IReadOnlyCollection<Taxonomy> SeedTaxonomies()
     {
-        List<Taxonomy> taxonomies = new()
+        List<Taxonomy> taxonomies = new List<Taxonomy>
         {
             // categories and sub-categories
             new Taxonomy("16f3a451-e88d-4ad0-b53f-c8925d1cc9e4", "Activities, clubs and groups", "Activities, clubs and groups", null),
@@ -117,7 +117,7 @@ public class OrganisationSeedData
     }
     public IReadOnlyCollection<Organisation> SeedOrganisations(OrganisationType organisationType)
     {
-        List<Organisation> organisations = new()
+        List<Organisation> organisations = new List<Organisation>
         {
             GetBristolCountyCouncil(organisationType),
             new Organisation(
@@ -150,7 +150,7 @@ public class OrganisationSeedData
 
     private List<Service> GetSalfordHubsAndServices(string parentId)
     {
-        List<Service> services = new();
+        List<Service> services = new List<Service>();
         if (!IsProduction)
         {
             services.AddRange(GetSalfordFamilyService(parentId));
@@ -362,8 +362,7 @@ public class OrganisationSeedData
                     new ServiceAtLocation(
                         "e234f5b5-fb74-4e68-bd29-88e736bfc317",
                         new Location("964ea451-6146-4add-913e-dff23a1bd7b6", "Central Family Hub", "Broughton Hub", 53.507025D, -2.259764D,
-                            new List<LinkTaxonomy> {new
-                            ("CD2324A3-AB3F-4707-9D38-34DFB7722B62",
+                            new List<LinkTaxonomy> {new LinkTaxonomy("CD2324A3-AB3F-4707-9D38-34DFB7722B62",
                                 "964ea451-6146-4add-913e-dff23a1bd7b6",
                                 LinkType.Location,
                                 new Taxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
@@ -429,8 +428,7 @@ public class OrganisationSeedData
                     new ServiceAtLocation(
                         "2995a7a0-6552-4c71-9e91-7f860d5a993e",
                         new Location("74c37f53-dbc0-4958-8c97-baee41a022bf", "North Family Hub", "Swinton Gateway", 53.5124278D, -2.342044D,
-                            new List<LinkTaxonomy> {new
-                            ("3A724AE8-8E9E-4AC5-95BC-E5B07795A8DD",
+                            new List<LinkTaxonomy> {new LinkTaxonomy("3A724AE8-8E9E-4AC5-95BC-E5B07795A8DD",
                                 "74c37f53-dbc0-4958-8c97-baee41a022bf",
                                 LinkType.Location,
                                 new Taxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
@@ -536,7 +534,7 @@ public class OrganisationSeedData
             return new List<Service>();
         }
 
-        return new()
+        return new List<Service>
         {
             new Service(
                 "4591d551-0d6a-4c0d-b109-002e67318231",

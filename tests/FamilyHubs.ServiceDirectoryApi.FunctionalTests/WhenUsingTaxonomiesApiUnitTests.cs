@@ -88,7 +88,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
 
         response.EnsureSuccessStatusCode();
 
-        var stringResult = await response.Content.ReadAsStringAsync();
+        await response.Content.ReadAsStringAsync();
 
         var updatedtaxonomy = new TaxonomyDto(commandtaxonomy.Id, "Test-IsUpdateTaxonomy", "Test-IsUpDateVocab", null);
 

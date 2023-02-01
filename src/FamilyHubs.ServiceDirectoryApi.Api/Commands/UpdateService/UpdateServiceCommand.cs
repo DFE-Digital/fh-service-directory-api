@@ -152,7 +152,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateEligibility(ICollection<Eligibility> existing, ICollection<EligibilityDto> updated)
     {
-        List<string> currentIds = new();
+        List<string> currentIds = new List<string>();
         foreach (var updatedEligibility in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedEligibility.Id);
@@ -181,8 +181,8 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateServiceAtLocation(ICollection<ServiceAtLocation> existing, ICollection<ServiceAtLocationDto> updated)
     {
-        List<string> list = new();
-        List<string> listAddress = new();
+        List<string> list = new List<string>();
+        List<string> listAddress = new List<string>();
 
         foreach (var updatedServiceLoc in updated)
         {
@@ -312,7 +312,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateHolidaySchedule(ICollection<HolidaySchedule> existing, ICollection<HolidayScheduleDto> updated, ServiceAtLocation? serviceAtLocation)
     {
-        List<string> currentIds = new();
+        List<string> currentIds = new List<string>();
         foreach (var updatedSchedule in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedSchedule.Id);
@@ -343,7 +343,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateRegularSchedule(ICollection<RegularSchedule> existing, ICollection<RegularScheduleDto> updated, ServiceAtLocation? serviceAtLocation)
     {
-        List<string> currentIds = new();
+        List<string> currentIds = new List<string>();
         foreach (var updatedSchedule in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedSchedule.Id);
@@ -379,7 +379,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateServiceArea(ICollection<ServiceArea> existing, ICollection<ServiceAreaDto> updated)
     {
-        List<string> currentIds = new();
+        List<string> currentIds = new List<string>();
         foreach (var updatedServiceArea in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedServiceArea.Id);
@@ -407,7 +407,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateCostOptions(ICollection<CostOption> existing, ICollection<CostOptionDto> updated)
     {
-        List<string> currentIds = new();
+        List<string> currentIds = new List<string>();
         foreach (var updatedCostOption in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedCostOption.Id);
@@ -439,7 +439,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateTaxonomies(ICollection<ServiceTaxonomy> existing, ICollection<ServiceTaxonomyDto> updated)
     {
-        List<string> currentIds = new();
+        List<string> currentIds = new List<string>();
         foreach (var updatedServiceTaxonomy in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedServiceTaxonomy.Id);
@@ -466,7 +466,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateLanguages(ICollection<Language> existing, ICollection<LanguageDto> updated)
     {
-        List<string> currentIds = new();
+        List<string> currentIds = new List<string>();
         foreach (var updatedLanguage in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedLanguage.Id);
@@ -522,7 +522,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateServiceDelivery(ICollection<ServiceDelivery> existing, ICollection<ServiceDeliveryDto> updated)
     {
-        List<string> currentIds = new();
+        List<string> currentIds = new List<string>();
         foreach (var updatedServiceDelivery in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedServiceDelivery.Id);

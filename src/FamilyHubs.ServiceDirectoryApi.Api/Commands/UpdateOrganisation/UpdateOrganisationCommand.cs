@@ -75,7 +75,8 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
 
                     if (existingChild != null)
                     {
-                        UpdateServiceCommand updateServiceCommand = new(existingChild.Id, childModel);
+                        var updateServiceCommand =
+                            new UpdateServiceCommand(existingChild.Id, childModel);
                         await _mediator.Send(updateServiceCommand, cancellationToken);
                     }
                     else

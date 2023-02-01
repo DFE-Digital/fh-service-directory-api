@@ -21,8 +21,8 @@ public class WhenUsingUiCacheCommands : BaseCreateDbUnitTest
         //Arrange
         var mockApplicationDbContext = GetApplicationDbContext();
         var logger = new Mock<ILogger<CreateUiCacheCommandHandler>>();
-        CreateUiCacheCommand command = new(new UICacheDto("6e23bc85-fff9-49f9-99e4-98160a9a2b56", TestViewModel.GetTestViewModel() ));
-        CreateUiCacheCommandHandler handler = new(mockApplicationDbContext, logger.Object);
+        var command = new CreateUiCacheCommand(new UICacheDto("6e23bc85-fff9-49f9-99e4-98160a9a2b56", TestViewModel.GetTestViewModel()));
+        var handler = new CreateUiCacheCommandHandler(mockApplicationDbContext, logger.Object);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
@@ -37,8 +37,8 @@ public class WhenUsingUiCacheCommands : BaseCreateDbUnitTest
         //Arrange
         var mockApplicationDbContext = GetApplicationDbContext();
         var logger = new Mock<ILogger<CreateUiCacheCommandHandler>>();
-        CreateUiCacheCommand command = new(new UICacheDto("6e23bc85-fff9-49f9-99e4-98160a9a2b56", default!));
-        CreateUiCacheCommandHandler handler = new(mockApplicationDbContext, logger.Object);
+        var command = new CreateUiCacheCommand(new UICacheDto("6e23bc85-fff9-49f9-99e4-98160a9a2b56", default!));
+        var handler = new CreateUiCacheCommandHandler(mockApplicationDbContext, logger.Object);
 
 
         // Act
@@ -64,8 +64,8 @@ public class WhenUsingUiCacheCommands : BaseCreateDbUnitTest
 
         var newViewModel = JsonConvert.SerializeObject(testViewModel);
 
-        UpdateUiCacheCommand command = new(id, new UICacheDto(id, newViewModel ));
-        UpdateUiCacheCommandHandler handler = new(mockApplicationDbContext, logger.Object);
+        var command = new UpdateUiCacheCommand(id, new UICacheDto(id, newViewModel));
+        var handler = new UpdateUiCacheCommandHandler(mockApplicationDbContext, logger.Object);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
@@ -83,8 +83,8 @@ public class WhenUsingUiCacheCommands : BaseCreateDbUnitTest
         var logger = new Mock<ILogger<UpdateUiCacheCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
 
-        UpdateUiCacheCommand command = new(id, new UICacheDto(id, default!));
-        UpdateUiCacheCommandHandler handler = new(mockApplicationDbContext, logger.Object);
+        var command = new UpdateUiCacheCommand(id, new UICacheDto(id, default!));
+        var handler = new UpdateUiCacheCommandHandler(mockApplicationDbContext, logger.Object);
 
 
         // Act
@@ -102,8 +102,8 @@ public class WhenUsingUiCacheCommands : BaseCreateDbUnitTest
         mockApplicationDbContext.UiCaches.Add(new UiCache(id, TestViewModel.GetTestViewModel()));
         await mockApplicationDbContext.SaveChangesAsync();
 
-        UpdateUiCacheCommand command = new(id, default!); //new UICacheDto(id, newViewModel));
-        UpdateUiCacheCommandHandler handler = new(mockApplicationDbContext, logger.Object);
+        var command = new UpdateUiCacheCommand(id, default!); //new UICacheDto(id, newViewModel));
+        var handler = new UpdateUiCacheCommandHandler(mockApplicationDbContext, logger.Object);
 
         // Act
         //Assert
@@ -119,7 +119,7 @@ public class WhenUsingUiCacheCommands : BaseCreateDbUnitTest
         mockApplicationDbContext.UiCaches.Add(new UiCache(id, TestViewModel.GetTestViewModel()));
         await mockApplicationDbContext.SaveChangesAsync();
         var command = new GetUiCacheByIdCommand(id);
-        GetUiCacheByIdCommandHandler handler = new(mockApplicationDbContext);
+        var handler = new GetUiCacheByIdCommandHandler(mockApplicationDbContext);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());

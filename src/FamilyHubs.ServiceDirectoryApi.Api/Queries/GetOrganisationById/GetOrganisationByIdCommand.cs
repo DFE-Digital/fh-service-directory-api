@@ -76,7 +76,7 @@ public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCom
             throw new NotFoundException(nameof(Organisation), request.Id);
         }
 
-        List<ServiceDto> services = new();
+        List<ServiceDto> services = new List<ServiceDto>();
         if (entity.Services != null)
         {
             foreach (var service in entity.Services)

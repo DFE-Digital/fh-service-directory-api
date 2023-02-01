@@ -9,7 +9,7 @@ public class WhenValidatingUpdateOrganisationCommands
     public void ThenShouldNotErrorWhenModelIsValid()
     {
         //Arrange
-        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilRecord();
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilRecord();
         var validator = new UpdateOrganisationCommandValidator();
         var testModel = new UpdateOrganisationCommand("Id", testOrganisation);
 
@@ -24,7 +24,7 @@ public class WhenValidatingUpdateOrganisationCommands
     public void ThenShouldErrorWhenThereIsNoId()
     {
         //Arrange
-        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilRecord();
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilRecord();
         var validator = new UpdateOrganisationCommandValidator();
         var testModel = new UpdateOrganisationCommand("", testOrganisation);
 
@@ -39,7 +39,7 @@ public class WhenValidatingUpdateOrganisationCommands
     public void ThenShouldErrorWhenModelHasNoId()
     {
         //Arrange
-        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilRecord();
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilRecord();
         testOrganisation.Id = string.Empty;
         var validator = new UpdateOrganisationCommandValidator();
         var testModel = new UpdateOrganisationCommand("Id", testOrganisation);
@@ -55,7 +55,7 @@ public class WhenValidatingUpdateOrganisationCommands
     public void ThenShouldErrorWhenModelHasNoName()
     {
         //Arrange
-        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilRecord();
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilRecord();
         testOrganisation.Name = string.Empty;
         var validator = new UpdateOrganisationCommandValidator();
         var testModel = new UpdateOrganisationCommand("Id", testOrganisation);

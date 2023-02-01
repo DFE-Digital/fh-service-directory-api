@@ -92,7 +92,7 @@ public class DtoHelper
         {
             return schedules.Select(x => new HolidayScheduleDto(x.Id, x.Closed, x.ClosesAt, x.StartDate, x.EndDate, x.OpensAt)).ToList();
         }
-        List<HolidayScheduleDto> holidaySchedules = new();
+        List<HolidayScheduleDto> holidaySchedules = new List<HolidayScheduleDto>();
 
         return holidaySchedules;
     }

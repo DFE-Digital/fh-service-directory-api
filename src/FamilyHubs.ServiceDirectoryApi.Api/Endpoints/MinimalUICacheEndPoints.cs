@@ -18,7 +18,7 @@ public class MinimalUiCacheEndPoints
         {
             try
             {
-                CreateUiCacheCommand command = new(request);
+                var command = new CreateUiCacheCommand(request);
                 var result = await mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -34,7 +34,7 @@ public class MinimalUiCacheEndPoints
         {
             try
             {
-                GetUiCacheByIdCommand request = new(id);
+                var request = new GetUiCacheByIdCommand(id);
                 var result = await mediator.Send(request, cancellationToken);
                 return result;
             }
@@ -50,7 +50,7 @@ public class MinimalUiCacheEndPoints
         {
             try
             {
-                UpdateUiCacheCommand command = new(id, request);
+                var command = new UpdateUiCacheCommand(id, request);
                 var result = await mediator.Send(command, cancellationToken);
                 return result;
             }

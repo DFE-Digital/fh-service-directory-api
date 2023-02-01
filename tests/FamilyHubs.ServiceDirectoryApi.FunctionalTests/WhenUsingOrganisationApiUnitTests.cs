@@ -135,7 +135,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(_client.BaseAddress + $"api/organizationAdminCode/{"72e653e8-1d05-4821-84e9-9177571a6013"}"),
+            RequestUri = new Uri(_client.BaseAddress + "api/organizationAdminCode/72e653e8-1d05-4821-84e9-9177571a6013"),
         };
 
         using var response = await _client.SendAsync(request);
@@ -206,7 +206,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
 
     public IReadOnlyCollection<Organisation> GetTestOrganisations()
     {
-        List<Organisation> organisations = new()
+        var organisations = new List<Organisation>
         {
             GetTestCountyCouncil()
         };
@@ -228,9 +228,10 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
             {
                  GetTestCountyCouncilServicesRecord("ba1cca90-b02a-4a0b-afa0-d8aed1083c0d")
             }
-            );
-
-        bristolCountyCouncil.AdminAreaCode = "E06000023";
+            )
+        {
+            AdminAreaCode = "E06000023"
+        };
 
         return bristolCountyCouncil;
     }
@@ -367,6 +368,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
 
         return service;
     }
+
     public static ServiceDto GetTestCountyCouncilServicesCreateRecord(string parentId)
     {
         var contactId = Guid.NewGuid().ToString();
@@ -486,7 +488,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
 
     private List<Service> GetTestCountyCouncilServices()
     {
-        return new()
+        return new List<Service>
         {
             new Service(
                 "c1b5dd80-7506-4424-9711-fe175fa13eb8",

@@ -3,7 +3,6 @@ using FamilyHubs.ServiceDirectory.Api.Commands.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
 using FamilyHubs.ServiceDirectory.Core;
 using FluentAssertions;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -20,23 +19,22 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         IMapper mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
-        var updatelogger = new Mock<ILogger<UpdateServiceCommandHandler>>();
-        var mockMediator = new Mock<ISender>();
-        CreateOrganisationCommand command = new(testOrganisation);
-        CreateOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await handler.Handle(command, new CancellationToken());
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
+        var updateLogger = new Mock<ILogger<UpdateServiceCommandHandler>>();
+        var command = new CreateOrganisationCommand(testOrganisation);
+        var handler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
+        await handler.Handle(command, new CancellationToken());
 
-        var service = WhenUsingOrganisationCommands.GetTestCountyCouncilServicesDto(testOrganisation.Id);
+        var service = TestDataProvider.GetTestCountyCouncilServicesDto(testOrganisation.Id);
 
 
         service.Name = "Unit Test Update Service Name";
         service.Description = "Unit Test Update Service Name";
-        UpdateServiceCommand updatecommand = new(service.Id, service);
-        UpdateServiceCommandHandler updatehandler = new(mockApplicationDbContext, mapper, updatelogger.Object);
+        var updateCommand = new UpdateServiceCommand(service.Id, service);
+        var updateHandler = new UpdateServiceCommandHandler(mockApplicationDbContext, mapper, updateLogger.Object);
 
         //Act
-        var result = await updatehandler.Handle(updatecommand, new CancellationToken());
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();

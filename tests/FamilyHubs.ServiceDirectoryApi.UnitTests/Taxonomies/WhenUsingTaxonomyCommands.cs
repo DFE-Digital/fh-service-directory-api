@@ -20,12 +20,12 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
+        var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateTaxonomyCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         var testTaxonomy = GetTestTaxonomyDto();
-        CreateTaxonomyCommand command = new(testTaxonomy);
-        CreateTaxonomyCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
+        var command = new CreateTaxonomyCommand(testTaxonomy);
+        var handler = new CreateTaxonomyCommandHandler(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
@@ -42,16 +42,14 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         var context = GetApplicationDbContext();
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
+        var mapper = new Mapper(configuration);
         var logger = new Logger<CreateTaxonomyCommandHandler>(new LoggerFactory());
         var handler = new CreateTaxonomyCommandHandler(context, mapper, logger);
         var command = new CreateTaxonomyCommand(default!);
 
         // Act
-        Func<Task> act = () => handler.Handle(command, CancellationToken.None);
-    
         //Assert
-        var exception = await Assert.ThrowsAsync<ArgumentNullException>(act);
+        await Assert.ThrowsAsync<ArgumentNullException>(() => handler.Handle(command, CancellationToken.None));
     }
 
     [Fact]
@@ -64,8 +62,8 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         var testTaxonomy = GetTestTaxonomyDto();
         var logger = new Mock<ILogger<UpdateTaxonomyCommandHandler>>();
 
-        UpdateTaxonomyCommand command = new("a3226044-5c89-4257-8b07-f29745a22e2c", testTaxonomy);
-        UpdateTaxonomyCommandHandler handler = new(mockApplicationDbContext, logger.Object);
+        var command = new UpdateTaxonomyCommand("a3226044-5c89-4257-8b07-f29745a22e2c", testTaxonomy);
+        var handler = new UpdateTaxonomyCommandHandler(mockApplicationDbContext, logger.Object);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
@@ -82,14 +80,14 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         var dbContext = GetApplicationDbContext();
         var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", "Test 1 Vocabulary", null);
         dbContext.Taxonomies.Add(dbTaxonomy);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         var logger = new Mock<ILogger<UpdateTaxonomyCommandHandler>>();
         var handler = new UpdateTaxonomyCommandHandler(dbContext, logger.Object);
         var command = new UpdateTaxonomyCommand("a3226044-5c89-4257-8b07-f29745a22e2c", default!);
 
         // Act
         //Assert
-        var exception = await Assert.ThrowsAsync<NullReferenceException>(() => handler.Handle(command, CancellationToken.None));
+        await Assert.ThrowsAsync<NullReferenceException>(() => handler.Handle(command, CancellationToken.None));
 
     }
 
@@ -103,10 +101,8 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         var command = new UpdateTaxonomyCommand("a3226044-5c89-4257-8b07-f29745a22e2c", default!);
 
         // Act
-        Func<Task> act = () => handler.Handle(command, CancellationToken.None);
-
         //Assert
-        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, CancellationToken.None));
 
     }
 
@@ -119,8 +115,8 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         await mockApplicationDbContext.SaveChangesAsync();
 
 
-        GetTaxonomiesCommand command = new(1, 1, null);
-        GetTaxonomiesCommandHandler handler = new(mockApplicationDbContext);
+        var command = new GetTaxonomiesCommand(1, 1, null);
+        var handler = new GetTaxonomiesCommandHandler(mockApplicationDbContext);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
@@ -138,8 +134,8 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         var mockApplicationDbContext = GetApplicationDbContext();
         var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", "Test 1 Vocabulary", null);
         mockApplicationDbContext.Taxonomies.Add(dbTaxonomy);
-        mockApplicationDbContext.SaveChanges();
-        GetTaxonomiesCommandHandler handler = new(mockApplicationDbContext);
+        await mockApplicationDbContext.SaveChangesAsync();
+        var handler = new GetTaxonomiesCommandHandler(mockApplicationDbContext);
 
         //Act
         var result = await handler.Handle(default!, new CancellationToken());

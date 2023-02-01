@@ -21,7 +21,10 @@ public class MinimalServiceEndPoints
         {
             try
             {
-                GetServicesCommand command = new(serviceType, status, districtCode, minimum_age, maximum_age, given_age, latitude, longtitude, proximity, pageNumber, pageSize, text, serviceDeliveries, isPaidFor, taxonmyIds, languages, canFamilyChooseLocation, isFamilyHub, maxFamilyHubs);
+                var command = new GetServicesCommand(serviceType, status, districtCode, minimum_age,
+                    maximum_age, given_age, latitude, longtitude, proximity, pageNumber, pageSize, text,
+                    serviceDeliveries, isPaidFor, taxonmyIds, languages, canFamilyChooseLocation, isFamilyHub,
+                    maxFamilyHubs);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -37,7 +40,7 @@ public class MinimalServiceEndPoints
         {
             try
             {
-                GetServiceByIdCommand command = new(id);
+                var command = new GetServiceByIdCommand(id);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -53,7 +56,7 @@ public class MinimalServiceEndPoints
         {
             try
             {
-                DeleteServiceByIdCommand command = new(id);
+                var command = new DeleteServiceByIdCommand(id);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -69,7 +72,7 @@ public class MinimalServiceEndPoints
         {
             try
             {
-                GetServicesByOrganisationIdCommand command = new(id);
+                var command = new GetServicesByOrganisationIdCommand(id);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -85,7 +88,7 @@ public class MinimalServiceEndPoints
         {
             try
             {
-                CreateServiceCommand command = new(request);
+                var command = new CreateServiceCommand(request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -101,7 +104,7 @@ public class MinimalServiceEndPoints
         {
             try
             {
-                UpdateServiceCommand command = new(id, request);
+                var command = new UpdateServiceCommand(id, request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }

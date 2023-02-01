@@ -9,7 +9,7 @@ public class WhenValidatingCreateOrganisationCommands
     public void ThenShouldNotErrorWhenModelIsValid()
     {
         //Arrange
-        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var validator = new CreateOrganisationCommandValidator();
         var testModel = new CreateOrganisationCommand(testOrganisation);
 
@@ -24,7 +24,7 @@ public class WhenValidatingCreateOrganisationCommands
     public void ThenShouldErrorWhenModelHasNoId()
     {
         //Arrange
-        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         testOrganisation.Id = string.Empty;
         var validator = new CreateOrganisationCommandValidator();
         var testModel = new CreateOrganisationCommand(testOrganisation);
@@ -40,7 +40,7 @@ public class WhenValidatingCreateOrganisationCommands
     public void ThenShouldErrorWhenModelHasNoName()
     {
         //Arrange
-        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         testOrganisation.Name = string.Empty;
         var validator = new CreateOrganisationCommandValidator();
         var testModel = new CreateOrganisationCommand(testOrganisation);

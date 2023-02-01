@@ -19,7 +19,7 @@ public class MinimalTaxonomyEndPoints
         {
             try
             {
-                CreateTaxonomyCommand command = new(request);
+                var command = new CreateTaxonomyCommand(request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -35,7 +35,7 @@ public class MinimalTaxonomyEndPoints
         {
             try
             {
-                UpdateTaxonomyCommand command = new(id, request);
+                var command = new UpdateTaxonomyCommand(id, request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -51,7 +51,7 @@ public class MinimalTaxonomyEndPoints
         {
             try
             {
-                GetTaxonomiesCommand command = new(pageNumber, pageSize, text);
+                var command = new GetTaxonomiesCommand(pageNumber, pageSize, text);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }

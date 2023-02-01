@@ -17,7 +17,7 @@ public class MinimalLocationEndPoints
         {
             try
             {
-                CreateLocationCommand command = new(request);
+                var command = new CreateLocationCommand(request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -33,7 +33,7 @@ public class MinimalLocationEndPoints
         {
             try
             {
-                UpdateLocationCommand command = new(request);
+                var command = new UpdateLocationCommand(request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }

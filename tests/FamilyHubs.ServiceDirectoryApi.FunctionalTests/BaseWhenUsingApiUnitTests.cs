@@ -18,7 +18,7 @@ public abstract class BaseWhenUsingApiUnitTests
                  .AddEnvironmentVariables()
                  .Build();
 
-        List<Claim> authClaims = new() { new Claim(ClaimTypes.Role, "LAAdmin") };
+        List<Claim> authClaims = new List<Claim> { new Claim(ClaimTypes.Role, "LAAdmin") };
         _token = CreateToken(authClaims, config);
 
         var webAppFactory = new MyWebApplicationFactory();

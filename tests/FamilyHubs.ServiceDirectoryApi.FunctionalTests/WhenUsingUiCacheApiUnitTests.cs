@@ -9,14 +9,14 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
 [Collection("Sequential")]
-public class WhenUsingUICacheApiUnitTests : BaseWhenUsingApiUnitTests
+public class WhenUsingUiCacheApiUnitTests : BaseWhenUsingApiUnitTests
 {
 #if DEBUG
     [Fact]
 #else
     [Fact(Skip = "This test should be run locally")]
 #endif
-    public async Task ThenTheUICacheIsCreated()
+    public async Task ThenTheUiCacheIsCreated()
     {
         var command = new UICacheDto(Guid.NewGuid().ToString(), GetTestViewModel());
 
@@ -44,9 +44,9 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingApiUnitTests
 #else
     [Fact(Skip = "This test should be run locally")]
 #endif
-    public async Task ThenTheUICacheIsUpdated()
+    public async Task ThenTheUiCacheIsUpdated()
     {
-        var id = await CreateUICache();
+        var id = await CreateUiCache();
 
         var testViewModel = new TestViewModel
         {
@@ -82,9 +82,9 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingApiUnitTests
 #else
     [Fact(Skip = "This test should be run locally")]
 #endif
-    public async Task ThenGetUICacheById()
+    public async Task ThenGetUiCacheById()
     {
-        var id = await CreateUICache();
+        var id = await CreateUiCache();
 
         var request = new HttpRequestMessage
         {
@@ -106,7 +106,7 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingApiUnitTests
         retVal.Id.Should().Be(id);
     }
 
-    private async Task<string> CreateUICache()
+    private async Task<string> CreateUiCache()
     {
         var command = new UICacheDto(Guid.NewGuid().ToString(), GetTestViewModel());
 
@@ -121,7 +121,7 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingApiUnitTests
 
         var response = await _client.SendAsync(request);
 
-        var contentString = await response.Content.ReadAsStringAsync();
+        await response.Content.ReadAsStringAsync();
 
         response.EnsureSuccessStatusCode();
 

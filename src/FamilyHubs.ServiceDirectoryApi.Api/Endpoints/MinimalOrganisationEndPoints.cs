@@ -21,7 +21,7 @@ public class MinimalOrganisationEndPoints
         {
             try
             {
-                CreateOrganisationCommand command = new(request);
+                var command = new CreateOrganisationCommand(request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -37,7 +37,7 @@ public class MinimalOrganisationEndPoints
         {
             try
             {
-                GetOrganisationByIdCommand request = new()
+                var request = new GetOrganisationByIdCommand
                 {
                     Id = id
                 };
@@ -56,7 +56,7 @@ public class MinimalOrganisationEndPoints
         {
             try
             {
-                ListOrganisationCommand request = new();
+                var request = new ListOrganisationCommand();
                 var result = await _mediator.Send(request, cancellationToken);
                 return result;
             }
@@ -72,7 +72,7 @@ public class MinimalOrganisationEndPoints
         {
             try
             {
-                UpdateOrganisationCommand command = new(id, request);
+                var command = new UpdateOrganisationCommand(id, request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -88,7 +88,7 @@ public class MinimalOrganisationEndPoints
         {
             try
             {
-                GetOrganisationTypesCommand request = new();
+                var request = new GetOrganisationTypesCommand();
                 var result = await _mediator.Send(request, cancellationToken);
                 return result;
             }
@@ -104,7 +104,8 @@ public class MinimalOrganisationEndPoints
         {
             try
             {
-                GetOrganisationAdminByOrganisationIdCommand request = new(id);
+                var request =
+                    new GetOrganisationAdminByOrganisationIdCommand(id);
                 var result = await _mediator.Send(request, cancellationToken);
                 return result;
             }

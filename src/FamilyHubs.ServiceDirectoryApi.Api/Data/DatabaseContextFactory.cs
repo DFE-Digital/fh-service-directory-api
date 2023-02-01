@@ -44,7 +44,9 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<ApplicationDbC
                 break;
         }
 
-        AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor = new(new CurrentUserService(new HttpContextAccessor()), new DateTimeService());
+        var auditableEntitySaveChangesInterceptor =
+            new AuditableEntitySaveChangesInterceptor(new CurrentUserService(new HttpContextAccessor()),
+                new DateTimeService());
 
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         return new ApplicationDbContext(builder.Options, null, auditableEntitySaveChangesInterceptor);
