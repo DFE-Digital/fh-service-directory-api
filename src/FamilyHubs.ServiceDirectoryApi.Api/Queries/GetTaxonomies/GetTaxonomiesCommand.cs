@@ -15,9 +15,9 @@ public class GetTaxonomiesCommand : IRequest<PaginatedList<TaxonomyDto>>
         Text = text;
     }
 
-    public int PageNumber { get; set; } = 1;
-    public int PageSize { get; set; } = 10;
-    public string? Text { get; set; }
+    public int PageNumber { get; } = 1;
+    public int PageSize { get; } = 10;
+    public string? Text { get; }
 }
 
 public class GetTaxonomiesCommandHandler : IRequestHandler<GetTaxonomiesCommand, PaginatedList<TaxonomyDto>>

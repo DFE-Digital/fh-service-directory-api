@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Core.Events;
-using FamilyHubs.ServiceDirectory.Core.Interfaces.Commands;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -9,14 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Api.Commands.CreateOrganisation;
 
-public class CreateOrganisationCommand : IRequest<string>, ICreateOrganisationCommand
+public class CreateOrganisationCommand : IRequest<string>
 {
     public CreateOrganisationCommand(OrganisationWithServicesDto organisation)
     {
         Organisation = organisation;
     }
 
-    public OrganisationWithServicesDto Organisation { get; init; }
+    public OrganisationWithServicesDto Organisation { get; }
 }
 
 public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisationCommand, string>
@@ -179,7 +178,7 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred creating organisation. {exceptionMessage}", ex.Message);
-            throw new Exception(ex.Message, ex);
+            throw;
         }
 
         return request.Organisation.Id;

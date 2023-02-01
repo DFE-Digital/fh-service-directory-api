@@ -15,7 +15,7 @@ public class CreateServiceCommand : IRequest<string>
         Service = service;
     }
 
-    public ServiceDto Service { get; init; }
+    public ServiceDto Service { get; }
 }
 
 public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand, string>
@@ -119,7 +119,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred creating taxonomy. {exceptionMessage}", ex.Message);
-            throw new Exception(ex.Message, ex);
+            throw;
         }
 
         return request.Service.Id;

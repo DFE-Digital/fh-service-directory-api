@@ -15,7 +15,7 @@ public class GetServiceByIdCommand : IRequest<ServiceDto>
         Id = id;
     }
 
-    public string Id { get; set; }
+    public string Id { get; }
 }
 
 public class GetServiceByIdCommandHandler : IRequestHandler<GetServiceByIdCommand, ServiceDto>

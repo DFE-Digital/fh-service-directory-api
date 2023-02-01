@@ -51,7 +51,7 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         Func<Task> act = () => handler.Handle(command, CancellationToken.None);
     
         //Assert
-        var exception = await Assert.ThrowsAsync<Exception>(act);
+        var exception = await Assert.ThrowsAsync<ArgumentNullException>(act);
     }
 
     [Fact]
@@ -88,10 +88,8 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         var command = new UpdateTaxonomyCommand("a3226044-5c89-4257-8b07-f29745a22e2c", default!);
 
         // Act
-        Func<Task> act = () => handler.Handle(command, CancellationToken.None);
-
         //Assert
-        var exception = await Assert.ThrowsAsync<Exception>(act);
+        var exception = await Assert.ThrowsAsync<NullReferenceException>(() => handler.Handle(command, CancellationToken.None));
 
     }
 

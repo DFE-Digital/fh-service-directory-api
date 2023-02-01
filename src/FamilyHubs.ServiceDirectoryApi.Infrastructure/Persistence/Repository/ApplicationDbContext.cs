@@ -35,7 +35,7 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository
             optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
         }
 
-        public DbSet<UICache> UICaches => Set<UICache>();
+        public DbSet<UiCache> UiCaches => Set<UiCache>();
         public DbSet<AccessibilityForDisabilities> AccessibilityForDisabilities => Set<AccessibilityForDisabilities>();
         public DbSet<Contact> Contacts => Set<Contact>();
         public DbSet<CostOption> CostOptions => Set<CostOption>();

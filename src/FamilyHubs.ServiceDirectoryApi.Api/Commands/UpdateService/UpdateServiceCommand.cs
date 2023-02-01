@@ -19,9 +19,9 @@ public class UpdateServiceCommand : IRequest<string>
         Service = service;
     }
 
-    public ServiceDto Service { get; init; }
+    public ServiceDto Service { get; }
 
-    public string Id { get; set; }
+    public string Id { get; }
 }
 
 public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand, string>
@@ -144,7 +144,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred updating organisation. {exceptionMessage}", ex.Message);
-            throw new Exception(ex.Message, ex);
+            throw;
         }
 
         return entity.Id;

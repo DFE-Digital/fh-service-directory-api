@@ -5,34 +5,34 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FamilyHubs.ServiceDirectory.Api.Queries.GetUICacheById;
+namespace FamilyHubs.ServiceDirectory.Api.Queries.GetUiCacheById;
 
-public class GetUICacheByIdCommand : IRequest<UICacheDto>
+public class GetUiCacheByIdCommand : IRequest<UICacheDto>
 {
-    public GetUICacheByIdCommand(string id)
+    public GetUiCacheByIdCommand(string id)
     {
         Id = id;
     }
 
-    public string Id { get; init; } = default!;
+    public string Id { get; }
 }
 
-public class GetUICacheByIdCommandHandler : IRequestHandler<GetUICacheByIdCommand, UICacheDto>
+public class GetUiCacheByIdCommandHandler : IRequestHandler<GetUiCacheByIdCommand, UICacheDto>
 {
     private readonly ApplicationDbContext _context;
 
-    public GetUICacheByIdCommandHandler(ApplicationDbContext context)
+    public GetUiCacheByIdCommandHandler(ApplicationDbContext context)
     {
         _context = context;
     }
-    public async Task<UICacheDto> Handle(GetUICacheByIdCommand request, CancellationToken cancellationToken)
+    public async Task<UICacheDto> Handle(GetUiCacheByIdCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.UICaches
+        var entity = await _context.UiCaches
            .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {
-            throw new NotFoundException(nameof(UICache), request.Id);
+            throw new NotFoundException(nameof(UiCache), request.Id);
         }
 
         var result = new UICacheDto(entity.Id, entity.Value);

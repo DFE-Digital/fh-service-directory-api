@@ -13,7 +13,7 @@ public class GetOrganisationAdminByOrganisationIdCommand : IRequest<string>
         OrganisationId = organisationId;
     }
 
-    public string OrganisationId { get; init; }
+    public string OrganisationId { get; }
 }
 
 public class GetOrganisationAdminByOrganisationIdCommandHandler : IRequestHandler<GetOrganisationAdminByOrganisationIdCommand, string>

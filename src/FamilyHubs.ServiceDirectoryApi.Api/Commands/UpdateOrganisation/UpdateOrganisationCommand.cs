@@ -18,9 +18,9 @@ public class UpdateOrganisationCommand : IRequest<string>
         Organisation = organisation;
     }
 
-    public OrganisationWithServicesDto Organisation { get; init; }
+    public OrganisationWithServicesDto Organisation { get; }
 
-    public string Id { get; set; }
+    public string Id { get; }
 }
 
 public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisationCommand, string>
@@ -142,7 +142,7 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred updating organisation. {exceptionMessage}", ex.Message);
-            throw new Exception(ex.Message, ex);
+            throw;
         }
 
         return entity.Id;

@@ -228,7 +228,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
 
         // Act 
         // Assert
-        await Assert.ThrowsAsync<Exception>(() => handler.Handle(command, new CancellationToken()));
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, new CancellationToken()));
 
     }
 

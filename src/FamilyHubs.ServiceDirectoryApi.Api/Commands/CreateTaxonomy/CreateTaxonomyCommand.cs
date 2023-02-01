@@ -14,7 +14,7 @@ public class CreateTaxonomyCommand : IRequest<string>
         Taxonomy = taxonomy;
     }
 
-    public TaxonomyDto Taxonomy { get; init; }
+    public TaxonomyDto Taxonomy { get; }
 }
 
 public class CreateTaxonomyCommandHandler : IRequestHandler<CreateTaxonomyCommand, string>
@@ -46,7 +46,7 @@ public class CreateTaxonomyCommandHandler : IRequestHandler<CreateTaxonomyComman
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred creating taxonomy. {exceptionMessage}", ex.Message);
-            throw new Exception(ex.Message, ex);
+            throw;
         }
 
         return request.Taxonomy.Id;

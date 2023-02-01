@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace FamilyHubs.ServiceDirectory.Api.Commands.UpdateUICache;
+namespace FamilyHubs.ServiceDirectory.Api.Commands.UpdateUiCache;
 
-public class UpdateUICacheCommandValidator : AbstractValidator<UpdateUICacheCommand>
+public class UpdateUiCacheCommandValidator : AbstractValidator<UpdateUiCacheCommand>
 {
-    public UpdateUICacheCommandValidator()
+    public UpdateUiCacheCommandValidator()
     {
         RuleFor(v => v.Id)
             .MinimumLength(1)
@@ -12,16 +12,16 @@ public class UpdateUICacheCommandValidator : AbstractValidator<UpdateUICacheComm
             .NotNull()
             .NotEmpty();
 
-        RuleFor(v => v.UICacheDto)
+        RuleFor(v => v.UiCacheDto)
             .NotNull();
 
-        RuleFor(v => v.UICacheDto.Id)
+        RuleFor(v => v.UiCacheDto.Id)
             .MinimumLength(1)
             .MaximumLength(50)
             .NotNull()
             .NotEmpty();
 
-        RuleFor(v => v.UICacheDto.Value)
+        RuleFor(v => v.UiCacheDto.Value)
             .MinimumLength(1)
             .NotNull()
             .NotEmpty();

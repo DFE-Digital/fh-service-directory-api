@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Config;
 
-public class UICacheConfig : IEntityTypeConfiguration<UICache>
+public class UiCacheConfig : IEntityTypeConfiguration<UiCache>
 {
-    public void Configure(EntityTypeBuilder<UICache> builder)
+    public void Configure(EntityTypeBuilder<UiCache> builder)
     {
         builder.Property(t => t.Id)
             .HasMaxLength(50)

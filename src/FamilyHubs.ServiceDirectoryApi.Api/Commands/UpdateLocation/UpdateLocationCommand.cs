@@ -16,7 +16,7 @@ public class UpdateLocationCommand : IRequest<string>
         LocationDto = locationDto;
     }
 
-    public LocationDto LocationDto { get; init; }
+    public LocationDto LocationDto { get; }
 }
 
 public class UpdateLocationCommandHandler : IRequestHandler<UpdateLocationCommand, string>
@@ -121,7 +121,7 @@ public class UpdateLocationCommandHandler : IRequestHandler<UpdateLocationComman
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred creating Location. {exceptionMessage}", ex.Message);
-            throw new Exception(ex.Message, ex);
+            throw;
         }
 
         return request.LocationDto.Id;

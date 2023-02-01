@@ -12,7 +12,7 @@ public class DeleteServiceByIdCommand : IRequest<bool>
         Id = id;
     }
 
-    public string Id { get; init; }
+    public string Id { get; }
 }
 
 public class DeleteServiceByIdCommandHandler : IRequestHandler<DeleteServiceByIdCommand, bool>
@@ -47,7 +47,7 @@ public class DeleteServiceByIdCommandHandler : IRequestHandler<DeleteServiceById
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred creating organisation. {exceptionMessage}", ex.Message);
-            throw new Exception(ex.Message, ex);
+            throw;
         }
     }
 }

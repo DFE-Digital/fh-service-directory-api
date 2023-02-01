@@ -13,6 +13,6 @@ public class AccessibilityForDisabilities : EntityBase<string>, IAggregateRoot
         Id = id;
         Accessibility = accessibility;
     }
-    public string Accessibility { get; init; } = default!;
+    public string Accessibility { get; set; } = default!;
     public string LocationId { get; set; } = default!;
 }

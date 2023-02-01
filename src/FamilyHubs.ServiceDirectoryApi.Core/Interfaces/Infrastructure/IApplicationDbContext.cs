@@ -5,7 +5,7 @@ namespace FamilyHubs.ServiceDirectory.Core.Interfaces.Infrastructure
 {
     public interface IApplicationDbContext
     {
-        DbSet<UICache> UICaches { get; }
+        DbSet<UiCache> UiCaches { get; }
         DbSet<AccessibilityForDisabilities> AccessibilityForDisabilities { get; }
         DbSet<Contact> Contacts { get; }
         DbSet<CostOption> CostOptions { get; }

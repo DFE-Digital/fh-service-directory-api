@@ -20,7 +20,7 @@ public class GetOrganisationTypesCommandHandler : IRequestHandler<GetOrganisatio
 
     public async Task<List<OrganisationTypeDto>> Handle(GetOrganisationTypesCommand request, CancellationToken cancellationToken)
     {
-        var orgainsationTypes = await _context.OrganisationTypes.Select(x => new OrganisationTypeDto(x.Id, x.Name, x.Description)).AsNoTracking().ToListAsync();
+        var orgainsationTypes = await _context.OrganisationTypes.Select(x => new OrganisationTypeDto(x.Id, x.Name, x.Description)).AsNoTracking().ToListAsync(cancellationToken);
 
         return orgainsationTypes;
     }

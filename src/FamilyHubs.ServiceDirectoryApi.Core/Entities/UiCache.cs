@@ -2,10 +2,10 @@
 
 namespace FamilyHubs.ServiceDirectory.Core.Entities;
 
-public class UICache : EntityBase<string>
+public class UiCache : EntityBase<string>
 {
-    private UICache() { }
-    public UICache(string id, string value)
+    private UiCache() { }
+    public UiCache(string id, string value)
     {
         Id = id;
         Value = value;

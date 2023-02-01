@@ -5,54 +5,54 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace FamilyHubs.ServiceDirectory.Api.Commands.UpdateUICache;
+namespace FamilyHubs.ServiceDirectory.Api.Commands.UpdateUiCache;
 
-public class UpdateUICacheCommand : IRequest<string>
+public class UpdateUiCacheCommand : IRequest<string>
 {
-    public UpdateUICacheCommand(string id, UICacheDto uiCacheDto)
+    public UpdateUiCacheCommand(string id, UICacheDto uiCacheDto)
     {
         Id = id;
-        UICacheDto = uiCacheDto;
+        UiCacheDto = uiCacheDto;
     }
 
-    public UICacheDto UICacheDto { get; init; }
+    public UICacheDto UiCacheDto { get; }
 
-    public string Id { get; set; }
+    public string Id { get; }
 }
 
-public class UpdateUICacheCommandHandler : IRequestHandler<UpdateUICacheCommand, string>
+public class UpdateUiCacheCommandHandler : IRequestHandler<UpdateUiCacheCommand, string>
 {
     private readonly ApplicationDbContext _context;
-    private readonly ILogger<UpdateUICacheCommandHandler> _logger;
+    private readonly ILogger<UpdateUiCacheCommandHandler> _logger;
 
-    public UpdateUICacheCommandHandler(ApplicationDbContext context, ILogger<UpdateUICacheCommandHandler> logger)
+    public UpdateUiCacheCommandHandler(ApplicationDbContext context, ILogger<UpdateUiCacheCommandHandler> logger)
     {
         _context = context;
         _logger = logger;
     }
 
-    public async Task<string> Handle(UpdateUICacheCommand request, CancellationToken cancellationToken)
+    public async Task<string> Handle(UpdateUiCacheCommand request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var entity = await _context.UICaches
+        var entity = await _context.UiCaches
           .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {
-            throw new NotFoundException(nameof(UICache), request.Id);
+            throw new NotFoundException(nameof(UiCache), request.Id);
         }
 
         try
         {
-            entity.Value = request.UICacheDto.Value;
+            entity.Value = request.UiCacheDto.Value;
             
             await _context.SaveChangesAsync(cancellationToken);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred updating UICache. {exceptionMessage}", ex.Message);
-            throw new Exception(ex.Message, ex);
+            throw;
         }
 
         return entity.Id;

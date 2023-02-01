@@ -127,7 +127,7 @@ public static class StartupExtensions
 
             containerBuilder.RegisterType<MinimalLocationEndPoints>();
 
-            containerBuilder.RegisterType<MinimalUICacheEndPoints>();
+            containerBuilder.RegisterType<MinimalUiCacheEndPoints>();
 
             containerBuilder.RegisterType<ApplicationDbContextInitialiser>();
 
@@ -268,8 +268,8 @@ public static class StartupExtensions
         var locationservice = scope.ServiceProvider.GetService<MinimalLocationEndPoints>();
         locationservice?.RegisterLocationEndPoints(webApplication);
 
-        var uiCacheservice = scope.ServiceProvider.GetService<MinimalUICacheEndPoints>();
-        uiCacheservice?.RegisterUICacheEndPoints(webApplication);
+        var uiCacheservice = scope.ServiceProvider.GetService<MinimalUiCacheEndPoints>();
+        uiCacheservice?.RegisterUiCacheEndPoints(webApplication);
 
         var genservice = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
         genservice?.RegisterMinimalGeneralEndPoints(webApplication);

@@ -1,16 +1,16 @@
-﻿using FamilyHubs.ServiceDirectory.Api.Queries.GetUICacheById;
+﻿using FamilyHubs.ServiceDirectory.Api.Queries.GetUiCacheById;
 using FluentAssertions;
 
-namespace FamilyHubs.ServiceDirectoryApi.UnitTests.UICaches;
+namespace FamilyHubs.ServiceDirectoryApi.UnitTests.UiCaches;
 
-public class WhenValidatingUICacheGetById
+public class WhenValidatingUiCacheGetById
 {
     [Fact]
     public void ThenShouldNotErrorWhenModelIsValid()
     {
         //Arrange
-        var validator = new GetUICacheByIdCommandValidator();
-        var testModel = new GetUICacheByIdCommand("Id");
+        var validator = new GetUiCacheByIdCommandValidator();
+        var testModel = new GetUiCacheByIdCommand("Id");
 
         //Act
         var result = validator.Validate(testModel);
@@ -23,8 +23,8 @@ public class WhenValidatingUICacheGetById
     public void ThenShouldErrorWhenThereIsNoId()
     {
         //Arrange
-        var validator = new GetUICacheByIdCommandValidator();
-        var testModel = new GetUICacheByIdCommand("");
+        var validator = new GetUiCacheByIdCommandValidator();
+        var testModel = new GetUiCacheByIdCommand("");
 
         //Act
         var result = validator.Validate(testModel);

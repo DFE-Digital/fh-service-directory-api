@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Ardalis.GuardClauses;
+using AutoMapper;
 using FamilyHubs.ServiceDirectory.Api.Commands.CreateLocation;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateLocation;
 using FamilyHubs.ServiceDirectory.Core;
@@ -131,11 +132,8 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         var handler = new UpdateLocationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
-        Func<Task> act = async () => { await handler.Handle(command, new CancellationToken()); };
-
-
         //Assert
-        await act.Should().ThrowAsync<Exception>();
+        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, new CancellationToken()));
     }
 
     [Fact]
@@ -155,13 +153,11 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
         CreateLocationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
 
         //Act
-        Func<Task> act = async () => { await handler.Handle(command, new CancellationToken()); };
-        
-
         //Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Location Already Exists, Please use Update Location");
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>  handler.Handle(command, new CancellationToken()));
         
     }
+
     public static LocationDto GetTestLocationDto()
     {
         return new LocationDto(

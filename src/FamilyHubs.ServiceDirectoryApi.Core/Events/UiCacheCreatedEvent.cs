@@ -4,13 +4,13 @@ using FamilyHubs.SharedKernel;
 namespace FamilyHubs.ServiceDirectory.Core.Events;
 
 
-public class UICacheCreatedEvent : DomainEventBase
+public class UiCacheCreatedEvent : DomainEventBase
 {
-    public UICacheCreatedEvent(UICache item)
+    public UiCacheCreatedEvent(UiCache item)
     {
         Item = item;
     }
 
-    public UICache Item { get; }
+    public UiCache Item { get; }
 }
 

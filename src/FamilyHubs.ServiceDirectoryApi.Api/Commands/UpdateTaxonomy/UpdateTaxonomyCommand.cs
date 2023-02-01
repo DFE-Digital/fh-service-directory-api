@@ -15,9 +15,9 @@ public class UpdateTaxonomyCommand : IRequest<string>
         Taxonomy = taxonomy;
     }
 
-    public TaxonomyDto Taxonomy { get; init; }
+    public TaxonomyDto Taxonomy { get; }
 
-    public string Id { get; set; }
+    public string Id { get; }
 }
 
 public class UpdateTaxonomyCommandHandler : IRequestHandler<UpdateTaxonomyCommand, string>
@@ -54,7 +54,7 @@ public class UpdateTaxonomyCommandHandler : IRequestHandler<UpdateTaxonomyComman
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred updating taxonomy. {exceptionMessage}", ex.Message);
-            throw new Exception(ex.Message, ex);
+            throw;
         }
 
         return entity.Id;

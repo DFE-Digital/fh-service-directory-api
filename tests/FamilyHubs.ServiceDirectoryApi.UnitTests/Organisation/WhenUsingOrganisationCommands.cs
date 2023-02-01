@@ -125,12 +125,8 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         CreateOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
 
         // Act 
-        Func<Task> act = () => handler.Handle(command, new CancellationToken());
-
-
         // Assert
-        var exception = await Assert.ThrowsAsync<Exception>(act);
-        await act.Should().ThrowAsync<Exception>().WithMessage("Duplicate Id");
+        await Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(command, new CancellationToken()));
 
     }
 

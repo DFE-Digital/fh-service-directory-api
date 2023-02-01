@@ -31,6 +31,6 @@ public class AutoMappingProfiles : Profile
         CreateMap<ServiceTaxonomyDto, ServiceTaxonomy>();
         CreateMap<ServiceTypeDto, ServiceType>();
         CreateMap<TaxonomyDto, Taxonomy>();
-        CreateMap<UICacheDto, UICache>();
+        CreateMap<UICacheDto, UiCache>();
     }
 }
