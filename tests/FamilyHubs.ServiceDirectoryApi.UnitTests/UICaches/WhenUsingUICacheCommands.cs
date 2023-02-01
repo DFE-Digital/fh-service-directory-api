@@ -17,7 +17,7 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenCreateUICache()
     {
-        //Arange
+        //Arrange
         var mockApplicationDbContext = GetApplicationDbContext();
         var logger = new Mock<ILogger<CreateUICacheCommandHandler>>();
         CreateUICacheCommand command = new(new UICacheDto("6e23bc85-fff9-49f9-99e4-98160a9a2b56", TestViewModel.GetTestViewModel() ));
@@ -33,7 +33,7 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenCreateUICacheShouldThrowAnException()
     {
-        //Arange
+        //Arrange
         var mockApplicationDbContext = GetApplicationDbContext();
         var logger = new Mock<ILogger<CreateUICacheCommandHandler>>();
         CreateUICacheCommand command = new(new UICacheDto("6e23bc85-fff9-49f9-99e4-98160a9a2b56", default!));
@@ -50,7 +50,7 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenUpdateUICache()
     {
-        //Arange
+        //Arrange
         const string id = "9ae3237d-73fd-46fc-afa3-f178250e0c09";
         var logger = new Mock<ILogger<UpdateUICacheCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
@@ -79,7 +79,7 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenUpdateUICacheShouldThrowANotFoundException()
     {
-        //Arange
+        //Arrange
         const string id = "9ae3237d-73fd-46fc-afa3-f178250e0c09";
         var logger = new Mock<ILogger<UpdateUICacheCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
@@ -104,7 +104,7 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenUpdateUICacheShouldThrowAnException()
     {
-        //Arange
+        //Arrange
         const string id = "9ae3237d-73fd-46fc-afa3-f178250e0c09";
         var logger = new Mock<ILogger<UpdateUICacheCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
@@ -124,7 +124,7 @@ public class WhenUsingUICacheCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenGetUICacheById()
     {
-        //Arange
+        //Arrange
         const string id = "9ae3237d-73fd-46fc-afa3-f178250e0c09";
         var mockApplicationDbContext = GetApplicationDbContext();
         mockApplicationDbContext.UICaches.Add(new UICache(id, TestViewModel.GetTestViewModel()));

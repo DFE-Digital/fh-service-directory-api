@@ -263,8 +263,8 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
             .WithLinkContact(new List<LinkContactDto>
             {
                 new LinkContactDto(
-                    "c1b5dd80-7506-4424-9711-fe175fa13eb8",
                     "c1b5dd80-7506-4424-9711-fe175fa13eb1",
+                    "c1b5dd80-7506-4424-9711-fe175fa13eb8",
                     "Service",
                 new ContactDto(
                     contactId,
@@ -396,8 +396,8 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
             .WithLinkContact(new List<LinkContactDto>
             {
                 new LinkContactDto(
-                    "9066bccb-79cb-401f-818f-86ad23b022cf",
                     "9066bccb-79cb-401f-818f-86ad23b022ca",
+                    "9066bccb-79cb-401f-818f-86ad23b022cf",
                     "Service",
                 new ContactDto(
                     contactId,

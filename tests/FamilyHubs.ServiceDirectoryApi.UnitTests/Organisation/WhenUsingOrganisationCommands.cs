@@ -26,7 +26,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenCreateOrganisation()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -47,7 +47,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenCreateRelatedOrganisation()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -88,7 +88,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenCreateAnotherOrganisation()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -113,7 +113,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenCreateDuplicateOrganisation_ShouldThrowException()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -141,7 +141,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenUpdateOrganisation()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -172,7 +172,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenUpdateOrganisationWithNewService()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -206,7 +206,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenGetOrganisationById()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -232,7 +232,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenGetOrganisationById_ShouldThrowExceptionWhenIdDoesNotExist()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -254,7 +254,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenListOrganisations()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -274,13 +274,17 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         //Assert
         result.Should().NotBeNull();
-        result[0].Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.Services).Excluding(si => si.AdminAreaCode));
+        result[0].Should().BeEquivalentTo(testOrganisation, opts => opts
+            .Excluding(si => si.Services)
+            .Excluding(si => si.AdminAreaCode)
+            .Excluding(si => si.LinkContacts)
+        );
     }
 
     [Fact]
     public async Task ThenListOrganisationTypes()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -308,7 +312,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenGetAdminByOrganisationId()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -403,8 +407,8 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             {
                 new LinkContactDto(
                     "3010521b-6e0a-41b0-b610-200edbbeeb11",
-                    "Service",
                     "3010521b-6e0a-41b0-b610-200edbbeeb14",
+                    "Service",
                 new ContactDto(
                     (newGuid == false) ? contactId : Guid.NewGuid().ToString(),
                     (updated == false) ? "Contact" : "Updated Contact",
@@ -426,7 +430,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             })
             .WithLanguages(new List<LanguageDto>
             {
-                    new LanguageDto((newGuid == false) ? "1bb6c313-648d-4226-9e96-b7d37eaeb3dd" : Guid.NewGuid().ToString(), (updated == false) ? "English"  : "French")
+                    new LanguageDto((newGuid == false) ? "1bb6c313-648d-4226-9e96-b7d37eaeb312" : Guid.NewGuid().ToString(), (updated == false) ? "English"  : "French")
             })
             .WithServiceAreas(new List<ServiceAreaDto>
             {
@@ -542,6 +546,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         service.RegularSchedules = new List<RegularScheduleDto>();
         service.HolidaySchedules = new List<HolidayScheduleDto>();
+        service.Fundings = new List<FundingDto>();
 
         return service;
     }
@@ -575,8 +580,8 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             .WithLinkContact(new List<LinkContactDto>
             {
                 new LinkContactDto(
-                    "3010521b-6e0a-41b0-b610-200edbbeeb14",
-                    "3010521b-6e0a-41b0-b610-200edbbeeb11",
+                    "5059a0b2-ad5d-4288-b7c1-e30d35345bab",
+                    "5059a0b2-ad5d-4288-b7c1-e30d35345b0e",
                     "Service",
                 new ContactDto(
                     contactId,
@@ -591,7 +596,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             .WithCostOption(new List<CostOptionDto> {new() {Id = Guid.NewGuid().ToString(), Amount = decimal.Zero, Option = "free", AmountDescription = ""}})
             .WithLanguages(new List<LanguageDto>
             {
-                    new LanguageDto("1bb6c313-648d-4226-9e96-b7d37eaeb3dd", "English")
+                    new LanguageDto("1bb6c313-648d-4226-9e96-b7d37eaeb3ab", "English")
                 })
             .WithServiceAreas(new List<ServiceAreaDto>
             {

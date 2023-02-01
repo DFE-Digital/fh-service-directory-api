@@ -15,7 +15,7 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenCreateLocation()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -38,7 +38,7 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenUpdateLocation()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -64,7 +64,7 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenUpdateLocationWithNewAddressAndTaxonomy()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -116,7 +116,7 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenUpdateLocationThatDoesNotExist()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);

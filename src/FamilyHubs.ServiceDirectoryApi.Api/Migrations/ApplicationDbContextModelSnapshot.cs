@@ -120,10 +120,6 @@ namespace fhservicedirectoryapi.api.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("ServiceId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Telephone")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -380,29 +376,11 @@ namespace fhservicedirectoryapi.api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("LocationId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("OrganisationId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ServiceAtLocationId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ServiceId")
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ContactId");
 
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("OrganisationId");
-
-                    b.HasIndex("ServiceAtLocationId");
-
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("LinkId");
 
                     b.ToTable("LinkContacts");
                 });
@@ -432,9 +410,6 @@ namespace fhservicedirectoryapi.api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("LocationId")
-                        .HasColumnType("text");
-
                     b.Property<string>("ParentId")
                         .HasColumnType("text");
 
@@ -443,7 +418,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LocationId");
+                    b.HasIndex("LinkId");
 
                     b.HasIndex("ParentId");
 
@@ -1203,19 +1178,27 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasOne("FamilyHubs.ServiceDirectory.Core.Entities.Location", null)
                         .WithMany("LinkContacts")
-                        .HasForeignKey("LocationId");
+                        .HasForeignKey("LinkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FamilyHubs.ServiceDirectory.Core.Entities.Organisation", null)
                         .WithMany("LinkContacts")
-                        .HasForeignKey("OrganisationId");
-
-                    b.HasOne("FamilyHubs.ServiceDirectory.Core.Entities.ServiceAtLocation", null)
-                        .WithMany("LinkContacts")
-                        .HasForeignKey("ServiceAtLocationId");
+                        .HasForeignKey("LinkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FamilyHubs.ServiceDirectory.Core.Entities.Service", null)
                         .WithMany("LinkContacts")
-                        .HasForeignKey("ServiceId");
+                        .HasForeignKey("LinkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FamilyHubs.ServiceDirectory.Core.Entities.ServiceAtLocation", null)
+                        .WithMany("LinkContacts")
+                        .HasForeignKey("LinkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Contact");
                 });
@@ -1224,7 +1207,9 @@ namespace fhservicedirectoryapi.api.Migrations
                 {
                     b.HasOne("FamilyHubs.ServiceDirectory.Core.Entities.Location", null)
                         .WithMany("LinkTaxonomies")
-                        .HasForeignKey("LocationId");
+                        .HasForeignKey("LinkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FamilyHubs.ServiceDirectory.Core.Entities.Parent", null)
                         .WithMany("LinkTaxonomies")

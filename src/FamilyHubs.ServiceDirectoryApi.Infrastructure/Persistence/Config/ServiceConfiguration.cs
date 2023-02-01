@@ -16,5 +16,8 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Property(t => t.CreatedBy)
             .HasMaxLength(255)
             .IsRequired();
+        builder.HasMany(s => s.LinkContacts)
+            .WithOne()
+            .HasForeignKey(lc => lc.LinkId);
     }
 }

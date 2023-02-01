@@ -469,7 +469,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         List<string> currentIds = new();
         foreach (var updatedLanguage in updated)
         {
-            var current = existing.FirstOrDefault(x => x.Name == updatedLanguage.Name && x.ServiceId == _request.Service.Id);
+            var current = existing.FirstOrDefault(x => x.Id == updatedLanguage.Id);
             if (current == null)
             {
                 var entity = _mapper.Map<Language>(updatedLanguage);
@@ -498,10 +498,9 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             var current = existing.FirstOrDefault(x => x.Id == updatedContact.Id);
             if (current == null)
             {
-                var entity = _mapper.Map<Contact>(updatedContact);
-                entity.ServiceId = _request.Service.Id;
-                entity.RegisterDomainEvent(new ContactCreatedEvent(entity));
-                _context.Contacts.Add(entity);
+                var entity = _mapper.Map<LinkContact>(updatedContact);
+                entity.LinkId = _request.Service.Id;
+                _context.LinkContacts.Add(entity);
             }
             else if (current.Contact != null)
             {

@@ -30,11 +30,11 @@ public class ListOrganisationCommandHandler : IRequestHandler<ListOrganisationCo
                                 x.org.Description,
                                 x.org.Logo,
                                 x.org.Uri,
-                                x.org.Url
-                                )
+                                x.org.Url)
                                 {
                                     AdminAreaCode = x.oad.Code
-                                }).ToListAsync(cancellationToken);
+                                }
+                            ).ToListAsync(cancellationToken);
 
         return organisations;
     }

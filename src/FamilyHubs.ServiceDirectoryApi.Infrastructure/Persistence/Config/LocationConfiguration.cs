@@ -23,5 +23,11 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(t => t.CreatedBy)
             .HasMaxLength(255)
             .IsRequired();
+        builder.HasMany(s => s.LinkContacts)
+            .WithOne()
+            .HasForeignKey(lc => lc.LinkId);
+        builder.HasMany(s => s.LinkTaxonomies)
+            .WithOne()
+            .HasForeignKey(lc => lc.LinkId);
     }
 }

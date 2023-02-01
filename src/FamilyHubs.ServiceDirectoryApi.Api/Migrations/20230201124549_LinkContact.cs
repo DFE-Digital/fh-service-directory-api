@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace fh_service_directory_api.api.Migrations
+namespace fhservicedirectoryapi.api.Migrations
 {
-#pragma warning disable CS8981
-    public partial class removeopenreferral : Migration
-#pragma warning restore CS8981
+    /// <inheritdoc />
+    public partial class LinkContact : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -75,6 +75,27 @@ namespace fh_service_directory_api.api.Migrations
                 name: "OpenReferralOrganisationId",
                 table: "AdminAreas",
                 newName: "OrganisationId");
+
+            migrationBuilder.CreateTable(
+                name: "Contacts",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Title = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Telephone = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    TextPhone = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Url = table.Column<string>(type: "text", nullable: true),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Contacts", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Locations",
@@ -224,34 +245,6 @@ namespace fh_service_directory_api.api.Migrations
                         column: x => x.ServiceTypeId,
                         principalTable: "ServiceTypes",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Contacts",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    ServiceId = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Telephone = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    TextPhone = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Url = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Contacts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Contacts_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -523,6 +516,53 @@ namespace fh_service_directory_api.api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LinkContacts",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    ContactId = table.Column<string>(type: "text", nullable: true),
+                    LinkId = table.Column<string>(type: "text", nullable: false),
+                    LinkType = table.Column<string>(type: "text", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LinkContacts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LinkContacts_Contacts_ContactId",
+                        column: x => x.ContactId,
+                        principalTable: "Contacts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_LinkContacts_Locations_LinkId",
+                        column: x => x.LinkId,
+                        principalTable: "Locations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LinkContacts_Organisations_LinkId",
+                        column: x => x.LinkId,
+                        principalTable: "Organisations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LinkContacts_ServiceAtLocations_LinkId",
+                        column: x => x.LinkId,
+                        principalTable: "ServiceAtLocations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_LinkContacts_Services_LinkId",
+                        column: x => x.LinkId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RegularSchedules",
                 columns: table => new
                 {
@@ -568,7 +608,6 @@ namespace fh_service_directory_api.api.Migrations
                     TaxonomyId = table.Column<string>(type: "text", nullable: true),
                     LinkId = table.Column<string>(type: "text", nullable: false),
                     LinkType = table.Column<string>(type: "text", nullable: false),
-                    LocationId = table.Column<string>(type: "text", nullable: true),
                     ParentId = table.Column<string>(type: "text", nullable: true),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
@@ -579,10 +618,11 @@ namespace fh_service_directory_api.api.Migrations
                 {
                     table.PrimaryKey("PK_LinkTaxonomies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LinkTaxonomies_Locations_LocationId",
-                        column: x => x.LocationId,
+                        name: "FK_LinkTaxonomies_Locations_LinkId",
+                        column: x => x.LinkId,
                         principalTable: "Locations",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_LinkTaxonomies_Parents_ParentId",
                         column: x => x.ParentId,
@@ -636,11 +676,6 @@ namespace fh_service_directory_api.api.Migrations
                 column: "LocationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Contacts_ServiceId",
-                table: "Contacts",
-                column: "ServiceId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_CostOptions_ServiceId",
                 table: "CostOptions",
                 column: "ServiceId");
@@ -671,9 +706,19 @@ namespace fh_service_directory_api.api.Migrations
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LinkTaxonomies_LocationId",
+                name: "IX_LinkContacts_ContactId",
+                table: "LinkContacts",
+                column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LinkContacts_LinkId",
+                table: "LinkContacts",
+                column: "LinkId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LinkTaxonomies_LinkId",
                 table: "LinkTaxonomies",
-                column: "LocationId");
+                column: "LinkId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LinkTaxonomies_ParentId",
@@ -766,13 +811,11 @@ namespace fh_service_directory_api.api.Migrations
                 column: "EligibilityId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "AccessibilityForDisabilities");
-
-            migrationBuilder.DropTable(
-                name: "Contacts");
 
             migrationBuilder.DropTable(
                 name: "CostOptions");
@@ -785,6 +828,9 @@ namespace fh_service_directory_api.api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Languages");
+
+            migrationBuilder.DropTable(
+                name: "LinkContacts");
 
             migrationBuilder.DropTable(
                 name: "LinkTaxonomies");
@@ -806,6 +852,9 @@ namespace fh_service_directory_api.api.Migrations
 
             migrationBuilder.DropTable(
                 name: "ServiceTaxonomies");
+
+            migrationBuilder.DropTable(
+                name: "Contacts");
 
             migrationBuilder.DropTable(
                 name: "ServiceAtLocations");
@@ -923,7 +972,7 @@ namespace fh_service_directory_api.api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    Address_1 = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Address1 = table.Column<string>(name: "Address_1", type: "character varying(100)", maxLength: 100, nullable: false),
                     City = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     Country = table.Column<string>(type: "text", nullable: true),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -931,8 +980,8 @@ namespace fh_service_directory_api.api.Migrations
                     LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "text", nullable: true),
                     OpenReferralLocationId = table.Column<string>(type: "text", nullable: false),
-                    Postal_code = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    State_province = table.Column<string>(type: "text", nullable: true)
+                    Postalcode = table.Column<string>(name: "Postal_code", type: "character varying(15)", maxLength: 15, nullable: false),
+                    Stateprovince = table.Column<string>(name: "State_province", type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -952,13 +1001,13 @@ namespace fh_service_directory_api.api.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     ServiceTypeId = table.Column<string>(type: "text", nullable: true),
                     Accreditations = table.Column<string>(type: "text", nullable: true),
-                    Assured_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Attending_access = table.Column<string>(type: "text", nullable: true),
-                    Attending_type = table.Column<string>(type: "text", nullable: true),
+                    Assureddate = table.Column<DateTime>(name: "Assured_date", type: "timestamp with time zone", nullable: true),
+                    Attendingaccess = table.Column<string>(name: "Attending_access", type: "text", nullable: true),
+                    Attendingtype = table.Column<string>(name: "Attending_type", type: "text", nullable: true),
                     CanFamilyChooseDeliveryLocation = table.Column<bool>(type: "boolean", nullable: false),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Deliverable_type = table.Column<string>(type: "text", nullable: true),
+                    Deliverabletype = table.Column<string>(name: "Deliverable_type", type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     Email = table.Column<string>(type: "text", nullable: true),
                     Fees = table.Column<string>(type: "text", nullable: true),
@@ -1017,7 +1066,7 @@ namespace fh_service_directory_api.api.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    Amount_description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    Amountdescription = table.Column<string>(name: "Amount_description", type: "character varying(500)", maxLength: 500, nullable: false),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -1025,8 +1074,8 @@ namespace fh_service_directory_api.api.Migrations
                     LinkId = table.Column<string>(type: "text", nullable: true),
                     OpenReferralServiceId = table.Column<string>(type: "text", nullable: false),
                     Option = table.Column<string>(type: "text", nullable: true),
-                    Valid_from = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Valid_to = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Validfrom = table.Column<DateTime>(name: "Valid_from", type: "timestamp with time zone", nullable: true),
+                    Validto = table.Column<DateTime>(name: "Valid_to", type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1050,8 +1099,8 @@ namespace fh_service_directory_api.api.Migrations
                     LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "text", nullable: true),
                     LinkId = table.Column<string>(type: "text", nullable: true),
-                    Maximum_age = table.Column<int>(type: "integer", nullable: false),
-                    Minimum_age = table.Column<int>(type: "integer", nullable: false),
+                    Maximumage = table.Column<int>(name: "Maximum_age", type: "integer", nullable: false),
+                    Minimumage = table.Column<int>(name: "Minimum_age", type: "integer", nullable: false),
                     OpenReferralServiceId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -1156,7 +1205,7 @@ namespace fh_service_directory_api.api.Migrations
                     LastModifiedBy = table.Column<string>(type: "text", nullable: true),
                     LinkId = table.Column<string>(type: "text", nullable: true),
                     OpenReferralServiceId = table.Column<string>(type: "text", nullable: false),
-                    Service_area = table.Column<string>(type: "text", nullable: false),
+                    Servicearea = table.Column<string>(name: "Service_area", type: "text", nullable: false),
                     Uri = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -1252,16 +1301,16 @@ namespace fh_service_directory_api.api.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     Closed = table.Column<bool>(type: "boolean", nullable: false),
-                    Closes_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Closesat = table.Column<DateTime>(name: "Closes_at", type: "timestamp with time zone", nullable: true),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    End_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Enddate = table.Column<DateTime>(name: "End_date", type: "timestamp with time zone", nullable: true),
                     LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "text", nullable: true),
                     OpenReferralServiceAtLocationId = table.Column<string>(type: "text", nullable: false),
                     OpenReferralServiceId = table.Column<string>(type: "text", nullable: true),
-                    Opens_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Start_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Opensat = table.Column<DateTime>(name: "Opens_at", type: "timestamp with time zone", nullable: true),
+                    Startdate = table.Column<DateTime>(name: "Start_date", type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1286,7 +1335,7 @@ namespace fh_service_directory_api.api.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     Byday = table.Column<string>(type: "text", nullable: true),
                     Bymonthday = table.Column<string>(type: "text", nullable: true),
-                    Closes_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Closesat = table.Column<DateTime>(name: "Closes_at", type: "timestamp with time zone", nullable: true),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: false),
@@ -1297,9 +1346,9 @@ namespace fh_service_directory_api.api.Migrations
                     LastModifiedBy = table.Column<string>(type: "text", nullable: true),
                     OpenReferralServiceAtLocationId = table.Column<string>(type: "text", nullable: false),
                     OpenReferralServiceId = table.Column<string>(type: "text", nullable: true),
-                    Opens_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Valid_from = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Valid_to = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Opensat = table.Column<DateTime>(name: "Opens_at", type: "timestamp with time zone", nullable: true),
+                    Validfrom = table.Column<DateTime>(name: "Valid_from", type: "timestamp with time zone", nullable: true),
+                    Validto = table.Column<DateTime>(name: "Valid_to", type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -17,7 +17,7 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenCreateTaxonomy()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);

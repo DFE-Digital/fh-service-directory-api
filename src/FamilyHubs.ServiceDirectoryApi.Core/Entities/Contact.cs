@@ -24,7 +24,6 @@ public class Contact : EntityBase<string>, IAggregateRoot
         Url = url;
         Email = email;
     }
-    public string ServiceId { get; set; } = default!;
     public string? Title { get; set; }
     public string Name { get; set; } = default!;
     public string Telephone { get; set; } = default!;
