@@ -1,17 +1,17 @@
-﻿using Ardalis.Specification;
+﻿using System.Linq.Expressions;
+using Ardalis.Specification;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.SharedKernel.Interfaces;
+using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Linq.Expressions;
-using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
-using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.UICaches;
 
 public class TestEntity : IAggregateRoot
 {
-    public int Id { get; set; } = default!;
+    public int Id { get; set; }
     public string Name { get; set; } = default!;
 }
 
@@ -22,7 +22,7 @@ public class TestResult : IAggregateRoot
 
 public class TestSpecificationWithResult : ISpecification<TestEntity, TestResult>
 {
-    private bool IsCacheEnabled = false;
+    private bool IsCacheEnabled;
     public ISpecificationBuilder<TestEntity, TestResult> Query => throw new NotImplementedException();
 
     public Expression<Func<TestEntity, TestResult>>? Selector => throw new NotImplementedException();
@@ -87,7 +87,7 @@ public class TestSpecificationWithResult : ISpecification<TestEntity, TestResult
 
 public class TestSpecification : ISpecification<TestEntity>
 {
-    private bool IsCacheEnabled = false;
+    private bool IsCacheEnabled;
     public ISpecificationBuilder<TestEntity> Query => throw new NotImplementedException();
 
     public IDictionary<string, object> Items { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -259,7 +259,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         var list = new List<TestEntity> { new TestEntity { Id = 1, Name = "Test1" }, new TestEntity { Id = 2, Name = "Test2" } };
-        mockSourceRepository.Setup(x => x.ListAsync<TestResult>(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()))
+        mockSourceRepository.Setup(x => x.ListAsync(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<TestResult>());
 
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
@@ -268,10 +268,10 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
         ISpecification<TestEntity, TestResult> specification = spec;
 
         // Act
-        var result = await repository.ListAsync<TestResult>(specification);
+        var result = await repository.ListAsync(specification);
 
         // Assert
-        mockSourceRepository.Verify(x => x.ListAsync<TestResult>(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()), Times.Once);
+        mockSourceRepository.Verify(x => x.ListAsync(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()), Times.Once);
         myCache.Dispose();
     }
 
@@ -287,17 +287,17 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
         var list = new List<TestEntity> { new TestEntity { Id = 1, Name = "Test1" }, new TestEntity { Id = 2, Name = "Test2" } };
-        mockSourceRepository.Setup(x => x.ListAsync<TestResult>(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()))
+        mockSourceRepository.Setup(x => x.ListAsync(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<TestResult>());
 
         var repository = new CachedRepository<TestEntity>(myCache, mockLogger.Object, mockSourceRepository.Object);
         ISpecification<TestEntity, TestResult> specification = new TestSpecificationWithResult();
 
         // Act
-        var result = await repository.ListAsync<TestResult>(specification);
+        var result = await repository.ListAsync(specification);
 
         // Assert
-        mockSourceRepository.Verify(x => x.ListAsync<TestResult>(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()), Times.Once);
+        mockSourceRepository.Verify(x => x.ListAsync(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()), Times.Once);
         myCache.Dispose();
     }
 
@@ -565,7 +565,7 @@ public class WhenUsingCachedRepository : BaseCreateDbUnitTest
         var mockSourceRepository = new Mock<EfRepository<TestEntity>>(appDbContext);
 
 #pragma warning disable CS0612 
-        mockSourceRepository.Setup(x => x.GetBySpecAsync<TestResult>(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()))
+        mockSourceRepository.Setup(x => x.GetBySpecAsync(It.IsAny<ISpecification<TestEntity, TestResult>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new TestResult());
 #pragma warning restore CS0612 
 

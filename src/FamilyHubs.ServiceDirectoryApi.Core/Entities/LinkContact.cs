@@ -1,5 +1,5 @@
-﻿using FamilyHubs.SharedKernel.Interfaces;
-using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.SharedKernel;
+using FamilyHubs.SharedKernel.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Core.Entities;
 

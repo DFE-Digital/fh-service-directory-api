@@ -1,4 +1,5 @@
-﻿using Ardalis.GuardClauses;
+﻿using System.Collections.ObjectModel;
+using Ardalis.GuardClauses;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Api.Commands.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateOrganisation;
@@ -17,7 +18,6 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Collections.ObjectModel;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
 
@@ -66,11 +66,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             null,
             new Uri("https://www.relatedvcs.gov.uk/").ToString(),
             "https://www.related.gov.uk/",
-            new List<ServiceDto>
-            {
-                 
-            }
-            );
+            new List<ServiceDto>());
 
         testOrgaisation.AdminAreaCode = "XTEST";
 
@@ -134,7 +130,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 
         // Assert
         var exception = await Assert.ThrowsAsync<Exception>(act);
-        await act.Should().ThrowAsync<System.Exception>().WithMessage("Duplicate Id");
+        await act.Should().ThrowAsync<Exception>().WithMessage("Duplicate Id");
 
     }
 
@@ -473,7 +469,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                             },
                             new List<LinkContactDto>()
                             ),
-                        new List<RegularScheduleDto>()
+                        new List<RegularScheduleDto>
                         {
                             new RegularScheduleDto(
                                 (newGuid == false) ? "5e5ba093-a5f9-49ce-826c-52851e626288" : Guid.NewGuid().ToString(), 
@@ -489,7 +485,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                                 DateTime.UtcNow.AddMonths(6)
                                 )
                         },
-                        new List<HolidayScheduleDto>()
+                        new List<HolidayScheduleDto>
                         {
                             new HolidayScheduleDto(
                                 (newGuid == false) ?  "bc946512-7f8c-4c54-b7ed-ad8fefde7b48" : Guid.NewGuid().ToString(),
@@ -640,7 +636,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                                 )
                             },
                             new List<LinkContactDto>()),
-                        new List<RegularScheduleDto>()
+                        new List<RegularScheduleDto>
                         {
                             new RegularScheduleDto(
                                 "67806edd-8427-4126-8ec1-06d59c2209ae",
@@ -656,7 +652,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                                 DateTime.UtcNow.AddMonths(6)
                                 )
                         },
-                        new List<HolidayScheduleDto>()
+                        new List<HolidayScheduleDto>
                         {
                             new HolidayScheduleDto(
                                 "60ef490f-1e6f-4a1b-bf96-337768e578cf",
@@ -809,7 +805,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
                                     null
                                 )
                             },
-                            new List<AccessibilityForDisabilities>()
+                            new List<AccessibilityForDisabilities>
                             {
                                 new AccessibilityForDisabilities("f9025e1f-3c16-48f3-a1bb-bfb36c216b45", "accessibility")
                             },

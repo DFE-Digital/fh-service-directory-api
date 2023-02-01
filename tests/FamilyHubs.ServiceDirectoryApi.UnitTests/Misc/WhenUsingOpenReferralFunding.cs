@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using FamilyHubs.ServiceDirectory.Core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
+using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Misc;
 
