@@ -45,7 +45,7 @@ public class CreateLocationCommandHandler : IRequestHandler<CreateLocationComman
 
             var entity = _mapper.Map<Location>(request.LocationDto);
 
-            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             entity.RegisterDomainEvent(new LocationCreatedEvent(entity));
 

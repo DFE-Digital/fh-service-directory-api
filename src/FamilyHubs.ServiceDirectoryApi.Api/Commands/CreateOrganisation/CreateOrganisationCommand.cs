@@ -37,7 +37,7 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
         try
         {
             var entity = _mapper.Map<Organisation>(request.Organisation);
-            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             if (_context.Organisations.FirstOrDefault(x => x.Id == request.Organisation.Id) != null)
             {

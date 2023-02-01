@@ -40,7 +40,7 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
 
     public async Task<string> Handle(UpdateOrganisationCommand request, CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(request, nameof(request));
+        ArgumentNullException.ThrowIfNull(request);
 
         var entity = await _context.Organisations
           .Include(x => x.OrganisationType)

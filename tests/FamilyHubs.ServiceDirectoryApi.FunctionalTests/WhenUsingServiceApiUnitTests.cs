@@ -68,7 +68,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         item.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        ArgumentNullException.ThrowIfNull(item);
         item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
     }
 
@@ -104,7 +104,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         item.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        ArgumentNullException.ThrowIfNull(item);
         item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
     }
 
@@ -140,7 +140,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         item.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        ArgumentNullException.ThrowIfNull(item);
         item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
     }
 
@@ -175,7 +175,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         item.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        ArgumentNullException.ThrowIfNull(item);
         item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
     }
 
@@ -210,7 +210,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         item.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        ArgumentNullException.ThrowIfNull(item);
         item.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
     }
 
@@ -236,7 +236,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
+        ArgumentNullException.ThrowIfNull(retVal);
         retVal.Id.Should().Be("4591d551-0d6a-4c0d-b109-002e67318231");
     }
 
@@ -264,7 +264,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         firstService.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(firstService, nameof(firstService));
+        ArgumentNullException.ThrowIfNull(firstService);
         firstService.Id.Should().Be("39f211fc-73d4-4ea1-a1c9-d8fc063d6b51");
     }
 
@@ -299,7 +299,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var item = retVal?.Items.FirstOrDefault(x => x.Id == "4591d551-0d6a-4c0d-b109-002e67318231");
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        ArgumentNullException.ThrowIfNull(item);
 
         item.Name += " Changed";
         item.Description += " Changed";

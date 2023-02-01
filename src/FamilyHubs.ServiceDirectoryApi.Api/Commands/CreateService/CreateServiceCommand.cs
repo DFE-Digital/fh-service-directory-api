@@ -36,7 +36,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
         try
         {
             var entity = _mapper.Map<Service>(request.Service);
-            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.Service.ServiceType.Id);
             if (serviceType != null)

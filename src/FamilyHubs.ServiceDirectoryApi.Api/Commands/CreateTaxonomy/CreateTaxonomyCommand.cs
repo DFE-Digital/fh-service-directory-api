@@ -35,7 +35,7 @@ public class CreateTaxonomyCommandHandler : IRequestHandler<CreateTaxonomyComman
         try
         {
             var entity = _mapper.Map<Taxonomy>(request.Taxonomy);
-            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             entity.RegisterDomainEvent(new TaxonomyCreatedEvent(entity));
 

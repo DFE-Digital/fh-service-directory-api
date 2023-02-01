@@ -40,7 +40,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     public async Task<string> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(request, nameof(request));
+        ArgumentNullException.ThrowIfNull(request);
         _request = request;
 
         var entity = await _context.Services
@@ -82,7 +82,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         try
         {
             var serviceEntity = _mapper.Map<Service>(request.Service);
-            ArgumentNullException.ThrowIfNull(serviceEntity, nameof(serviceEntity));
+            ArgumentNullException.ThrowIfNull(serviceEntity);
 
             var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.Service.ServiceType.Id);
             if (serviceType != null)
@@ -275,7 +275,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
                                 }
                             }
 
-                            ArgumentNullException.ThrowIfNull(linkTaxonomyEntity, nameof(linkTaxonomyEntity));
+                            ArgumentNullException.ThrowIfNull(linkTaxonomyEntity);
 
                             linkTaxonomyEntity.RegisterDomainEvent(new LinkTaxonomyCreatedEvent(linkTaxonomyEntity));
 

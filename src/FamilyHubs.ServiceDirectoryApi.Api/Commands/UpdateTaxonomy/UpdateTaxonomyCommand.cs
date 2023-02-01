@@ -33,7 +33,7 @@ public class UpdateTaxonomyCommandHandler : IRequestHandler<UpdateTaxonomyComman
 
     public async Task<string> Handle(UpdateTaxonomyCommand request, CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(request, nameof(request));
+        ArgumentNullException.ThrowIfNull(request);
 
         var entity = await _context.Taxonomies
           .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);

@@ -14,16 +14,16 @@ public class EfRepositoryAdd : BaseEfRepositoryTestFixture
         // Arrange
         var testData = new TestData();
         var organisation = testData.GetTestCountyCouncil();
-        ArgumentNullException.ThrowIfNull(organisation, nameof(organisation));
+        ArgumentNullException.ThrowIfNull(organisation);
 
         var repository = GetRepository<Organisation>();
-        ArgumentNullException.ThrowIfNull(repository, nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
 
         // Act
         await repository.AddAsync(organisation);
 
         var addedOrganisation = await repository.GetByIdAsync(organisation.Id);
-        ArgumentNullException.ThrowIfNull(addedOrganisation, nameof(addedOrganisation));
+        ArgumentNullException.ThrowIfNull(addedOrganisation);
 
         await repository.SaveChangesAsync();
 

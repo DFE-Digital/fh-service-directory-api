@@ -15,10 +15,10 @@ public class EfRepositoryUpdate : BaseEfRepositoryTestFixture
         // Arrange
         var testData = new TestData();
         var organisation = testData.GetTestCountyCouncil();
-        ArgumentNullException.ThrowIfNull(organisation, nameof(organisation));
+        ArgumentNullException.ThrowIfNull(organisation);
 
         var repository = GetRepository<Organisation>();
-        ArgumentNullException.ThrowIfNull(repository, nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
         await repository.AddAsync(organisation);
 
         DbContext.Entry(organisation).State = EntityState.Detached;             // detach the item so we get a different instance

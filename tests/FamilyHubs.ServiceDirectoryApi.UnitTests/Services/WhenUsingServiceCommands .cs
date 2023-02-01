@@ -66,8 +66,8 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
 
         //Assert
         results.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(testOrganisation, nameof(testOrganisation));
-        ArgumentNullException.ThrowIfNull(testOrganisation.Services, nameof(testOrganisation.Services));
+        ArgumentNullException.ThrowIfNull(testOrganisation);
+        ArgumentNullException.ThrowIfNull(testOrganisation.Services);
         results.Items[0].Should().BeEquivalentTo(testOrganisation.Services.ElementAt(0));
     }
 
@@ -94,8 +94,8 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
 
         //Assert
         results.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(testOrganisation, nameof(testOrganisation));
-        ArgumentNullException.ThrowIfNull(testOrganisation.Services, nameof(testOrganisation.Services));
+        ArgumentNullException.ThrowIfNull(testOrganisation);
+        ArgumentNullException.ThrowIfNull(testOrganisation.Services);
         results[0].Should().BeEquivalentTo(testOrganisation.Services.ElementAt(0));
     }
 
@@ -187,8 +187,8 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
 
         //Assert
         results.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(testOrganisation, nameof(testOrganisation));
-        ArgumentNullException.ThrowIfNull(testOrganisation.Services, nameof(testOrganisation.Services));
+        ArgumentNullException.ThrowIfNull(testOrganisation);
+        ArgumentNullException.ThrowIfNull(testOrganisation.Services);
         results.Items[0].Should().BeEquivalentTo(testOrganisation.Services.ElementAt(0));
     }
 

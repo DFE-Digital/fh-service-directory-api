@@ -102,7 +102,7 @@ public class WhenUsingUICacheApiUnitTests : BaseWhenUsingApiUnitTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
+        ArgumentNullException.ThrowIfNull(retVal);
         retVal.Id.Should().Be(id);
     }
 

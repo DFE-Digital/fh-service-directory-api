@@ -66,7 +66,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
+        ArgumentNullException.ThrowIfNull(retVal);
         retVal.Id.Should().Be("72e653e8-1d05-4821-84e9-9177571a6013");
     }
 
@@ -92,7 +92,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
+        ArgumentNullException.ThrowIfNull(retVal);
         retVal.Count.Should().BeGreaterThan(0);
     }
 
@@ -118,7 +118,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
+        ArgumentNullException.ThrowIfNull(retVal);
         retVal.Count.Should().BeGreaterThan(2);
     }
 
@@ -172,7 +172,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
 
 
         var retVal = await JsonSerializer.DeserializeAsync<OrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
+        ArgumentNullException.ThrowIfNull(retVal);
 
         var update = new OrganisationWithServicesDto(
             retVal.Id,

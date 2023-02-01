@@ -11,10 +11,10 @@ public class EfRepositoryDelete : BaseEfRepositoryTestFixture
         // Arrange
         var testData = new TestData();
         var newOrganisation = testData.GetTestCountyCouncil();
-        ArgumentNullException.ThrowIfNull(newOrganisation, nameof(newOrganisation));
+        ArgumentNullException.ThrowIfNull(newOrganisation);
         var organisationId = newOrganisation.Id;
         var repository = GetRepository<Organisation>();
-        ArgumentNullException.ThrowIfNull(repository, nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
         await repository.AddAsync(newOrganisation);
 
         // Act

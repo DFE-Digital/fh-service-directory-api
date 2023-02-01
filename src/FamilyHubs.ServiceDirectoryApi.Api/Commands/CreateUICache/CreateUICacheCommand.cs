@@ -31,7 +31,7 @@ public class CreateUICacheCommandHandler : IRequestHandler<CreateUICacheCommand,
         try
         {
             var entity = new UICache(request.UICacheDto.Id, request.UICacheDto.Value);
-            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             entity.RegisterDomainEvent(new UICacheCreatedEvent(entity));
 

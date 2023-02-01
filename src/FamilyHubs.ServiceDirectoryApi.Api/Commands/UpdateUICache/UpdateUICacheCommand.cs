@@ -33,7 +33,7 @@ public class UpdateUICacheCommandHandler : IRequestHandler<UpdateUICacheCommand,
 
     public async Task<string> Handle(UpdateUICacheCommand request, CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(request, nameof(request));
+        ArgumentNullException.ThrowIfNull(request);
 
         var entity = await _context.UICaches
           .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);

@@ -33,7 +33,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<TaxonomyDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
+        ArgumentNullException.ThrowIfNull(retVal);
         retVal.Should().NotBeNull();
         retVal.Items.Count.Should().BeGreaterThan(3);
     }
