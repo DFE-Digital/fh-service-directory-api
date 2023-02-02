@@ -57,6 +57,27 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
                     if (serviceType != null)
                         service.ServiceType = serviceType;
 
+                    for(var i = service.Eligibilities.Count - 1; i >= 0; i--)
+                    {
+                        var eligibility = _context.Eligibilities.FirstOrDefault(x => x.Id == service.Eligibilities.ElementAt(i).Id);
+                        if (eligibility != null)
+                        {
+                            service.Eligibilities.Remove(service.Eligibilities.ElementAt(i));
+
+                            service.Eligibilities.Add(eligibility);
+                        }
+                    }
+
+                    for (var i = service.Languages.Count - 1; i >= 0; i--)
+                    {
+                        var language = _context.Languages.FirstOrDefault(x => x.Id == service.Languages.ElementAt(i).Id);
+                        if (language != null)
+                        {
+                            service.Languages.Remove(service.Languages.ElementAt(i));
+                            service.Languages.Add(language);
+                        }
+                    }
+
                     foreach (var serviceTaxonomy in service.ServiceTaxonomies)
                     {
                         if (serviceTaxonomy.Taxonomy != null)
@@ -69,9 +90,21 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
                         }
                     }
 
+                    foreach (var linkContact in service.LinkContacts)
+                    {
+                        if (linkContact.Contact != null)
+                        {
+                            var contact = _context.Contacts.FirstOrDefault(x => x.Id == linkContact.Contact.Id);
+                            if (contact != null)
+                            {
+                                linkContact.Contact = contact;
+                            }
+                        }
+                    }
+
                     foreach (var serviceAtLocation in service.ServiceAtLocations)
                     {
-                        if (serviceAtLocation.RegularSchedules != null)
+                        if (serviceAtLocation.RegularSchedules?.Any() == true)
                         {
                             foreach (var regularSchedules in serviceAtLocation.RegularSchedules)
                             {
@@ -79,11 +112,26 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
                             }
                         }
 
-                        if (serviceAtLocation.HolidaySchedules != null)
+                        if (serviceAtLocation.HolidaySchedules?.Any() == true)
                         {
                             foreach (var holidaySchedules in serviceAtLocation.HolidaySchedules)
                             {
                                 holidaySchedules.ServiceAtLocationId = serviceAtLocation.Id;
+                            }
+                        }
+
+                        if (serviceAtLocation.LinkContacts?.Any() == true)
+                        {
+                            foreach (var linkContact in serviceAtLocation.LinkContacts)
+                            {
+                                if (linkContact.Contact != null)
+                                {
+                                    var contact = _context.Contacts.FirstOrDefault(x => x.Id == linkContact.Contact.Id);
+                                    if (contact != null)
+                                    {
+                                        linkContact.Contact = contact;
+                                    }
+                                }
                             }
                         }
 
@@ -108,8 +156,9 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
                                 }
                             }
                             serviceAtLocation.Location = existingLocation;
-                        }
-                        else if (serviceAtLocation.Location.LinkTaxonomies != null)
+                        } 
+                        
+                        if (serviceAtLocation.Location.LinkTaxonomies?.Any() == true)
                         {
                             foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
                             {
@@ -123,43 +172,20 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
                                 }
                             }
                         }
-                    }
-
-                    for(var i = service.Eligibilities.Count - 1; i >= 0; i--)
-                    {
-                        var eligibility = _context.Eligibilities.FirstOrDefault(x => x.Id == service.Eligibilities.ElementAt(i).Id);
-                        if (eligibility != null)
+                        
+                        if (serviceAtLocation.Location.LinkContacts?.Any() == true)
                         {
-                            service.Eligibilities.Remove(service.Eligibilities.ElementAt(i));
-
-                            service.Eligibilities.Add(eligibility);
-                        }
-                    }
-
-                    for (var i = service.Languages.Count - 1; i >= 0; i--)
-                    {
-                        var language = _context.Languages.FirstOrDefault(x => x.Id == service.Languages.ElementAt(i).Id);
-                        if (language != null)
-                        {
-                            service.Languages.Remove(service.Languages.ElementAt(i));
-                            service.Languages.Add(language);
-                        }
-                    }
-
-                    for (var i = service.ServiceTaxonomies.Count - 1; i >= 0; i--)
-                    {
-                        if (service.ServiceTaxonomies.ElementAt(i).Taxonomy != null)
-                        {
-                            var listTaxonomy = service.ServiceTaxonomies.ElementAt(i).Taxonomy;
-                            if (listTaxonomy != null) 
+                            foreach (var linkContact in serviceAtLocation.Location.LinkContacts)
                             {
-                                var tax = _context.Taxonomies.FirstOrDefault(x => x.Id == listTaxonomy.Id);
-                                if (tax != null)
+                                if (linkContact.Contact != null)
                                 {
-                                    service.ServiceTaxonomies.ElementAt(i).Taxonomy = tax;
+                                    var contact = _context.Contacts.FirstOrDefault(x => x.Id == linkContact.Contact.Id);
+                                    if (contact != null)
+                                    {
+                                        linkContact.Contact = contact;
+                                    }
                                 }
                             }
-                            
                         }
                     }
                 }

@@ -19,7 +19,7 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         IMapper mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
         var updateLogger = new Mock<ILogger<UpdateServiceCommandHandler>>();
         var command = new CreateOrganisationCommand(testOrganisation);
         var handler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);

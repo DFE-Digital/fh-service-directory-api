@@ -42,6 +42,27 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             if (serviceType != null)
                 entity.ServiceType = serviceType;
 
+            for(var i = entity.Eligibilities.Count - 1; i >= 0; i--)
+            {
+                var eligibility = _context.Eligibilities.FirstOrDefault(x => x.Id == entity.Eligibilities.ElementAt(i).Id);
+                if (eligibility != null)
+                {
+                    entity.Eligibilities.Remove(entity.Eligibilities.ElementAt(i));
+
+                    entity.Eligibilities.Add(eligibility);
+                }
+            }
+
+            for (var i = entity.Languages.Count - 1; i >= 0; i--)
+            {
+                var language = _context.Languages.FirstOrDefault(x => x.Id == entity.Languages.ElementAt(i).Id);
+                if (language != null)
+                {
+                    entity.Languages.Remove(entity.Languages.ElementAt(i));
+                    entity.Languages.Add(language);
+                }
+            }
+
             foreach (var serviceTaxonomy in entity.ServiceTaxonomies)
             {
                 if (serviceTaxonomy.Taxonomy != null)
@@ -50,6 +71,18 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
                     if (taxonomy != null)
                     {
                         serviceTaxonomy.Taxonomy = taxonomy;
+                    }
+                }
+            }
+
+            foreach (var linkContact in entity.LinkContacts)
+            {
+                if (linkContact.Contact != null)
+                {
+                    var contact = _context.Contacts.FirstOrDefault(x => x.Id == linkContact.Contact.Id);
+                    if (contact != null)
+                    {
+                        linkContact.Contact = contact;
                     }
                 }
             }
@@ -69,6 +102,21 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
                     foreach (var holidaySchedules in serviceAtLocation.HolidaySchedules)
                     {
                         holidaySchedules.ServiceAtLocationId = serviceAtLocation.Id;
+                    }
+                }
+
+                if (serviceAtLocation.LinkContacts?.Any() == true)
+                {
+                    foreach (var linkContact in serviceAtLocation.LinkContacts)
+                    {
+                        if (linkContact.Contact != null)
+                        {
+                            var contact = _context.Contacts.FirstOrDefault(x => x.Id == linkContact.Contact.Id);
+                            if (contact != null)
+                            {
+                                linkContact.Contact = contact;
+                            }
+                        }
                     }
                 }
 
@@ -94,7 +142,8 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
                     }
                     serviceAtLocation.Location = existingLocation;
                 }
-                else if (serviceAtLocation.Location.LinkTaxonomies != null)
+                
+                if (serviceAtLocation.Location.LinkTaxonomies != null)
                 {
                     foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
                     {
@@ -104,6 +153,21 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
                             if (taxonomy != null)
                             {
                                 linkTaxonomy.Taxonomy = taxonomy;
+                            }
+                        }
+                    }
+                }
+                
+                if (serviceAtLocation.Location.LinkContacts?.Any() == true)
+                {
+                    foreach (var linkContact in serviceAtLocation.Location.LinkContacts)
+                    {
+                        if (linkContact.Contact != null)
+                        {
+                            var contact = _context.Contacts.FirstOrDefault(x => x.Id == linkContact.Contact.Id);
+                            if (contact != null)
+                            {
+                                linkContact.Contact = contact;
                             }
                         }
                     }

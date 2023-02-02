@@ -192,9 +192,10 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
           .Include(x => x.ServiceType)
           .Include(x => x.ServiceDeliveries)
           .Include(x => x.Eligibilities)
-          .Include(x => x.LinkContacts)
           .Include(x => x.Languages)
           .Include(x => x.ServiceAreas)
+          .Include(x => x.LinkContacts)
+          .ThenInclude(x => x.Contact)
           .Include(x => x.ServiceTaxonomies)
           .ThenInclude(x => x.Taxonomy)
           
@@ -206,6 +207,15 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
           .ThenInclude(x => x.Location)
           .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
           .ThenInclude(x => x.Taxonomy)
+
+          .Include(x => x.ServiceAtLocations)
+          .ThenInclude(x => x.Location)
+          .ThenInclude(x => x.LinkContacts!)
+          .ThenInclude(x => x.Contact)
+
+          .Include(x => x.ServiceAtLocations)
+          .Include(x => x.LinkContacts)
+          .ThenInclude(x => x.Contact)
 
           .Include(x => x.ServiceAtLocations)
           .ThenInclude(x => x.RegularSchedules)

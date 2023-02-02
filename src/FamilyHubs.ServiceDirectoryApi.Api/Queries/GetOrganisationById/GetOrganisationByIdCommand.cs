@@ -34,6 +34,7 @@ public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCom
            .ThenInclude(x => x.Eligibilities)
            .Include(x => x.Services!)
            .ThenInclude(x => x.LinkContacts)
+           .ThenInclude(x => x.Contact)
            .Include(x => x.Services!)
            .ThenInclude(x => x.CostOptions)
            .Include(x => x.Services!)
@@ -65,6 +66,17 @@ public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCom
            .ThenInclude(x => x.Location)
            .ThenInclude(x => x.LinkTaxonomies!)
            .ThenInclude(x => x.Taxonomy)
+
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.ServiceAtLocations)
+           .ThenInclude(x => x.Location)
+           .ThenInclude(x => x.LinkContacts!)
+           .ThenInclude(x => x.Contact)
+
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.ServiceAtLocations)
+           .ThenInclude(x => x.LinkContacts!)
+           .ThenInclude(x => x.Contact)
 
            .Include(x => x.Services!)
            .ThenInclude(x => x.ServiceTaxonomies)

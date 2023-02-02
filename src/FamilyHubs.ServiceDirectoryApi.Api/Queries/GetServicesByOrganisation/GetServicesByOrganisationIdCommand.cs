@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using FamilyHubs.ServiceDirectory.Api.Helper;
+using FamilyHubs.ServiceDirectory.Core;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -51,6 +52,7 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
             .Include(x => x.ServiceDeliveries)
             .Include(x => x.Eligibilities)
             .Include(x => x.LinkContacts)
+            .ThenInclude(x => x.Contact)
             .Include(x => x.CostOptions)
             .Include(x => x.Languages)
             .Include(x => x.ServiceAreas)
@@ -64,6 +66,15 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
             .ThenInclude(x => x.LinkTaxonomies!)
             .ThenInclude(x => x.Taxonomy)
 
+            .Include(x => x.ServiceAtLocations)
+            .ThenInclude(x => x.Location)
+            .ThenInclude(x => x.LinkContacts!)
+            .ThenInclude(x => x.Contact)
+
+            .Include(x => x.ServiceAtLocations)
+            .Include(x => x.LinkContacts)
+            .ThenInclude(x => x.Contact)
+            
             .Include(x => x.ServiceAtLocations)
             .ThenInclude(x => x.RegularSchedules)
 

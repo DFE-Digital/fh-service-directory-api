@@ -139,7 +139,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
                 UpdateHolidaySchedule(entity.HolidaySchedules, request.Service.HolidaySchedules ?? new Collection<HolidayScheduleDto>(), null);
 
             await _context.SaveChangesAsync(cancellationToken);
-            
+
         }
         catch (Exception ex)
         {
@@ -152,7 +152,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateEligibility(ICollection<Eligibility> existing, ICollection<EligibilityDto> updated)
     {
-        List<string> currentIds = new List<string>();
+        var currentIds = new List<string>();
         foreach (var updatedEligibility in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedEligibility.Id);
@@ -181,8 +181,8 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateServiceAtLocation(ICollection<ServiceAtLocation> existing, ICollection<ServiceAtLocationDto> updated)
     {
-        List<string> list = new List<string>();
-        List<string> listAddress = new List<string>();
+        var list = new List<string>();
+        var listAddress = new List<string>();
 
         foreach (var updatedServiceLoc in updated)
         {
@@ -243,11 +243,12 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
                         UpdateHolidaySchedule(current.HolidaySchedules ?? new Collection<HolidaySchedule>(), updatedServiceLoc.HolidaySchedules ?? new Collection<HolidayScheduleDto>(), current);
                     }
                 }
+                
                 if (updatedServiceLoc.Location.LinkTaxonomies != null && updatedServiceLoc.Location.LinkTaxonomies.Any())
                 {
                     foreach (var linkTaxonomyDto in updatedServiceLoc.Location.LinkTaxonomies)
                     {
-                        var linkTaxonomy =  _context.LinkTaxonomies.SingleOrDefault(p => p.Id == linkTaxonomyDto.Id);
+                        var linkTaxonomy = _context.LinkTaxonomies.SingleOrDefault(p => p.Id == linkTaxonomyDto.Id);
                         if (linkTaxonomy != null)
                         {
                             linkTaxonomy.LinkType = linkTaxonomyDto.LinkType;
@@ -279,10 +280,16 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
                             linkTaxonomyEntity.RegisterDomainEvent(new LinkTaxonomyCreatedEvent(linkTaxonomyEntity));
 
-                             _context.LinkTaxonomies.Add(linkTaxonomyEntity);
+                            _context.LinkTaxonomies.Add(linkTaxonomyEntity);
                         }
                     }
                 }
+
+                if (current.LinkContacts != null && updatedServiceLoc.LinkContacts != null && current.LinkContacts.Serialize() != updatedServiceLoc.LinkContacts.Serialize())
+                    UpdateContacts(current.LinkContacts, updatedServiceLoc.LinkContacts);
+
+                if (current.Location.LinkContacts != null && updatedServiceLoc.Location.LinkContacts != null && current.Location.LinkContacts.Serialize() != updatedServiceLoc.Location.LinkContacts.Serialize())
+                    UpdateContacts(current.Location.LinkContacts, updatedServiceLoc.Location.LinkContacts);
 
                 list.Add(current.Id);
             }
@@ -300,19 +307,17 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
                     }
                 }
             }
-            
 
             if (!list.Contains(item.Id))
             {
                 _context.ServiceAtLocations.Remove(item);
             }
         }
-        
     }
 
     private void UpdateHolidaySchedule(ICollection<HolidaySchedule> existing, ICollection<HolidayScheduleDto> updated, ServiceAtLocation? serviceAtLocation)
     {
-        List<string> currentIds = new List<string>();
+        var currentIds = new List<string>();
         foreach (var updatedSchedule in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedSchedule.Id);
@@ -343,7 +348,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateRegularSchedule(ICollection<RegularSchedule> existing, ICollection<RegularScheduleDto> updated, ServiceAtLocation? serviceAtLocation)
     {
-        List<string> currentIds = new List<string>();
+        var currentIds = new List<string>();
         foreach (var updatedSchedule in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedSchedule.Id);
@@ -379,7 +384,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateServiceArea(ICollection<ServiceArea> existing, ICollection<ServiceAreaDto> updated)
     {
-        List<string> currentIds = new List<string>();
+        var currentIds = new List<string>();
         foreach (var updatedServiceArea in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedServiceArea.Id);
@@ -407,7 +412,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateCostOptions(ICollection<CostOption> existing, ICollection<CostOptionDto> updated)
     {
-        List<string> currentIds = new List<string>();
+        var currentIds = new List<string>();
         foreach (var updatedCostOption in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedCostOption.Id);
@@ -439,7 +444,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateTaxonomies(ICollection<ServiceTaxonomy> existing, ICollection<ServiceTaxonomyDto> updated)
     {
-        List<string> currentIds = new List<string>();
+        var currentIds = new List<string>();
         foreach (var updatedServiceTaxonomy in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedServiceTaxonomy.Id);
@@ -455,7 +460,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             }
             else
             {
-              currentIds.Add(current.Id);
+                currentIds.Add(current.Id);
             }
         }
 
@@ -466,7 +471,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateLanguages(ICollection<Language> existing, ICollection<LanguageDto> updated)
     {
-        List<string> currentIds = new List<string>();
+        var currentIds = new List<string>();
         foreach (var updatedLanguage in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedLanguage.Id);
@@ -489,8 +494,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             _context.Languages.RemoveRange(dataToDelete);
     }
 
-    
-
     private void UpdateContacts(ICollection<LinkContact> existing, ICollection<LinkContactDto> updated)
     {
         foreach (var updatedContact in updated)
@@ -504,12 +507,12 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             }
             else if (current.Contact != null)
             {
-                current.Contact.Title     = updatedContact.Contact.Title;
-                current.Contact.Name      = updatedContact.Contact.Name;
+                current.Contact.Title = updatedContact.Contact.Title;
+                current.Contact.Name = updatedContact.Contact.Name;
                 current.Contact.Telephone = updatedContact.Contact.Telephone;
                 current.Contact.TextPhone = updatedContact.Contact.TextPhone;
-                current.Contact.Url       = updatedContact.Contact.Url;
-                current.Contact.Email     = updatedContact.Contact.Email;
+                current.Contact.Url = updatedContact.Contact.Url;
+                current.Contact.Email = updatedContact.Contact.Email;
             }
         }
 
@@ -522,7 +525,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private void UpdateServiceDelivery(ICollection<ServiceDelivery> existing, ICollection<ServiceDeliveryDto> updated)
     {
-        List<string> currentIds = new List<string>();
+        var currentIds = new List<string>();
         foreach (var updatedServiceDelivery in updated)
         {
             var current = existing.FirstOrDefault(x => x.Id == updatedServiceDelivery.Id);
