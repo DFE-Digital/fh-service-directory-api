@@ -3,6 +3,7 @@ using System;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace fhservicedirectoryapi.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230202162726_RemoveLinkContactFk")]
+    partial class RemoveLinkContactFk
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +57,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("AccessibilityForDisabilities", (string)null);
+                    b.ToTable("AccessibilityForDisabilities");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.AdminArea", b =>
@@ -89,7 +92,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdminAreas", (string)null);
+                    b.ToTable("AdminAreas");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.Contact", b =>
@@ -139,7 +142,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Contacts", (string)null);
+                    b.ToTable("Contacts");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.CostOption", b =>
@@ -190,7 +193,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("CostOptions", (string)null);
+                    b.ToTable("CostOptions");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.Eligibility", b =>
@@ -234,7 +237,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Eligibilities", (string)null);
+                    b.ToTable("Eligibilities");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.Funding", b =>
@@ -265,7 +268,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Fundings", (string)null);
+                    b.ToTable("Fundings");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.HolidaySchedule", b =>
@@ -313,7 +316,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("HolidaySchedules", (string)null);
+                    b.ToTable("HolidaySchedules");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.Language", b =>
@@ -345,7 +348,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Languages", (string)null);
+                    b.ToTable("Languages");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.LinkContact", b =>
@@ -382,7 +385,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("LinkId");
 
-                    b.ToTable("LinkContacts", (string)null);
+                    b.ToTable("LinkContacts");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.LinkTaxonomy", b =>
@@ -424,7 +427,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("TaxonomyId");
 
-                    b.ToTable("LinkTaxonomies", (string)null);
+                    b.ToTable("LinkTaxonomies");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.Location", b =>
@@ -465,7 +468,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations", (string)null);
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.Organisation", b =>
@@ -513,7 +516,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("OrganisationTypeId");
 
-                    b.ToTable("Organisations", (string)null);
+                    b.ToTable("Organisations");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.OrganisationType", b =>
@@ -548,7 +551,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OrganisationTypes", (string)null);
+                    b.ToTable("OrganisationTypes");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.Parent", b =>
@@ -577,7 +580,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Parents", (string)null);
+                    b.ToTable("Parents");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.PhysicalAddress", b =>
@@ -628,7 +631,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("PhysicalAddresses", (string)null);
+                    b.ToTable("PhysicalAddresses");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.RegularSchedule", b =>
@@ -692,7 +695,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("RegularSchedules", (string)null);
+                    b.ToTable("RegularSchedules");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.RelatedOrganisation", b =>
@@ -727,7 +730,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RelatedOrganisations", (string)null);
+                    b.ToTable("RelatedOrganisations");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.Review", b =>
@@ -779,7 +782,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.Service", b =>
@@ -847,7 +850,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("ServiceTypeId");
 
-                    b.ToTable("Services", (string)null);
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.ServiceArea", b =>
@@ -891,7 +894,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceAreas", (string)null);
+                    b.ToTable("ServiceAreas");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.ServiceAtLocation", b =>
@@ -928,7 +931,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceAtLocations", (string)null);
+                    b.ToTable("ServiceAtLocations");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.ServiceDelivery", b =>
@@ -964,7 +967,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceDeliveries", (string)null);
+                    b.ToTable("ServiceDeliveries");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.ServiceTaxonomy", b =>
@@ -1005,7 +1008,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("TaxonomyId");
 
-                    b.ToTable("ServiceTaxonomies", (string)null);
+                    b.ToTable("ServiceTaxonomies");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.ServiceType", b =>
@@ -1040,7 +1043,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ServiceTypes", (string)null);
+                    b.ToTable("ServiceTypes");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.Taxonomy", b =>
@@ -1081,7 +1084,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasIndex("EligibilityId");
 
-                    b.ToTable("Taxonomies", (string)null);
+                    b.ToTable("Taxonomies");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.UiCache", b =>
@@ -1111,7 +1114,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UiCaches", (string)null);
+                    b.ToTable("UiCaches");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.AccessibilityForDisabilities", b =>

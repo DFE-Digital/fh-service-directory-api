@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace fhservicedirectoryapi.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230201124549_LinkContact")]
+    [Migration("20230202162601_LinkContact")]
     partial class LinkContact
     {
         /// <inheritdoc />
@@ -1087,7 +1087,7 @@ namespace fhservicedirectoryapi.api.Migrations
                     b.ToTable("Taxonomies");
                 });
 
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.UICache", b =>
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.UiCache", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -1114,7 +1114,7 @@ namespace fhservicedirectoryapi.api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UICaches");
+                    b.ToTable("UiCaches");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Core.Entities.AccessibilityForDisabilities", b =>

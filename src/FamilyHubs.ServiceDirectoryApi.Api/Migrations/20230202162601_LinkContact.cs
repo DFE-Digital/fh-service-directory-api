@@ -71,10 +71,23 @@ namespace fhservicedirectoryapi.api.Migrations
             migrationBuilder.DropTable(
                 name: "OpenReferralOrganisations");
 
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_UICaches",
+                table: "UICaches");
+
+            migrationBuilder.RenameTable(
+                name: "UICaches",
+                newName: "UiCaches");
+
             migrationBuilder.RenameColumn(
                 name: "OpenReferralOrganisationId",
                 table: "AdminAreas",
                 newName: "OrganisationId");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_UiCaches",
+                table: "UiCaches",
+                column: "Id");
 
             migrationBuilder.CreateTable(
                 name: "Contacts",
@@ -877,10 +890,23 @@ namespace fhservicedirectoryapi.api.Migrations
             migrationBuilder.DropTable(
                 name: "Organisations");
 
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_UiCaches",
+                table: "UiCaches");
+
+            migrationBuilder.RenameTable(
+                name: "UiCaches",
+                newName: "UICaches");
+
             migrationBuilder.RenameColumn(
                 name: "OrganisationId",
                 table: "AdminAreas",
                 newName: "OpenReferralOrganisationId");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_UICaches",
+                table: "UICaches",
+                column: "Id");
 
             migrationBuilder.CreateTable(
                 name: "OpenReferralLocations",
