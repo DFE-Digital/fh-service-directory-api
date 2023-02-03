@@ -226,7 +226,21 @@ public class OrganisationSeedData
                             )
                         },
                         new List<HolidaySchedule>(),
-                        new List<LinkContact>())
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "1a000f89-6487-49ae-9f70-166070b02b47",
+                                "1a000f89-6487-49ae-9f70-166070b02b48",
+                                "Service",
+                                new Contact(
+                                    "7a488a62-6c5b-4fa7-88bc-f60f83627e38",
+                                    "",
+                                    "Broughton Hub",
+                                    "0161 778 0601",
+                                    "0161 778 0601",
+                                    "www.gov.uk",
+                                    "help@gov.uk"))
+                        })
 
                 }),
                 new List<ServiceTaxonomy>( new List<ServiceTaxonomy>
@@ -238,21 +252,7 @@ public class OrganisationSeedData
                 }),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>
-                {
-                    new LinkContact(
-                        "1a000f89-6487-49ae-9f70-166070b02b47",
-                        "1a000f89-6487-49ae-9f70-166070b02b48",
-                        "Service",
-                    new Contact(
-                        "7a488a62-6c5b-4fa7-88bc-f60f83627e38",
-                        "",
-                        "Broughton Hub",
-                        "0161 778 0601",
-                        "0161 778 0601",
-                        "www.gov.uk",
-                        "help@gov.uk"))
-                }),
+                new List<LinkContact>()),
 
             new Service(
                 "2dde869a-914a-4acc-915b-10d368808022",
@@ -296,7 +296,21 @@ public class OrganisationSeedData
                             new List<PhysicalAddress> { new PhysicalAddress("387b5dff-a26a-42fe-84d6-1a744097cf4f", "Chatsworth Road", "Eccles", "M30 9DY", "United Kingdom", "Manchester") }, new List<AccessibilityForDisabilities>(), new List<LinkContact>()),
                         new List<RegularSchedule>(),
                         new List<HolidaySchedule>(),
-                        new List<LinkContact>())
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "2dde869a-914a-4acc-915b-10d368808011",
+                                "2dde869a-914a-4acc-915b-10d368808022",
+                                "Service",
+                                new Contact(
+                                    "aaef3e12-849d-4a09-8606-17252cee6572",
+                                    "Ms",
+                                    "Kate Berry",
+                                    "01619212880",
+                                    "01619212880",
+                                    "www.gov.uk",
+                                    "help@gov.uk"))
+                        })
 
                 }),
                 new List<ServiceTaxonomy>( new List<ServiceTaxonomy>
@@ -308,21 +322,7 @@ public class OrganisationSeedData
                 }),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>
-                {
-                    new LinkContact(
-                        "2dde869a-914a-4acc-915b-10d368808011",
-                        "2dde869a-914a-4acc-915b-10d368808022",
-                        "Service",
-                    new Contact(
-                        "aaef3e12-849d-4a09-8606-17252cee6572",
-                        "Ms",
-                        "Kate Berry",
-                        "01619212880",
-                        "01619212880",
-                        "www.gov.uk",
-                        "help@gov.uk"))
-                }),
+                new List<LinkContact>()),
 
             new Service(
                 "6f4251a7-ae32-44cd-84fc-a632e944fccf",
@@ -369,26 +369,26 @@ public class OrganisationSeedData
                             new List<PhysicalAddress> { new PhysicalAddress("84c0a47a-08a1-4e54-814b-46ce26765c08", "50 Rigby Street", "Manchester", "M7 4BQ", "United Kingdom", "Salford") }, new List<AccessibilityForDisabilities>(), new List<LinkContact>()),
                         new List<RegularSchedule>(),
                         new List<HolidaySchedule>(),
-                        new List<LinkContact>())
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "6f4251a7-ae32-44cd-84fc-a632e944fccc",
+                                "6f4251a7-ae32-44cd-84fc-a632e944fccf",
+                                "Service",
+                                new Contact(
+                                    "6a84d5af-2e5c-40fa-9689-6b11181db320",
+                                    "Ms",
+                                    "Kate Berry",
+                                    "0161 778 0601"
+                                    , "0161 778 0601",
+                                    "www.gov.uk",
+                                    "help@gov.uk"))
+                        })
                 }),
                 new List<ServiceTaxonomy>(),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>
-                {
-                    new LinkContact(
-                        "6f4251a7-ae32-44cd-84fc-a632e944fccc",
-                        "6f4251a7-ae32-44cd-84fc-a632e944fccf",
-                        "Service",
-                    new Contact(
-                        "6a84d5af-2e5c-40fa-9689-6b11181db320",
-                        "Ms",
-                        "Kate Berry",
-                        "0161 778 0601"
-                        , "0161 778 0601",
-                        "www.gov.uk",
-                        "help@gov.uk"))
-                }),
+                new List<LinkContact>()),
 
             new Service(
                 "57bde76b-885d-484d-869f-7e60faf4b1b2",
@@ -435,27 +435,27 @@ public class OrganisationSeedData
                             new List<PhysicalAddress> { new PhysicalAddress("83bf4f64-fdcb-46bc-a32e-8b117bf5c19a", "100 Chorley Road", "Manchester", "M27 6BP", "United Kingdom", "Salford") }, new List<AccessibilityForDisabilities>(), new List<LinkContact>()),
                         new List<RegularSchedule>(),
                         new List<HolidaySchedule>(),
-                        new List<LinkContact>())
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "57bde76b-885d-484d-869f-7e60faf4b1a1",
+                                "57bde76b-885d-484d-869f-7e60faf4b1b2",
+                                "Service",
+                                new Contact(
+                                    "560e159d-c54c-4925-bd55-8bbfd5071520",
+                                    "Ms",
+                                    "Kate Berry",
+                                    "0161 778 0495",
+                                    "0161 778 0495",
+                                    "www.gov.uk",
+                                    "help@gov.uk"))
+                        })
 
                 }),
                 new List<ServiceTaxonomy>(),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>
-                {
-                    new LinkContact(
-                        "57bde76b-885d-484d-869f-7e60faf4b1a1",
-                        "57bde76b-885d-484d-869f-7e60faf4b1b2",
-                        "Service",
-                    new Contact(
-                        "560e159d-c54c-4925-bd55-8bbfd5071520",
-                        "Ms",
-                        "Kate Berry",
-                        "0161 778 0495",
-                        "0161 778 0495",
-                        "www.gov.uk",
-                        "help@gov.uk"))
-                }),
+                new List<LinkContact>()),
 
             new Service(
                 "06c16312-fa5f-4e82-b672-3a9ab099649a",
@@ -503,27 +503,27 @@ public class OrganisationSeedData
                             new List<PhysicalAddress> { new PhysicalAddress("45603703-5d3f-45f4-84f1-b294ac4d3290", "Brindley Street", "Manchester", "M30 8AB", "United Kingdom", "Salford") }, new List<AccessibilityForDisabilities>(), new List<LinkContact>()),
                         new List<RegularSchedule>(),
                         new List<HolidaySchedule>(),
-                        new List<LinkContact>())
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "06c16312-fa5f-4e82-b672-3a9ab099640b",
+                                "06c16312-fa5f-4e82-b672-3a9ab099649a",
+                                "Service",
+                                new Contact(
+                                    "6596d609-8ba1-4188-a357-3d92ae9dec8f",
+                                    "Ms",
+                                    "Kate Berry",
+                                    "0161 686 5260",
+                                    "0161 686 5260",
+                                    "www.gov.uk",
+                                    "help@gov.uk"))
+                        })
 
                 }),
                 new List<ServiceTaxonomy>(),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>
-                {
-                    new LinkContact(
-                        "06c16312-fa5f-4e82-b672-3a9ab099640b",
-                        "06c16312-fa5f-4e82-b672-3a9ab099649a",
-                        "Service",
-                    new Contact(
-                        "6596d609-8ba1-4188-a357-3d92ae9dec8f",
-                        "Ms",
-                        "Kate Berry",
-                        "0161 686 5260",
-                        "0161 686 5260",
-                        "www.gov.uk",
-                        "help@gov.uk"))
-                })
+                new List<LinkContact>())
         };
     }
 
@@ -686,7 +686,21 @@ public class OrganisationSeedData
                             new List<LinkContact>()),
                         new List<RegularSchedule>(),
                         new List<HolidaySchedule>(),
-                        new List<LinkContact>())
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "96781fd9-95a2-4196-8db6-0f083f1c38ab",
+                                "96781fd9-95a2-4196-8db6-0f083f1c38fc",
+                                "Service",
+                                new Contact(
+                                    "1561",
+                                    "Mr",
+                                    "John Smith",
+                                    "01827 65711",
+                                    "01827 65711",
+                                    "www.gov.uk",
+                                    "help@gov.uk"))
+                        })
 
                 }),
                 new List<ServiceTaxonomy>(new List<ServiceTaxonomy>
@@ -699,21 +713,7 @@ public class OrganisationSeedData
                     }),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>
-                {
-                    new LinkContact(
-                        "96781fd9-95a2-4196-8db6-0f083f1c38ab",
-                        "96781fd9-95a2-4196-8db6-0f083f1c38fc",
-                        "Service",
-                        new Contact(
-                        "1561",
-                        "Mr",
-                        "John Smith",
-                        "01827 65711",
-                        "01827 65711",
-                        "www.gov.uk",
-                        "help@gov.uk"))
-                }),
+                new List<LinkContact>()),
 
             new Service(
                 "207613c5-4cdf-46b2-a110-cf120a9412f9",
@@ -868,7 +868,22 @@ public class OrganisationSeedData
                             new List<LinkContact>()),
                         new List<RegularSchedule>(),
                         new List<HolidaySchedule>(),
-                        new List<LinkContact>())
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b52",
+                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b51",
+                                "Service",
+                                new Contact(
+                                    "1563",
+                                    "Mr",
+                                    "John Smith",
+                                    "01827 64328",
+                                    "01827 64328",
+                                    "www.gov.uk",
+                                    "help@gov.uk")
+                            )
+                        })
 
                 }),
                 new List<ServiceTaxonomy>(new List<ServiceTaxonomy>
@@ -881,22 +896,7 @@ public class OrganisationSeedData
                     }),
                 new List<HolidaySchedule>(),
                 new List<RegularSchedule>(),
-                new List<LinkContact>
-                {
-                    new LinkContact(
-                        "39f211fc-73d4-4ea1-a1c9-d8fc063d6b52",
-                        "39f211fc-73d4-4ea1-a1c9-d8fc063d6b51",
-                        "Service",
-                        new Contact(
-                            "1563",
-                            "Mr",
-                            "John Smith",
-                            "01827 64328",
-                            "01827 64328",
-                            "www.gov.uk",
-                            "help@gov.uk")
-                        )
-                }),
+                new List<LinkContact>()),
         };
     }
 }
