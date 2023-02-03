@@ -103,6 +103,7 @@ public static class StartupExtensions
                     {
                         options = new DbContextOptionsBuilder<ApplicationDbContext>()
                             .UseNpgsql(builder.Configuration.GetConnectionString("ServiceDirectoryConnection") ?? string.Empty)
+                            .UseLowerCaseNamingConvention()
                             .Options;
                     }
                     break;

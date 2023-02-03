@@ -75,837 +75,1271 @@ namespace fhservicedirectoryapi.api.Migrations
                 name: "PK_UICaches",
                 table: "UICaches");
 
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_ServiceTypes",
+                table: "ServiceTypes");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_RelatedOrganisations",
+                table: "RelatedOrganisations");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_OrganisationTypes",
+                table: "OrganisationTypes");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_AdminAreas",
+                table: "AdminAreas");
+
             migrationBuilder.RenameTable(
                 name: "UICaches",
-                newName: "UiCaches");
+                newName: "uicaches");
+
+            migrationBuilder.RenameTable(
+                name: "ServiceTypes",
+                newName: "servicetypes");
+
+            migrationBuilder.RenameTable(
+                name: "RelatedOrganisations",
+                newName: "relatedorganisations");
+
+            migrationBuilder.RenameTable(
+                name: "OrganisationTypes",
+                newName: "organisationtypes");
+
+            migrationBuilder.RenameTable(
+                name: "AdminAreas",
+                newName: "adminareas");
+
+            migrationBuilder.RenameColumn(
+                name: "Value",
+                table: "uicaches",
+                newName: "value");
+
+            migrationBuilder.RenameColumn(
+                name: "LastModifiedBy",
+                table: "uicaches",
+                newName: "lastmodifiedby");
+
+            migrationBuilder.RenameColumn(
+                name: "LastModified",
+                table: "uicaches",
+                newName: "lastmodified");
+
+            migrationBuilder.RenameColumn(
+                name: "CreatedBy",
+                table: "uicaches",
+                newName: "createdby");
+
+            migrationBuilder.RenameColumn(
+                name: "Created",
+                table: "uicaches",
+                newName: "created");
+
+            migrationBuilder.RenameColumn(
+                name: "Id",
+                table: "uicaches",
+                newName: "id");
+
+            migrationBuilder.RenameColumn(
+                name: "Name",
+                table: "servicetypes",
+                newName: "name");
+
+            migrationBuilder.RenameColumn(
+                name: "LastModifiedBy",
+                table: "servicetypes",
+                newName: "lastmodifiedby");
+
+            migrationBuilder.RenameColumn(
+                name: "LastModified",
+                table: "servicetypes",
+                newName: "lastmodified");
+
+            migrationBuilder.RenameColumn(
+                name: "Description",
+                table: "servicetypes",
+                newName: "description");
+
+            migrationBuilder.RenameColumn(
+                name: "CreatedBy",
+                table: "servicetypes",
+                newName: "createdby");
+
+            migrationBuilder.RenameColumn(
+                name: "Created",
+                table: "servicetypes",
+                newName: "created");
+
+            migrationBuilder.RenameColumn(
+                name: "Id",
+                table: "servicetypes",
+                newName: "id");
+
+            migrationBuilder.RenameColumn(
+                name: "RelatedOrganisationId",
+                table: "relatedorganisations",
+                newName: "relatedorganisationid");
+
+            migrationBuilder.RenameColumn(
+                name: "OrganisationId",
+                table: "relatedorganisations",
+                newName: "organisationid");
+
+            migrationBuilder.RenameColumn(
+                name: "LastModifiedBy",
+                table: "relatedorganisations",
+                newName: "lastmodifiedby");
+
+            migrationBuilder.RenameColumn(
+                name: "LastModified",
+                table: "relatedorganisations",
+                newName: "lastmodified");
+
+            migrationBuilder.RenameColumn(
+                name: "CreatedBy",
+                table: "relatedorganisations",
+                newName: "createdby");
+
+            migrationBuilder.RenameColumn(
+                name: "Created",
+                table: "relatedorganisations",
+                newName: "created");
+
+            migrationBuilder.RenameColumn(
+                name: "Id",
+                table: "relatedorganisations",
+                newName: "id");
+
+            migrationBuilder.RenameColumn(
+                name: "Name",
+                table: "organisationtypes",
+                newName: "name");
+
+            migrationBuilder.RenameColumn(
+                name: "LastModifiedBy",
+                table: "organisationtypes",
+                newName: "lastmodifiedby");
+
+            migrationBuilder.RenameColumn(
+                name: "LastModified",
+                table: "organisationtypes",
+                newName: "lastmodified");
+
+            migrationBuilder.RenameColumn(
+                name: "Description",
+                table: "organisationtypes",
+                newName: "description");
+
+            migrationBuilder.RenameColumn(
+                name: "CreatedBy",
+                table: "organisationtypes",
+                newName: "createdby");
+
+            migrationBuilder.RenameColumn(
+                name: "Created",
+                table: "organisationtypes",
+                newName: "created");
+
+            migrationBuilder.RenameColumn(
+                name: "Id",
+                table: "organisationtypes",
+                newName: "id");
+
+            migrationBuilder.RenameColumn(
+                name: "LastModifiedBy",
+                table: "adminareas",
+                newName: "lastmodifiedby");
+
+            migrationBuilder.RenameColumn(
+                name: "LastModified",
+                table: "adminareas",
+                newName: "lastmodified");
+
+            migrationBuilder.RenameColumn(
+                name: "CreatedBy",
+                table: "adminareas",
+                newName: "createdby");
+
+            migrationBuilder.RenameColumn(
+                name: "Created",
+                table: "adminareas",
+                newName: "created");
+
+            migrationBuilder.RenameColumn(
+                name: "Code",
+                table: "adminareas",
+                newName: "code");
+
+            migrationBuilder.RenameColumn(
+                name: "Id",
+                table: "adminareas",
+                newName: "id");
 
             migrationBuilder.RenameColumn(
                 name: "OpenReferralOrganisationId",
-                table: "AdminAreas",
-                newName: "OrganisationId");
+                table: "adminareas",
+                newName: "organisationid");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_UiCaches",
-                table: "UiCaches",
-                column: "Id");
+                name: "pk_uicaches",
+                table: "uicaches",
+                column: "id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "pk_servicetypes",
+                table: "servicetypes",
+                column: "id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "pk_relatedorganisations",
+                table: "relatedorganisations",
+                column: "id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "pk_organisationtypes",
+                table: "organisationtypes",
+                column: "id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "pk_adminareas",
+                table: "adminareas",
+                column: "id");
 
             migrationBuilder.CreateTable(
-                name: "Contacts",
+                name: "contacts",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Telephone = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    TextPhone = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Url = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    title = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    telephone = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    textphone = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    url = table.Column<string>(type: "text", nullable: true),
+                    email = table.Column<string>(type: "text", nullable: true),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdby = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Contacts", x => x.Id);
+                    table.PrimaryKey("pk_contacts", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Locations",
+                name: "locations",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    Latitude = table.Column<double>(type: "double precision", nullable: false),
-                    Longitude = table.Column<double>(type: "double precision", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    latitude = table.Column<double>(type: "double precision", nullable: false),
+                    longitude = table.Column<double>(type: "double precision", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdby = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Locations", x => x.Id);
+                    table.PrimaryKey("pk_locations", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Organisations",
+                name: "organisations",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    OrganisationTypeId = table.Column<string>(type: "text", nullable: true),
-                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    Logo = table.Column<string>(type: "text", nullable: true),
-                    Uri = table.Column<string>(type: "text", nullable: true),
-                    Url = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    organisationtypeid = table.Column<string>(type: "text", nullable: true),
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    logo = table.Column<string>(type: "text", nullable: true),
+                    uri = table.Column<string>(type: "text", nullable: true),
+                    url = table.Column<string>(type: "text", nullable: true),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdby = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Organisations", x => x.Id);
+                    table.PrimaryKey("pk_organisations", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Organisations_OrganisationTypes_OrganisationTypeId",
-                        column: x => x.OrganisationTypeId,
-                        principalTable: "OrganisationTypes",
-                        principalColumn: "Id");
+                        name: "fk_organisations_organisationtypes_organisationtypeid",
+                        column: x => x.organisationtypeid,
+                        principalTable: "organisationtypes",
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Parents",
+                name: "parents",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Vocabulary = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    vocabulary = table.Column<string>(type: "text", nullable: true),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    createdby = table.Column<string>(type: "text", nullable: true),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Parents", x => x.Id);
+                    table.PrimaryKey("pk_parents", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AccessibilityForDisabilities",
+                name: "accessibilityfordisabilities",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Accessibility = table.Column<string>(type: "text", nullable: false),
-                    LocationId = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    accessibility = table.Column<string>(type: "text", nullable: false),
+                    locationid = table.Column<string>(type: "text", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdby = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccessibilityForDisabilities", x => x.Id);
+                    table.PrimaryKey("pk_accessibilityfordisabilities", x => x.id);
                     table.ForeignKey(
-                        name: "FK_AccessibilityForDisabilities_Locations_LocationId",
-                        column: x => x.LocationId,
-                        principalTable: "Locations",
-                        principalColumn: "Id",
+                        name: "fk_accessibilityfordisabilities_locations_locationid",
+                        column: x => x.locationid,
+                        principalTable: "locations",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PhysicalAddresses",
+                name: "physicaladdresses",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    LocationId = table.Column<string>(type: "text", nullable: false),
-                    Address1 = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    City = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    PostCode = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    Country = table.Column<string>(type: "text", nullable: true),
-                    StateProvince = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    locationid = table.Column<string>(type: "text", nullable: false),
+                    address1 = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    city = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    postcode = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    country = table.Column<string>(type: "text", nullable: true),
+                    stateprovince = table.Column<string>(type: "text", nullable: true),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdby = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PhysicalAddresses", x => x.Id);
+                    table.PrimaryKey("pk_physicaladdresses", x => x.id);
                     table.ForeignKey(
-                        name: "FK_PhysicalAddresses_Locations_LocationId",
-                        column: x => x.LocationId,
-                        principalTable: "Locations",
-                        principalColumn: "Id",
+                        name: "fk_physicaladdresses_locations_locationid",
+                        column: x => x.locationid,
+                        principalTable: "locations",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Services",
+                name: "services",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    ServiceTypeId = table.Column<string>(type: "text", nullable: true),
-                    OrganisationId = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Accreditations = table.Column<string>(type: "text", nullable: true),
-                    AssuredDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    AttendingAccess = table.Column<string>(type: "text", nullable: true),
-                    AttendingType = table.Column<string>(type: "text", nullable: true),
-                    DeliverableType = table.Column<string>(type: "text", nullable: true),
-                    Status = table.Column<string>(type: "text", nullable: true),
-                    Fees = table.Column<string>(type: "text", nullable: true),
-                    CanFamilyChooseDeliveryLocation = table.Column<bool>(type: "boolean", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    servicetypeid = table.Column<string>(type: "text", nullable: true),
+                    organisationid = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    description = table.Column<string>(type: "text", nullable: true),
+                    accreditations = table.Column<string>(type: "text", nullable: true),
+                    assureddate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    attendingaccess = table.Column<string>(type: "text", nullable: true),
+                    attendingtype = table.Column<string>(type: "text", nullable: true),
+                    deliverabletype = table.Column<string>(type: "text", nullable: true),
+                    status = table.Column<string>(type: "text", nullable: true),
+                    fees = table.Column<string>(type: "text", nullable: true),
+                    canfamilychoosedeliverylocation = table.Column<bool>(type: "boolean", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdby = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Services", x => x.Id);
+                    table.PrimaryKey("pk_services", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Services_Organisations_OrganisationId",
-                        column: x => x.OrganisationId,
-                        principalTable: "Organisations",
-                        principalColumn: "Id",
+                        name: "fk_services_organisations_organisationid",
+                        column: x => x.organisationid,
+                        principalTable: "organisations",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Services_ServiceTypes_ServiceTypeId",
-                        column: x => x.ServiceTypeId,
-                        principalTable: "ServiceTypes",
-                        principalColumn: "Id");
+                        name: "fk_services_servicetypes_servicetypeid",
+                        column: x => x.servicetypeid,
+                        principalTable: "servicetypes",
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "CostOptions",
+                name: "costoptions",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    AmountDescription = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
-                    LinkId = table.Column<string>(type: "text", nullable: true),
-                    Option = table.Column<string>(type: "text", nullable: true),
-                    ValidFrom = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ValidTo = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ServiceId = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    amountdescription = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    linkid = table.Column<string>(type: "text", nullable: true),
+                    option = table.Column<string>(type: "text", nullable: true),
+                    validfrom = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    validto = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    serviceid = table.Column<string>(type: "text", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdby = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CostOptions", x => x.Id);
+                    table.PrimaryKey("pk_costoptions", x => x.id);
                     table.ForeignKey(
-                        name: "FK_CostOptions_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Eligibilities",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    EligibilityDescription = table.Column<string>(type: "text", nullable: false),
-                    LinkId = table.Column<string>(type: "text", nullable: true),
-                    MaximumAge = table.Column<int>(type: "integer", nullable: false),
-                    MinimumAge = table.Column<int>(type: "integer", nullable: false),
-                    ServiceId = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Eligibilities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Eligibilities_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
+                        name: "fk_costoptions_services_serviceid",
+                        column: x => x.serviceid,
+                        principalTable: "services",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Fundings",
+                name: "eligibilities",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Source = table.Column<string>(type: "text", nullable: false),
-                    ServiceId = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    eligibilitydescription = table.Column<string>(type: "text", nullable: false),
+                    linkid = table.Column<string>(type: "text", nullable: true),
+                    maximumage = table.Column<int>(type: "integer", nullable: false),
+                    minimumage = table.Column<int>(type: "integer", nullable: false),
+                    serviceid = table.Column<string>(type: "text", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdby = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Fundings", x => x.Id);
+                    table.PrimaryKey("pk_eligibilities", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Fundings_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Languages",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    ServiceId = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Languages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Languages_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
+                        name: "fk_eligibilities_services_serviceid",
+                        column: x => x.serviceid,
+                        principalTable: "services",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reviews",
+                name: "fundings",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Score = table.Column<string>(type: "text", nullable: true),
-                    Url = table.Column<string>(type: "text", nullable: true),
-                    Widget = table.Column<string>(type: "text", nullable: true),
-                    ServiceId = table.Column<string>(type: "text", nullable: false),
-                    OrganisationId = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    source = table.Column<string>(type: "text", nullable: false),
+                    serviceid = table.Column<string>(type: "text", nullable: true),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    createdby = table.Column<string>(type: "text", nullable: true),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.PrimaryKey("pk_fundings", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Reviews_Organisations_OrganisationId",
-                        column: x => x.OrganisationId,
-                        principalTable: "Organisations",
-                        principalColumn: "Id");
+                        name: "fk_fundings_services_serviceid",
+                        column: x => x.serviceid,
+                        principalTable: "services",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "languages",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    serviceid = table.Column<string>(type: "text", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    createdby = table.Column<string>(type: "text", nullable: true),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_languages", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Reviews_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
+                        name: "fk_languages_services_serviceid",
+                        column: x => x.serviceid,
+                        principalTable: "services",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServiceAreas",
+                name: "reviews",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    ServiceAreaDescription = table.Column<string>(type: "text", nullable: false),
-                    LinkId = table.Column<string>(type: "text", nullable: true),
-                    Extent = table.Column<string>(type: "text", nullable: true),
-                    Uri = table.Column<string>(type: "text", nullable: true),
-                    ServiceId = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: true),
+                    date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    score = table.Column<string>(type: "text", nullable: true),
+                    url = table.Column<string>(type: "text", nullable: true),
+                    widget = table.Column<string>(type: "text", nullable: true),
+                    serviceid = table.Column<string>(type: "text", nullable: false),
+                    organisationid = table.Column<string>(type: "text", nullable: true),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    createdby = table.Column<string>(type: "text", nullable: true),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceAreas", x => x.Id);
+                    table.PrimaryKey("pk_reviews", x => x.id);
                     table.ForeignKey(
-                        name: "FK_ServiceAreas_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
+                        name: "fk_reviews_organisations_organisationid",
+                        column: x => x.organisationid,
+                        principalTable: "organisations",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "fk_reviews_services_serviceid",
+                        column: x => x.serviceid,
+                        principalTable: "services",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServiceAtLocations",
+                name: "serviceareas",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    LocationId = table.Column<string>(type: "text", nullable: false),
-                    ServiceId = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    serviceareadescription = table.Column<string>(type: "text", nullable: false),
+                    linkid = table.Column<string>(type: "text", nullable: true),
+                    extent = table.Column<string>(type: "text", nullable: true),
+                    uri = table.Column<string>(type: "text", nullable: true),
+                    serviceid = table.Column<string>(type: "text", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdby = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceAtLocations", x => x.Id);
+                    table.PrimaryKey("pk_serviceareas", x => x.id);
                     table.ForeignKey(
-                        name: "FK_ServiceAtLocations_Locations_LocationId",
-                        column: x => x.LocationId,
-                        principalTable: "Locations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ServiceAtLocations_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
+                        name: "fk_serviceareas_services_serviceid",
+                        column: x => x.serviceid,
+                        principalTable: "services",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServiceDeliveries",
+                name: "serviceatlocations",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    ServiceId = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    locationid = table.Column<string>(type: "text", nullable: false),
+                    serviceid = table.Column<string>(type: "text", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdby = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceDeliveries", x => x.Id);
+                    table.PrimaryKey("pk_serviceatlocations", x => x.id);
                     table.ForeignKey(
-                        name: "FK_ServiceDeliveries_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
+                        name: "fk_serviceatlocations_locations_locationid",
+                        column: x => x.locationid,
+                        principalTable: "locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_serviceatlocations_services_serviceid",
+                        column: x => x.serviceid,
+                        principalTable: "services",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Taxonomies",
+                name: "servicedeliveries",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Vocabulary = table.Column<string>(type: "text", nullable: true),
-                    Parent = table.Column<string>(type: "text", nullable: true),
-                    EligibilityId = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    serviceid = table.Column<string>(type: "text", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdby = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Taxonomies", x => x.Id);
+                    table.PrimaryKey("pk_servicedeliveries", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Taxonomies_Eligibilities_EligibilityId",
-                        column: x => x.EligibilityId,
-                        principalTable: "Eligibilities",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "HolidaySchedules",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Closed = table.Column<bool>(type: "boolean", nullable: false),
-                    ClosesAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    OpensAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ServiceAtLocationId = table.Column<string>(type: "text", nullable: false),
-                    ServiceId = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_HolidaySchedules", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_HolidaySchedules_ServiceAtLocations_ServiceAtLocationId",
-                        column: x => x.ServiceAtLocationId,
-                        principalTable: "ServiceAtLocations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_HolidaySchedules_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LinkContacts",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    ContactId = table.Column<string>(type: "text", nullable: true),
-                    LinkId = table.Column<string>(type: "text", nullable: false),
-                    LinkType = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LinkContacts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_LinkContacts_Contacts_ContactId",
-                        column: x => x.ContactId,
-                        principalTable: "Contacts",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_LinkContacts_Locations_LinkId",
-                        column: x => x.LinkId,
-                        principalTable: "Locations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_LinkContacts_Organisations_LinkId",
-                        column: x => x.LinkId,
-                        principalTable: "Organisations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_LinkContacts_ServiceAtLocations_LinkId",
-                        column: x => x.LinkId,
-                        principalTable: "ServiceAtLocations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_LinkContacts_Services_LinkId",
-                        column: x => x.LinkId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
+                        name: "fk_servicedeliveries_services_serviceid",
+                        column: x => x.serviceid,
+                        principalTable: "services",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RegularSchedules",
+                name: "taxonomies",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    OpensAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ClosesAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ByDay = table.Column<string>(type: "text", nullable: true),
-                    ByMonthDay = table.Column<string>(type: "text", nullable: true),
-                    DtStart = table.Column<string>(type: "text", nullable: true),
-                    Freq = table.Column<string>(type: "text", nullable: true),
-                    Interval = table.Column<string>(type: "text", nullable: true),
-                    ValidFrom = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ValidTo = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ServiceAtLocationId = table.Column<string>(type: "text", nullable: false),
-                    ServiceId = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    vocabulary = table.Column<string>(type: "text", nullable: true),
+                    parent = table.Column<string>(type: "text", nullable: true),
+                    eligibilityid = table.Column<string>(type: "text", nullable: true),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdby = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RegularSchedules", x => x.Id);
+                    table.PrimaryKey("pk_taxonomies", x => x.id);
                     table.ForeignKey(
-                        name: "FK_RegularSchedules_ServiceAtLocations_ServiceAtLocationId",
-                        column: x => x.ServiceAtLocationId,
-                        principalTable: "ServiceAtLocations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RegularSchedules_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id");
+                        name: "fk_taxonomies_eligibilities_eligibilityid",
+                        column: x => x.eligibilityid,
+                        principalTable: "eligibilities",
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "LinkTaxonomies",
+                name: "holidayschedules",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    TaxonomyId = table.Column<string>(type: "text", nullable: true),
-                    LinkId = table.Column<string>(type: "text", nullable: false),
-                    LinkType = table.Column<string>(type: "text", nullable: false),
-                    ParentId = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    closed = table.Column<bool>(type: "boolean", nullable: false),
+                    closesat = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    startdate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    enddate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    opensat = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    serviceatlocationid = table.Column<string>(type: "text", nullable: false),
+                    serviceid = table.Column<string>(type: "text", nullable: true),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    createdby = table.Column<string>(type: "text", nullable: true),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LinkTaxonomies", x => x.Id);
+                    table.PrimaryKey("pk_holidayschedules", x => x.id);
                     table.ForeignKey(
-                        name: "FK_LinkTaxonomies_Locations_LinkId",
-                        column: x => x.LinkId,
-                        principalTable: "Locations",
-                        principalColumn: "Id",
+                        name: "fk_holidayschedules_serviceatlocations_serviceatlocationid",
+                        column: x => x.serviceatlocationid,
+                        principalTable: "serviceatlocations",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_LinkTaxonomies_Parents_ParentId",
-                        column: x => x.ParentId,
-                        principalTable: "Parents",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_LinkTaxonomies_Taxonomies_TaxonomyId",
-                        column: x => x.TaxonomyId,
-                        principalTable: "Taxonomies",
-                        principalColumn: "Id");
+                        name: "fk_holidayschedules_services_serviceid",
+                        column: x => x.serviceid,
+                        principalTable: "services",
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServiceTaxonomies",
+                name: "linkcontacts",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    LinkId = table.Column<string>(type: "text", nullable: true),
-                    TaxonomyId = table.Column<string>(type: "text", nullable: true),
-                    ServiceId = table.Column<string>(type: "text", nullable: false),
-                    ParentId = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    contactid = table.Column<string>(type: "text", nullable: true),
+                    linkid = table.Column<string>(type: "text", nullable: false),
+                    linktype = table.Column<string>(type: "text", nullable: false),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    createdby = table.Column<string>(type: "text", nullable: true),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceTaxonomies", x => x.Id);
+                    table.PrimaryKey("pk_linkcontacts", x => x.id);
                     table.ForeignKey(
-                        name: "FK_ServiceTaxonomies_Parents_ParentId",
-                        column: x => x.ParentId,
-                        principalTable: "Parents",
-                        principalColumn: "Id");
+                        name: "fk_linkcontacts_contacts_contactid",
+                        column: x => x.contactid,
+                        principalTable: "contacts",
+                        principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_ServiceTaxonomies_Services_ServiceId",
-                        column: x => x.ServiceId,
-                        principalTable: "Services",
-                        principalColumn: "Id",
+                        name: "fk_linkcontacts_locations_locationid",
+                        column: x => x.linkid,
+                        principalTable: "locations",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ServiceTaxonomies_Taxonomies_TaxonomyId",
-                        column: x => x.TaxonomyId,
-                        principalTable: "Taxonomies",
-                        principalColumn: "Id");
+                        name: "fk_linkcontacts_organisations_organisationid",
+                        column: x => x.linkid,
+                        principalTable: "organisations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_linkcontacts_serviceatlocations_serviceatlocationid",
+                        column: x => x.linkid,
+                        principalTable: "serviceatlocations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_linkcontacts_services_serviceid",
+                        column: x => x.linkid,
+                        principalTable: "services",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "regularschedules",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false),
+                    opensat = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    closesat = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    byday = table.Column<string>(type: "text", nullable: true),
+                    bymonthday = table.Column<string>(type: "text", nullable: true),
+                    dtstart = table.Column<string>(type: "text", nullable: true),
+                    freq = table.Column<string>(type: "text", nullable: true),
+                    interval = table.Column<string>(type: "text", nullable: true),
+                    validfrom = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    validto = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    serviceatlocationid = table.Column<string>(type: "text", nullable: false),
+                    serviceid = table.Column<string>(type: "text", nullable: true),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    createdby = table.Column<string>(type: "text", nullable: true),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_regularschedules", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_regularschedules_serviceatlocations_serviceatlocationid",
+                        column: x => x.serviceatlocationid,
+                        principalTable: "serviceatlocations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_regularschedules_services_serviceid",
+                        column: x => x.serviceid,
+                        principalTable: "services",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "linktaxonomies",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "text", nullable: false),
+                    taxonomyid = table.Column<string>(type: "text", nullable: true),
+                    linkid = table.Column<string>(type: "text", nullable: false),
+                    linktype = table.Column<string>(type: "text", nullable: false),
+                    parentid = table.Column<string>(type: "text", nullable: true),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    createdby = table.Column<string>(type: "text", nullable: true),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_linktaxonomies", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_linktaxonomies_locations_locationid",
+                        column: x => x.linkid,
+                        principalTable: "locations",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_linktaxonomies_parents_parentid",
+                        column: x => x.parentid,
+                        principalTable: "parents",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "fk_linktaxonomies_taxonomies_taxonomyid",
+                        column: x => x.taxonomyid,
+                        principalTable: "taxonomies",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "servicetaxonomies",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "text", nullable: false),
+                    linkid = table.Column<string>(type: "text", nullable: true),
+                    taxonomyid = table.Column<string>(type: "text", nullable: true),
+                    serviceid = table.Column<string>(type: "text", nullable: false),
+                    parentid = table.Column<string>(type: "text", nullable: true),
+                    created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    createdby = table.Column<string>(type: "text", nullable: true),
+                    lastmodified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    lastmodifiedby = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_servicetaxonomies", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_servicetaxonomies_parents_parentid",
+                        column: x => x.parentid,
+                        principalTable: "parents",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "fk_servicetaxonomies_services_serviceid",
+                        column: x => x.serviceid,
+                        principalTable: "services",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_servicetaxonomies_taxonomies_taxonomyid",
+                        column: x => x.taxonomyid,
+                        principalTable: "taxonomies",
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccessibilityForDisabilities_LocationId",
-                table: "AccessibilityForDisabilities",
-                column: "LocationId");
+                name: "ix_accessibilityfordisabilities_locationid",
+                table: "accessibilityfordisabilities",
+                column: "locationid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CostOptions_ServiceId",
-                table: "CostOptions",
-                column: "ServiceId");
+                name: "ix_costoptions_serviceid",
+                table: "costoptions",
+                column: "serviceid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Eligibilities_ServiceId",
-                table: "Eligibilities",
-                column: "ServiceId");
+                name: "ix_eligibilities_serviceid",
+                table: "eligibilities",
+                column: "serviceid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fundings_ServiceId",
-                table: "Fundings",
-                column: "ServiceId");
+                name: "ix_fundings_serviceid",
+                table: "fundings",
+                column: "serviceid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HolidaySchedules_ServiceAtLocationId",
-                table: "HolidaySchedules",
-                column: "ServiceAtLocationId");
+                name: "ix_holidayschedules_serviceatlocationid",
+                table: "holidayschedules",
+                column: "serviceatlocationid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HolidaySchedules_ServiceId",
-                table: "HolidaySchedules",
-                column: "ServiceId");
+                name: "ix_holidayschedules_serviceid",
+                table: "holidayschedules",
+                column: "serviceid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Languages_ServiceId",
-                table: "Languages",
-                column: "ServiceId");
+                name: "ix_languages_serviceid",
+                table: "languages",
+                column: "serviceid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LinkContacts_ContactId",
-                table: "LinkContacts",
-                column: "ContactId");
+                name: "ix_linkcontacts_contactid",
+                table: "linkcontacts",
+                column: "contactid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LinkContacts_LinkId",
-                table: "LinkContacts",
-                column: "LinkId");
+                name: "ix_linkcontacts_linkid",
+                table: "linkcontacts",
+                column: "linkid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LinkTaxonomies_LinkId",
-                table: "LinkTaxonomies",
-                column: "LinkId");
+                name: "ix_linktaxonomies_linkid",
+                table: "linktaxonomies",
+                column: "linkid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LinkTaxonomies_ParentId",
-                table: "LinkTaxonomies",
-                column: "ParentId");
+                name: "ix_linktaxonomies_parentid",
+                table: "linktaxonomies",
+                column: "parentid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LinkTaxonomies_TaxonomyId",
-                table: "LinkTaxonomies",
-                column: "TaxonomyId");
+                name: "ix_linktaxonomies_taxonomyid",
+                table: "linktaxonomies",
+                column: "taxonomyid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Organisations_OrganisationTypeId",
-                table: "Organisations",
-                column: "OrganisationTypeId");
+                name: "ix_organisations_organisationtypeid",
+                table: "organisations",
+                column: "organisationtypeid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PhysicalAddresses_LocationId",
-                table: "PhysicalAddresses",
-                column: "LocationId");
+                name: "ix_physicaladdresses_locationid",
+                table: "physicaladdresses",
+                column: "locationid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RegularSchedules_ServiceAtLocationId",
-                table: "RegularSchedules",
-                column: "ServiceAtLocationId");
+                name: "ix_regularschedules_serviceatlocationid",
+                table: "regularschedules",
+                column: "serviceatlocationid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RegularSchedules_ServiceId",
-                table: "RegularSchedules",
-                column: "ServiceId");
+                name: "ix_regularschedules_serviceid",
+                table: "regularschedules",
+                column: "serviceid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_OrganisationId",
-                table: "Reviews",
-                column: "OrganisationId");
+                name: "ix_reviews_organisationid",
+                table: "reviews",
+                column: "organisationid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_ServiceId",
-                table: "Reviews",
-                column: "ServiceId");
+                name: "ix_reviews_serviceid",
+                table: "reviews",
+                column: "serviceid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceAreas_ServiceId",
-                table: "ServiceAreas",
-                column: "ServiceId");
+                name: "ix_serviceareas_serviceid",
+                table: "serviceareas",
+                column: "serviceid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceAtLocations_LocationId",
-                table: "ServiceAtLocations",
-                column: "LocationId");
+                name: "ix_serviceatlocations_locationid",
+                table: "serviceatlocations",
+                column: "locationid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceAtLocations_ServiceId",
-                table: "ServiceAtLocations",
-                column: "ServiceId");
+                name: "ix_serviceatlocations_serviceid",
+                table: "serviceatlocations",
+                column: "serviceid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceDeliveries_ServiceId",
-                table: "ServiceDeliveries",
-                column: "ServiceId");
+                name: "ix_servicedeliveries_serviceid",
+                table: "servicedeliveries",
+                column: "serviceid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Services_OrganisationId",
-                table: "Services",
-                column: "OrganisationId");
+                name: "ix_services_organisationid",
+                table: "services",
+                column: "organisationid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Services_ServiceTypeId",
-                table: "Services",
-                column: "ServiceTypeId");
+                name: "ix_services_servicetypeid",
+                table: "services",
+                column: "servicetypeid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceTaxonomies_ParentId",
-                table: "ServiceTaxonomies",
-                column: "ParentId");
+                name: "ix_servicetaxonomies_parentid",
+                table: "servicetaxonomies",
+                column: "parentid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceTaxonomies_ServiceId",
-                table: "ServiceTaxonomies",
-                column: "ServiceId");
+                name: "ix_servicetaxonomies_serviceid",
+                table: "servicetaxonomies",
+                column: "serviceid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ServiceTaxonomies_TaxonomyId",
-                table: "ServiceTaxonomies",
-                column: "TaxonomyId");
+                name: "ix_servicetaxonomies_taxonomyid",
+                table: "servicetaxonomies",
+                column: "taxonomyid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Taxonomies_EligibilityId",
-                table: "Taxonomies",
-                column: "EligibilityId");
+                name: "ix_taxonomies_eligibilityid",
+                table: "taxonomies",
+                column: "eligibilityid");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AccessibilityForDisabilities");
+                name: "accessibilityfordisabilities");
 
             migrationBuilder.DropTable(
-                name: "CostOptions");
+                name: "costoptions");
 
             migrationBuilder.DropTable(
-                name: "Fundings");
+                name: "fundings");
 
             migrationBuilder.DropTable(
-                name: "HolidaySchedules");
+                name: "holidayschedules");
 
             migrationBuilder.DropTable(
-                name: "Languages");
+                name: "languages");
 
             migrationBuilder.DropTable(
-                name: "LinkContacts");
+                name: "linkcontacts");
 
             migrationBuilder.DropTable(
-                name: "LinkTaxonomies");
+                name: "linktaxonomies");
 
             migrationBuilder.DropTable(
-                name: "PhysicalAddresses");
+                name: "physicaladdresses");
 
             migrationBuilder.DropTable(
-                name: "RegularSchedules");
+                name: "regularschedules");
 
             migrationBuilder.DropTable(
-                name: "Reviews");
+                name: "reviews");
 
             migrationBuilder.DropTable(
-                name: "ServiceAreas");
+                name: "serviceareas");
 
             migrationBuilder.DropTable(
-                name: "ServiceDeliveries");
+                name: "servicedeliveries");
 
             migrationBuilder.DropTable(
-                name: "ServiceTaxonomies");
+                name: "servicetaxonomies");
 
             migrationBuilder.DropTable(
-                name: "Contacts");
+                name: "contacts");
 
             migrationBuilder.DropTable(
-                name: "ServiceAtLocations");
+                name: "serviceatlocations");
 
             migrationBuilder.DropTable(
-                name: "Parents");
+                name: "parents");
 
             migrationBuilder.DropTable(
-                name: "Taxonomies");
+                name: "taxonomies");
 
             migrationBuilder.DropTable(
-                name: "Locations");
+                name: "locations");
 
             migrationBuilder.DropTable(
-                name: "Eligibilities");
+                name: "eligibilities");
 
             migrationBuilder.DropTable(
-                name: "Services");
+                name: "services");
 
             migrationBuilder.DropTable(
-                name: "Organisations");
+                name: "organisations");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_UiCaches",
-                table: "UiCaches");
+                name: "pk_uicaches",
+                table: "uicaches");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "pk_servicetypes",
+                table: "servicetypes");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "pk_relatedorganisations",
+                table: "relatedorganisations");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "pk_organisationtypes",
+                table: "organisationtypes");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "pk_adminareas",
+                table: "adminareas");
 
             migrationBuilder.RenameTable(
-                name: "UiCaches",
+                name: "uicaches",
                 newName: "UICaches");
 
+            migrationBuilder.RenameTable(
+                name: "servicetypes",
+                newName: "ServiceTypes");
+
+            migrationBuilder.RenameTable(
+                name: "relatedorganisations",
+                newName: "RelatedOrganisations");
+
+            migrationBuilder.RenameTable(
+                name: "organisationtypes",
+                newName: "OrganisationTypes");
+
+            migrationBuilder.RenameTable(
+                name: "adminareas",
+                newName: "AdminAreas");
+
             migrationBuilder.RenameColumn(
-                name: "OrganisationId",
+                name: "value",
+                table: "UICaches",
+                newName: "Value");
+
+            migrationBuilder.RenameColumn(
+                name: "lastmodifiedby",
+                table: "UICaches",
+                newName: "LastModifiedBy");
+
+            migrationBuilder.RenameColumn(
+                name: "lastmodified",
+                table: "UICaches",
+                newName: "LastModified");
+
+            migrationBuilder.RenameColumn(
+                name: "createdby",
+                table: "UICaches",
+                newName: "CreatedBy");
+
+            migrationBuilder.RenameColumn(
+                name: "created",
+                table: "UICaches",
+                newName: "Created");
+
+            migrationBuilder.RenameColumn(
+                name: "id",
+                table: "UICaches",
+                newName: "Id");
+
+            migrationBuilder.RenameColumn(
+                name: "name",
+                table: "ServiceTypes",
+                newName: "Name");
+
+            migrationBuilder.RenameColumn(
+                name: "lastmodifiedby",
+                table: "ServiceTypes",
+                newName: "LastModifiedBy");
+
+            migrationBuilder.RenameColumn(
+                name: "lastmodified",
+                table: "ServiceTypes",
+                newName: "LastModified");
+
+            migrationBuilder.RenameColumn(
+                name: "description",
+                table: "ServiceTypes",
+                newName: "Description");
+
+            migrationBuilder.RenameColumn(
+                name: "createdby",
+                table: "ServiceTypes",
+                newName: "CreatedBy");
+
+            migrationBuilder.RenameColumn(
+                name: "created",
+                table: "ServiceTypes",
+                newName: "Created");
+
+            migrationBuilder.RenameColumn(
+                name: "id",
+                table: "ServiceTypes",
+                newName: "Id");
+
+            migrationBuilder.RenameColumn(
+                name: "relatedorganisationid",
+                table: "RelatedOrganisations",
+                newName: "RelatedOrganisationId");
+
+            migrationBuilder.RenameColumn(
+                name: "organisationid",
+                table: "RelatedOrganisations",
+                newName: "OrganisationId");
+
+            migrationBuilder.RenameColumn(
+                name: "lastmodifiedby",
+                table: "RelatedOrganisations",
+                newName: "LastModifiedBy");
+
+            migrationBuilder.RenameColumn(
+                name: "lastmodified",
+                table: "RelatedOrganisations",
+                newName: "LastModified");
+
+            migrationBuilder.RenameColumn(
+                name: "createdby",
+                table: "RelatedOrganisations",
+                newName: "CreatedBy");
+
+            migrationBuilder.RenameColumn(
+                name: "created",
+                table: "RelatedOrganisations",
+                newName: "Created");
+
+            migrationBuilder.RenameColumn(
+                name: "id",
+                table: "RelatedOrganisations",
+                newName: "Id");
+
+            migrationBuilder.RenameColumn(
+                name: "name",
+                table: "OrganisationTypes",
+                newName: "Name");
+
+            migrationBuilder.RenameColumn(
+                name: "lastmodifiedby",
+                table: "OrganisationTypes",
+                newName: "LastModifiedBy");
+
+            migrationBuilder.RenameColumn(
+                name: "lastmodified",
+                table: "OrganisationTypes",
+                newName: "LastModified");
+
+            migrationBuilder.RenameColumn(
+                name: "description",
+                table: "OrganisationTypes",
+                newName: "Description");
+
+            migrationBuilder.RenameColumn(
+                name: "createdby",
+                table: "OrganisationTypes",
+                newName: "CreatedBy");
+
+            migrationBuilder.RenameColumn(
+                name: "created",
+                table: "OrganisationTypes",
+                newName: "Created");
+
+            migrationBuilder.RenameColumn(
+                name: "id",
+                table: "OrganisationTypes",
+                newName: "Id");
+
+            migrationBuilder.RenameColumn(
+                name: "lastmodifiedby",
+                table: "AdminAreas",
+                newName: "LastModifiedBy");
+
+            migrationBuilder.RenameColumn(
+                name: "lastmodified",
+                table: "AdminAreas",
+                newName: "LastModified");
+
+            migrationBuilder.RenameColumn(
+                name: "createdby",
+                table: "AdminAreas",
+                newName: "CreatedBy");
+
+            migrationBuilder.RenameColumn(
+                name: "created",
+                table: "AdminAreas",
+                newName: "Created");
+
+            migrationBuilder.RenameColumn(
+                name: "code",
+                table: "AdminAreas",
+                newName: "Code");
+
+            migrationBuilder.RenameColumn(
+                name: "id",
+                table: "AdminAreas",
+                newName: "Id");
+
+            migrationBuilder.RenameColumn(
+                name: "organisationid",
                 table: "AdminAreas",
                 newName: "OpenReferralOrganisationId");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_UICaches",
                 table: "UICaches",
+                column: "Id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_ServiceTypes",
+                table: "ServiceTypes",
+                column: "Id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_RelatedOrganisations",
+                table: "RelatedOrganisations",
+                column: "Id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_OrganisationTypes",
+                table: "OrganisationTypes",
+                column: "Id");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_AdminAreas",
+                table: "AdminAreas",
                 column: "Id");
 
             migrationBuilder.CreateTable(

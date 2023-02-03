@@ -207,9 +207,25 @@ public class OrganisationSeedData
                 {
                     new ServiceAtLocation(
                         "5fdbbefd-4cf4-4c4a-8178-c001fcb25570",
-                        new Location("b405ae9a-5410-4136-86f3-dc1e85f1ec68", "Ordsall Neighbourhood Centre", "2, Robert Hall Street M5 3LT", 53.474103227856105D, -2.2721559641660787D,
+                        new Location(
+                            "b405ae9a-5410-4136-86f3-dc1e85f1ec68", 
+                            "Ordsall Neighbourhood Centre", 
+                            "2, Robert Hall Street M5 3LT", 
+                            53.474103227856105D, 
+                            -2.2721559641660787D,
                             new List<LinkTaxonomy>(),
-                            new List<PhysicalAddress> { new PhysicalAddress("67efce6d-248b-4e71-b08d-4c21009d01f0", "2, Robert Hall Street", "Ordsall", "M5 3LT", "United Kingdom", "Salford") }, new List<AccessibilityForDisabilities>(), new List<LinkContact>()),
+                            new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    "67efce6d-248b-4e71-b08d-4c21009d01f0", 
+                                    "2, Robert Hall Street", 
+                                    "Ordsall", 
+                                    "M5 3LT", 
+                                    "United Kingdom", 
+                                    "Salford")
+                            }, 
+                            new List<AccessibilityForDisabilities>(), 
+                            new List<LinkContact>()),
                         new List<RegularSchedule>
                         {
                             new RegularSchedule("16785195-413f-417c-8c77-8f3e3fe08e6f",
@@ -230,8 +246,8 @@ public class OrganisationSeedData
                         {
                             new LinkContact(
                                 "1a000f89-6487-49ae-9f70-166070b02b47",
-                                "1a000f89-6487-49ae-9f70-166070b02b48",
-                                "Service",
+                                "5fdbbefd-4cf4-4c4a-8178-c001fcb25570",
+                                "ServiceAtLocation",
                                 new Contact(
                                     "7a488a62-6c5b-4fa7-88bc-f60f83627e38",
                                     "",
@@ -291,17 +307,33 @@ public class OrganisationSeedData
                 {
                     new ServiceAtLocation(
                         "6e0bb978-fe9e-4c13-b8e7-50c97bf06ed7",
-                        new Location("f7301eeb-3293-4d7b-9869-d1e8a6368a13", "Oakwood Academy", "", 53.493505779578605D, -2.336084327089324D,
+                        new Location(
+                            "f7301eeb-3293-4d7b-9869-d1e8a6368a13", 
+                            "Oakwood Academy", 
+                            "", 
+                            53.493505779578605D, 
+                            -2.336084327089324D,
                             new List<LinkTaxonomy>(),
-                            new List<PhysicalAddress> { new PhysicalAddress("387b5dff-a26a-42fe-84d6-1a744097cf4f", "Chatsworth Road", "Eccles", "M30 9DY", "United Kingdom", "Manchester") }, new List<AccessibilityForDisabilities>(), new List<LinkContact>()),
+                            new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    "387b5dff-a26a-42fe-84d6-1a744097cf4f", 
+                                    "Chatsworth Road", 
+                                    "Eccles", 
+                                    "M30 9DY", 
+                                    "United Kingdom", 
+                                    "Manchester")
+                            }, 
+                            new List<AccessibilityForDisabilities>(), 
+                            new List<LinkContact>()),
                         new List<RegularSchedule>(),
                         new List<HolidaySchedule>(),
                         new List<LinkContact>
                         {
                             new LinkContact(
                                 "2dde869a-914a-4acc-915b-10d368808011",
-                                "2dde869a-914a-4acc-915b-10d368808022",
-                                "Service",
+                                "6e0bb978-fe9e-4c13-b8e7-50c97bf06ed7",
+                                "ServiceAtLocation",
                                 new Contact(
                                     "aaef3e12-849d-4a09-8606-17252cee6572",
                                     "Ms",
@@ -361,20 +393,44 @@ public class OrganisationSeedData
                 {
                     new ServiceAtLocation(
                         "e234f5b5-fb74-4e68-bd29-88e736bfc317",
-                        new Location("964ea451-6146-4add-913e-dff23a1bd7b6", "Central Family Hub", "Broughton Hub", 53.507025D, -2.259764D,
-                            new List<LinkTaxonomy> {new LinkTaxonomy("CD2324A3-AB3F-4707-9D38-34DFB7722B62",
-                                "964ea451-6146-4add-913e-dff23a1bd7b6",
-                                LinkType.Location,
-                                new Taxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
-                            new List<PhysicalAddress> { new PhysicalAddress("84c0a47a-08a1-4e54-814b-46ce26765c08", "50 Rigby Street", "Manchester", "M7 4BQ", "United Kingdom", "Salford") }, new List<AccessibilityForDisabilities>(), new List<LinkContact>()),
+                        new Location(
+                            "964ea451-6146-4add-913e-dff23a1bd7b6", 
+                            "Central Family Hub", 
+                            "Broughton Hub", 
+                            53.507025D, 
+                            -2.259764D,
+                            new List<LinkTaxonomy> 
+                            {
+                                new LinkTaxonomy(
+                                    "CD2324A3-AB3F-4707-9D38-34DFB7722B62",
+                                    "964ea451-6146-4add-913e-dff23a1bd7b6",
+                                    LinkType.Location,
+                                    new Taxonomy(
+                                        "4DC40D99-BA5D-45E1-886E-8D34F398B869", 
+                                        "FamilyHub", 
+                                        null, 
+                                        null))
+                            },
+                            new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    "84c0a47a-08a1-4e54-814b-46ce26765c08", 
+                                    "50 Rigby Street", 
+                                    "Manchester", 
+                                    "M7 4BQ", 
+                                    "United Kingdom", 
+                                    "Salford")
+                            }, 
+                            new List<AccessibilityForDisabilities>(), 
+                            new List<LinkContact>()),
                         new List<RegularSchedule>(),
                         new List<HolidaySchedule>(),
                         new List<LinkContact>
                         {
                             new LinkContact(
                                 "6f4251a7-ae32-44cd-84fc-a632e944fccc",
-                                "6f4251a7-ae32-44cd-84fc-a632e944fccf",
-                                "Service",
+                                "e234f5b5-fb74-4e68-bd29-88e736bfc317",
+                                "ServiceAtLocation",
                                 new Contact(
                                     "6a84d5af-2e5c-40fa-9689-6b11181db320",
                                     "Ms",
@@ -427,20 +483,44 @@ public class OrganisationSeedData
                 {
                     new ServiceAtLocation(
                         "2995a7a0-6552-4c71-9e91-7f860d5a993e",
-                        new Location("74c37f53-dbc0-4958-8c97-baee41a022bf", "North Family Hub", "Swinton Gateway", 53.5124278D, -2.342044D,
-                            new List<LinkTaxonomy> {new LinkTaxonomy("3A724AE8-8E9E-4AC5-95BC-E5B07795A8DD",
-                                "74c37f53-dbc0-4958-8c97-baee41a022bf",
-                                LinkType.Location,
-                                new Taxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
-                            new List<PhysicalAddress> { new PhysicalAddress("83bf4f64-fdcb-46bc-a32e-8b117bf5c19a", "100 Chorley Road", "Manchester", "M27 6BP", "United Kingdom", "Salford") }, new List<AccessibilityForDisabilities>(), new List<LinkContact>()),
+                        new Location(
+                            "74c37f53-dbc0-4958-8c97-baee41a022bf", 
+                            "North Family Hub", 
+                            "Swinton Gateway", 
+                            53.5124278D, 
+                            -2.342044D,
+                            new List<LinkTaxonomy> 
+                            {
+                                new LinkTaxonomy(
+                                    "3A724AE8-8E9E-4AC5-95BC-E5B07795A8DD",
+                                    "74c37f53-dbc0-4958-8c97-baee41a022bf",
+                                    LinkType.Location,
+                                    new Taxonomy(
+                                        "4DC40D99-BA5D-45E1-886E-8D34F398B869", 
+                                        "FamilyHub", 
+                                        null, 
+                                        null))
+                            },
+                            new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    "83bf4f64-fdcb-46bc-a32e-8b117bf5c19a", 
+                                    "100 Chorley Road", 
+                                    "Manchester", 
+                                    "M27 6BP", 
+                                    "United Kingdom", 
+                                    "Salford")
+                            }, 
+                            new List<AccessibilityForDisabilities>(), 
+                            new List<LinkContact>()),
                         new List<RegularSchedule>(),
                         new List<HolidaySchedule>(),
                         new List<LinkContact>
                         {
                             new LinkContact(
                                 "57bde76b-885d-484d-869f-7e60faf4b1a1",
-                                "57bde76b-885d-484d-869f-7e60faf4b1b2",
-                                "Service",
+                                "2995a7a0-6552-4c71-9e91-7f860d5a993e",
+                                "ServiceAtLocation",
                                 new Contact(
                                     "560e159d-c54c-4925-bd55-8bbfd5071520",
                                     "Ms",
@@ -494,21 +574,43 @@ public class OrganisationSeedData
                 {
                     new ServiceAtLocation(
                         "4e969589-e2b3-47d7-b079-1af1e3de5554",
-                        new Location("1b4a625b-54bb-407d-a508-f90cade1e96f", "South Family Hub", "Winton Children’s Centre", 53.48801070060149D, -2.368140748303118D,
-                            new List<LinkTaxonomy> {new LinkTaxonomy(
-                                "4594A80C-42EC-4F80-AABE-E216E7732DC8",
-                                "1b4a625b-54bb-407d-a508-f90cade1e96f",
-                                LinkType.Location,
-                                new Taxonomy("4DC40D99-BA5D-45E1-886E-8D34F398B869", "FamilyHub", null, null))},
-                            new List<PhysicalAddress> { new PhysicalAddress("45603703-5d3f-45f4-84f1-b294ac4d3290", "Brindley Street", "Manchester", "M30 8AB", "United Kingdom", "Salford") }, new List<AccessibilityForDisabilities>(), new List<LinkContact>()),
+                        new Location(
+                            "1b4a625b-54bb-407d-a508-f90cade1e96f", 
+                            "South Family Hub", 
+                            "Winton Children’s Centre", 
+                            53.48801070060149D, 
+                            -2.368140748303118D,
+                            new List<LinkTaxonomy> 
+                            {
+                                new LinkTaxonomy(
+                                    "4594A80C-42EC-4F80-AABE-E216E7732DC8",
+                                    "1b4a625b-54bb-407d-a508-f90cade1e96f",
+                                    LinkType.Location,
+                                    new Taxonomy(
+                                        "4DC40D99-BA5D-45E1-886E-8D34F398B869", 
+                                        "FamilyHub", 
+                                        null, 
+                                        null))},
+                            new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    "45603703-5d3f-45f4-84f1-b294ac4d3290", 
+                                    "Brindley Street", 
+                                    "Manchester", 
+                                    "M30 8AB", 
+                                    "United Kingdom", 
+                                    "Salford")
+                            }, 
+                            new List<AccessibilityForDisabilities>(), 
+                            new List<LinkContact>()),
                         new List<RegularSchedule>(),
                         new List<HolidaySchedule>(),
                         new List<LinkContact>
                         {
                             new LinkContact(
                                 "06c16312-fa5f-4e82-b672-3a9ab099640b",
-                                "06c16312-fa5f-4e82-b672-3a9ab099649a",
-                                "Service",
+                                "4e969589-e2b3-47d7-b079-1af1e3de5554",
+                                "ServiceAtLocation",
                                 new Contact(
                                     "6596d609-8ba1-4188-a357-3d92ae9dec8f",
                                     "Ms",
@@ -690,8 +792,8 @@ public class OrganisationSeedData
                         {
                             new LinkContact(
                                 "96781fd9-95a2-4196-8db6-0f083f1c38ab",
-                                "96781fd9-95a2-4196-8db6-0f083f1c38fc",
-                                "Service",
+                                "1849",
+                                "ServiceAtLocation",
                                 new Contact(
                                     "1561",
                                     "Mr",
@@ -872,8 +974,8 @@ public class OrganisationSeedData
                         {
                             new LinkContact(
                                 "39f211fc-73d4-4ea1-a1c9-d8fc063d6b52",
-                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b51",
-                                "Service",
+                                "1868",
+                                "ServiceAtLocation",
                                 new Contact(
                                     "1563",
                                     "Mr",

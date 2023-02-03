@@ -38,7 +38,10 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<ApplicationDbC
                 {
                     var connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
                     if (connectionString != null)
-                        builder.UseNpgsql(connectionString, b => b.MigrationsAssembly("FamilyHubs.ServiceDirectoryApi.Api"));
+                        builder
+                            .UseNpgsql(connectionString, b => b.MigrationsAssembly("FamilyHubs.ServiceDirectoryApi.Api"))
+                            .UseLowerCaseNamingConvention()
+                            ;
 
                 }
                 break;
