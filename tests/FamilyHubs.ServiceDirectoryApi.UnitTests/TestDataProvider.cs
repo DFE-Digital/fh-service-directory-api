@@ -6,7 +6,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests;
 
 public static class TestDataProvider
 {
-    public static OrganisationWithServicesDto GetTestCountyCouncilDto(bool updated = false, bool newGuid = false, bool includeLinkContact = false)
+    public static OrganisationWithServicesDto GetTestCountyCouncilDto(bool updated = false, bool newGuid = false)
     {
         var testCountyCouncil = new OrganisationWithServicesDto(
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
@@ -18,7 +18,7 @@ public static class TestDataProvider
             "https://www.unittest.gov.uk/",
             new List<ServiceDto>
             {
-                GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc", updated, newGuid, includeLinkContact)
+                GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc", updated, newGuid)
             }
         )
         {
@@ -50,7 +50,7 @@ public static class TestDataProvider
         return testCountyCouncil;
     }
 
-    public static ServiceDto GetTestCountyCouncilServicesDto(string parentId, bool updated = false, bool newGuid = false, bool includeLinkContact = false)
+    public static ServiceDto GetTestCountyCouncilServicesDto(string parentId, bool updated = false, bool newGuid = false)
     {
         var contactId = Guid.NewGuid().ToString();
 
@@ -144,23 +144,22 @@ public static class TestDataProvider
                                 )
                             )
                         },
-                        !includeLinkContact ? new List<LinkContactDto>() :
-                            new List<LinkContactDto>
-                            {
-                                new LinkContactDto(
-                                    "3010521b-6e0a-41b0-b610-200edbbeeb33",
-                                    newGuid == false ? "6ea31a4f-7dcc-4350-9fba-20525efe092f" : Guid.NewGuid().ToString(),
-                                    "Service",
-                                    new ContactDto(
-                                        Guid.NewGuid().ToString(),
-                                        updated == false ? "Contact" : "Updated Contact",
-                                        string.Empty,
-                                        "01827 65777",
-                                        "01827 65777",
-                                        "www.unittestservice.com",
-                                        "support@unittestservice.com"
-                                    ))
-                            }
+                        new List<LinkContactDto>
+                        {
+                            new LinkContactDto(
+                                "3010521b-6e0a-41b0-b610-200edbbeeb33",
+                                newGuid == false ? "6ea31a4f-7dcc-4350-9fba-20525efe092f" : Guid.NewGuid().ToString(),
+                                "Service",
+                                new ContactDto(
+                                    Guid.NewGuid().ToString(),
+                                    updated == false ? "Contact" : "Updated Contact",
+                                    string.Empty,
+                                    "01827 65777",
+                                    "01827 65777",
+                                    "www.unittestservice.com",
+                                    "support@unittestservice.com"
+                                ))
+                        }
                     ),
                     new List<RegularScheduleDto>
                     {
@@ -189,23 +188,22 @@ public static class TestDataProvider
                             DateTime.UtcNow
                         )
                     },
-                    !includeLinkContact ? new List<LinkContactDto>() :
-                        new List<LinkContactDto>
-                        {
-                            new LinkContactDto(
-                                "3010521b-6e0a-41b0-b610-200edbbeeb99",
-                                "Test1749",
-                                "Service",
-                                new ContactDto(
-                                    Guid.NewGuid().ToString(),
-                                    updated == false ? "Contact" : "Updated Contact",
-                                    string.Empty,
-                                    "01827 65777",
-                                    "01827 65777",
-                                    "www.unittestservice.com",
-                                    "support@unittestservice.com"
-                                ))
-                        }
+                    new List<LinkContactDto>
+                    {
+                        new LinkContactDto(
+                            "3010521b-6e0a-41b0-b610-200edbbeeb99",
+                            "Test1749",
+                            "Service",
+                            new ContactDto(
+                                Guid.NewGuid().ToString(),
+                                updated == false ? "Contact" : "Updated Contact",
+                                string.Empty,
+                                "01827 65777",
+                                "01827 65777",
+                                "www.unittestservice.com",
+                                "support@unittestservice.com"
+                            ))
+                    }
                 )
 
             })

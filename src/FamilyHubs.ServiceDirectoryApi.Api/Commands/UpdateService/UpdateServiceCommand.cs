@@ -48,6 +48,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
            .Include(x => x.ServiceDeliveries)
            .Include(x => x.Eligibilities)
            .Include(x => x.LinkContacts)
+           .ThenInclude(x => x.Contact)
            .Include(x => x.CostOptions)
            .Include(x => x.Languages)
            .Include(x => x.ServiceAreas)
@@ -60,6 +61,15 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
            .ThenInclude(x => x.Location)
            .ThenInclude(x => x.LinkTaxonomies!)
            .ThenInclude(x => x.Taxonomy)
+
+           .Include(x => x.ServiceAtLocations)
+           .ThenInclude(x => x.Location)
+           .ThenInclude(x => x.LinkContacts!)
+           .ThenInclude(x => x.Contact)
+
+           .Include(x => x.ServiceAtLocations)
+           .Include(x => x.LinkContacts)
+           .ThenInclude(x => x.Contact)
 
            .Include(x => x.ServiceAtLocations)
            .ThenInclude(x => x.RegularSchedules)

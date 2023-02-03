@@ -24,7 +24,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         testOrganisation.Services = default!;
         var orgCommand = new CreateOrganisationCommand(testOrganisation);
         var orgHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
@@ -51,7 +51,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var createCommand = new CreateOrganisationCommand(testOrganisation);
         var createHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await createHandler.Handle(createCommand, new CancellationToken());
@@ -80,7 +80,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var createCommand = new CreateOrganisationCommand(testOrganisation);
         var createHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await createHandler.Handle(createCommand, new CancellationToken());
@@ -104,7 +104,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
     {
         //Arrange
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var command = new GetServicesByOrganisationIdCommand(testOrganisation.Id);
         var handler = new GetServicesByOrganisationIdCommandHandler(mockApplicationDbContext);
 
@@ -123,7 +123,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         testOrganisation.Services = default!;
         var createCommand = new CreateOrganisationCommand(testOrganisation);
         var createHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
@@ -147,7 +147,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var createCommand = new CreateOrganisationCommand(testOrganisation);
         var createHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await createHandler.Handle(createCommand, new CancellationToken());
@@ -174,7 +174,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var createCommand = new CreateOrganisationCommand(testOrganisation);
         var createHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await createHandler.Handle(createCommand, new CancellationToken());
@@ -203,7 +203,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var createCommand = new CreateOrganisationCommand(testOrganisation);
         var createHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await createHandler.Handle(createCommand, new CancellationToken());
@@ -243,7 +243,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var orgCommand = new CreateOrganisationCommand(testOrganisation);
         var orgHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await orgHandler.Handle(orgCommand, new CancellationToken());
@@ -270,7 +270,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var orgCommand = new CreateOrganisationCommand(testOrganisation);
         var orgHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await orgHandler.Handle(orgCommand, new CancellationToken());

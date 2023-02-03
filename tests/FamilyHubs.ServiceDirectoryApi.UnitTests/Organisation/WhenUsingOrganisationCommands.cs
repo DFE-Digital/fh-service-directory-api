@@ -27,7 +27,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var command = new CreateOrganisationCommand(testOrganisation);
         var handler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
 
@@ -48,7 +48,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testCountyCouncil = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testCountyCouncil = TestDataProvider.GetTestCountyCouncilDto();
         var createOrganisationCommand = new CreateOrganisationCommand(testCountyCouncil);
         var handler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await handler.Handle(createOrganisationCommand, new CancellationToken());
@@ -86,7 +86,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var initialCommand = new CreateOrganisationCommand(TestDataProvider.GetTestCountyCouncilDto(false, false, true));
+        var initialCommand = new CreateOrganisationCommand(TestDataProvider.GetTestCountyCouncilDto());
         var initialHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await initialHandler.Handle(initialCommand, new CancellationToken());
 
@@ -111,7 +111,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var initialCommand = new CreateOrganisationCommand(testOrganisation);
         var initialHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await initialHandler.Handle(initialCommand, new CancellationToken());
@@ -135,7 +135,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var updateLogger = new Mock<ILogger<UpdateOrganisationCommandHandler>>();
         var mockMediator = new Mock<ISender>();
         var command = new CreateOrganisationCommand(testOrganisation);
@@ -166,7 +166,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         testOrganisation.Services = default!;
         var updateLogger = new Mock<ILogger<UpdateOrganisationCommandHandler>>();
         var mockMediator = new Mock<ISender>();
@@ -200,7 +200,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var command = new CreateOrganisationCommand(testOrganisation);
         var handler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await handler.Handle(command, new CancellationToken());
@@ -240,7 +240,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var command = new CreateOrganisationCommand(testOrganisation);
         var handler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await handler.Handle(command, new CancellationToken());
@@ -294,7 +294,7 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         var mapper = new Mapper(configuration);
         var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, false, true);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         var command = new CreateOrganisationCommand(testOrganisation);
         var handler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
         await handler.Handle(command, new CancellationToken());
