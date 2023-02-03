@@ -25,9 +25,30 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .IsRequired();
         builder.HasMany(s => s.LinkContacts)
             .WithOne()
-            .HasForeignKey(lc => lc.LinkId);
+            .HasForeignKey(lc => lc.LinkId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
         builder.HasMany(s => s.LinkTaxonomies)
             .WithOne()
-            .HasForeignKey(lc => lc.LinkId);
+            .HasForeignKey(lc => lc.LinkId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.PhysicalAddresses)
+            .WithOne()
+            .HasForeignKey(f => f.LocationId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.AccessibilityForDisabilities)
+            .WithOne()
+            .HasForeignKey(lc => lc.LocationId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
     }
 }

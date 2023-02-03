@@ -13,8 +13,26 @@ public class ServiceAtLocationConfiguration : IEntityTypeConfiguration<ServiceAt
         builder.Property(t => t.CreatedBy)
             .HasMaxLength(255)
             .IsRequired();
+
         builder.HasMany(s => s.LinkContacts)
             .WithOne()
-            .HasForeignKey(lc => lc.LinkId);
+            .HasForeignKey(lc => lc.LinkId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.HolidaySchedules)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceAtLocationId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.RegularSchedules)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceAtLocationId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
     }
 }

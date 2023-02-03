@@ -94,11 +94,11 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         {
             var servicesFilteredByDelMethod = new List<Service>();
             var parts = request.ServiceDeliveries.Split(',');
-            
+
             foreach (var part in parts)
                 if (Enum.TryParse(part, true, out ServiceDeliveryType serviceDelivery))
                     servicesFilteredByDelMethod.AddRange(dbServices.Where(x => x.ServiceDeliveries.Any(delivery => delivery.Name == serviceDelivery)).ToList());
-            
+
             dbServices = servicesFilteredByDelMethod;
         }
 
@@ -107,10 +107,10 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         {
             var servicesFilteredByLanguages = new List<Service>();
             var parts = request.Languages.Split(',');
-            
+
             foreach (var part in parts)
                 servicesFilteredByLanguages.AddRange(dbServices.Where(x => x.Languages.Any(language => language.Name == part)).ToList());
-            
+
             dbServices = servicesFilteredByLanguages;
         }
 
@@ -182,82 +182,50 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
 
     private async Task<IQueryable<Service>> GetServices(GetServicesCommand request)
     {
-        IQueryable<Service> services;
+        var services = _context.Services
+            .Include(x => x.ServiceType)
+            .Include(x => x.ServiceDeliveries)
+            .Include(x => x.Eligibilities)
+            .Include(x => x.CostOptions)
+            .Include(x => x.Fundings)
+            .Include(x => x.Languages)
+            .Include(x => x.ServiceAreas)
+            .Include(x => x.RegularSchedules)
+            .Include(x => x.HolidaySchedules)
+            .Include(x => x.LinkContacts)
+            .ThenInclude(x => x.Contact)
+            .Include(x => x.ServiceTaxonomies)
+            .ThenInclude(x => x.Taxonomy)
+
+            .Include(x => x.ServiceAtLocations)
+            .ThenInclude(x => x.RegularSchedules)
+            
+            .Include(x => x.ServiceAtLocations)
+            .ThenInclude(x => x.HolidaySchedules)
+
+            .Include(x => x.ServiceAtLocations)
+            .ThenInclude(x => x.LinkContacts!)
+            .ThenInclude(x => x.Contact)
+            
+            .Include(x => x.ServiceAtLocations)
+            .ThenInclude(x => x.Location)
+            .ThenInclude(x => x.PhysicalAddresses)
+            
+            .Include(x => x.ServiceAtLocations)
+            .ThenInclude(x => x.Location)
+            .ThenInclude(x => x.LinkContacts!)
+            .ThenInclude(x => x.Contact)
+            
+            .Include(x => x.ServiceAtLocations)
+            .ThenInclude(x => x.Location)
+            .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
+            .ThenInclude(x => x.Taxonomy)
+            .Where(x => x.Status == request.Status && x.Status != "Deleted");
 
         if (request.DistrictCode != null)
         {
             var organisationIds = await _context.AdminAreas.Where(x => x.Code == request.DistrictCode).Select(x => x.OrganisationId).ToListAsync();
-
-           services = _context.Services
-          .Include(x => x.ServiceType)
-          .Include(x => x.ServiceDeliveries)
-          .Include(x => x.Eligibilities)
-          .Include(x => x.Languages)
-          .Include(x => x.ServiceAreas)
-          .Include(x => x.LinkContacts)
-          .ThenInclude(x => x.Contact)
-          .Include(x => x.ServiceTaxonomies)
-          .ThenInclude(x => x.Taxonomy)
-          
-          .Include(x => x.ServiceAtLocations)
-          .ThenInclude(x => x.Location)
-          .ThenInclude(x => x.PhysicalAddresses)
-
-          .Include(x => x.ServiceAtLocations)
-          .ThenInclude(x => x.Location)
-          .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
-          .ThenInclude(x => x.Taxonomy)
-
-          .Include(x => x.ServiceAtLocations)
-          .ThenInclude(x => x.Location)
-          .ThenInclude(x => x.LinkContacts!)
-          .ThenInclude(x => x.Contact)
-
-          .Include(x => x.ServiceAtLocations)
-          .Include(x => x.LinkContacts)
-          .ThenInclude(x => x.Contact)
-
-          .Include(x => x.ServiceAtLocations)
-          .ThenInclude(x => x.RegularSchedules)
-
-          .Include(x => x.ServiceAtLocations)
-          .ThenInclude(x => x.HolidaySchedules)
-
-          .Include(x => x.RegularSchedules)
-          .Include(x => x.HolidaySchedules)
-
-          .Include(x => x.CostOptions)
-          .Where(x => x.Status == request.Status && x.Status != "Deleted" && organisationIds.Contains(x.OrganisationId));
-        }
-        else
-        {
-            services = _context.Services
-           .Include(x => x.ServiceType)
-           .Include(x => x.ServiceDeliveries)
-           .Include(x => x.Eligibilities)
-           .Include(x => x.LinkContacts)
-           .Include(x => x.Languages)
-           .Include(x => x.ServiceAreas)
-           .Include(x => x.ServiceTaxonomies)
-           .ThenInclude(x => x.Taxonomy)
-           .Include(x => x.ServiceAtLocations)
-           .ThenInclude(x => x.Location)
-           .ThenInclude(x => x.PhysicalAddresses)
-
-           .Include(x => x.ServiceAtLocations)
-           .ThenInclude(x => x.Location)
-           .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
-           .ThenInclude(x => x.Taxonomy)
-
-           .Include(x => x.ServiceAtLocations)
-           .ThenInclude(x => x.RegularSchedules)
-           .Include(x => x.ServiceAtLocations)
-           .ThenInclude(x => x.HolidaySchedules)
-           .Include(x => x.RegularSchedules)
-           .Include(x => x.HolidaySchedules)
-
-           .Include(x => x.CostOptions)
-           .Where(x => x.Status == request.Status && x.Status != "Deleted");
+            services = services.Where(x => organisationIds.Contains(x.OrganisationId));
         }
 
         if (request.ServiceType != null)
@@ -268,8 +236,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
                 services = services.Where(x => x.ServiceType.Id == serviceType.Id);
             }
         }
-        
+
         return services;
     }
-
 }

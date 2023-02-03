@@ -51,40 +51,47 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
             .Include(x => x.ServiceType)
             .Include(x => x.ServiceDeliveries)
             .Include(x => x.Eligibilities)
-            .Include(x => x.LinkContacts)
-            .ThenInclude(x => x.Contact)
             .Include(x => x.CostOptions)
+            .Include(x => x.Fundings)
             .Include(x => x.Languages)
             .Include(x => x.ServiceAreas)
+            .Include(x => x.RegularSchedules)
+            .Include(x => x.HolidaySchedules)
+            .Include(x => x.LinkContacts)
+            .ThenInclude(x => x.Contact)
+            .Include(x => x.ServiceTaxonomies)
+            .ThenInclude(x => x.Taxonomy)
+
+            .Include(x => x.ServiceAtLocations)
+            .ThenInclude(x => x.RegularSchedules)
+            
+            .Include(x => x.ServiceAtLocations)
+            .ThenInclude(x => x.HolidaySchedules)
+
+            .Include(x => x.ServiceAtLocations)
+            .ThenInclude(x => x.LinkContacts!)
+            .ThenInclude(x => x.Contact)
             
             .Include(x => x.ServiceAtLocations)
             .ThenInclude(x => x.Location)
             .ThenInclude(x => x.PhysicalAddresses)
-
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.LinkTaxonomies!)
-            .ThenInclude(x => x.Taxonomy)
-
+            
             .Include(x => x.ServiceAtLocations)
             .ThenInclude(x => x.Location)
             .ThenInclude(x => x.LinkContacts!)
             .ThenInclude(x => x.Contact)
-
-            .Include(x => x.ServiceAtLocations)
-            .Include(x => x.LinkContacts)
-            .ThenInclude(x => x.Contact)
             
             .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.RegularSchedules)
-
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.HolidaySchedules)
-
-            .Include(x => x.ServiceTaxonomies)
+            .ThenInclude(x => x.Location)
+            .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
             .ThenInclude(x => x.Taxonomy)
             .Where(x => ids.Contains(x.Id))
             .ToListAsync(cancellationToken);
+
+        if (entity == null)
+        {
+            throw new NotFoundException(nameof(Service), request.Id);
+        }
 
         var result = DtoHelper.GetServicesDto(entity);
 

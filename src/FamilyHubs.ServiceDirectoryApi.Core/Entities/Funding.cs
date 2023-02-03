@@ -14,4 +14,5 @@ public class Funding : EntityBase<string>, IAggregateRoot
         Source = source;
     }
     public string Source { get; set; } = default!;
+    public string ServiceId { get; set; } = default!;
 }

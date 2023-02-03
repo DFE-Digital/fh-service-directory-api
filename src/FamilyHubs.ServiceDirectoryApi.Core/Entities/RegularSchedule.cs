@@ -43,4 +43,5 @@ public class RegularSchedule : EntityBase<string>, IAggregateRoot
     public DateTime? ValidFrom { get; set; }
     public DateTime? ValidTo { get; set; }
     public string ServiceAtLocationId { get; set; } = default!;
+    public string ServiceId { get; set; } = default!;
 }

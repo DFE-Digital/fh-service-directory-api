@@ -25,22 +25,32 @@ public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCom
     public async Task<OrganisationWithServicesDto> Handle(GetOrganisationByIdCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Organisations
+           .Include(x => x.LinkContacts)
            .Include(x => x.OrganisationType)
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.ServiceDeliveries)
            .Include(x => x.Services!)
            .ThenInclude(x => x.ServiceType)
            .Include(x => x.Services!)
+           .ThenInclude(x => x.ServiceDeliveries)
+           .Include(x => x.Services!)
            .ThenInclude(x => x.Eligibilities)
            .Include(x => x.Services!)
-           .ThenInclude(x => x.LinkContacts)
-           .ThenInclude(x => x.Contact)
-           .Include(x => x.Services!)
            .ThenInclude(x => x.CostOptions)
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.Fundings)
            .Include(x => x.Services!)
            .ThenInclude(x => x.Languages)
            .Include(x => x.Services!)
            .ThenInclude(x => x.ServiceAreas)
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.RegularSchedules)
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.HolidaySchedules)
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.LinkContacts)
+           .ThenInclude(x => x.Contact)
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.ServiceTaxonomies)
+           .ThenInclude(x => x.Taxonomy)
 
            .Include(x => x.Services!)
            .ThenInclude(x => x.ServiceAtLocations)
@@ -51,36 +61,27 @@ public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCom
            .ThenInclude(x => x.HolidaySchedules)
 
            .Include(x => x.Services!)
-           .ThenInclude(x => x.RegularSchedules)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.HolidaySchedules)
+           .ThenInclude(x => x.ServiceAtLocations)
+           .ThenInclude(x => x.LinkContacts!)
+           .ThenInclude(x => x.Contact)
 
            .Include(x => x.Services!)
            .ThenInclude(x => x.ServiceAtLocations)
            .ThenInclude(x => x.Location)
            .ThenInclude(x => x.PhysicalAddresses)
-           
+
+           .Include(x => x.Services!)
+           .ThenInclude(x => x.ServiceAtLocations)
+           .ThenInclude(x => x.Location)
+           .ThenInclude(x => x.LinkContacts!)
+           .ThenInclude(x => x.Contact)
+
            .Include(x => x.Services!)
            .ThenInclude(x => x.ServiceAtLocations)
            .ThenInclude(x => x.Location)
            .ThenInclude(x => x.LinkTaxonomies!)
            .ThenInclude(x => x.Taxonomy)
 
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.ServiceAtLocations)
-           .ThenInclude(x => x.Location)
-           .ThenInclude(x => x.LinkContacts!)
-           .ThenInclude(x => x.Contact)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.ServiceAtLocations)
-           .ThenInclude(x => x.LinkContacts!)
-           .ThenInclude(x => x.Contact)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.ServiceTaxonomies)
-           .ThenInclude(x => x.Taxonomy)
            .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
@@ -112,7 +113,7 @@ public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCom
         {
             result.AdminAreaCode = organisationAdminDistrict.Code;
         }
-        
+
         return result;
     }
 }

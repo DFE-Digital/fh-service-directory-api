@@ -2,7 +2,6 @@
 using FamilyHubs.ServiceDirectory.Api.Commands.DeleteService;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetService;
-using FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
 using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Services;

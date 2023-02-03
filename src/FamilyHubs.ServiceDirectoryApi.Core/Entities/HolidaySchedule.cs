@@ -28,4 +28,5 @@ public class HolidaySchedule : EntityBase<string>, IAggregateRoot
     public DateTime? EndDate { get; set; }
     public DateTime? OpensAt { get; set; }
     public string ServiceAtLocationId { get; set; } = default!;
+    public string ServiceId { get; set; } = default!;
 }

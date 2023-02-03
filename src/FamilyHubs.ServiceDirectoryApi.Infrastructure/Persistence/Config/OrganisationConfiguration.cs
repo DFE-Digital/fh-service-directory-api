@@ -20,8 +20,12 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
         builder.Property(t => t.CreatedBy)
             .HasMaxLength(255)
             .IsRequired();
+
         builder.HasMany(s => s.LinkContacts)
             .WithOne()
-            .HasForeignKey(lc => lc.LinkId);
+            .HasForeignKey(lc => lc.LinkId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
     }
 }

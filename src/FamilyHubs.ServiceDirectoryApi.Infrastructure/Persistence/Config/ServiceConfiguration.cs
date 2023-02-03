@@ -16,8 +16,88 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Property(t => t.CreatedBy)
             .HasMaxLength(255)
             .IsRequired();
+
         builder.HasMany(s => s.LinkContacts)
             .WithOne()
-            .HasForeignKey(lc => lc.LinkId);
+            .HasForeignKey(lc => lc.LinkId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.HolidaySchedules)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.RegularSchedules)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.Fundings)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.CostOptions)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.ServiceAtLocations)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.Eligibilities)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceId)
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.Languages)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.Reviews)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.ServiceAreas)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.ServiceDeliveries)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.ServiceTaxonomies)
+            .WithOne()
+            .HasForeignKey(lc => lc.ServiceId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
     }
 }
