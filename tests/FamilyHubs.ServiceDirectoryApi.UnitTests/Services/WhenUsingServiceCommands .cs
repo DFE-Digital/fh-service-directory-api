@@ -7,106 +7,122 @@ using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetServices;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetServicesByOrganisation;
 using FamilyHubs.ServiceDirectory.Core;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
+using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Services;
 
 public class WhenUsingServiceCommands : BaseCreateDbUnitTest
 {
+    public WhenUsingServiceCommands()
+    {
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        Mapper = new Mapper(configuration);
+        MockApplicationDbContext = GetApplicationDbContext();
+
+        MockMediatR = new Mock<ISender>();
+        var createServiceCommandHandler = new CreateServiceCommandHandler(MockApplicationDbContext, Mapper, NullLogger<CreateServiceCommandHandler>.Instance);
+        var updateServiceCommandHandler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, NullLogger<UpdateServiceCommandHandler>.Instance);
+        MockMediatR.Setup(m => m.Send(It.IsAny<CreateServiceCommand>(), It.IsAny<CancellationToken>()))
+            .Callback<object, CancellationToken>((notification, cToken) =>
+                createServiceCommandHandler.Handle((CreateServiceCommand)notification, cToken).GetAwaiter().GetResult());
+
+        MockMediatR.Setup(m => m.Send(It.IsAny<UpdateServiceCommand>(), It.IsAny<CancellationToken>()))
+            .Callback<object, CancellationToken>((notification, cToken) =>
+                updateServiceCommandHandler.Handle((UpdateServiceCommand)notification, cToken).GetAwaiter().GetResult());
+
+        TestOrganisation = TestDataProvider.GetTestCountyCouncilDto();
+    }
+
+    private OrganisationWithServicesDto TestOrganisation { get; }
+
+    private Mock<ISender> MockMediatR { get; }
+
+    private ApplicationDbContext MockApplicationDbContext { get; }
+
+    private IMapper Mapper { get; }
+    private static NullLogger<T> GetLogger<T>() => new NullLogger<T>();
+
+    private void CreateOrganisation()
+    {
+        var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
+
+        var handler = new CreateOrganisationCommandHandler(MockApplicationDbContext, Mapper, MockMediatR.Object, GetLogger<CreateOrganisationCommandHandler>());
+
+        handler.Handle(createOrganisationCommand, new CancellationToken()).GetAwaiter().GetResult();
+    }
+
     [Fact]
     public async Task ThenCreateService()
     {
         //Arrange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        var mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-        testOrganisation.Services = default!;
-        var orgCommand = new CreateOrganisationCommand(testOrganisation);
-        var orgHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
-        await orgHandler.Handle(orgCommand, new CancellationToken());
-        testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-        var command = new CreateServiceCommand(testOrganisation.Services?.ElementAt(0) ?? default!);
-        var handler = new CreateServiceCommandHandler(mockApplicationDbContext, mapper, new Mock<ILogger<CreateServiceCommandHandler>>().Object);
+        CreateOrganisation();
 
+        var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
+        
+        var command = new CreateServiceCommand(anotherService);
+        
+        var handler = new CreateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<CreateServiceCommandHandler>>().Object);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().Be(testOrganisation.Services?.ElementAt(0).Id);
+        result.Should().Be(anotherService.Id);
     }
 
     [Fact]
     public async Task ThenGetService()
     {
         //Arrange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        var mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-        var createCommand = new CreateOrganisationCommand(testOrganisation);
-        var createHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
-        await createHandler.Handle(createCommand, new CancellationToken());
-
+        CreateOrganisation();
 
         var command = new GetServicesCommand("Information Sharing", "active", "XTEST", null, null, null,
             null, null, null, 1, 10, null, null, null, null, null, null, null, null);
-        var handler = new GetServicesCommandHandler(mockApplicationDbContext);
+        var handler = new GetServicesCommandHandler(MockApplicationDbContext);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
 
         //Assert
         results.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(testOrganisation);
-        ArgumentNullException.ThrowIfNull(testOrganisation.Services);
-        results.Items[0].Should().BeEquivalentTo(testOrganisation.Services.ElementAt(0));
+        ArgumentNullException.ThrowIfNull(TestOrganisation);
+        ArgumentNullException.ThrowIfNull(TestOrganisation.Services);
+        results.Items[0].Should().BeEquivalentTo(TestOrganisation.Services.ElementAt(0));
     }
 
     [Fact]
     public async Task ThenGetServicesByOrganisationId()
     {
         //Arrange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        var mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-        var createCommand = new CreateOrganisationCommand(testOrganisation);
-        var createHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
-        await createHandler.Handle(createCommand, new CancellationToken());
+        CreateOrganisation();
 
-
-        var command = new GetServicesByOrganisationIdCommand(testOrganisation.Id);
-        var handler = new GetServicesByOrganisationIdCommandHandler(mockApplicationDbContext);
+        var command = new GetServicesByOrganisationIdCommand(TestOrganisation.Id);
+        var handler = new GetServicesByOrganisationIdCommandHandler(MockApplicationDbContext);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
 
         //Assert
         results.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(testOrganisation);
-        ArgumentNullException.ThrowIfNull(testOrganisation.Services);
-        results[0].Should().BeEquivalentTo(testOrganisation.Services.ElementAt(0));
+        ArgumentNullException.ThrowIfNull(TestOrganisation);
+        ArgumentNullException.ThrowIfNull(TestOrganisation.Services);
+        results[0].Should().BeEquivalentTo(TestOrganisation.Services.ElementAt(0));
     }
 
     [Fact]
     public async Task ThenGetServicesByOrganisationId_ShouldThrowExceptionWhenNoOrganisations()
     {
         //Arrange
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-        var command = new GetServicesByOrganisationIdCommand(testOrganisation.Id);
-        var handler = new GetServicesByOrganisationIdCommandHandler(mockApplicationDbContext);
+        var command = new GetServicesByOrganisationIdCommand(TestOrganisation.Id);
+        var handler = new GetServicesByOrganisationIdCommandHandler(MockApplicationDbContext);
 
         // Act 
         // Assert
@@ -118,19 +134,8 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
     public async Task ThenGetServicesByOrganisationId_ShouldThrowExceptionWhenNoServices()
     {
         //Arrange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        var mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-        testOrganisation.Services = default!;
-        var createCommand = new CreateOrganisationCommand(testOrganisation);
-        var createHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
-        await createHandler.Handle(createCommand, new CancellationToken());
-
-        var command = new GetServicesByOrganisationIdCommand(testOrganisation.Id);
-        var handler = new GetServicesByOrganisationIdCommandHandler(mockApplicationDbContext);
+        var command = new GetServicesByOrganisationIdCommand(TestOrganisation.Id);
+        var handler = new GetServicesByOrganisationIdCommandHandler(MockApplicationDbContext);
 
         // Act 
         // Assert
@@ -142,20 +147,11 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
     public async Task ThenGetServiceThatArePaidFor()
     {
         //Arrange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        var mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-        var createCommand = new CreateOrganisationCommand(testOrganisation);
-        var createHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
-        await createHandler.Handle(createCommand, new CancellationToken());
-
+        CreateOrganisation();
 
         var command = new GetServicesCommand("Information Sharing", "active", "XTEST", null, null, null,
             null, null, null, 1, 10, null, null, true, null, null, null, null, null);
-        var handler = new GetServicesCommandHandler(mockApplicationDbContext);
+        var handler = new GetServicesCommandHandler(MockApplicationDbContext);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
@@ -169,48 +165,30 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
     public async Task ThenGetServiceThatAreFree()
     {
         //Arrange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        var mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-        var createCommand = new CreateOrganisationCommand(testOrganisation);
-        var createHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
-        await createHandler.Handle(createCommand, new CancellationToken());
-
+        CreateOrganisation();
 
         var command = new GetServicesCommand("Information Sharing", "active", "XTEST", null, null, null,
             null, null, null, 1, 10, null, null, false, null, null, null, null, null);
-        var handler = new GetServicesCommandHandler(mockApplicationDbContext);
+        var handler = new GetServicesCommandHandler(MockApplicationDbContext);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
 
         //Assert
         results.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(testOrganisation);
-        ArgumentNullException.ThrowIfNull(testOrganisation.Services);
-        results.Items[0].Should().BeEquivalentTo(testOrganisation.Services.ElementAt(0));
+        ArgumentNullException.ThrowIfNull(TestOrganisation);
+        ArgumentNullException.ThrowIfNull(TestOrganisation.Services);
+        results.Items[0].Should().BeEquivalentTo(TestOrganisation.Services.ElementAt(0));
     }
 
     [Fact]
     public async Task ThenDeleteService()
     {
         //Arrange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        var mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-        var createCommand = new CreateOrganisationCommand(testOrganisation);
-        var createHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
-        await createHandler.Handle(createCommand, new CancellationToken());
-
+        CreateOrganisation();
 
         var command = new DeleteServiceByIdCommand("3010521b-6e0a-41b0-b610-200edbbeeb14");
-        var handler = new DeleteServiceByIdCommandHandler(mockApplicationDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);
+        var handler = new DeleteServiceByIdCommandHandler(MockApplicationDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
@@ -224,9 +202,8 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
     public async Task ThenDeleteServiceThatDoesNotExist()
     {
         //Arrange
-        var mockApplicationDbContext = GetApplicationDbContext();
         var command = new DeleteServiceByIdCommand(Guid.NewGuid().ToString());
-        var handler = new DeleteServiceByIdCommandHandler(mockApplicationDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);
+        var handler = new DeleteServiceByIdCommandHandler(MockApplicationDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);
 
         // Act 
         // Assert
@@ -238,18 +215,10 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
     public async Task ThenUpdateService()
     {
         //Arrange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        var mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-        var orgCommand = new CreateOrganisationCommand(testOrganisation);
-        var orgHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
-        await orgHandler.Handle(orgCommand, new CancellationToken());
-        testOrganisation = TestDataProvider.GetTestCountyCouncilDto(true);
-        var command = new UpdateServiceCommand(testOrganisation.Services?.ElementAt(0).Id ?? string.Empty, testOrganisation.Services?.ElementAt(0) ?? default!);
-        var handler = new UpdateServiceCommandHandler(mockApplicationDbContext, mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
+        CreateOrganisation();
+
+        var command = new UpdateServiceCommand(TestOrganisation.Services?.ElementAt(0).Id ?? string.Empty, TestOrganisation.Services?.ElementAt(0) ?? default!);
+        var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
 
 
         //Act
@@ -257,7 +226,7 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().Be(testOrganisation.Services?.ElementAt(0).Id);
+        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
     }
 
 
@@ -265,21 +234,10 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
     public async Task ThenUpdateServiceWithNewNestedRecords()
     {
         //Arrange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        var mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-        var orgCommand = new CreateOrganisationCommand(testOrganisation);
-        var orgHandler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, logger.Object);
-        await orgHandler.Handle(orgCommand, new CancellationToken());
-        testOrganisation = TestDataProvider.GetTestCountyCouncilDto(false, true);
-        var command = new UpdateServiceCommand(
-            testOrganisation.Services?.ElementAt(0).Id ?? string.Empty,
-            testOrganisation.Services?.ElementAt(0) ?? default!);
-        var handler = new UpdateServiceCommandHandler(mockApplicationDbContext, mapper,
-            new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
+        CreateOrganisation();
+
+        var command = new UpdateServiceCommand(TestOrganisation.Services?.ElementAt(0).Id ?? string.Empty, TestOrganisation.Services?.ElementAt(0) ?? default!);
+        var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
 
 
         //Act
@@ -287,6 +245,6 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().Be(testOrganisation.Services?.ElementAt(0).Id);
+        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
     }
 }

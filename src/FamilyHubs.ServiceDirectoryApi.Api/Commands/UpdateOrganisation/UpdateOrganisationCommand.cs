@@ -1,8 +1,8 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
+using FamilyHubs.ServiceDirectory.Api.Commands.CreateService;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
 using FamilyHubs.ServiceDirectory.Core.Entities;
-using FamilyHubs.ServiceDirectory.Core.Events;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -70,70 +70,17 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
                 // Update and Insert children
                 foreach (var childModel in request.Organisation.Services)
                 {
-                    var existingChild = entity.Services
-                        .SingleOrDefault(c => c.Id == childModel.Id);
+                    var existing = entity.Services.Any(c => c.Id == childModel.Id);
 
-                    if (existingChild != null)
+                    if (existing)
                     {
-                        var updateServiceCommand =
-                            new UpdateServiceCommand(existingChild.Id, childModel);
+                        var updateServiceCommand = new UpdateServiceCommand(childModel.Id, childModel);
                         await _mediator.Send(updateServiceCommand, cancellationToken);
                     }
                     else
                     {
-                        var service = _mapper.Map<Service>(childModel);
-
-                        var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == childModel.ServiceType.Id);
-                        if (serviceType != null)
-                            service.ServiceType = serviceType;
-
-                        if (childModel.ServiceTaxonomies != null)
-                        {
-                            for (var i = 0; i < childModel.ServiceTaxonomies.Count; i++)
-                            {
-                                if (childModel.ServiceTaxonomies.ElementAt(i).Taxonomy != null)
-                                {
-                                    var id = childModel.ServiceTaxonomies.ElementAt(i).Taxonomy?.Id ?? string.Empty;
-                                    var tx = _context.Taxonomies.FirstOrDefault(x => x.Id == id);
-                                    service.ServiceTaxonomies.ElementAt(i).Taxonomy = tx;
-                                }
-                            }
-                        }
-
-                        foreach (var serviceAtLocation in service.ServiceAtLocations)
-                        {
-                            var existingLocation = await _context.Locations
-                                .Include(l => l.PhysicalAddresses)
-                                .Include(l => l.LinkTaxonomies)!
-                                .ThenInclude(l => l.Taxonomy)
-                                .Where(l => l.Name == serviceAtLocation.Location.Name)
-                                .FirstOrDefaultAsync(cancellationToken);
-
-                            if (existingLocation != null)
-                            {
-                                serviceAtLocation.Location = existingLocation;
-                            }
-                            else
-                            {
-                                if (serviceAtLocation.Location.LinkTaxonomies != null)
-                                {
-                                    foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
-                                    {
-                                        if (linkTaxonomy.Taxonomy != null)
-                                        {
-                                            var taxonomy = _context.Taxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy.Id);
-                                            if (taxonomy != null)
-                                            {
-                                                linkTaxonomy.Taxonomy = taxonomy;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        entity.RegisterDomainEvent(new ServiceCreatedEvent(service));
-                        _context.Services.Add(service);
+                        var createServiceCommand = new CreateServiceCommand(childModel);
+                        await _mediator.Send(createServiceCommand, cancellationToken);
                     }
                 }
             }

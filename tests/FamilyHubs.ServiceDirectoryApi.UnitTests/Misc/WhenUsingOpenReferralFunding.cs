@@ -10,7 +10,11 @@ public class WhenUsingFunding : BaseCreateDbUnitTest
     {
         //Arrange
         var mockApplicationDbContext = GetApplicationDbContext();
-        var funding = new Funding("96c0cfa6-0057-403c-9f4b-c9c111b742ec", "source");
+        
+        var funding = new Funding("96c0cfa6-0057-403c-9f4b-c9c111b742ec", "source")
+        {
+            ServiceId = "96c0cfa6-0057-403c-9f4b-c9c111b74211"
+        };
 
         //Act
         mockApplicationDbContext.Fundings.Add(funding);

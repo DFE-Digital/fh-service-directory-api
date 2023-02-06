@@ -278,7 +278,7 @@ public static class TestDataProvider
             })
             .WithEligibility(new List<EligibilityDto>
             {
-                new EligibilityDto("Test9111Children","Test9111Children",0,13)
+                new EligibilityDto("Test9112Children","Test9112Children",0,13)
             })
             .WithLinkContact(new List<LinkContactDto>
             {
@@ -310,7 +310,7 @@ public static class TestDataProvider
                 new ServiceAtLocationDto(
                     "Test1750",
                     new LocationDto(
-                        "6ea31a4f-7dcc-4350-9fba-20525efe092f",
+                        "6ea31a4f-7dcc-4350-9fba-20525efe091a",
                         "Test Location",
                         "",
                         52.6312,
@@ -379,7 +379,7 @@ public static class TestDataProvider
                 new ServiceTaxonomyDto(
                     "UnitTest9107B",
                     new TaxonomyDto(
-                        "UnitTest bccsource:Organisation",
+                        "UnitTest1",
                         "Organisation",
                         "Test BCC Data Sources",
                         null
@@ -388,7 +388,7 @@ public static class TestDataProvider
                 new ServiceTaxonomyDto(
                     "UnitTest9108B",
                     new TaxonomyDto(
-                        "UnitTest bccprimaryservicetype:38",
+                        "UnitTest2",
                         "Support",
                         "Test BCC Primary Services",
                         null
@@ -397,7 +397,7 @@ public static class TestDataProvider
                 new ServiceTaxonomyDto(
                     "UnitTest9109B",
                     new TaxonomyDto(
-                        "UnitTest bccagegroup:37",
+                        "UnitTest3",
                         "Children",
                         "Test BCC Age Groups",
                         null
@@ -406,7 +406,7 @@ public static class TestDataProvider
                 new ServiceTaxonomyDto(
                     "UnitTest9110B",
                     new TaxonomyDto(
-                        "UnitTestbccusergroup:56",
+                        "UnitTest4",
                         "Long Term Health Conditions",
                         "Test BCC User Groups",
                         null
