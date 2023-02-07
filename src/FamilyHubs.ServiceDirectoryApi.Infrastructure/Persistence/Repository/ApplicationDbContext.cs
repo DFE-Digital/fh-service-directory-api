@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
+using FamilyHubs.ServiceDirectory.Core.Entities;
+using FamilyHubs.ServiceDirectory.Core.Interfaces.Infrastructure;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.core.Entities;
-using fh_service_directory_api.core.Interfaces.Infrastructure;
-using fh_service_directory_api.infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Repository
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository
 {
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
@@ -22,7 +22,7 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OpenReferralServiceDelivery>().HasEnum(e => e.ServiceDelivery);
+            modelBuilder.Entity<ServiceDelivery>().HasEnum(e => e.Name);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
@@ -35,27 +35,28 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
             optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
         }
 
-        public DbSet<UICache> UICaches => Set<UICache>();
-        public DbSet<Accessibility_For_Disabilities> Accessibility_For_Disabilities => Set<Accessibility_For_Disabilities>();
-        public DbSet<OpenReferralContact> OpenReferralContacts => Set<OpenReferralContact>();
-        public DbSet<OpenReferralCost_Option> OpenReferralCost_Options => Set<OpenReferralCost_Option>();
-        public DbSet<OpenReferralEligibility> OpenReferralEligibilities => Set<OpenReferralEligibility>();
-        public DbSet<OpenReferralFunding> OpenReferralFundings => Set<OpenReferralFunding>();
-        public DbSet<OpenReferralHoliday_Schedule> OpenReferralHoliday_Schedules => Set<OpenReferralHoliday_Schedule>();
-        public DbSet<OpenReferralLanguage> OpenReferralLanguages => Set<OpenReferralLanguage>();
-        public DbSet<OpenReferralLinkTaxonomy> OpenReferralLinkTaxonomies => Set<OpenReferralLinkTaxonomy>();
-        public DbSet<OpenReferralLocation> OpenReferralLocations => Set<OpenReferralLocation>();
-        public DbSet<OpenReferralOrganisation> OpenReferralOrganisations => Set<OpenReferralOrganisation>();
-        public DbSet<OpenReferralParent> OpenReferralParents => Set<OpenReferralParent>();
-        public DbSet<OpenReferralPhysical_Address> OpenReferralPhysical_Addresses => Set<OpenReferralPhysical_Address>();
-        public DbSet<OpenReferralRegular_Schedule> OpenReferralRegular_Schedules => Set<OpenReferralRegular_Schedule>();
-        public DbSet<OpenReferralReview> OpenReferralReviews => Set<OpenReferralReview>();
-        public DbSet<OpenReferralService> OpenReferralServices => Set<OpenReferralService>();
-        public DbSet<OpenReferralService_Area> OpenReferralService_Areas => Set<OpenReferralService_Area>();
-        public DbSet<OpenReferralService_Taxonomy> OpenReferralService_Taxonomies => Set<OpenReferralService_Taxonomy>();
-        public DbSet<OpenReferralServiceAtLocation> OpenReferralServiceAtLocations => Set<OpenReferralServiceAtLocation>();
-        public DbSet<OpenReferralTaxonomy> OpenReferralTaxonomies => Set<OpenReferralTaxonomy>();
-        public DbSet<OpenReferralServiceDelivery> OpenReferralServiceDeliveries => Set<OpenReferralServiceDelivery>();
+        public DbSet<UiCache> UiCaches => Set<UiCache>();
+        public DbSet<AccessibilityForDisabilities> AccessibilityForDisabilities => Set<AccessibilityForDisabilities>();
+        public DbSet<Contact> Contacts => Set<Contact>();
+        public DbSet<CostOption> CostOptions => Set<CostOption>();
+        public DbSet<Eligibility> Eligibilities => Set<Eligibility>();
+        public DbSet<Funding> Fundings => Set<Funding>();
+        public DbSet<HolidaySchedule> HolidaySchedules => Set<HolidaySchedule>();
+        public DbSet<Language> Languages => Set<Language>();
+        public DbSet<LinkTaxonomy> LinkTaxonomies => Set<LinkTaxonomy>();
+        public DbSet<LinkContact> LinkContacts => Set<LinkContact>();
+        public DbSet<Location> Locations => Set<Location>();
+        public DbSet<Organisation> Organisations => Set<Organisation>();
+        public DbSet<Parent> Parents => Set<Parent>();
+        public DbSet<PhysicalAddress> PhysicalAddresses => Set<PhysicalAddress>();
+        public DbSet<RegularSchedule> RegularSchedules => Set<RegularSchedule>();
+        public DbSet<Review> Reviews => Set<Review>();
+        public DbSet<Service> Services => Set<Service>();
+        public DbSet<ServiceArea> ServiceAreas => Set<ServiceArea>();
+        public DbSet<ServiceTaxonomy> ServiceTaxonomies => Set<ServiceTaxonomy>();
+        public DbSet<ServiceAtLocation> ServiceAtLocations => Set<ServiceAtLocation>();
+        public DbSet<Taxonomy> Taxonomies => Set<Taxonomy>();
+        public DbSet<ServiceDelivery> ServiceDeliveries => Set<ServiceDelivery>();
         public DbSet<ServiceType> ServiceTypes => Set<ServiceType>();
         public DbSet<OrganisationType> OrganisationTypes => Set<OrganisationType>();
         public DbSet<AdminArea> AdminAreas => Set<AdminArea>();

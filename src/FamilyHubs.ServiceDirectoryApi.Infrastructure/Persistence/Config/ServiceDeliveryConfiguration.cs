@@ -1,14 +1,14 @@
-﻿using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Config;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Config;
 
-public class ServiceDeliveryConfiguration : IEntityTypeConfiguration<OpenReferralServiceDelivery>
+public class ServiceDeliveryConfiguration : IEntityTypeConfiguration<ServiceDelivery>
 {
-    public void Configure(EntityTypeBuilder<OpenReferralServiceDelivery> builder)
+    public void Configure(EntityTypeBuilder<ServiceDelivery> builder)
     {
-        builder.Property(t => t.ServiceDelivery)
+        builder.Property(t => t.Name)
             .HasMaxLength(50)
             .IsRequired();
         builder.Property(t => t.Created)

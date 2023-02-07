@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
-using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
-using fh_service_directory_api.api.Commands.UpdateOpenReferralService;
-using fh_service_directory_api.core;
+using FamilyHubs.ServiceDirectory.Api.Commands.CreateOrganisation;
+using FamilyHubs.ServiceDirectory.Api.Commands.CreateService;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
+using FamilyHubs.ServiceDirectory.Core;
 using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
@@ -12,34 +14,45 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
 public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
 {
     [Fact]
-    public async Task ThenUpdateOpenReferralServiceOnly()
+    public async Task ThenUpdateServiceOnly()
     {
-        //Arange
+        //Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
+        var mapper = new Mapper(configuration);
+        var logger = new Mock<ILogger<CreateOrganisationCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
-        var updatelogger = new Mock<ILogger<UpdateOpenReferralServiceCommandHandler>>();
+        
         var mockMediator = new Mock<ISender>();
-        CreateOpenReferralOrganisationCommand command = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await handler.Handle(command, new CancellationToken());
+        var createServiceCommandHandler = new CreateServiceCommandHandler(mockApplicationDbContext, mapper, NullLogger<CreateServiceCommandHandler>.Instance);
+        var updateServiceCommandHandler = new UpdateServiceCommandHandler(mockApplicationDbContext, mapper, NullLogger<UpdateServiceCommandHandler>.Instance);
+        mockMediator.Setup(m => m.Send(It.IsAny<CreateServiceCommand>(), It.IsAny<CancellationToken>()))
+            .Callback<object, CancellationToken>((notification, cToken) => 
+                createServiceCommandHandler.Handle((CreateServiceCommand)notification, cToken).GetAwaiter().GetResult());
 
-        var openReferralService = WhenUsingOrganisationCommands.GetTestCountyCouncilServicesDto(testOrganisation.Id);
+        mockMediator.Setup(m => m.Send(It.IsAny<UpdateServiceCommand>(), It.IsAny<CancellationToken>()))
+            .Callback<object, CancellationToken>((notification, cToken) => 
+                updateServiceCommandHandler.Handle((UpdateServiceCommand)notification, cToken).GetAwaiter().GetResult());
+        
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
+        var updateLogger = new Mock<ILogger<UpdateServiceCommandHandler>>();
+        var command = new CreateOrganisationCommand(testOrganisation);
+        var handler = new CreateOrganisationCommandHandler(mockApplicationDbContext, mapper, mockMediator.Object, logger.Object);
+        await handler.Handle(command, new CancellationToken());
+
+        var service = TestDataProvider.GetTestCountyCouncilServicesDto(testOrganisation.Id);
 
 
-        openReferralService.Name = "Unit Test Update Service Name";
-        openReferralService.Description = "Unit Test Update Service Name";
-        UpdateOpenReferralServiceCommand updatecommand = new(openReferralService.Id, openReferralService);
-        UpdateOpenReferralServiceCommandHandler updatehandler = new(mockApplicationDbContext, mapper, updatelogger.Object);
+        service.Name = "Unit Test Update Service Name";
+        service.Description = "Unit Test Update Service Name";
+        var updateCommand = new UpdateServiceCommand(service.Id, service);
+        var updateHandler = new UpdateServiceCommandHandler(mockApplicationDbContext, mapper, updateLogger.Object);
 
         //Act
-        var result = await updatehandler.Handle(updatecommand, new CancellationToken());
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().Be(openReferralService.Id);
+        result.Should().Be(service.Id);
     }
 }

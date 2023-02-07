@@ -1,5 +1,5 @@
-﻿using fh_service_directory_api.api.Data;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
+﻿using FamilyHubs.ServiceDirectory.Api.Data;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FluentAssertions;
 using Xunit;
 

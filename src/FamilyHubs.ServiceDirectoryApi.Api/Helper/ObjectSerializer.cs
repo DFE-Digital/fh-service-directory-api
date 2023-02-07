@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace fh_service_directory_api.api.Helper;
+namespace FamilyHubs.ServiceDirectory.Api.Helper;
 
 public static class ObjectSerializer
 {

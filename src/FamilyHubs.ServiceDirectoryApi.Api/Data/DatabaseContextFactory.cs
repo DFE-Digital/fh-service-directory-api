@@ -1,10 +1,10 @@
-﻿using fh_service_directory_api.infrastructure.Persistence.Interceptors;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
-using fh_service_directory_api.infrastructure.Services;
+﻿using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace fh_service_directory_api.api.Data;
+namespace FamilyHubs.ServiceDirectory.Api.Data;
 
 public class DatabaseContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
@@ -38,13 +38,18 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<ApplicationDbC
                 {
                     var connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
                     if (connectionString != null)
-                        builder.UseNpgsql(connectionString, b => b.MigrationsAssembly("FamilyHubs.ServiceDirectoryApi.Api"));
+                        builder
+                            .UseNpgsql(connectionString, b => b.MigrationsAssembly("FamilyHubs.ServiceDirectoryApi.Api"))
+                            .UseLowerCaseNamingConvention()
+                            ;
 
                 }
                 break;
         }
 
-        AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor = new(new CurrentUserService(new HttpContextAccessor()), new DateTimeService());
+        var auditableEntitySaveChangesInterceptor =
+            new AuditableEntitySaveChangesInterceptor(new CurrentUserService(new HttpContextAccessor()),
+                new DateTimeService());
 
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         return new ApplicationDbContext(builder.Options, null, auditableEntitySaveChangesInterceptor);

@@ -1,7 +1,7 @@
-﻿using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using Xunit;
 
-namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence.OpenReferralOrganisations;
+namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence.Organisations;
 
 public class EfRepositoryDelete : BaseEfRepositoryTestFixture
 {
@@ -9,19 +9,19 @@ public class EfRepositoryDelete : BaseEfRepositoryTestFixture
     public async Task DeletesOrOganisationAfterAddingIt()
     {
         // Arrange
-        var openReferralData = new OpenReferralData();
-        var newOpenReferralOrganisation = openReferralData.GetTestCountyCouncil();
-        ArgumentNullException.ThrowIfNull(newOpenReferralOrganisation, nameof(newOpenReferralOrganisation));
-        var OpenReferralOrganisationId = newOpenReferralOrganisation.Id;
-        var repository = GetRepository<OpenReferralOrganisation>();
-        ArgumentNullException.ThrowIfNull(repository, nameof(repository));
-        await repository.AddAsync(newOpenReferralOrganisation);
+        var testData = new TestData();
+        var newOrganisation = testData.GetTestCountyCouncil();
+        ArgumentNullException.ThrowIfNull(newOrganisation);
+        var organisationId = newOrganisation.Id;
+        var repository = GetRepository<Organisation>();
+        ArgumentNullException.ThrowIfNull(repository);
+        await repository.AddAsync(newOrganisation);
 
         // Act
-        await repository.DeleteAsync(newOpenReferralOrganisation);
+        await repository.DeleteAsync(newOrganisation);
 
         // Assert
         Assert.DoesNotContain(await repository.ListAsync(),
-            newOpenReferralOrganisation => newOpenReferralOrganisation.Id == OpenReferralOrganisationId);
+            organisation => organisation.Id == organisationId);
     }
 }

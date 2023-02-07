@@ -1,25 +1,25 @@
 ﻿using System.Diagnostics;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api;
-using fh_service_directory_api.api.Commands.CreateUICache;
-using fh_service_directory_api.api.Commands.UpdateUICache;
-using fh_service_directory_api.api.Queries.GetUICacheById;
+using FamilyHubs.ServiceDirectory.Api.Commands.CreateUiCache;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpdateUiCache;
+using FamilyHubs.ServiceDirectory.Api.Queries.GetUiCacheById;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace fh_service_directory_api.api.Endpoints;
+namespace FamilyHubs.ServiceDirectory.Api.Endpoints;
 
-public class MinimalUICacheEndPoints
+public class MinimalUiCacheEndPoints
 {
-    public void RegisterUICacheEndPoints(WebApplication app)
+    public void RegisterUiCacheEndPoints(WebApplication app)
     {
-        app.MapPost("api/uicaches", [Authorize(Policy = "ServiceAccess")] async ([FromBody] UICacheDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalUICacheEndPoints> logger) =>
+        app.MapPost("api/uicaches", [Authorize(Policy = "ServiceAccess")] async ([FromBody] UICacheDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalUiCacheEndPoints> logger) =>
         {
             try
             {
-                CreateUICacheCommand command = new(request);
-                var result = await _mediator.Send(command, cancellationToken);
+                var command = new CreateUiCacheCommand(request);
+                var result = await mediator.Send(command, cancellationToken);
                 return result;
             }
             catch (Exception ex)
@@ -30,12 +30,12 @@ public class MinimalUICacheEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("UICaches", "Create UICache") { Tags = new[] { "UICaches" } });
 
-        app.MapGet("api/uicaches/{id}", async (string id, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalUICacheEndPoints> logger) =>
+        app.MapGet("api/uicaches/{id}", async (string id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalUiCacheEndPoints> logger) =>
         {
             try
             {
-                GetUICacheByIdCommand request = new(id);
-                var result = await _mediator.Send(request, cancellationToken);
+                var request = new GetUiCacheByIdCommand(id);
+                var result = await mediator.Send(request, cancellationToken);
                 return result;
             }
             catch (Exception ex)
@@ -46,12 +46,12 @@ public class MinimalUICacheEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get UICache", "Get UICache By Id") { Tags = new[] { "UICaches" } });
 
-        app.MapPut("api/uicaches/{id}", [Authorize(Policy = "ServiceAccess")] async (string id, [FromBody] UICacheDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalUICacheEndPoints> logger) =>
+        app.MapPut("api/uicaches/{id}", [Authorize(Policy = "ServiceAccess")] async (string id, [FromBody] UICacheDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalUiCacheEndPoints> logger) =>
         {
             try
             {
-                UpdateUICacheCommand command = new(id, request);
-                var result = await _mediator.Send(command, cancellationToken);
+                var command = new UpdateUiCacheCommand(id, request);
+                var result = await mediator.Send(command, cancellationToken);
                 return result;
             }
             catch (Exception ex)

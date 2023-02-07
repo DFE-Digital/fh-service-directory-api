@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace fh_service_directory_api.api.Migrations
 {
+#pragma warning disable CS8981
     public partial class adminareacontactmodellink : Migration
+#pragma warning disable CS8981
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

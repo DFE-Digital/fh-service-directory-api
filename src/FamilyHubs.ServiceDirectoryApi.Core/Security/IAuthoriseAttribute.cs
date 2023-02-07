@@ -1,4 +1,4 @@
-﻿namespace fh_service_directory_api.core.Security
+﻿namespace FamilyHubs.ServiceDirectory.Core.Security
 {
     public interface IAuthoriseAttribute
     {

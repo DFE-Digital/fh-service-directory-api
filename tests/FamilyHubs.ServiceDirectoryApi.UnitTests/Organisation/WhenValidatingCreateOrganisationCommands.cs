@@ -1,4 +1,4 @@
-﻿using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
+﻿using FamilyHubs.ServiceDirectory.Api.Commands.CreateOrganisation;
 using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
@@ -9,9 +9,9 @@ public class WhenValidatingCreateOrganisationCommands
     public void ThenShouldNotErrorWhenModelIsValid()
     {
         //Arrange
-        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
-        var validator = new CreateOpenReferralOrganisationCommandValidator();
-        var testModel = new CreateOpenReferralOrganisationCommand(testOrganisation);
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
+        var validator = new CreateOrganisationCommandValidator();
+        var testModel = new CreateOrganisationCommand(testOrganisation);
 
         //Act
         var result = validator.Validate(testModel);
@@ -24,31 +24,31 @@ public class WhenValidatingCreateOrganisationCommands
     public void ThenShouldErrorWhenModelHasNoId()
     {
         //Arrange
-        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         testOrganisation.Id = string.Empty;
-        var validator = new CreateOpenReferralOrganisationCommandValidator();
-        var testModel = new CreateOpenReferralOrganisationCommand(testOrganisation);
+        var validator = new CreateOrganisationCommandValidator();
+        var testModel = new CreateOrganisationCommand(testOrganisation);
 
         //Act
         var result = validator.Validate(testModel);
 
         //Assert
-        result.Errors.Any(x => x.PropertyName == "OpenReferralOrganisation.Id").Should().BeTrue();
+        result.Errors.Any(x => x.PropertyName == "Organisation.Id").Should().BeTrue();
     }
 
     [Fact]
     public void ThenShouldErrorWhenModelHasNoName()
     {
         //Arrange
-        var testOrganisation = WhenUsingOrganisationCommands.GetTestCountyCouncilDto();
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         testOrganisation.Name = string.Empty;
-        var validator = new CreateOpenReferralOrganisationCommandValidator();
-        var testModel = new CreateOpenReferralOrganisationCommand(testOrganisation);
+        var validator = new CreateOrganisationCommandValidator();
+        var testModel = new CreateOrganisationCommand(testOrganisation);
 
         //Act
         var result = validator.Validate(testModel);
 
         //Assert
-        result.Errors.Any(x => x.PropertyName == "OpenReferralOrganisation.Name").Should().BeTrue();
+        result.Errors.Any(x => x.PropertyName == "Organisation.Name").Should().BeTrue();
     }
 }

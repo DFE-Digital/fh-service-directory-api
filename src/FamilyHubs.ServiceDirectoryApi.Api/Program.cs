@@ -1,6 +1,6 @@
 using Serilog;
 
-namespace fh_service_directory_api.api;
+namespace FamilyHubs.ServiceDirectory.Api;
 
 public class Program
 {
@@ -30,7 +30,7 @@ public class Program
         }
         catch (Exception e)
         {
-            if (e.GetType().Name.Equals("StopTheHostException", StringComparison.Ordinal))
+            if (e.GetType().Name.Equals("HostAbortedException", StringComparison.Ordinal))
             {
                 //this error only occurs when DB migration is running on its own
                 throw;

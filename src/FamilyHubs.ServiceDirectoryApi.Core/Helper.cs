@@ -3,7 +3,7 @@ using GeoCoordinatePortable;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 
-namespace fh_service_directory_api.core;
+namespace FamilyHubs.ServiceDirectory.Core;
 
 public class Helper
 {
@@ -31,8 +31,8 @@ public class Helper
         latitude2 ??= 0.0;
         longitude2 ??= 0.0;
 
-        GeoCoordinate pin1 = new(latitude1.Value, longitude1.Value);
-        GeoCoordinate pin2 = new(latitude2.Value, longitude2.Value);
+        var pin1 = new GeoCoordinate(latitude1.Value, longitude1.Value);
+        var pin2 = new GeoCoordinate(latitude2.Value, longitude2.Value);
 
         return pin1.GetDistanceTo(pin2);
     }

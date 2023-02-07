@@ -2,15 +2,15 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using FamilyHubs.ServiceDirectory.Api.Endpoints;
+using FamilyHubs.ServiceDirectory.Core;
+using FamilyHubs.ServiceDirectory.Core.Entities;
+using FamilyHubs.ServiceDirectory.Core.Interfaces;
+using FamilyHubs.ServiceDirectory.Infrastructure;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Infrastructure.Services;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.api.Endpoints;
-using fh_service_directory_api.core;
-using fh_service_directory_api.core.Entities;
-using fh_service_directory_api.core.Interfaces;
-using fh_service_directory_api.infrastructure;
-using fh_service_directory_api.infrastructure.Persistence.Interceptors;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
-using fh_service_directory_api.infrastructure.Services;
 using MediatR;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,7 +20,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 
-namespace fh_service_directory_api.api;
+namespace FamilyHubs.ServiceDirectory.Api;
 
 public static class StartupExtensions
 {
@@ -103,6 +103,7 @@ public static class StartupExtensions
                     {
                         options = new DbContextOptionsBuilder<ApplicationDbContext>()
                             .UseNpgsql(builder.Configuration.GetConnectionString("ServiceDirectoryConnection") ?? string.Empty)
+                            .UseLowerCaseNamingConvention()
                             .Options;
                     }
                     break;
@@ -127,7 +128,7 @@ public static class StartupExtensions
 
             containerBuilder.RegisterType<MinimalLocationEndPoints>();
 
-            containerBuilder.RegisterType<MinimalUICacheEndPoints>();
+            containerBuilder.RegisterType<MinimalUiCacheEndPoints>();
 
             containerBuilder.RegisterType<ApplicationDbContextInitialiser>();
 
@@ -167,7 +168,7 @@ public static class StartupExtensions
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "fh-service-directory-api.api", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "FamilyHubs.ServiceDirectory.Api", Version = "v1" });
             c.EnableAnnotations();
         });
 
@@ -175,7 +176,7 @@ public static class StartupExtensions
         {
             typeof(Program).Assembly,
             typeof(ApplicationDbContext).Assembly,
-            typeof(OpenReferralOrganisation).Assembly
+            typeof(Organisation).Assembly
         };
 
         services.AddMediatR(assemblies);
@@ -268,8 +269,8 @@ public static class StartupExtensions
         var locationservice = scope.ServiceProvider.GetService<MinimalLocationEndPoints>();
         locationservice?.RegisterLocationEndPoints(webApplication);
 
-        var uiCacheservice = scope.ServiceProvider.GetService<MinimalUICacheEndPoints>();
-        uiCacheservice?.RegisterUICacheEndPoints(webApplication);
+        var uiCacheservice = scope.ServiceProvider.GetService<MinimalUiCacheEndPoints>();
+        uiCacheservice?.RegisterUiCacheEndPoints(webApplication);
 
         var genservice = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
         genservice?.RegisterMinimalGeneralEndPoints(webApplication);

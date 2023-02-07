@@ -1,8 +1,8 @@
-﻿using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Config;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Config;
 
 public class AdminAreaConfiguration : IEntityTypeConfiguration<AdminArea>
 {
@@ -11,7 +11,7 @@ public class AdminAreaConfiguration : IEntityTypeConfiguration<AdminArea>
         builder.Property(t => t.Code)
             .HasMaxLength(50)
             .IsRequired();
-        builder.Property(t => t.OpenReferralOrganisationId)
+        builder.Property(t => t.OrganisationId)
             .HasMaxLength(50)
             .IsRequired();
         builder.Property(t => t.Created)

@@ -1,11 +1,11 @@
-﻿using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Config;
-public class AccessibilityConfiguration : IEntityTypeConfiguration<Accessibility_For_Disabilities>
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Config;
+public class AccessibilityConfiguration : IEntityTypeConfiguration<AccessibilityForDisabilities>
 {
-    public void Configure(EntityTypeBuilder<Accessibility_For_Disabilities> builder)
+    public void Configure(EntityTypeBuilder<AccessibilityForDisabilities> builder)
     {
         builder.Property(t => t.Accessibility)
             .IsRequired();

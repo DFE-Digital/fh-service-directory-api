@@ -1,4 +1,4 @@
-﻿namespace fh_service_directory_api.core.Security;
+﻿namespace FamilyHubs.ServiceDirectory.Core.Security;
 
 /// <summary>
 /// Specifies the class this attribute is applied to requires authorization.

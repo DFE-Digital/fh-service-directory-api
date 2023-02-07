@@ -1,6 +1,6 @@
 ﻿using FamilyHubs.SharedKernel.Interfaces;
 
-namespace fh_service_directory_api.infrastructure.Services;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Services;
 
 public class DateTimeService : IDateTime
 {

@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace fh_service_directory_api.api.Queries.GetUICacheById;
+namespace FamilyHubs.ServiceDirectory.Api.Queries.GetUiCacheById;
 
-public class GetUICacheByIdCommandValidator : AbstractValidator<GetUICacheByIdCommand>
+public class GetUiCacheByIdCommandValidator : AbstractValidator<GetUiCacheByIdCommand>
 {
-    public GetUICacheByIdCommandValidator()
+    public GetUiCacheByIdCommandValidator()
     {
         RuleFor(v => v.Id)
             .MinimumLength(1)

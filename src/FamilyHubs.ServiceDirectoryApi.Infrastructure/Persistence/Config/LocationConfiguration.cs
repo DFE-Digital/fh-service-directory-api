@@ -1,12 +1,12 @@
-﻿using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Config;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Config;
 
-public class LocationConfiguration : IEntityTypeConfiguration<OpenReferralLocation>
+public class LocationConfiguration : IEntityTypeConfiguration<Location>
 {
-    public void Configure(EntityTypeBuilder<OpenReferralLocation> builder)
+    public void Configure(EntityTypeBuilder<Location> builder)
     {
         builder.Property(t => t.Name)
             .HasMaxLength(255)
@@ -23,5 +23,32 @@ public class LocationConfiguration : IEntityTypeConfiguration<OpenReferralLocati
         builder.Property(t => t.CreatedBy)
             .HasMaxLength(255)
             .IsRequired();
+        builder.HasMany(s => s.LinkContacts)
+            .WithOne()
+            .HasForeignKey(lc => lc.LinkId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.LinkTaxonomies)
+            .WithOne()
+            .HasForeignKey(lc => lc.LinkId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.PhysicalAddresses)
+            .WithOne()
+            .HasForeignKey(f => f.LocationId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
+
+        builder.HasMany(s => s.AccessibilityForDisabilities)
+            .WithOne()
+            .HasForeignKey(lc => lc.LocationId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade)
+            ;
     }
 }

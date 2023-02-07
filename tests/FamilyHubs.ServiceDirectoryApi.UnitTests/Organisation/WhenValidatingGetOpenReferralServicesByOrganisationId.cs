@@ -1,16 +1,16 @@
-﻿using fh_service_directory_api.api.Queries.GetOpenReferralServicesByOrganisation;
+﻿using FamilyHubs.ServiceDirectory.Api.Queries.GetServicesByOrganisation;
 using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
 
-public class WhenValidatingGetOpenReferralServicesByOrganisationId
+public class WhenValidatingGetServicesByOrganisationId
 {
     [Fact]
-    public void ThenShouldNotErrorForGetOpenReferralServicesByOrganisationIdWhenModelIsValid()
+    public void ThenShouldNotErrorForGetServicesByOrganisationIdWhenModelIsValid()
     {
         //Arrange
-        var validator = new GetOpenReferralServicesByOrganisationIdCommandValidator();
-        var testModel = new GetOpenReferralServicesByOrganisationIdCommand("56e62852-1b0b-40e5-ac97-54a67ea957dc");
+        var validator = new GetServicesByOrganisationIdCommandValidator();
+        var testModel = new GetServicesByOrganisationIdCommand("56e62852-1b0b-40e5-ac97-54a67ea957dc");
 
         //Act
         var result = validator.Validate(testModel);

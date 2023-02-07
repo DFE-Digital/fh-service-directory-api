@@ -3,7 +3,7 @@ using FamilyHubs.SharedKernel.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Repository
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository
 {
     public class CachedRepository<T> : IReadRepository<T> where T : class, IAggregateRoot
     {
@@ -78,7 +78,7 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
                 entry.SetOptions(_cacheOptions);
                 _logger.LogWarning("Fetching source data for " + key);
                 return _sourceRepository.GetByIdAsync(id, cancellationToken);
-            });
+            })!;
         }
 
         public Task<T?> GetBySpecAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
@@ -100,7 +100,7 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
                 entry.SetOptions(_cacheOptions);
                 _logger.LogWarning($"Fetching source data for {key}");
                 return _sourceRepository.ListAsync(cancellationToken);
-            });
+            })!;
         }
 
         public Task<List<T>> ListAsync(ISpecification<T> specification,
@@ -115,7 +115,7 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
                     entry.SetOptions(_cacheOptions);
                     _logger.LogWarning($"Fetching source data for {key}");
                     return _sourceRepository.ListAsync(specification, cancellationToken);
-                });
+                })!;
             }
             return _sourceRepository.ListAsync(specification, cancellationToken);
         }
@@ -132,7 +132,7 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
                     entry.SetOptions(_cacheOptions);
                     _logger.LogWarning($"Fetching source data for {key}");
                     return _sourceRepository.ListAsync(specification, cancellationToken);
-                });
+                })!;
             }
             return _sourceRepository.ListAsync(specification, cancellationToken);
         }

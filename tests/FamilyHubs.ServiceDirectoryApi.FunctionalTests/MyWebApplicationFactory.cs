@@ -1,4 +1,4 @@
-﻿using fh_service_directory_api.api;
+﻿using FamilyHubs.ServiceDirectory.Api;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;

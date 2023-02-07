@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 using System.Text.Json;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -11,14 +11,14 @@ namespace FamilyHubs.ServiceDirectoryApi.FunctionalTests;
 
 
 [Collection("Sequential")]
-public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitTests
+public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
 {
 #if DEBUG
     [Fact]
 #else
     [Fact(Skip = "This test should be run locally")]
 #endif
-    public async Task ThenTheOpenReferralTaxonomiesAreRetrieved()
+    public async Task ThenTheTaxonomiesAreRetrieved()
     {
         var request = new HttpRequestMessage
         {
@@ -30,10 +30,10 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<OpenReferralTaxonomyDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<TaxonomyDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        ArgumentNullException.ThrowIfNull(retVal, nameof(retVal));
+        ArgumentNullException.ThrowIfNull(retVal);
         retVal.Should().NotBeNull();
         retVal.Items.Count.Should().BeGreaterThan(3);
     }
@@ -45,7 +45,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
 #endif
     public async Task ThenTheTaxonomyIsCreated()
     {
-        var commandtaxonomy = new OpenReferralTaxonomyDto(Guid.NewGuid().ToString(), "Test-AddTaxonomy", "Test-AddVocab", null);
+        var commandtaxonomy = new TaxonomyDto(Guid.NewGuid().ToString(), "Test-AddTaxonomy", "Test-AddVocab", null);
         
         var request = new HttpRequestMessage
         {
@@ -73,7 +73,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
 #endif
     public async Task ThenTheTaxonomyIsUpdated()
     {
-        var commandtaxonomy = new OpenReferralTaxonomyDto(Guid.NewGuid().ToString(), "Test-UpdateTaxonomy", "Test-UpDateVocab", null);
+        var commandtaxonomy = new TaxonomyDto(Guid.NewGuid().ToString(), "Test-UpdateTaxonomy", "Test-UpDateVocab", null);
 
         var request = new HttpRequestMessage
         {
@@ -88,9 +88,9 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingOpenReferralApiUnitT
 
         response.EnsureSuccessStatusCode();
 
-        var stringResult = await response.Content.ReadAsStringAsync();
+        await response.Content.ReadAsStringAsync();
 
-        var updatedtaxonomy = new OpenReferralTaxonomyDto(commandtaxonomy.Id, "Test-IsUpdateTaxonomy", "Test-IsUpDateVocab", null);
+        var updatedtaxonomy = new TaxonomyDto(commandtaxonomy.Id, "Test-IsUpdateTaxonomy", "Test-IsUpDateVocab", null);
 
         var updaterequest = new HttpRequestMessage
         {

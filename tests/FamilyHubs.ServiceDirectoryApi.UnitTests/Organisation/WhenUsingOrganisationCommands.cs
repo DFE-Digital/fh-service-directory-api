@@ -1,81 +1,83 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
-using FamilyHubs.ServiceDirectory.Shared.Builders;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralContacts;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralCostOptions;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralEligibilitys;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralHolidaySchedule;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLanguages;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLinkTaxonomies;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralLocations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralPhysicalAddresses;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralRegularSchedule;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAreas;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceAtLocations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceDeliverysEx;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServices;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralServiceTaxonomys;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralTaxonomys;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.ServiceType;
-using FamilyHubs.ServiceDirectoryApi.UnitTests.Builders;
-using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
-using fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
-using fh_service_directory_api.api.Queries.GetOpenReferralOrganisationById;
-using fh_service_directory_api.api.Queries.GetOrganisationAdminByOrganisationId;
-using fh_service_directory_api.api.Queries.GetOrganisationTypes;
-using fh_service_directory_api.api.Queries.ListOrganisation;
-using fh_service_directory_api.core;
-using fh_service_directory_api.core.Entities;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Api.Commands.CreateOrganisation;
+using FamilyHubs.ServiceDirectory.Api.Commands.CreateService;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpdateOrganisation;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
+using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationAdminByOrganisationId;
+using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationById;
+using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationTypes;
+using FamilyHubs.ServiceDirectory.Api.Queries.ListOrganisation;
+using FamilyHubs.ServiceDirectory.Core;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using System.Collections.ObjectModel;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
 
 public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
 {
-    [Fact]
-    public async Task ThenCreateOpenReferralOrganisation()
+    public WhenUsingOrganisationCommands()
     {
-        //Arange
+        TestOrganisation = TestDataProvider.GetTestCountyCouncilDto();
+
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = GetTestCountyCouncilDto();
-        CreateOpenReferralOrganisationCommand command = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
+        Mapper = new Mapper(configuration);
+        MockApplicationDbContext = GetApplicationDbContext();
+        
+        MockMediatR = new Mock<ISender>();
+        var createServiceCommandHandler = new CreateServiceCommandHandler(MockApplicationDbContext, Mapper, NullLogger<CreateServiceCommandHandler>.Instance);
+        var updateServiceCommandHandler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, NullLogger<UpdateServiceCommandHandler>.Instance);
+        MockMediatR.Setup(m => m.Send(It.IsAny<CreateServiceCommand>(), It.IsAny<CancellationToken>()))
+            .Callback<object, CancellationToken>((notification, cToken) => 
+                createServiceCommandHandler.Handle((CreateServiceCommand)notification, cToken).GetAwaiter().GetResult());
+
+        MockMediatR.Setup(m => m.Send(It.IsAny<UpdateServiceCommand>(), It.IsAny<CancellationToken>()))
+            .Callback<object, CancellationToken>((notification, cToken) => 
+                updateServiceCommandHandler.Handle((UpdateServiceCommand)notification, cToken).GetAwaiter().GetResult());
+    }
+
+    private void CreateOrganisation()
+    {
+        var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
+        var handler = new CreateOrganisationCommandHandler(MockApplicationDbContext, Mapper, MockMediatR.Object,
+            GetLogger<CreateOrganisationCommandHandler>());
+        handler.Handle(createOrganisationCommand, new CancellationToken()).GetAwaiter().GetResult();
+    }
+
+    private OrganisationWithServicesDto TestOrganisation { get; }
+    private IMapper Mapper { get; }
+    private Mock<ISender> MockMediatR { get; }
+    private ApplicationDbContext MockApplicationDbContext { get; }
+    private static NullLogger<T> GetLogger<T>() => new NullLogger<T>();
+
+    [Fact]
+    public async Task ThenCreateOrganisation()
+    {
+        //Arrange
+        var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
+        var handler = new CreateOrganisationCommandHandler(MockApplicationDbContext, Mapper, MockMediatR.Object, GetLogger<CreateOrganisationCommandHandler>());
 
         //Act
-        var result = await handler.Handle(command, new CancellationToken());
+        var result = await handler.Handle(createOrganisationCommand, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().Be(testOrganisation.Id);
+        result.Should().Be(TestOrganisation.Id);
     }
 
     [Fact]
-    public async Task ThenCreateRelatedOpenReferralOrganisation()
+    public async Task ThenCreateRelatedOrganisation()
     {
-        //Arange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testCountyCouncil = GetTestCountyCouncilDto();
-        CreateOpenReferralOrganisationCommand createcommand = new(testCountyCouncil);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-        var createresult = await handler.Handle(createcommand, new CancellationToken());
+        //Arrange
+        CreateOrganisation();
 
-        var testOrgaisation = new OpenReferralOrganisationWithServicesDto(
+        var relatedOrganisation = new OrganisationWithServicesDto(
             "e0dc6a0c-2f9c-48c6-a222-1232abbf9000",
             new OrganisationTypeDto("2", "VCFS", "Voluntary, Charitable, Faith Sector"),
             "Related VCS",
@@ -83,239 +85,255 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
             null,
             new Uri("https://www.relatedvcs.gov.uk/").ToString(),
             "https://www.related.gov.uk/",
-            new List<OpenReferralServiceDto>
-            {
-                 
-            }
-            );
-
-        testOrgaisation.AdminAreaCode = "XTEST";
-
-        CreateOpenReferralOrganisationCommand command = new(testOrgaisation);
-        
-
-        //Act
-        var result = await handler.Handle(command, new CancellationToken());
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(testOrgaisation.Id);
-    }
-
-    [Fact]
-    public async Task ThenCreateAnotherOpenReferralOrganisation()
-    {
-        //Arange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        CreateOpenReferralOrganisationCommand initialcommand = new(GetTestCountyCouncilDto());
-        CreateOpenReferralOrganisationCommandHandler initialhandler = new(mockApplicationDbContext, mapper, logger.Object);
-        await initialhandler.Handle(initialcommand, new CancellationToken());
-
-        var testOrganisation = GetTestCountyCouncilDto2();
-        CreateOpenReferralOrganisationCommand command = new(GetTestCountyCouncilDto2());
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-
-        //Act
-        var result = await handler.Handle(command, new CancellationToken());
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(testOrganisation.Id);
-    }
-
-    [Fact]
-    public async Task ThenCreateDuplicateOpenReferralOrganisation_ShouldThrowException()
-    {
-        //Arange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = GetTestCountyCouncilDto();
-        CreateOpenReferralOrganisationCommand initialcommand = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler initialhandler = new(mockApplicationDbContext, mapper, logger.Object);
-        await initialhandler.Handle(initialcommand, new CancellationToken());
-
-        
-        CreateOpenReferralOrganisationCommand command = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-
-        // Act 
-        Func<Task> act = () => handler.Handle(command, new CancellationToken());
-
-
-        // Assert
-        var exception = await Assert.ThrowsAsync<Exception>(act);
-        await act.Should().ThrowAsync<System.Exception>().WithMessage("Duplicate Id");
-
-    }
-
-    [Fact]
-    public async Task ThenUpdateOpenReferralOrganisation()
-    {
-        //Arange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = GetTestCountyCouncilDto();
-        var updatelogger = new Mock<ILogger<UpdateOpenReferralOrganisationCommandHandler>>();
-        var mockMediator = new Mock<ISender>();
-        CreateOpenReferralOrganisationCommand command = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await handler.Handle(command, new CancellationToken());
-
-
-        var updateTestOrganisation = GetTestCountyCouncilDto(true);
-        
-
-        UpdateOpenReferralOrganisationCommand updatecommand = new(updateTestOrganisation.Id, updateTestOrganisation);
-        UpdateOpenReferralOrganisationCommandHandler updatehandler = new(mockApplicationDbContext, updatelogger.Object, mockMediator.Object, mapper);
-
-        //Act
-        var result = await updatehandler.Handle(updatecommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(testOrganisation.Id);
-    }
-
-    [Fact]
-    public async Task ThenUpdateOpenReferralOrganisationWithNewService()
-    {
-        //Arange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = GetTestCountyCouncilDto();
-        testOrganisation.Services = default!;
-        var updatelogger = new Mock<ILogger<UpdateOpenReferralOrganisationCommandHandler>>();
-        var mockMediator = new Mock<ISender>();
-        CreateOpenReferralOrganisationCommand command = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await handler.Handle(command, new CancellationToken());
-
-        var updateTestOrganisation = GetTestCountyCouncilDto();
-        updateTestOrganisation.Services = new List<OpenReferralServiceDto>
+            new List<ServiceDto>())
         {
-             GetTestCountyCouncilServicesDto2("56e62852-1b0b-40e5-ac97-54a67ea957dc")
+            AdminAreaCode = "XTEST"
         };
 
-        UpdateOpenReferralOrganisationCommand updatecommand = new(updateTestOrganisation.Id, updateTestOrganisation);
-        UpdateOpenReferralOrganisationCommandHandler updatehandler = new(mockApplicationDbContext, updatelogger.Object, mockMediator.Object, mapper);
+        var command = new CreateOrganisationCommand(relatedOrganisation);
+        var handler = new CreateOrganisationCommandHandler(MockApplicationDbContext, Mapper, MockMediatR.Object, GetLogger<CreateOrganisationCommandHandler>());
 
         //Act
-        var result = await updatehandler.Handle(updatecommand, new CancellationToken());
+        var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().Be(testOrganisation.Id);
+        result.Should().Be(relatedOrganisation.Id);
     }
 
     [Fact]
-    public async Task ThenGetOpenReferralOrganisationById()
+    public async Task ThenCreateAnotherOrganisation()
     {
-        //Arange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = GetTestCountyCouncilDto();
-        CreateOpenReferralOrganisationCommand command = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await handler.Handle(command, new CancellationToken());
-
-        GetOpenReferralOrganisationByIdCommand getcommand = new() { Id = testOrganisation.Id };
-        GetOpenReferralOrganisationByIdHandler gethandler = new(mockApplicationDbContext);
-        testOrganisation.Logo = "";
+        //Arrange
+        CreateOrganisation();
+        var anotherOrganisation = TestDataProvider.GetTestCountyCouncilDto2();
+        var command = new CreateOrganisationCommand(anotherOrganisation);
+        var handler = new CreateOrganisationCommandHandler(MockApplicationDbContext, Mapper, MockMediatR.Object, GetLogger<CreateOrganisationCommandHandler>());
 
         //Act
-        var result = await gethandler.Handle(getcommand, new CancellationToken());
+        var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.AdminAreaCode));
+        result.Should().Be(anotherOrganisation.Id);
     }
 
     [Fact]
-    public async Task ThenGetOpenReferralOrganisationById_ShouldThrowExceptionWhenIdDoesNotExist()
+    public async Task ThenCreateDuplicateOrganisation_ShouldThrowException()
     {
-        //Arange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        GetOpenReferralOrganisationByIdCommand getcommand = new() { Id = Guid.NewGuid().ToString() };
-        GetOpenReferralOrganisationByIdHandler gethandler = new(mockApplicationDbContext);
-        
+        //Arrange
+        CreateOrganisation();
+
+        var command = new CreateOrganisationCommand(TestOrganisation);
+        var handler = new CreateOrganisationCommandHandler(MockApplicationDbContext, Mapper, MockMediatR.Object, GetLogger<CreateOrganisationCommandHandler>());
 
         // Act 
-        Func<Task> act = () => gethandler.Handle(getcommand, new CancellationToken());
-
-
         // Assert
-        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
-
+        await Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(command, new CancellationToken()));
     }
 
     [Fact]
-    public async Task ThenListOpenReferralOrganisations()
+    public async Task ThenUpdateOrganisation()
     {
-        //Arange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = GetTestCountyCouncilDto();
-        CreateOpenReferralOrganisationCommand command = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await handler.Handle(command, new CancellationToken());
+        //Arrange
+        CreateOrganisation();
 
-        ListOpenReferralOrganisationCommand getcommand = new();
-        ListOpenReferralOrganisationCommandHandler gethandler = new(mockApplicationDbContext);
-        testOrganisation.Logo = "";
+        var updateLogger = new Mock<ILogger<UpdateOrganisationCommandHandler>>();
+        
+        var updateTestOrganisation = TestDataProvider.GetTestCountyCouncilDto(true);
+
+
+        var updateCommand = new UpdateOrganisationCommand(updateTestOrganisation.Id, updateTestOrganisation);
+        var updateHandler = new UpdateOrganisationCommandHandler(MockApplicationDbContext, updateLogger.Object, MockMediatR.Object, Mapper);
 
         //Act
-        var result = await gethandler.Handle(getcommand, new CancellationToken());
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
-        result[0].Should().BeEquivalentTo(testOrganisation, opts => opts.Excluding(si => si.Services).Excluding(si => si.AdminAreaCode));
+        result.Should().Be(TestOrganisation.Id);
     }
 
     [Fact]
-    public async Task ThenListOpenReferralOrganisationTypes()
+    public async Task ThenUpdateOrganisationWithNewService()
     {
-        //Arange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData(false);
-        if (!mockApplicationDbContext.AdminAreas.Any())
-        {
-            mockApplicationDbContext.OrganisationTypes.AddRange(openReferralOrganisationSeedData.SeedOrganisationTypes());
-            mockApplicationDbContext.SaveChanges();
-        }
+        //Arrange
+        CreateOrganisation();
 
-        GetOrganisationTypesCommand getcommand = new();
-        GetOrganisationTypesCommandHandler gethandler = new(mockApplicationDbContext);
+        TestOrganisation.Services = default;
+        var updateLogger = new Mock<ILogger<UpdateOrganisationCommandHandler>>();
+
+        var updateTestOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         
+        updateTestOrganisation.Services = new List<ServiceDto>
+        {
+             TestDataProvider.GetTestCountyCouncilServicesDto2("56e62852-1b0b-40e5-ac97-54a67ea957dc")
+        };
+
+        var updateCommand = new UpdateOrganisationCommand(updateTestOrganisation.Id, updateTestOrganisation);
+        var updateHandler = new UpdateOrganisationCommandHandler(MockApplicationDbContext, updateLogger.Object, MockMediatR.Object, Mapper);
 
         //Act
-        var result = await gethandler.Handle(getcommand, new CancellationToken());
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be(TestOrganisation.Id);
+        var actualServices = MockApplicationDbContext.Services
+            .Where(s => s.OrganisationId == updateTestOrganisation.Id).ToList();
+        actualServices.Should().NotBeNull();
+        actualServices.Count.Should().Be(2);
+        actualServices.SingleOrDefault(s => s.Id == "5059a0b2-ad5d-4288-b7c1-e30d35345b0e").Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task ThenUpdateOrganisationWithUpdatedService()
+    {
+        //Arrange
+        CreateOrganisation();
+
+        var updateLogger = new Mock<ILogger<UpdateOrganisationCommandHandler>>();
+
+        var updateTestOrganisation = TestDataProvider.GetTestCountyCouncilDto();
+        
+        var serviceDto = updateTestOrganisation.Services!.ElementAt(0);
+
+        if (serviceDto is null) throw new NullReferenceException("Service Dto is null");
+        var serviceAtLocationId = Guid.NewGuid().ToString();
+        var locationId = Guid.NewGuid().ToString();
+        var physicalAddressId = Guid.NewGuid().ToString();
+        serviceDto.Description = "Updated Description";
+        serviceDto.Fees = "Updated Fees";
+        serviceDto.Name = "Updated Name";
+        serviceDto.ServiceAtLocations!.Add(new ServiceAtLocationDto
+        {
+            Id = serviceAtLocationId,
+            Location = new LocationDto
+            {
+                Id = locationId,
+                Name = "New Location",
+                Description = "new Description",
+                PhysicalAddresses = new List<PhysicalAddressDto>
+                {
+                    new PhysicalAddressDto
+                    {
+                        Id = physicalAddressId,
+                        Address1 = "Address1",
+                        City = "City",
+                        Country = "Country",
+                        PostCode = "PostCode",
+                        StateProvince = "StateProvince"
+                    }
+                }
+            }
+        });
+
+        var updateCommand = new UpdateOrganisationCommand(updateTestOrganisation.Id, updateTestOrganisation);
+        var updateHandler = new UpdateOrganisationCommandHandler(MockApplicationDbContext, updateLogger.Object, MockMediatR.Object, Mapper);
+
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be(TestOrganisation.Id);
+        
+        var actualServices = MockApplicationDbContext.Services.Where(s => s.Id == serviceDto.Id).ToList();
+        actualServices.Should().NotBeNull();
+        actualServices.Count.Should().Be(1);
+        
+        var service = actualServices.SingleOrDefault(s => s.Id == serviceDto.Id);
+
+        service.Should().NotBeNull();
+        service!.Description.Should().Be("Updated Description");
+        service.Fees.Should().Be("Updated Fees");
+        service.Name.Should().Be("Updated Name");
+        service.Description.Should().Be("Updated Description");
+        
+        service.ServiceAtLocations.Should().Contain(s => s.Id == serviceAtLocationId);
+        service.ServiceAtLocations.Single(s => s.Id == serviceAtLocationId)
+            .Location.Id.Should().Be(locationId);
+
+        var location = service.ServiceAtLocations.Single(s => s.Id == serviceAtLocationId)
+            .Location;
+
+        location.Name.Should().Be("New Location");
+        location.Description.Should().Be("new Description");
+        location.PhysicalAddresses.Should().NotBeEmpty();
+        location.PhysicalAddresses!.ElementAt(0).Address1.Should().Be("Address1");
+        location.PhysicalAddresses!.ElementAt(0).City.Should().Be("City");
+        location.PhysicalAddresses!.ElementAt(0).PostCode.Should().Be("PostCode");
+        location.PhysicalAddresses!.ElementAt(0).StateProvince.Should().Be("StateProvince");
+    }
+
+    [Fact]
+    public async Task ThenGetOrganisationById()
+    {
+        //Arrange
+        CreateOrganisation();
+
+        var getCommand = new GetOrganisationByIdCommand { Id = TestOrganisation.Id };
+        var getHandler = new GetOrganisationByIdHandler(MockApplicationDbContext);
+        TestOrganisation.Logo = "";
+
+        //Act
+        var result = await getHandler.Handle(getCommand, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().BeEquivalentTo(TestOrganisation, opts => opts.Excluding(si => si.AdminAreaCode));
+    }
+
+    [Fact]
+    public async Task ThenGetOrganisationById_ShouldThrowExceptionWhenIdDoesNotExist()
+    {
+        //Arrange
+        var getCommand = new GetOrganisationByIdCommand { Id = Guid.NewGuid().ToString() };
+        var getHandler = new GetOrganisationByIdHandler(MockApplicationDbContext);
+
+        // Act 
+        // Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => getHandler.Handle(getCommand, new CancellationToken()));
+    }
+
+    [Fact]
+    public async Task ThenListOrganisations()
+    {
+        //Arrange
+        CreateOrganisation();
+        
+        var getCommand = new ListOrganisationCommand();
+        var getHandler = new ListOrganisationCommandHandler(MockApplicationDbContext);
+        TestOrganisation.Logo = "";
+
+        //Act
+        var result = await getHandler.Handle(getCommand, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result[0].Should().BeEquivalentTo(TestOrganisation, opts => opts
+            .Excluding(si => si.Services)
+            .Excluding(si => si.AdminAreaCode)
+            .Excluding(si => si.LinkContacts)
+        );
+    }
+
+    [Fact]
+    public async Task ThenListOrganisationTypes()
+    {
+        //Arrange
+        var seedData = new OrganisationSeedData(false);
+        if (!MockApplicationDbContext.AdminAreas.Any())
+        {
+            MockApplicationDbContext.OrganisationTypes.AddRange(seedData.SeedOrganisationTypes());
+            await MockApplicationDbContext.SaveChangesAsync();
+        }
+
+        var getCommand = new GetOrganisationTypesCommand();
+        var getHandler = new GetOrganisationTypesCommandHandler(MockApplicationDbContext);
+
+        //Act
+        var result = await getHandler.Handle(getCommand, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
@@ -323,544 +341,20 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     }
 
     [Fact]
-    public async Task ThenGetOpenReferralAdminByOrganisationId()
+    public async Task ThenGetAdminByOrganisationId()
     {
-        //Arange
-        var myProfile = new AutoMappingProfiles();
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
-        IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateOpenReferralOrganisationCommandHandler>>();
-        var mockApplicationDbContext = GetApplicationDbContext();
-        var testOrganisation = GetTestCountyCouncilDto();
-        CreateOpenReferralOrganisationCommand command = new(testOrganisation);
-        CreateOpenReferralOrganisationCommandHandler handler = new(mockApplicationDbContext, mapper, logger.Object);
-        var id = await handler.Handle(command, new CancellationToken());
-
-        GetOrganisationAdminByOrganisationIdCommand getcommand = new(testOrganisation.Id);
-        GetOrganisationAdminByOrganisationIdCommandHandler gethandler = new(mockApplicationDbContext, mapper);
-        testOrganisation.Logo = "";
+        //Arrange
+        CreateOrganisation();
+        
+        var getCommand = new GetOrganisationAdminByOrganisationIdCommand(TestOrganisation.Id);
+        var getHandler = new GetOrganisationAdminByOrganisationIdCommandHandler(MockApplicationDbContext);
+        TestOrganisation.Logo = "";
 
         //Act
-        var result = await gethandler.Handle(getcommand, new CancellationToken());
+        var result = await getHandler.Handle(getCommand, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
         result.Should().Be("XTEST");
-    }
-
-    public static OpenReferralOrganisationWithServicesDto GetTestCountyCouncilDto(bool updated = false, bool newGuid = false)
-    {
-        var testCountyCouncil = new OpenReferralOrganisationWithServicesDto(
-            "56e62852-1b0b-40e5-ac97-54a67ea957dc",
-            new OrganisationTypeDto("1", "LA", "Local Authority"),
-            (updated == false) ? "Unit Test County Council" : "Unit Test County Council Updated",
-            (updated == false) ? "Unit Test County Council" : "Unit Test County Council Updated",
-            null,
-            new Uri("https://www.unittest.gov.uk/").ToString(),
-            "https://www.unittest.gov.uk/",
-            new List<OpenReferralServiceDto>
-            {
-                 GetTestCountyCouncilServicesDto("56e62852-1b0b-40e5-ac97-54a67ea957dc", updated, newGuid)
-            }
-            );
-
-        testCountyCouncil.AdminAreaCode = "XTEST";
-
-        return testCountyCouncil;
-    }
-
-    public static OpenReferralOrganisationWithServicesDto GetTestCountyCouncilDto2()
-    {
-        var testCountyCouncil = new OpenReferralOrganisationWithServicesDto(
-            "26f10023-7570-4bcd-b9ed-70f51ad43f62",
-            new OrganisationTypeDto("1", "LA", "Local Authority"),
-            "Unit Test County Council 2",
-            "Unit Test County Council 2",
-            null,
-            new Uri("https://www.unittest2.gov.uk/").ToString(),
-            "https://www.unittest2.gov.uk/",
-            new List<OpenReferralServiceDto>
-            {
-                 GetTestCountyCouncilServicesDto2("26f10023-7570-4bcd-b9ed-70f51ad43f62")
-            }
-            );
-
-        testCountyCouncil.AdminAreaCode = "XTEST";
-
-        return testCountyCouncil;
-    }
-
-    public static OpenReferralServiceDto GetTestCountyCouncilServicesDto(string parentId, bool updated = false, bool newGuid = false)
-    {
-        var contactId = Guid.NewGuid().ToString();
-
-        var builder = new ServicesDtoBuilder();
-        var service = builder.WithMainProperties("3010521b-6e0a-41b0-b610-200edbbeeb14",
-                new ServiceTypeDto("1", "Information Sharing", ""),
-                parentId,
-                (updated == false) ? "Unit Test Service" : "Unit Test Service Updated",
-                @"Unit Test Service Description",
-                "accreditations",
-                DateTime.Now,
-                "attending access",
-                "attending type",
-                "delivery type",
-                "active",
-                "www.unittestservice.com",
-                "support@unittestservice.com",
-                null,
-                false)
-            .WithServiceDelivery(new List<OpenReferralServiceDeliveryExDto>
-                {
-                    new OpenReferralServiceDeliveryExDto((newGuid == false) ? "77cc3815-6b95-4618-ab27-ac9f35c44614" : Guid.NewGuid().ToString(),(updated == false) ? ServiceDelivery.Online : ServiceDelivery.Telephone)
-                })
-            .WithEligibility(new List<OpenReferralEligibilityDto>
-                {
-                    new OpenReferralEligibilityDto((newGuid == false) ? "Test9111Children" : Guid.NewGuid().ToString(),"",(updated == false) ? 0 : 1,(updated == false) ? 13 : 14)
-                })
-            .WithContact(new List<OpenReferralContactDto>
-            {
-                new OpenReferralContactDto(
-                    (newGuid == false) ? contactId : Guid.NewGuid().ToString(),
-                    (updated == false) ? "Contact" : "Updated Contact",
-                    string.Empty,
-                    "01827 65777",
-                    "01827 65777"
-                )
-            })
-            .WithCostOption(new List<OpenReferralCostOptionDto> {  new(
-                    id: (newGuid == false) ? "22001144-26d5-4dcc-a6a5-62ce2ce98cc0" : Guid.NewGuid().ToString(),
-                    amount_description: (updated == false) ? "amount_description1" : "amount_description2",
-                    amount: decimal.Zero,
-                    linkId: default!,
-                    option: "free",
-                    valid_from: DateTime.UtcNow,
-                    valid_to: DateTime.UtcNow.AddHours(8))
-            })
-            .WithLanguages(new List<OpenReferralLanguageDto>
-            {
-                    new OpenReferralLanguageDto((newGuid == false) ? "1bb6c313-648d-4226-9e96-b7d37eaeb3dd" : Guid.NewGuid().ToString(), (updated == false) ? "English"  : "French")
-            })
-            .WithServiceAreas(new List<OpenReferralServiceAreaDto>
-            {
-                    new OpenReferralServiceAreaDto((newGuid == false) ? "a302aea4-fe0c-4ccc-9178-bea39f3edc30" : Guid.NewGuid().ToString(), (updated == false) ? "National" : "Local", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
-                })
-            .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>
-            {
-                    new OpenReferralServiceAtLocationDto(
-                        "Test1749",
-                        new OpenReferralLocationDto(
-                            (newGuid == false) ? "6ea31a4f-7dcc-4350-9fba-20525efe092f" : Guid.NewGuid().ToString(),
-                            (updated == false) ? "Test Location" : "Test New Location",
-                            "",
-                            52.6312,
-                            -1.66526,
-                            new List<OpenReferralPhysicalAddressDto>
-                            {
-                                new OpenReferralPhysicalAddressDto(
-                                    (newGuid == false) ? "c576191d-9f14-4963-885e-2889a7a2b48f" : Guid.NewGuid().ToString(),
-                                    (updated == false) ? "77 Sheepcote Lane" : "78 Sheepcote Lane",
-                                    ", Stathe, Tamworth, Staffordshire, ",
-                                    "B77 3JN",
-                                    "England",
-                                    null
-                                    )
-                            },
-                            new List<OpenReferralLinkTaxonomyDto>
-                            {
-                                new OpenReferralLinkTaxonomyDto(
-                                    "d53b3524-bd3e-443c-ae14-69482afc7d2a",
-                                    "Location",
-                                    "6ea31a4f-7dcc-4350-9fba-20525efe092f",
-                                    new OpenReferralTaxonomyDto(
-                                        (newGuid == false) ? "b60b7f3e-9ff4-48b2-bded-b00272ed3aba" : Guid.NewGuid().ToString(),
-                                        (updated == false) ? "Family_hub 1" : "Family_hub 2",
-                                        null,
-                                        null
-                                    )
-                                )
-                            }),
-                        new List<OpenReferralRegularScheduleDto>()
-                        {
-                            new OpenReferralRegularScheduleDto(
-                                id: (newGuid == false) ? "5e5ba093-a5f9-49ce-826c-52851e626288" : Guid.NewGuid().ToString(), 
-                                description: "Description",
-                                opens_at: DateTime.UtcNow,
-                                closes_at: DateTime.UtcNow.AddHours(8),
-                                byday: (updated == false) ?  "byDay1" : "byDay2", 
-                                bymonthday: "byMonth",
-                                dtstart: "dtStart",
-                                freq: "freq",
-                                interval: "interval",
-                                valid_from: DateTime.UtcNow,
-                                valid_to: DateTime.UtcNow.AddMonths(6)
-                                )
-                        },
-                        new List<OpenReferralHolidayScheduleDto>()
-                        {
-                            new OpenReferralHolidayScheduleDto(
-                                id: (newGuid == false) ?  "bc946512-7f8c-4c54-b7ed-ad8fefde7b48" : Guid.NewGuid().ToString(),
-                                closed: (updated == false) ? false : true,
-                                closes_at: DateTime.UtcNow,
-                                start_date: DateTime.UtcNow,
-                                end_date: DateTime.UtcNow.AddDays(5) ,
-                                opens_at: DateTime.UtcNow 
-                                )
-                        }
-                        )
-
-                })
-            .WithServiceTaxonomies(new List<OpenReferralServiceTaxonomyDto>
-            {
-                    new OpenReferralServiceTaxonomyDto
-                    ("UnitTest9107",
-                    new OpenReferralTaxonomyDto(
-                        "UnitTest bccsource:Organisation",
-                        (updated == false) ? "Organisation" : "Organisation Updated",
-                        "Test BCC Data Sources",
-                        null
-                        )),
-
-                    new OpenReferralServiceTaxonomyDto
-                    ("UnitTest9108",
-                    new OpenReferralTaxonomyDto(
-                        "UnitTest bccprimaryservicetype:38",
-                        (updated == false) ? "Support" : "Support Updated",
-                        "Test BCC Primary Services",
-                        null
-                        )),
-
-                    new OpenReferralServiceTaxonomyDto
-                    ("UnitTest9109",
-                    new OpenReferralTaxonomyDto(
-                        "UnitTest bccagegroup:37",
-                        "Children",
-                        "Test BCC Age Groups",
-                        null
-                        )),
-
-                    new OpenReferralServiceTaxonomyDto
-                    ("UnitTest9110",
-                    new OpenReferralTaxonomyDto(
-                        "UnitTestbccusergroup:56",
-                        "Long Term Health Conditions",
-                        "Test BCC User Groups",
-                        null
-                        ))
-                })
-            .Build();
-
-        service.RegularSchedules = new List<OpenReferralRegularScheduleDto>();
-        service.HolidaySchedules = new List<OpenReferralHolidayScheduleDto>();
-
-        return service;
-    }
-
-    public static OpenReferralServiceDto GetTestCountyCouncilServicesDto2(string parentId)
-    {
-        var contactId = Guid.NewGuid().ToString();
-
-        var builder = new ServicesDtoBuilder();
-        var service = builder.WithMainProperties("5059a0b2-ad5d-4288-b7c1-e30d35345b0e",
-                new ServiceTypeDto("1", "Information Sharing", ""),
-                parentId,
-                "Unit Test Service",
-                @"Unit Test Service Description",
-                "accreditations",
-                DateTime.Now,
-                "attending access",
-                "attending type",
-                "delivery type",
-                "active",
-                "www.unittestservice.com",
-                "support@unittestservice.com",
-                null,
-                false)
-            .WithServiceDelivery(new List<OpenReferralServiceDeliveryExDto>
-                {
-                    new OpenReferralServiceDeliveryExDto(Guid.NewGuid().ToString(),ServiceDelivery.Online)
-                })
-            .WithEligibility(new List<OpenReferralEligibilityDto>
-                {
-                    new OpenReferralEligibilityDto("Test9111Children","",0,13)
-                })
-            .WithContact(new List<OpenReferralContactDto>
-            {
-                new OpenReferralContactDto(
-                    contactId,
-                    "Contact",
-                    string.Empty,
-                    "01827 65777",
-                    "01827 65777"
-                    )
-            })
-            .WithCostOption(new List<OpenReferralCostOptionDto> { new() { Id = Guid.NewGuid().ToString(), Amount = decimal.Zero, Option = "free", Amount_description = "" } })
-            .WithLanguages(new List<OpenReferralLanguageDto>
-            {
-                    new OpenReferralLanguageDto("1bb6c313-648d-4226-9e96-b7d37eaeb3dd", "English")
-                })
-            .WithServiceAreas(new List<OpenReferralServiceAreaDto>
-            {
-                    new OpenReferralServiceAreaDto(Guid.NewGuid().ToString(), "National", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
-                })
-            .WithServiceAtLocations(new List<OpenReferralServiceAtLocationDto>
-            {
-                    new OpenReferralServiceAtLocationDto(
-                        "Test1750",
-                        new OpenReferralLocationDto(
-                            "6ea31a4f-7dcc-4350-9fba-20525efe092f",
-                            "Test Location",
-                            "",
-                            52.6312,
-                            -1.66526,
-                            new List<OpenReferralPhysicalAddressDto>
-                            {
-                                new OpenReferralPhysicalAddressDto(
-                                    Guid.NewGuid().ToString(),
-                                    "Some Lane",
-                                    ", Stathe, Tamworth, Staffordshire, ",
-                                    "B77 4JN",
-                                    "England",
-                                    null
-                                    )
-                            },
-                            new List<OpenReferralLinkTaxonomyDto>
-                            {
-                                new OpenReferralLinkTaxonomyDto(
-                                    Guid.NewGuid().ToString(),
-                                    "Location",
-                                    "6ea31a4f-7dcc-4350-9fba-20525efe092f",
-                                    new OpenReferralTaxonomyDto(
-                                        //todo: real guid
-
-                                        Guid.NewGuid().ToString(),
-                                        "Family_hub",
-                                        null,
-                                        null
-                                    )
-                                )
-                            }),
-                        new List<OpenReferralRegularScheduleDto>()
-                        {
-                            new OpenReferralRegularScheduleDto(
-                                id: "67806edd-8427-4126-8ec1-06d59c2209ae",
-                                description: "Description",
-                                opens_at: DateTime.UtcNow,
-                                closes_at: DateTime.UtcNow.AddHours(8),
-                                byday: "byDay",
-                                bymonthday: "byMonth",
-                                dtstart: "dtStart",
-                                freq: "freq",
-                                interval: "interval",
-                                valid_from: DateTime.UtcNow,
-                                valid_to: DateTime.UtcNow.AddMonths(6)
-                                )
-                        },
-                        new List<OpenReferralHolidayScheduleDto>()
-                        {
-                            new OpenReferralHolidayScheduleDto(
-                                id: "60ef490f-1e6f-4a1b-bf96-337768e578cf",
-                                closed: false,
-                                closes_at: DateTime.UtcNow,
-                                start_date: DateTime.UtcNow,
-                                end_date: DateTime.UtcNow.AddDays(5) ,
-                                opens_at: DateTime.UtcNow
-                                )
-                        }
-                        )
-
-                })
-            .WithServiceTaxonomies(new List<OpenReferralServiceTaxonomyDto>
-            {
-                    new OpenReferralServiceTaxonomyDto
-                    ("UnitTest9107B",
-                    new OpenReferralTaxonomyDto(
-                        "UnitTest bccsource:Organisation",
-                        "Organisation",
-                        "Test BCC Data Sources",
-                        null
-                        )),
-
-                    new OpenReferralServiceTaxonomyDto
-                    ("UnitTest9108B",
-                    new OpenReferralTaxonomyDto(
-                        "UnitTest bccprimaryservicetype:38",
-                        "Support",
-                        "Test BCC Primary Services",
-                        null
-                        )),
-
-                    new OpenReferralServiceTaxonomyDto
-                    ("UnitTest9109B",
-                    new OpenReferralTaxonomyDto(
-                        "UnitTest bccagegroup:37",
-                        "Children",
-                        "Test BCC Age Groups",
-                        null
-                        )),
-
-                    new OpenReferralServiceTaxonomyDto
-                    ("UnitTest9110B",
-                    new OpenReferralTaxonomyDto(
-                        "UnitTestbccusergroup:56",
-                        "Long Term Health Conditions",
-                        "Test BCC User Groups",
-                        null
-                        ))
-                })
-            .Build();
-
-        service.RegularSchedules = new List<OpenReferralRegularScheduleDto>();
-        service.HolidaySchedules = new List<OpenReferralHolidayScheduleDto>();
-
-        return service;
-    }
-
-
-    public static OpenReferralOrganisationWithServicesDto GetTestCountyCouncilRecord()
-    {
-        var testCountyCouncil = new OpenReferralOrganisationWithServicesDto(
-            "56e62852-1b0b-40e5-ac97-54a67ea957dc",
-            new OrganisationTypeDto("1", "LA", "Local Authority"),
-            "Unit Test A County Council",
-            "Unit Test A County Council",
-            null,
-            new Uri("https://www.unittesta.gov.uk/").ToString(),
-            "https://www.unittesta.gov.uk/",
-            //new List<OpenReferralReviewDto>(),
-            new List<OpenReferralServiceDto>
-            {
-                 //GetTestCountyCouncilServicesRecord()
-            }
-            );
-
-        testCountyCouncil.AdminAreaCode = "XTEST";
-
-        return testCountyCouncil;
-    }
-
-    private static OpenReferralService GetTestCountyCouncilServicesRecord()
-    {
-        var contactId = Guid.NewGuid().ToString();
-
-        var builder = new ServicesBuilder();
-        var service = builder.WithMainProperties("3010521b-6e0a-41b0-b610-200edbbeeb14",
-                "Unit Test Organisation for Children with Tracheostomies",
-                @"Unit Test Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
-                null,
-                null,
-                null,
-                null,
-                null,
-                "active",
-                "www.unittestservice.com",
-                "support@unittestservice.com",
-                null)
-            .WithServiceDelivery(new List<OpenReferralServiceDelivery>
-                {
-                    new OpenReferralServiceDelivery(Guid.NewGuid().ToString(),ServiceDelivery.Online)
-                })
-            .WithEligibility(new List<OpenReferralEligibility>
-                {
-                    new OpenReferralEligibility("Test9120Children","eligability","",0,13, new Collection<OpenReferralTaxonomy>())
-                })
-            .WithContact(new List<OpenReferralContact>
-            {
-                new OpenReferralContact(
-                    contactId,
-                    "New Contact",
-                    string.Empty,
-                    "01827 65776", 
-                    "01827 65776"
-                    )
-            })
-            .WithCostOption(new List<OpenReferralCost_Option>())
-            .WithLanguages(new List<OpenReferralLanguage>
-            {
-                    new OpenReferralLanguage("386b9b56-4bb0-4ff9-817f-99e4d94f77f5", "English")
-                })
-            .WithServiceAreas(new List<OpenReferralService_Area>
-            {
-                    new OpenReferralService_Area(Guid.NewGuid().ToString(), "National", null,"extent","http://statistics.data.gov.uk/id/statistical-geography/K02000001")
-                })
-            .WithServiceAtLocations(new List<OpenReferralServiceAtLocation>
-            {
-                    new OpenReferralServiceAtLocation(
-                        "Test1750",
-                        new OpenReferralLocation(
-                            "b4f8f02b-34e0-4366-ad8a-7ef75271a3bc",
-                            "",
-                            "",
-                            52.6312,
-                            -1.66526,
-                            new List<OpenReferralLinkTaxonomy>(),
-                            new List<OpenReferralPhysical_Address>
-                            {
-                                new OpenReferralPhysical_Address(
-                                    Guid.NewGuid().ToString(),
-                                    "79 Sheepcote Lane",
-                                    ", Stathe, Tamworth, Staffordshire, ",
-                                    "B77 3JN",
-                                    "England",
-                                    null
-                                    )
-                            },
-                            new List<Accessibility_For_Disabilities>()
-                            {
-                                new Accessibility_For_Disabilities("f9025e1f-3c16-48f3-a1bb-bfb36c216b45", "accessibility")
-                            }
-                            ),
-                        new List<OpenReferralRegular_Schedule>(),
-                        new List<OpenReferralHoliday_Schedule>()
-                        )
-
-                })
-            .WithServiceTaxonomies(new List<OpenReferralService_Taxonomy>
-            {
-                    new OpenReferralService_Taxonomy
-                    ("UnitTestA9107",
-                    null,
-                    new OpenReferralTaxonomy(
-                        "UnitTestA bccsource:Organisation",
-                        "Organisation",
-                        "Test BCC Data Sources",
-                        null
-                        )),
-
-                    new OpenReferralService_Taxonomy
-                    ("UnitTestA9108",
-                    null,
-                    new OpenReferralTaxonomy(
-                        "UnitTestA bccprimaryservicetype:38",
-                        "Support",
-                        "Test BCC Primary Services",
-                        null
-                        )),
-
-                    new OpenReferralService_Taxonomy
-                    ("UnitTestA9109",
-                    null,
-                    new OpenReferralTaxonomy(
-                        "UnitTestA bccagegroup:37",
-                        "Children",
-                        "Test BCC Age Groups",
-                        null
-                        )),
-
-                    new OpenReferralService_Taxonomy
-                    ("UnitTestA9110",
-                    null,
-                    new OpenReferralTaxonomy(
-                        "UnitTestAbccusergroup:56",
-                        "Long Term Health Conditions",
-                        "Test BCC User Groups",
-                        null
-                        ))
-                })
-            .Build();
-
-        service.ServiceType = new ServiceType("1", "Information Sharing", "");
-
-        return service;
     }
 }
