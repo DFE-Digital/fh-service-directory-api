@@ -149,7 +149,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
                 UpdateHolidaySchedule(entity.HolidaySchedules, request.Service.HolidaySchedules ?? new Collection<HolidayScheduleDto>(), null);
 
             await _context.SaveChangesAsync(cancellationToken);
-
         }
         catch (Exception ex)
         {
@@ -513,6 +512,16 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             {
                 var entity = _mapper.Map<LinkContact>(updatedContact);
                 entity.LinkId = _request.Service.Id;
+
+                if (entity.Contact != null)
+                {
+                    var contact = _context.Contacts.FirstOrDefault(x => x.Id == entity.Contact.Id);
+                    if (contact != null)
+                    {
+                        entity.Contact = contact;
+                    }
+                }
+
                 _context.LinkContacts.Add(entity);
             }
             else if (current.Contact != null)
