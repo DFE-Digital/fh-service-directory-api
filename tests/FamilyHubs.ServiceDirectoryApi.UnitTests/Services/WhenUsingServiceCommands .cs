@@ -7,6 +7,7 @@ using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetServices;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetServicesByOrganisation;
 using FamilyHubs.ServiceDirectory.Core;
+using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
@@ -65,9 +66,9 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         CreateOrganisation();
 
         var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
-        
+
         var command = new CreateServiceCommand(anotherService);
-        
+
         var handler = new CreateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<CreateServiceCommandHandler>>().Object);
 
         //Act
@@ -76,6 +77,45 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         //Assert
         result.Should().NotBeNull();
         result.Should().Be(anotherService.Id);
+    }
+
+    [Fact]
+    public async Task ThenCreateNewServiceWithExistingContact()
+    {
+        //Arrange
+        CreateOrganisation();
+
+        var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
+
+        var contact = Mapper.Map<Contact>(anotherService.LinkContacts!.ElementAt(0).Contact);
+        MockApplicationDbContext.Contacts.Add(contact);
+        await MockApplicationDbContext.SaveChangesAsync();
+
+        var command = new CreateServiceCommand(anotherService);
+
+        var handler = new CreateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<CreateServiceCommandHandler>>().Object);
+
+        //Act
+        MockApplicationDbContext.Contacts
+            .Where(c => c.Id == contact.Id)
+            .ToList().Count.Should().Be(1);
+
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be(anotherService.Id);
+
+        MockApplicationDbContext.Contacts
+            .Where(c => c.Id == contact.Id)
+            .ToList().Count.Should().Be(1);
+
+        var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.LinkId == anotherService.Id).ToList();
+
+        linkContacts.Should().HaveCount(1);
+        linkContacts.ElementAt(0).Contact.Should().NotBeNull();
+
+        linkContacts.ElementAt(0).Contact!.Id.Should().Be(contact.Id);
     }
 
     [Fact]
@@ -229,6 +269,104 @@ public class WhenUsingServiceCommands : BaseCreateDbUnitTest
         result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
     }
 
+    [Fact]
+    public async Task ThenUpdateServiceWithExistingContact()
+    {
+        //Arrange
+        CreateOrganisation();
+
+        var serviceDto = TestOrganisation.Services!.ElementAt(0);
+        var existingContact = serviceDto.LinkContacts!.ElementAt(0).Contact;
+
+        if (serviceDto is null) throw new NullReferenceException("Service Dto is null");
+        if (existingContact is null) throw new NullReferenceException("Contact Dto is null");
+
+        var serviceAtLocationId = Guid.NewGuid().ToString();
+        var locationId = Guid.NewGuid().ToString();
+        var physicalAddressId = Guid.NewGuid().ToString();
+        
+        serviceDto.Description = "Updated Description";
+        serviceDto.Fees = "Updated Fees";
+        serviceDto.Name = "Updated Name";
+        serviceDto.ServiceAtLocations!.Add(new ServiceAtLocationDto
+        {
+            Id = serviceAtLocationId,
+            Location = new LocationDto
+            {
+                Id = locationId,
+                Name = "New Location",
+                Description = "new Description",
+                PhysicalAddresses = new List<PhysicalAddressDto>
+                {
+                    new PhysicalAddressDto
+                    {
+                        Id = physicalAddressId,
+                        Address1 = "Address1",
+                        City = "City",
+                        Country = "Country",
+                        PostCode = "PostCode",
+                        StateProvince = "StateProvince"
+                    }
+                }
+            }
+        });
+
+        var newLinkContactId = Guid.NewGuid().ToString();
+        serviceDto.LinkContacts!.Add(new LinkContactDto(
+            newLinkContactId,
+            serviceDto.Id,
+            "Service",
+            existingContact
+            ));
+
+        var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
+        var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
+
+        //Act
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+
+        var actualServices = MockApplicationDbContext.Services.Where(s => s.Id == serviceDto.Id).ToList();
+        actualServices.Should().NotBeNull();
+        actualServices.Count.Should().Be(1);
+        
+        var service = actualServices.SingleOrDefault(s => s.Id == serviceDto.Id);
+
+        service.Should().NotBeNull();
+        service!.Description.Should().Be("Updated Description");
+        service.Fees.Should().Be("Updated Fees");
+        service.Name.Should().Be("Updated Name");
+        service.Description.Should().Be("Updated Description");
+        
+        service.ServiceAtLocations.Should().Contain(s => s.Id == serviceAtLocationId);
+        service.ServiceAtLocations.Single(s => s.Id == serviceAtLocationId)
+            .Location.Id.Should().Be(locationId);
+
+        var location = service.ServiceAtLocations.Single(s => s.Id == serviceAtLocationId)
+            .Location;
+
+        location.Name.Should().Be("New Location");
+        location.Description.Should().Be("new Description");
+        location.PhysicalAddresses.Should().NotBeEmpty();
+        location.PhysicalAddresses!.ElementAt(0).Address1.Should().Be("Address1");
+        location.PhysicalAddresses!.ElementAt(0).City.Should().Be("City");
+        location.PhysicalAddresses!.ElementAt(0).PostCode.Should().Be("PostCode");
+        location.PhysicalAddresses!.ElementAt(0).StateProvince.Should().Be("StateProvince");
+
+        MockApplicationDbContext.Contacts
+            .Where(c => c.Id == existingContact.Id)
+            .ToList().Count.Should().Be(1);
+
+        var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.Id == newLinkContactId).ToList();
+
+        linkContacts.Should().HaveCount(1);
+        linkContacts.ElementAt(0).Contact.Should().NotBeNull();
+
+        linkContacts.ElementAt(0).Contact!.Id.Should().Be(existingContact.Id);
+    }
 
     [Fact]
     public async Task ThenUpdateServiceWithNewNestedRecords()

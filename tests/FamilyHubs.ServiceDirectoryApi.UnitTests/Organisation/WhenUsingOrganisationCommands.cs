@@ -9,6 +9,7 @@ using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationById;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationTypes;
 using FamilyHubs.ServiceDirectory.Api.Queries.ListOrganisation;
 using FamilyHubs.ServiceDirectory.Core;
+using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
@@ -69,6 +70,40 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         //Assert
         result.Should().NotBeNull();
         result.Should().Be(TestOrganisation.Id);
+    }
+
+    [Fact]
+    public async Task ThenCreateOrganisationWithExistingServiceLinkContact()
+    {
+        //Arrange
+        var contact = Mapper.Map<Contact>(TestOrganisation.Services!.ElementAt(0).LinkContacts!.ElementAt(0).Contact);
+        MockApplicationDbContext.Contacts.Add(contact);
+        await MockApplicationDbContext.SaveChangesAsync();
+
+        var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
+        var handler = new CreateOrganisationCommandHandler(MockApplicationDbContext, Mapper, MockMediatR.Object, GetLogger<CreateOrganisationCommandHandler>());
+
+        //Act
+        MockApplicationDbContext.Contacts
+            .Where(c => c.Id == contact.Id)
+            .ToList().Count.Should().Be(1);
+
+        var result = await handler.Handle(createOrganisationCommand, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be(TestOrganisation.Id);
+
+        MockApplicationDbContext.Contacts
+            .Where(c => c.Id == contact.Id)
+            .ToList().Count.Should().Be(1);
+
+        var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.LinkId == TestOrganisation.Services!.ElementAt(0).Id).ToList();
+
+        linkContacts.Should().HaveCount(1);
+        linkContacts.ElementAt(0).Contact.Should().NotBeNull();
+
+        linkContacts.ElementAt(0).Contact!.Id.Should().Be(contact.Id);
     }
 
     [Fact]
@@ -264,6 +299,52 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
         location.PhysicalAddresses!.ElementAt(0).City.Should().Be("City");
         location.PhysicalAddresses!.ElementAt(0).PostCode.Should().Be("PostCode");
         location.PhysicalAddresses!.ElementAt(0).StateProvince.Should().Be("StateProvince");
+    }
+
+    [Fact]
+    public async Task ThenUpdateOrganisationWithUpdatedServiceAndExistingContact()
+    {
+        //Arrange
+        CreateOrganisation();
+
+        var updateLogger = new Mock<ILogger<UpdateOrganisationCommandHandler>>();
+
+        var serviceDto = TestOrganisation.Services!.ElementAt(0);
+
+        var existingContactDto = TestOrganisation.Services!.ElementAt(0).LinkContacts!.ElementAt(0).Contact;
+
+        serviceDto.LinkContacts!.Add(new LinkContactDto(
+            Guid.NewGuid().ToString(),
+            serviceDto.Id,
+            "Service",
+            existingContactDto
+        ));
+
+        var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
+        var updateHandler = new UpdateOrganisationCommandHandler(MockApplicationDbContext, updateLogger.Object, MockMediatR.Object, Mapper);
+
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be(TestOrganisation.Id);
+        
+        var actualServices = MockApplicationDbContext.Services.Where(s => s.Id == serviceDto.Id).ToList();
+        actualServices.Should().NotBeNull();
+        actualServices.Count.Should().Be(1);
+        
+        var service = actualServices.SingleOrDefault(s => s.Id == serviceDto.Id);
+
+        service.Should().NotBeNull();
+        var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.LinkId == serviceDto.Id).ToList();
+
+        linkContacts.Should().HaveCount(2);
+        linkContacts.ElementAt(0).Contact.Should().NotBeNull();
+        linkContacts.ElementAt(1).Contact.Should().NotBeNull();
+
+        linkContacts.ElementAt(0).Contact!.Id.Should().Be(existingContactDto.Id);
+        linkContacts.ElementAt(1).Contact!.Id.Should().Be(existingContactDto.Id);
     }
 
     [Fact]
