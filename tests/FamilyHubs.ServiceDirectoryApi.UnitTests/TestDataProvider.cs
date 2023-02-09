@@ -191,9 +191,9 @@ public static class TestDataProvider
                     new List<LinkContactDto>
                     {
                         new LinkContactDto(
-                            "3010521b-6e0a-41b0-b610-200edbbeeb99",
+                            "Test17491234",
                             "Test1749",
-                            "Service",
+                            "ServiceAtLocation",
                             new ContactDto(
                                 Guid.NewGuid().ToString(),
                                 updated == false ? "Contact" : "Updated Contact",
@@ -296,7 +296,16 @@ public static class TestDataProvider
                         "support@unittestservice.com"
                     ))
             })
-            .WithCostOption(new List<CostOptionDto> { new CostOptionDto { Id = Guid.NewGuid().ToString(), Amount = decimal.Zero, Option = "free", AmountDescription = "" } })
+            .WithCostOption(new List<CostOptionDto>
+            {
+                new CostOptionDto
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Amount = decimal.Zero,
+                    Option = "free",
+                    AmountDescription = ""
+                }
+            })
             .WithLanguages(new List<LanguageDto>
             {
                 new LanguageDto("1bb6c313-648d-4226-9e96-b7d37eaeb3ab", "English")
@@ -370,7 +379,22 @@ public static class TestDataProvider
                             DateTime.UtcNow
                         )
                     },
-                    new List<LinkContactDto>()
+                    new List<LinkContactDto>
+                    {
+                        new LinkContactDto(
+                            "Test17500978",
+                            "Test17500123",
+                            "ServiceAtLocation",
+                            new ContactDto(
+                                Guid.NewGuid().ToString(),
+                                "Contact",
+                                string.Empty,
+                                "01827 65777",
+                                "01827 65777",
+                                "www.unittestservice.com",
+                                "support@unittestservice.com"
+                            ))
+                    }
                 )
 
             })
@@ -412,10 +436,34 @@ public static class TestDataProvider
                         null
                     ))
             })
+            .WithRegularSchedules(new List<RegularScheduleDto>
+                {
+                    new RegularScheduleDto(
+                        Guid.NewGuid().ToString(),
+                        "Description",
+                        DateTime.UtcNow,
+                        DateTime.UtcNow.AddHours(8),
+                        "byDay1",
+                        "byMonth",
+                        "dtStart",
+                        "freq",
+                        "interval",
+                        DateTime.UtcNow,
+                        DateTime.UtcNow.AddMonths(6)
+                    )
+                })
+            .WithHolidaySchedules(new List<HolidayScheduleDto>
+            {
+                new HolidayScheduleDto(
+                    Guid.NewGuid().ToString(),
+                    true,
+                    DateTime.UtcNow,
+                    DateTime.UtcNow,
+                    DateTime.UtcNow.AddDays(5),
+                    DateTime.UtcNow
+                )
+            })
             .Build();
-
-        service.RegularSchedules = new List<RegularScheduleDto>();
-        service.HolidaySchedules = new List<HolidayScheduleDto>();
 
         return service;
     }
