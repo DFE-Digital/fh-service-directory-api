@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Core.Entities;
-using FamilyHubs.ServiceDirectory.Core.Events;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -173,8 +172,6 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
                     }
                 }
             }
-
-            entity.RegisterDomainEvent(new ServiceCreatedEvent(entity));
 
             _context.Services.Add(entity);
 

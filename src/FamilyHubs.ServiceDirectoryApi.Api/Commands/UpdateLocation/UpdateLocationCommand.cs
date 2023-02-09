@@ -1,7 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Core.Entities;
-using FamilyHubs.ServiceDirectory.Core.Events;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -68,7 +67,6 @@ public class UpdateLocationCommandHandler : IRequestHandler<UpdateLocationComman
                         var newAddress = _mapper.Map<PhysicalAddress>(addressDto);
                         newAddress.LocationId = request.LocationDto.Id;
                         ArgumentNullException.ThrowIfNull(newAddress);
-                        existingLocation.RegisterDomainEvent(new PhysicalAddressCreatedEvent(newAddress));
 
                         _context.PhysicalAddresses.Add(newAddress);
                     }
@@ -108,8 +106,6 @@ public class UpdateLocationCommandHandler : IRequestHandler<UpdateLocationComman
                         }
 
                         ArgumentNullException.ThrowIfNull(linkTaxonomyEntity);
-
-                        existingLocation.RegisterDomainEvent(new LinkTaxonomyCreatedEvent(linkTaxonomyEntity));
 
                         await _context.LinkTaxonomies.AddAsync(linkTaxonomyEntity, cancellationToken);
                     }

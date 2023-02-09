@@ -2,7 +2,6 @@
 using FamilyHubs.ServiceDirectory.Api.Commands.CreateService;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
 using FamilyHubs.ServiceDirectory.Core.Entities;
-using FamilyHubs.ServiceDirectory.Core.Events;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -78,8 +77,6 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
 
             AddRelatedOrganisation(request, entity);
 
-            entity.RegisterDomainEvent(new OrganisationCreatedEvent(entity));
-
             _context.Organisations.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
@@ -129,7 +126,7 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
         }
 
         var entity = new RelatedOrganisation(Guid.NewGuid().ToString(), result.Id, organisation.Id);
-        entity.RegisterDomainEvent(new RelatedOrganisationCreatedEvent(entity));
+
         _context.RelatedOrganisations.Add(entity);
     }
 }

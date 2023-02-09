@@ -169,7 +169,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             {
                 var entity = _mapper.Map<Eligibility>(updatedEligibility);
                 entity.ServiceId = _request.Service.Id;
-                entity.RegisterDomainEvent(new EligibilityCreatedEvent(entity));
                 _context.Eligibilities.Add(entity);
                 currentIds.Add(entity.Id);
             }
@@ -200,7 +199,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             {
                 var entity = _mapper.Map<ServiceAtLocation>(updatedServiceLoc);
                 entity.ServiceId = _request.Service.Id;
-                entity.RegisterDomainEvent(new ServiceAtLocationCreatedEvent(entity));
                 _context.ServiceAtLocations.Add(entity);
                 list.Add(entity.Id);
                 if (entity.Location.PhysicalAddresses != null)
@@ -335,7 +333,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
                 var entity = _mapper.Map<HolidaySchedule>(updatedSchedule);
                 if (serviceAtLocation != null)
                     entity.ServiceAtLocationId = serviceAtLocation.Id;
-                entity.RegisterDomainEvent(new HolidayScheduleCreatedEvent(entity));
                 _context.HolidaySchedules.Add(entity);
                 currentIds.Add(entity.Id);
             }
@@ -366,7 +363,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
                 var entity = _mapper.Map<RegularSchedule>(updatedSchedule);
                 if (serviceAtLocation != null)
                     entity.ServiceAtLocationId = serviceAtLocation.Id;
-                entity.RegisterDomainEvent(new RegularScheduleCreatedEvent(entity));
                 _context.RegularSchedules.Add(entity);
                 currentIds.Add(entity.Id);
             }
@@ -401,7 +397,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             {
                 var entity = _mapper.Map<ServiceArea>(updatedServiceArea);
                 entity.ServiceId = _request.Service.Id;
-                entity.RegisterDomainEvent(new ServiceAreaCreatedEvent(entity));
                 _context.ServiceAreas.Add(entity);
                 currentIds.Add(entity.Id);
             }
@@ -429,7 +424,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             {
                 var entity = _mapper.Map<CostOption>(updatedCostOption);
                 entity.ServiceId = _request.Service.Id;
-                entity.RegisterDomainEvent(new CostOptionCreatedEvent(entity));
                 _context.CostOptions.Add(entity);
                 currentIds.Add(entity.Id);
             }
@@ -463,7 +457,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
                 if (updatedServiceTaxonomy.Taxonomy != null)
                     entity.Taxonomy = _context.Taxonomies.FirstOrDefault(x => x.Id == updatedServiceTaxonomy.Taxonomy.Id);
                 entity.ServiceId = _request.Service.Id;
-                entity.RegisterDomainEvent(new ServiceTaxonomyCreatedEvent(entity));
                 _context.ServiceTaxonomies.Add(entity);
                 currentIds.Add(entity.Id);
             }
@@ -488,7 +481,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             {
                 var entity = _mapper.Map<Language>(updatedLanguage);
                 entity.ServiceId = _request.Service.Id;
-                entity.RegisterDomainEvent(new LanguageCreatedEvent(entity));
                 _context.Languages.Add(entity);
                 currentIds.Add(entity.Id);
             }
@@ -552,7 +544,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             {
                 var entity = _mapper.Map<ServiceDelivery>(updatedServiceDelivery);
                 entity.ServiceId = _request.Service.Id;
-                entity.RegisterDomainEvent(new ServiceDeliveryCreatedEvent(entity));
                 _context.ServiceDeliveries.Add(entity);
                 currentIds.Add(entity.Id);
             }

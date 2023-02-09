@@ -1,5 +1,4 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Entities;
-using FamilyHubs.ServiceDirectory.Core.Events;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -31,9 +30,8 @@ public class CreateUiCacheCommandHandler : IRequestHandler<CreateUiCacheCommand,
         try
         {
             var entity = new UiCache(request.UiCacheDto.Id, request.UiCacheDto.Value);
-            ArgumentNullException.ThrowIfNull(entity);
 
-            entity.RegisterDomainEvent(new UiCacheCreatedEvent(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             _context.UiCaches.Add(entity);
 

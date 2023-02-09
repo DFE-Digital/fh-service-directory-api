@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Core.Entities;
-using FamilyHubs.ServiceDirectory.Core.Events;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -35,9 +34,8 @@ public class CreateTaxonomyCommandHandler : IRequestHandler<CreateTaxonomyComman
         try
         {
             var entity = _mapper.Map<Taxonomy>(request.Taxonomy);
-            ArgumentNullException.ThrowIfNull(entity);
 
-            entity.RegisterDomainEvent(new TaxonomyCreatedEvent(entity));
+            ArgumentNullException.ThrowIfNull(entity);
 
             _context.Taxonomies.Add(entity);
 
