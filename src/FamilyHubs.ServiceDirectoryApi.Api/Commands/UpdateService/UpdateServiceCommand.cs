@@ -172,6 +172,14 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             {
                 var entity = _mapper.Map<ServiceAtLocation>(updatedServiceLoc);
                 entity.ServiceId = _request.Service.Id;
+                entity.HolidaySchedules?.Clear();
+                entity.RegularSchedules?.Clear();
+                entity.LinkContacts?.Clear();
+
+                entity.Location.LinkContacts?.Clear();
+                entity.Location.AccessibilityForDisabilities?.Clear();
+                entity.Location.LinkTaxonomies?.Clear();
+                entity.Location.PhysicalAddresses?.Clear();
 
                 UpdateServiceAtLocationChildEntities(entity, updatedServiceLoc);
 
