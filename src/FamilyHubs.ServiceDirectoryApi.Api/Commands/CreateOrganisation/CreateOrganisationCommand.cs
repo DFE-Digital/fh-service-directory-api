@@ -39,20 +39,34 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
         try
         {
             var entity = _mapper.Map<Organisation>(request.Organisation);
+
             ArgumentNullException.ThrowIfNull(entity);
 
-            if (_context.Organisations.FirstOrDefault(x => x.Id == request.Organisation.Id) != null)
+            if (_context.Organisations.FirstOrDefault(x => x.Id == request.Organisation.Id) is not null)
             {
                 throw new ArgumentException("Duplicate Id");
             }
 
             var organisationType = _context.OrganisationTypes.FirstOrDefault(x => x.Id == request.Organisation.OrganisationType.Id);
-            if (organisationType != null)
+            if (organisationType is not null)
             {
                 entity.OrganisationType = organisationType;
             }
 
-            if (entity.Services != null && request.Organisation.Services != null)
+            entity.Services?.Clear();
+
+            AddAdministrativeDistrict(request, entity);
+
+            AddRelatedOrganisation(request, entity);
+
+            _context.Organisations.Add(entity);
+
+            await _context.SaveChangesAsync(cancellationToken);
+            
+            //Organisation needs to be saved first before handling service otherwise RDBMS will throw foreign key violation exception
+            //NOTE: this error only occurs in RDBMS, EF core InMemory provider does not enforces FK constrains
+            //TODO: Use SQLLite DB provider for tests so that this kind of errors are caught at dev stage 
+            if (request.Organisation.Services is not null)
             {
                 // Update and Insert children
                 foreach (var childModel in request.Organisation.Services)
@@ -70,16 +84,7 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
                         await _mediator.Send(createServiceCommand, cancellationToken);
                     }
                 }
-                entity.Services.Clear();
             }
-
-            AddAdministrativeDistrict(request, entity);
-
-            AddRelatedOrganisation(request, entity);
-
-            _context.Organisations.Add(entity);
-
-            await _context.SaveChangesAsync(cancellationToken);
         }
         catch (Exception ex)
         {
