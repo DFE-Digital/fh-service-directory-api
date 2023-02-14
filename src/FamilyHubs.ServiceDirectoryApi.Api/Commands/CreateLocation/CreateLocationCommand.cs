@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Core.Entities;
-using FamilyHubs.ServiceDirectory.Core.Events;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -46,8 +45,6 @@ public class CreateLocationCommandHandler : IRequestHandler<CreateLocationComman
             var entity = _mapper.Map<Location>(request.LocationDto);
 
             ArgumentNullException.ThrowIfNull(entity);
-
-            entity.RegisterDomainEvent(new LocationCreatedEvent(entity));
 
             if (entity.LinkTaxonomies != null)
             {

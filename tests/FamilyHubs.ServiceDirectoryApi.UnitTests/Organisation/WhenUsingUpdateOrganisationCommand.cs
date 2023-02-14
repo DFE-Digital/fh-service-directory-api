@@ -20,9 +20,9 @@ using Moq;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Organisation;
 
-public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
+public class WhenUsingUpdateOrganisationCommand : BaseCreateDbUnitTest
 {
-    public WhenUsingOrganisationCommands()
+    public WhenUsingUpdateOrganisationCommand()
     {
         TestOrganisation = TestDataProvider.GetTestCountyCouncilDto();
 
@@ -56,116 +56,6 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     private Mock<ISender> MockMediatR { get; }
     private ApplicationDbContext MockApplicationDbContext { get; }
     private static NullLogger<T> GetLogger<T>() => new NullLogger<T>();
-
-    [Fact]
-    public async Task ThenCreateOrganisation()
-    {
-        //Arrange
-        var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
-        var handler = new CreateOrganisationCommandHandler(MockApplicationDbContext, Mapper, MockMediatR.Object, GetLogger<CreateOrganisationCommandHandler>());
-
-        //Act
-        var result = await handler.Handle(createOrganisationCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Id);
-    }
-
-    [Fact]
-    public async Task ThenCreateOrganisationWithExistingServiceLinkContact()
-    {
-        //Arrange
-        var contact = Mapper.Map<Contact>(TestOrganisation.Services!.ElementAt(0).LinkContacts!.ElementAt(0).Contact);
-        MockApplicationDbContext.Contacts.Add(contact);
-        await MockApplicationDbContext.SaveChangesAsync();
-
-        var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
-        var handler = new CreateOrganisationCommandHandler(MockApplicationDbContext, Mapper, MockMediatR.Object, GetLogger<CreateOrganisationCommandHandler>());
-
-        //Act
-        MockApplicationDbContext.Contacts
-            .Where(c => c.Id == contact.Id)
-            .ToList().Count.Should().Be(1);
-
-        var result = await handler.Handle(createOrganisationCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Id);
-
-        MockApplicationDbContext.Contacts
-            .Where(c => c.Id == contact.Id)
-            .ToList().Count.Should().Be(1);
-
-        var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.LinkId == TestOrganisation.Services!.ElementAt(0).Id).ToList();
-
-        linkContacts.Should().HaveCount(1);
-        linkContacts.ElementAt(0).Contact.Should().NotBeNull();
-
-        linkContacts.ElementAt(0).Contact!.Id.Should().Be(contact.Id);
-    }
-
-    [Fact]
-    public async Task ThenCreateRelatedOrganisation()
-    {
-        //Arrange
-        CreateOrganisation();
-
-        var relatedOrganisation = new OrganisationWithServicesDto(
-            "e0dc6a0c-2f9c-48c6-a222-1232abbf9000",
-            new OrganisationTypeDto("2", "VCFS", "Voluntary, Charitable, Faith Sector"),
-            "Related VCS",
-            "Related VCS",
-            null,
-            new Uri("https://www.relatedvcs.gov.uk/").ToString(),
-            "https://www.related.gov.uk/",
-            new List<ServiceDto>())
-        {
-            AdminAreaCode = "XTEST"
-        };
-
-        var command = new CreateOrganisationCommand(relatedOrganisation);
-        var handler = new CreateOrganisationCommandHandler(MockApplicationDbContext, Mapper, MockMediatR.Object, GetLogger<CreateOrganisationCommandHandler>());
-
-        //Act
-        var result = await handler.Handle(command, new CancellationToken());
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(relatedOrganisation.Id);
-    }
-
-    [Fact]
-    public async Task ThenCreateAnotherOrganisation()
-    {
-        //Arrange
-        CreateOrganisation();
-        var anotherOrganisation = TestDataProvider.GetTestCountyCouncilDto2();
-        var command = new CreateOrganisationCommand(anotherOrganisation);
-        var handler = new CreateOrganisationCommandHandler(MockApplicationDbContext, Mapper, MockMediatR.Object, GetLogger<CreateOrganisationCommandHandler>());
-
-        //Act
-        var result = await handler.Handle(command, new CancellationToken());
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(anotherOrganisation.Id);
-    }
-
-    [Fact]
-    public async Task ThenCreateDuplicateOrganisation_ShouldThrowException()
-    {
-        //Arrange
-        CreateOrganisation();
-
-        var command = new CreateOrganisationCommand(TestOrganisation);
-        var handler = new CreateOrganisationCommandHandler(MockApplicationDbContext, Mapper, MockMediatR.Object, GetLogger<CreateOrganisationCommandHandler>());
-
-        // Act 
-        // Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(command, new CancellationToken()));
-    }
 
     [Fact]
     public async Task ThenUpdateOrganisation()
@@ -348,94 +238,41 @@ public class WhenUsingOrganisationCommands : BaseCreateDbUnitTest
     }
 
     [Fact]
-    public async Task ThenGetOrganisationById()
+    public async Task ThenUpdateOrganisationWithUpdatedServiceAndExistingContactForServiceAtLocation()
     {
         //Arrange
         CreateOrganisation();
 
-        var getCommand = new GetOrganisationByIdCommand { Id = TestOrganisation.Id };
-        var getHandler = new GetOrganisationByIdHandler(MockApplicationDbContext);
-        TestOrganisation.Logo = "";
+        var updateLogger = new Mock<ILogger<UpdateOrganisationCommandHandler>>();
+
+        var serviceDto = TestOrganisation.Services!.ElementAt(0);
+        var serviceAtLocationDto = serviceDto.ServiceAtLocations!.ElementAt(0);
+        var existingContactDto = serviceAtLocationDto.LinkContacts!.ElementAt(0).Contact;
+
+        serviceAtLocationDto.LinkContacts!.Add(new LinkContactDto(
+            Guid.NewGuid().ToString(),
+            serviceAtLocationDto.Id,
+            "ServiceAtLocation",
+            existingContactDto
+        ));
+
+        var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
+        var updateHandler = new UpdateOrganisationCommandHandler(MockApplicationDbContext, updateLogger.Object, MockMediatR.Object, Mapper);
 
         //Act
-        var result = await getHandler.Handle(getCommand, new CancellationToken());
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(TestOrganisation, opts => opts.Excluding(si => si.AdminAreaCode));
-    }
-
-    [Fact]
-    public async Task ThenGetOrganisationById_ShouldThrowExceptionWhenIdDoesNotExist()
-    {
-        //Arrange
-        var getCommand = new GetOrganisationByIdCommand { Id = Guid.NewGuid().ToString() };
-        var getHandler = new GetOrganisationByIdHandler(MockApplicationDbContext);
-
-        // Act 
-        // Assert
-        await Assert.ThrowsAsync<NotFoundException>(() => getHandler.Handle(getCommand, new CancellationToken()));
-    }
-
-    [Fact]
-    public async Task ThenListOrganisations()
-    {
-        //Arrange
-        CreateOrganisation();
+        result.Should().Be(TestOrganisation.Id);
         
-        var getCommand = new ListOrganisationCommand();
-        var getHandler = new ListOrganisationCommandHandler(MockApplicationDbContext);
-        TestOrganisation.Logo = "";
+        var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.LinkId == serviceAtLocationDto.Id).ToList();
 
-        //Act
-        var result = await getHandler.Handle(getCommand, new CancellationToken());
+        linkContacts.Should().HaveCount(2);
+        linkContacts.ElementAt(0).Contact.Should().NotBeNull();
+        linkContacts.ElementAt(1).Contact.Should().NotBeNull();
 
-        //Assert
-        result.Should().NotBeNull();
-        result[0].Should().BeEquivalentTo(TestOrganisation, opts => opts
-            .Excluding(si => si.Services)
-            .Excluding(si => si.AdminAreaCode)
-            .Excluding(si => si.LinkContacts)
-        );
-    }
-
-    [Fact]
-    public async Task ThenListOrganisationTypes()
-    {
-        //Arrange
-        var seedData = new OrganisationSeedData(false);
-        if (!MockApplicationDbContext.AdminAreas.Any())
-        {
-            MockApplicationDbContext.OrganisationTypes.AddRange(seedData.SeedOrganisationTypes());
-            await MockApplicationDbContext.SaveChangesAsync();
-        }
-
-        var getCommand = new GetOrganisationTypesCommand();
-        var getHandler = new GetOrganisationTypesCommandHandler(MockApplicationDbContext);
-
-        //Act
-        var result = await getHandler.Handle(getCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Count.Should().Be(3);
-    }
-
-    [Fact]
-    public async Task ThenGetAdminByOrganisationId()
-    {
-        //Arrange
-        CreateOrganisation();
-        
-        var getCommand = new GetOrganisationAdminByOrganisationIdCommand(TestOrganisation.Id);
-        var getHandler = new GetOrganisationAdminByOrganisationIdCommandHandler(MockApplicationDbContext);
-        TestOrganisation.Logo = "";
-
-        //Act
-        var result = await getHandler.Handle(getCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().Be("XTEST");
+        linkContacts.ElementAt(0).Contact!.Id.Should().Be(existingContactDto.Id);
+        linkContacts.ElementAt(1).Contact!.Id.Should().Be(existingContactDto.Id);
     }
 }

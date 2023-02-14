@@ -54,7 +54,6 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
 
         try
         {
-
             var org = _mapper.Map<Organisation>(request.Organisation);
             var organisationType = _context.OrganisationTypes.FirstOrDefault(x => x.Id == request.Organisation.OrganisationType.Id);
             if (organisationType != null)
@@ -114,10 +113,6 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
             {
                 organisationAdminDistrict.Code = request.Organisation.AdminAreaCode;
             }
-
         }
     }
-
 }
-
-
