@@ -125,7 +125,7 @@ public class TestData
                         new Taxonomy(
                             "bccsource:Organisation",
                             "Organisation",
-                            "BCC Data Sources",
+                            TaxonomyType.ServiceCategory,
                             null
                         )),
                     new ServiceTaxonomy("9112",
@@ -133,7 +133,7 @@ public class TestData
                         new Taxonomy(
                             "bccprimaryservicetype:38",
                             "Support",
-                            "BCC Primary Services",
+                            TaxonomyType.ServiceCategory,
                             null
                         )),
                     new ServiceTaxonomy("9113",
@@ -141,7 +141,7 @@ public class TestData
                         new Taxonomy(
                             "bccagegroup:37",
                             "Children",
-                            "BCC Age Groups",
+                            TaxonomyType.ServiceCategory,
                             null
                         )),
                     new ServiceTaxonomy("9114",
@@ -149,7 +149,7 @@ public class TestData
                         new Taxonomy(
                             "bccusergroup:56",
                             "Long Term Health Conditions",
-                            "BCC User Groups",
+                            TaxonomyType.ServiceCategory,
                             null
                         ))
                     }

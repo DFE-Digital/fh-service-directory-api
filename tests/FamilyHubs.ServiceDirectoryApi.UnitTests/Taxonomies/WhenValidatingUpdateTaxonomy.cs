@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Api.Commands.UpdateTaxonomy;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Taxonomies;
@@ -11,7 +12,7 @@ public class WhenValidatingUpdateTaxonomy
     {
         //Arrange
         var validator = new UpdateTaxonomyCommandValidator();
-        var testModel = new UpdateTaxonomyCommand("Id", new TaxonomyDto("Id", "Name", "Vocabulary", null));
+        var testModel = new UpdateTaxonomyCommand("Id", new TaxonomyDto("Id", "Name", TaxonomyType.ServiceCategory, null));
 
         //Act
         var result = validator.Validate(testModel);
@@ -25,7 +26,7 @@ public class WhenValidatingUpdateTaxonomy
     {
         //Arrange
         var validator = new UpdateTaxonomyCommandValidator();
-        var testModel = new UpdateTaxonomyCommand("", new TaxonomyDto("Id", "Name", "Vocabulary", null));
+        var testModel = new UpdateTaxonomyCommand("", new TaxonomyDto("Id", "Name", TaxonomyType.ServiceCategory, null));
 
         //Act
         var result = validator.Validate(testModel);
@@ -39,7 +40,7 @@ public class WhenValidatingUpdateTaxonomy
     {
         //Arrange
         var validator = new UpdateTaxonomyCommandValidator();
-        var testModel = new UpdateTaxonomyCommand("Id", new TaxonomyDto("", "Name", "Vocabulary", null));
+        var testModel = new UpdateTaxonomyCommand("Id", new TaxonomyDto("", "Name", TaxonomyType.ServiceCategory, null));
 
         //Act
         var result = validator.Validate(testModel);
@@ -53,26 +54,12 @@ public class WhenValidatingUpdateTaxonomy
     {
         //Arrange
         var validator = new UpdateTaxonomyCommandValidator();
-        var testModel = new UpdateTaxonomyCommand("Id", new TaxonomyDto("Id", "", "Vocabulary", null));
+        var testModel = new UpdateTaxonomyCommand("Id", new TaxonomyDto("Id", "", TaxonomyType.ServiceCategory, null));
 
         //Act
         var result = validator.Validate(testModel);
 
         //Assert
         result.Errors.Any(x => x.PropertyName == "Taxonomy.Name").Should().BeTrue();
-    }
-
-    [Fact]
-    public void ThenShouldErrorWhenModelHasNoVocabulary()
-    {
-        //Arrange
-        var validator = new UpdateTaxonomyCommandValidator();
-        var testModel = new UpdateTaxonomyCommand("Id", new TaxonomyDto("Id", "Name", "", null));
-
-        //Act
-        var result = validator.Validate(testModel);
-
-        //Assert
-        result.Errors.Any(x => x.PropertyName == "Taxonomy.Vocabulary").Should().BeTrue();
     }
 }

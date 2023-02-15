@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,15 +9,17 @@ namespace FamilyHubs.ServiceDirectory.Api.Queries.GetTaxonomies;
 
 public class GetTaxonomiesCommand : IRequest<PaginatedList<TaxonomyDto>>
 {
-    public GetTaxonomiesCommand(int? pageNumber, int? pageSize, string? text)
+    public GetTaxonomiesCommand(TaxonomyType taxonomyType, int? pageNumber, int? pageSize, string? text)
     {
-        PageNumber = pageNumber != null ? pageNumber.Value : 1;
-        PageSize = pageSize != null ? pageSize.Value : 1;
+        PageNumber = pageNumber ?? 1;
+        PageSize = pageSize ?? 10;
+        TaxonomyType = taxonomyType;
         Text = text;
     }
 
-    public int PageNumber { get; } = 1;
-    public int PageSize { get; } = 10;
+    public int PageNumber { get; }
+    public int PageSize { get; }
+    public TaxonomyType TaxonomyType { get; }
     public string? Text { get; }
 }
 
@@ -31,27 +34,21 @@ public class GetTaxonomiesCommandHandler : IRequestHandler<GetTaxonomiesCommand,
 
     public async Task<PaginatedList<TaxonomyDto>> Handle(GetTaxonomiesCommand request, CancellationToken cancellationToken)
     {
-        var entities = await _context.Taxonomies.ToListAsync();
+        var filteredTaxonomies = await _context.Taxonomies
+            .Where(t => request.Text == null || t.Name.Contains(request.Text))
+            .Where(t => request.TaxonomyType == TaxonomyType.NotSet || t.TaxonomyType == request.TaxonomyType)
+            .Select(x => new TaxonomyDto(
+                x.Id,
+                x.Name,
+                x.TaxonomyType,
+                x.Parent
+            ))
+            .ToListAsync(cancellationToken: cancellationToken);
 
-        if (request != null && request.Text != null)
-        {
-            entities = entities.Where(x => x.Name.Contains(request.Text)).ToList();
-        }
-
-        var filteredTaxonomies = entities.Select(x => new TaxonomyDto(
-            x.Id,
-            x.Name,
-            x.Vocabulary,
-            x.Parent
-            )).ToList();
-
-        if (request != null)
-        {
-            var pagelist = filteredTaxonomies.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToList();
-            var result = new PaginatedList<TaxonomyDto>(pagelist, filteredTaxonomies.Count, request.PageNumber, request.PageSize);
-            return result;
-        }
-
-        return new PaginatedList<TaxonomyDto>(filteredTaxonomies, filteredTaxonomies.Count, 1, 10);
+        var pagedList = filteredTaxonomies.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToList();
+        
+        var result = new PaginatedList<TaxonomyDto>(pagedList, filteredTaxonomies.Count, request.PageNumber, request.PageSize);
+        
+        return result;
     }
 }

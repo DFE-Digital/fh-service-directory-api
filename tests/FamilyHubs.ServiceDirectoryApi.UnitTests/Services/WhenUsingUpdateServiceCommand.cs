@@ -274,7 +274,7 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
-    public async Task ThenUpdateServiceWithNewLinkContactAndExistingEligibilities()
+    public async Task ThenUpdateServiceExistingEligibilities()
     {
         //Arrange
         var serviceDto = TestOrganisation.Services!.ElementAt(0);
@@ -313,7 +313,7 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
-    public async Task ThenUpdateServiceWithNewLinkContactAndExistingServiceAreas()
+    public async Task ThenUpdateServiceExistingServiceAreas()
     {
         //Arrange
         var serviceDto = TestOrganisation.Services!.ElementAt(0);
@@ -352,7 +352,7 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
-    public async Task ThenUpdateServiceWithNewLinkContactAndExistingServiceDeliveries()
+    public async Task ThenUpdateServiceExistingServiceDeliveries()
     {
         //Arrange
         var serviceDto = TestOrganisation.Services!.ElementAt(0);
@@ -389,7 +389,7 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
-    public async Task ThenUpdateServiceWithNewLinkContactAndExistingLanguages()
+    public async Task ThenUpdateServiceExistingLanguages()
     {
         //Arrange
         var serviceDto = TestOrganisation.Services!.ElementAt(0);
@@ -426,7 +426,7 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
-    public async Task ThenUpdateServiceWithNewLinkContactAndExistingServiceTaxonomies()
+    public async Task ThenUpdateServiceExistingServiceTaxonomies()
     {
         //Arrange
         var serviceDto = TestOrganisation.Services!.ElementAt(0);
@@ -463,7 +463,7 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
-    public async Task ThenUpdateServiceWithNewLinkContactAndExistingCostOptions()
+    public async Task ThenUpdateServiceExistingCostOptions()
     {
         //Arrange
         var serviceDto = TestOrganisation.Services!.ElementAt(0);
@@ -505,7 +505,7 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
-    public async Task ThenUpdateServiceWithNewLinkContactAndExistingRegularSchedules()
+    public async Task ThenUpdateServiceExistingRegularSchedules()
     {
         //Arrange
         var serviceDto = TestOrganisation.Services!.ElementAt(0);
@@ -551,7 +551,7 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
-    public async Task ThenUpdateServiceWithNewLinkContactAndExistingHolidaySchedules()
+    public async Task ThenUpdateServiceExistingHolidaySchedules()
     {
         //Arrange
         var serviceDto = TestOrganisation.Services!.ElementAt(0);

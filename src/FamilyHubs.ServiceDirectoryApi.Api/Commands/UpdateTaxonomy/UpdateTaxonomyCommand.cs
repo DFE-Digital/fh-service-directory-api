@@ -46,7 +46,7 @@ public class UpdateTaxonomyCommandHandler : IRequestHandler<UpdateTaxonomyComman
         try
         {
             entity.Name = request.Taxonomy.Name;
-            entity.Vocabulary = request.Taxonomy.Vocabulary;
+            entity.TaxonomyType = request.Taxonomy.TaxonomyType;
             entity.Parent = request.Taxonomy.Parent;
 
             await _context.SaveChangesAsync(cancellationToken);

@@ -139,7 +139,7 @@ public static class TestDataProvider
                                 new TaxonomyDto(
                                     newGuid == false ? "b60b7f3e-9ff4-48b2-bded-b00272ed3aba" : Guid.NewGuid().ToString(),
                                     updated == false ? "Family_hub 1" : "Family_hub 2",
-                                    null,
+                                    TaxonomyType.LocationType,
                                     null
                                 )
                             )
@@ -214,7 +214,7 @@ public static class TestDataProvider
                     new TaxonomyDto(
                         "UnitTest bccsource:Organisation",
                         updated == false ? "Organisation" : "Organisation Updated",
-                        "Test BCC Data Sources",
+                        TaxonomyType.ServiceCategory,
                         null
                     )),
 
@@ -223,7 +223,7 @@ public static class TestDataProvider
                     new TaxonomyDto(
                         "UnitTest bccprimaryservicetype:38",
                         updated == false ? "Support" : "Support Updated",
-                        "Test BCC Primary Services",
+                        TaxonomyType.ServiceCategory,
                         null
                     )),
 
@@ -232,7 +232,7 @@ public static class TestDataProvider
                     new TaxonomyDto(
                         "UnitTest bccagegroup:37",
                         "Children",
-                        "Test BCC Age Groups",
+                        TaxonomyType.ServiceCategory,
                         null
                     )),
 
@@ -241,7 +241,7 @@ public static class TestDataProvider
                     new TaxonomyDto(
                         "UnitTestbccusergroup:56",
                         "Long Term Health Conditions",
-                        "Test BCC User Groups",
+                        TaxonomyType.ServiceCategory,
                         null
                     ))
             })
@@ -346,7 +346,7 @@ public static class TestDataProvider
 
                                     Guid.NewGuid().ToString(),
                                     "Family_hub",
-                                    null,
+                                    TaxonomyType.LocationType,
                                     null
                                 )
                             )
@@ -405,7 +405,7 @@ public static class TestDataProvider
                     new TaxonomyDto(
                         "UnitTest1",
                         "Organisation",
-                        "Test BCC Data Sources",
+                        TaxonomyType.ServiceCategory,
                         null
                     )),
 
@@ -414,7 +414,7 @@ public static class TestDataProvider
                     new TaxonomyDto(
                         "UnitTest2",
                         "Support",
-                        "Test BCC Primary Services",
+                        TaxonomyType.ServiceCategory,
                         null
                     )),
 
@@ -423,7 +423,7 @@ public static class TestDataProvider
                     new TaxonomyDto(
                         "UnitTest3",
                         "Children",
-                        "Test BCC Age Groups",
+                        TaxonomyType.ServiceCategory,
                         null
                     )),
 
@@ -432,7 +432,7 @@ public static class TestDataProvider
                     new TaxonomyDto(
                         "UnitTest4",
                         "Long Term Health Conditions",
-                        "Test BCC User Groups",
+                        TaxonomyType.ServiceCategory,
                         null
                     ))
             })

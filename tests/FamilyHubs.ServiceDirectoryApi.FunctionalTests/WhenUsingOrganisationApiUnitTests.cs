@@ -317,7 +317,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                                         //todo: real guid
                                         Guid.NewGuid().ToString(),
                                         "Family_hub",
-                                        null,
+                                        TaxonomyType.LocationType,
                                         null
                                         )
                                     )
@@ -336,7 +336,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                     new TaxonomyDto(
                         "Test bccsource:Organisation",
                         "Organisation",
-                        "Test BCC Data Sources",
+                        TaxonomyType.ServiceCategory,
                         null
                         )),
 
@@ -344,7 +344,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                     new TaxonomyDto(
                         "Test bccprimaryservicetype:38",
                         "Support",
-                        "Test BCC Primary Services",
+                        TaxonomyType.ServiceCategory,
                         null
                         )),
 
@@ -352,7 +352,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                     new TaxonomyDto(
                         "Test bccagegroup:37",
                         "Children",
-                        "Test BCC Age Groups",
+                        TaxonomyType.ServiceCategory,
                         null
                         )),
 
@@ -360,7 +360,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                     new TaxonomyDto(
                         "Testbccusergroup:56",
                         "Long Term Health Conditions",
-                        "Test BCC User Groups",
+                        TaxonomyType.ServiceCategory,
                         null
                         ))
                 })
@@ -452,7 +452,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
 
                                         Guid.NewGuid().ToString(),
                                         "Family_hub",
-                                        null,
+                                        TaxonomyType.LocationType,
                                         null
                                     )
                                 )
@@ -557,7 +557,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                         new Taxonomy(
                             "Test bccsource:Organisation",
                             "Organisation",
-                            "Test BCC Data Sources",
+                            TaxonomyType.ServiceCategory,
                             null
                         )),
 
@@ -567,7 +567,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                         new Taxonomy(
                             "Test bccprimaryservicetype:38",
                             "Support",
-                            "Test BCC Primary Services",
+                            TaxonomyType.ServiceCategory,
                             null
                         )),
 
@@ -577,7 +577,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                         new Taxonomy(
                             "Test bccagegroup:37",
                             "Children",
-                            "Test BCC Age Groups",
+                            TaxonomyType.ServiceCategory,
                             null
                         )),
 
@@ -587,7 +587,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
                         new Taxonomy(
                             "Testbccusergroup:56",
                             "Long Term Health Conditions",
-                            "Test BCC User Groups",
+                            TaxonomyType.ServiceCategory,
                             null
                         ))
                 },

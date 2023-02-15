@@ -21,10 +21,8 @@ public class CreateTaxonomyCommandValidator : AbstractValidator<CreateTaxonomyCo
             .NotNull()
             .NotEmpty();
 
-        RuleFor(v => v.Taxonomy.Vocabulary)
-            .MinimumLength(1)
-            .NotNull()
-            .NotEmpty();
+        RuleFor(v => v.Taxonomy.TaxonomyType)
+            .IsInEnum();
     }
 }
 

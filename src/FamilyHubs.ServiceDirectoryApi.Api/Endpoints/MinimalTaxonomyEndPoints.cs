@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Api.Commands.CreateTaxonomy;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateTaxonomy;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetTaxonomies;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +16,12 @@ public class MinimalTaxonomyEndPoints
 {
     public void RegisterTaxonomyEndPoints(WebApplication app)
     {
-        app.MapPost("api/taxonomies", [Authorize(Policy = "ServiceAccess")] async ([FromBody] TaxonomyDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
+        app.MapPost("api/taxonomies", [Authorize(Policy = "ServiceAccess")] async ([FromBody] TaxonomyDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
             {
                 var command = new CreateTaxonomyCommand(request);
-                var result = await _mediator.Send(command, cancellationToken);
+                var result = await mediator.Send(command, cancellationToken);
                 return result;
             }
             catch (Exception ex)
@@ -31,12 +32,12 @@ public class MinimalTaxonomyEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Taxonomy", "Create Taxonomy") { Tags = new[] { "Taxonomies" } });
 
-        app.MapPut("api/taxonomies/{id}", [Authorize(Policy = "ServiceAccess")] async (string id, [FromBody] TaxonomyDto request, CancellationToken cancellationToken, ISender _mediator, IMapper mapper, ILogger<MinimalTaxonomyEndPoints> logger) =>
+        app.MapPut("api/taxonomies/{id}", [Authorize(Policy = "ServiceAccess")] async (string id, [FromBody] TaxonomyDto request, CancellationToken cancellationToken, ISender mediator, IMapper mapper, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
             {
                 var command = new UpdateTaxonomyCommand(id, request);
-                var result = await _mediator.Send(command, cancellationToken);
+                var result = await mediator.Send(command, cancellationToken);
                 return result;
             }
             catch (Exception ex)
@@ -47,12 +48,12 @@ public class MinimalTaxonomyEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Update Taxonomy", "Update Taxonomy") { Tags = new[] { "Taxonomies" } });
 
-        app.MapGet("api/taxonomies", async (int? pageNumber, int? pageSize, string? text, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
+        app.MapGet("api/taxonomies", async (TaxonomyType taxonomyType, int? pageNumber, int? pageSize, string? text, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
             {
-                var command = new GetTaxonomiesCommand(pageNumber, pageSize, text);
-                var result = await _mediator.Send(command, cancellationToken);
+                var command = new GetTaxonomiesCommand(taxonomyType, pageNumber, pageSize, text);
+                var result = await mediator.Send(command, cancellationToken);
                 return result;
             }
             catch (Exception ex)
