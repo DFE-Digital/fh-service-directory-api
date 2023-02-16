@@ -9,7 +9,7 @@ public class AddressConfiguration : IEntityTypeConfiguration<PhysicalAddress>
     public void Configure(EntityTypeBuilder<PhysicalAddress> builder)
     {
         builder.Property(t => t.Address1)
-            .HasMaxLength(100)
+            .HasMaxLength(1024)
             .IsRequired();
         builder.Property(t => t.City)
             .HasMaxLength(50);

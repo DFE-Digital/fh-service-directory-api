@@ -5,6 +5,7 @@ using FamilyHubs.ServiceDirectory.Api.Commands.UpdateLocation;
 using FamilyHubs.ServiceDirectory.Core;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -96,7 +97,7 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
                 "491a553a-8f97-4ac7-941d-8eafa981042b",
                 "Location",
                 "661cab6d-81f6-46cd-a05b-4ec2e19b03fa",
-                new TaxonomyDto("eeca6a0b-36d9-4a7f-9f74-d6bc3913cddd", "Test Taxonomy Update", "Test Vocabulary Update", null)
+                new TaxonomyDto("eeca6a0b-36d9-4a7f-9f74-d6bc3913cddd", "Test Taxonomy Update", TaxonomyType.ServiceCategory, null)
                 )
 
         };
@@ -183,7 +184,7 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
                 "a8587b60-e9cd-4527-9bdd-d55955faa8c1",
                 "Location",
                 "661cab6d-81f6-46cd-a05b-4ec2e19b03fa",
-                new TaxonomyDto("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", "Test Vocabulary", null)
+                new TaxonomyDto("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", TaxonomyType.ServiceCategory, null)
                 )
 
         },
@@ -193,6 +194,6 @@ public class WhenUsingLocationCommand : BaseCreateDbUnitTest
 
     public static Taxonomy GetTestTaxonomy()
     {
-        return new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", "Test Vocabulary", null);
+        return new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", TaxonomyType.ServiceCategory, null);
     }
 }

@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectory.Api.Queries.GetTaxonomies;
 using FamilyHubs.ServiceDirectory.Core;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -56,7 +57,7 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
     public async Task ThenUpdateTaxonomy()
     {
         var mockApplicationDbContext = GetApplicationDbContext();
-        var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", "Test 1 Vocabulary", null);
+        var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", TaxonomyType.ServiceCategory, null);
         mockApplicationDbContext.Taxonomies.Add(dbTaxonomy);
         await mockApplicationDbContext.SaveChangesAsync();
         var testTaxonomy = GetTestTaxonomyDto();
@@ -78,7 +79,7 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
     {
         // Arrange
         var dbContext = GetApplicationDbContext();
-        var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", "Test 1 Vocabulary", null);
+        var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", TaxonomyType.ServiceCategory, null);
         dbContext.Taxonomies.Add(dbTaxonomy);
         await dbContext.SaveChangesAsync();
         var logger = new Mock<ILogger<UpdateTaxonomyCommandHandler>>();
@@ -110,12 +111,12 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
     public async Task ThenGetTaxonomies()
     {
         var mockApplicationDbContext = GetApplicationDbContext();
-        var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", "Test 1 Vocabulary", null);
+        var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", TaxonomyType.ServiceCategory, null);
         mockApplicationDbContext.Taxonomies.Add(dbTaxonomy);
         await mockApplicationDbContext.SaveChangesAsync();
 
 
-        var command = new GetTaxonomiesCommand(1, 1, null);
+        var command = new GetTaxonomiesCommand(TaxonomyType.NotSet, 1, null, null);
         var handler = new GetTaxonomiesCommandHandler(mockApplicationDbContext);
 
         //Act
@@ -125,30 +126,30 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         result.Should().NotBeNull();
         result.Items[0].Id.Should().Be("a3226044-5c89-4257-8b07-f29745a22e2c");
         result.Items[0].Name.Should().Be("Test 1 Taxonomy");
-        result.Items[0].Vocabulary.Should().Be("Test 1 Vocabulary");
+        result.Items[0].TaxonomyType.Should().Be(TaxonomyType.ServiceCategory);
     }
 
     [Fact]
     public async Task ThenGetTaxonomiesWithNullRequest()
     {
         var mockApplicationDbContext = GetApplicationDbContext();
-        var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", "Test 1 Vocabulary", null);
+        var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", TaxonomyType.ServiceCategory, null);
         mockApplicationDbContext.Taxonomies.Add(dbTaxonomy);
         await mockApplicationDbContext.SaveChangesAsync();
         var handler = new GetTaxonomiesCommandHandler(mockApplicationDbContext);
 
         //Act
-        var result = await handler.Handle(default!, new CancellationToken());
+        var result = await handler.Handle(new GetTaxonomiesCommand(TaxonomyType.NotSet, null, null, null), new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
         result.Items[0].Id.Should().Be("a3226044-5c89-4257-8b07-f29745a22e2c");
         result.Items[0].Name.Should().Be("Test 1 Taxonomy");
-        result.Items[0].Vocabulary.Should().Be("Test 1 Vocabulary");
+        result.Items[0].TaxonomyType.Should().Be(TaxonomyType.ServiceCategory);
     }
 
     private static TaxonomyDto GetTestTaxonomyDto()
     {
-        return new TaxonomyDto("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", "Test Vocabulary", null);
+        return new TaxonomyDto("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", TaxonomyType.ServiceCategory, null);
     }
 }

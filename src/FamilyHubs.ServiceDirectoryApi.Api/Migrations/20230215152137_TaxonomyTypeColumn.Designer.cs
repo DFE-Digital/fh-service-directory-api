@@ -3,6 +3,7 @@ using System;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace fhservicedirectoryapi.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230215152137_TaxonomyTypeColumn")]
+    partial class TaxonomyTypeColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1489,6 +1492,30 @@ namespace fhservicedirectoryapi.api.Migrations
                         .WithMany()
                         .HasForeignKey("ContactId")
                         .HasConstraintName("fk_linkcontacts_contacts_contactid");
+
+                    b.HasOne("FamilyHubs.ServiceDirectory.Core.Entities.Location", null)
+                        .WithMany("LinkContacts")
+                        .HasForeignKey("LinkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk_linkcontacts_locations_locationid");
+
+                    b.HasOne("FamilyHubs.ServiceDirectory.Core.Entities.Organisation", null)
+                        .WithMany("LinkContacts")
+                        .HasForeignKey("LinkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk_linkcontacts_organisations_organisationid");
+
+                    b.HasOne("FamilyHubs.ServiceDirectory.Core.Entities.Service", null)
+                        .WithMany("LinkContacts")
+                        .HasForeignKey("LinkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk_linkcontacts_services_serviceid");
+
+                    b.HasOne("FamilyHubs.ServiceDirectory.Core.Entities.ServiceAtLocation", null)
+                        .WithMany("LinkContacts")
+                        .HasForeignKey("LinkId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk_linkcontacts_serviceatlocations_serviceatlocationid");
 
                     b.Navigation("Contact");
                 });

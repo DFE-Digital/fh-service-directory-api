@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -23,7 +24,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(_client.BaseAddress + "api/taxonomies?pageNumber=1&pageSize=10"),
+            RequestUri = new Uri(_client.BaseAddress + "api/taxonomies?pageNumber=1&pageSize=10&taxonomyType=ServiceCategory"),
         };
 
         using var response = await _client.SendAsync(request);
@@ -45,7 +46,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
 #endif
     public async Task ThenTheTaxonomyIsCreated()
     {
-        var commandtaxonomy = new TaxonomyDto(Guid.NewGuid().ToString(), "Test-AddTaxonomy", "Test-AddVocab", null);
+        var commandtaxonomy = new TaxonomyDto(Guid.NewGuid().ToString(), "Test-AddTaxonomy", TaxonomyType.ServiceCategory, null);
         
         var request = new HttpRequestMessage
         {
@@ -73,7 +74,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
 #endif
     public async Task ThenTheTaxonomyIsUpdated()
     {
-        var commandtaxonomy = new TaxonomyDto(Guid.NewGuid().ToString(), "Test-UpdateTaxonomy", "Test-UpDateVocab", null);
+        var commandtaxonomy = new TaxonomyDto(Guid.NewGuid().ToString(), "Test-UpdateTaxonomy", TaxonomyType.ServiceCategory, null);
 
         var request = new HttpRequestMessage
         {
@@ -90,7 +91,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
 
         await response.Content.ReadAsStringAsync();
 
-        var updatedtaxonomy = new TaxonomyDto(commandtaxonomy.Id, "Test-IsUpdateTaxonomy", "Test-IsUpDateVocab", null);
+        var updatedtaxonomy = new TaxonomyDto(commandtaxonomy.Id, "Test-IsUpdateTaxonomy", TaxonomyType.ServiceCategory, null);
 
         var updaterequest = new HttpRequestMessage
         {

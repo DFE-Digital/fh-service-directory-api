@@ -29,7 +29,7 @@ public class DtoHelper
             service.Languages.Select(language => new LanguageDto(language.Id, language.Name)).ToList(),
             service.ServiceAreas.Select(serviceArea => new ServiceAreaDto(serviceArea.Id, serviceArea.ServiceAreaDescription, serviceArea.Extent, serviceArea.Uri)).ToList(),
             service.ServiceAtLocations.Select(serviceAtLocation => new ServiceAtLocationDto(serviceAtLocation.Id, GetLocation(serviceAtLocation), GetRegularSchedules(serviceAtLocation.RegularSchedules), GetHolidaySchedules(serviceAtLocation.HolidaySchedules), GetContacts(serviceAtLocation.LinkContacts ?? new List<LinkContact>()))).ToList(),
-            service.ServiceTaxonomies.Select(serviceTaxonomy => new ServiceTaxonomyDto(serviceTaxonomy.Id, serviceTaxonomy.Taxonomy != null ? new TaxonomyDto(serviceTaxonomy.Taxonomy.Id, serviceTaxonomy.Taxonomy.Name, serviceTaxonomy.Taxonomy.Vocabulary, serviceTaxonomy.Taxonomy.Parent) : null)).ToList(),
+            service.ServiceTaxonomies.Select(serviceTaxonomy => new ServiceTaxonomyDto(serviceTaxonomy.Id, serviceTaxonomy.Taxonomy != null ? new TaxonomyDto(serviceTaxonomy.Taxonomy.Id, serviceTaxonomy.Taxonomy.Name, serviceTaxonomy.Taxonomy.TaxonomyType, serviceTaxonomy.Taxonomy.Parent) : null)).ToList(),
             service.RegularSchedules.Select(regularSchedule => new RegularScheduleDto(regularSchedule.Id, regularSchedule.Description, regularSchedule.OpensAt, regularSchedule.ClosesAt, regularSchedule.ByDay, regularSchedule.ByMonthDay, regularSchedule.DtStart, regularSchedule.Freq, regularSchedule.Interval, regularSchedule.ValidFrom, regularSchedule.ValidTo)).ToList(),
             service.HolidaySchedules.Select(holidaySchedule => new HolidayScheduleDto(holidaySchedule.Id, holidaySchedule.Closed, holidaySchedule.ClosesAt, holidaySchedule.StartDate, holidaySchedule.EndDate, holidaySchedule.OpensAt)).ToList(),
             GetContacts(service.LinkContacts)
@@ -61,7 +61,7 @@ public class DtoHelper
             service.Languages.Select(language => new LanguageDto(language.Id, language.Name)).ToList(),
             service.ServiceAreas.Select(serviceArea => new ServiceAreaDto(serviceArea.Id, serviceArea.ServiceAreaDescription, serviceArea.Extent, serviceArea.Uri)).ToList(),
             service.ServiceAtLocations.Select(serviceAtLocation => new ServiceAtLocationDto(serviceAtLocation.Id, GetLocation(serviceAtLocation), GetRegularSchedules(serviceAtLocation.RegularSchedules), GetHolidaySchedules(serviceAtLocation.HolidaySchedules), GetContacts(serviceAtLocation.LinkContacts ?? new List<LinkContact>()))).ToList(),
-            service.ServiceTaxonomies.Select(serviceTaxonomy => new ServiceTaxonomyDto(serviceTaxonomy.Id, serviceTaxonomy.Taxonomy != null ? new TaxonomyDto(serviceTaxonomy.Taxonomy.Id, serviceTaxonomy.Taxonomy.Name, serviceTaxonomy.Taxonomy.Vocabulary, serviceTaxonomy.Taxonomy.Parent) : null)).ToList(),
+            service.ServiceTaxonomies.Select(serviceTaxonomy => new ServiceTaxonomyDto(serviceTaxonomy.Id, serviceTaxonomy.Taxonomy != null ? new TaxonomyDto(serviceTaxonomy.Taxonomy.Id, serviceTaxonomy.Taxonomy.Name, serviceTaxonomy.Taxonomy.TaxonomyType, serviceTaxonomy.Taxonomy.Parent) : null)).ToList(),
             service.RegularSchedules.Select(regularSchedule => new RegularScheduleDto(regularSchedule.Id, regularSchedule.Description, regularSchedule.OpensAt, regularSchedule.ClosesAt, regularSchedule.ByDay, regularSchedule.ByMonthDay, regularSchedule.DtStart, regularSchedule.Freq, regularSchedule.Interval, regularSchedule.ValidFrom, regularSchedule.ValidTo)).ToList(),
             service.HolidaySchedules.Select(holidaySchedule => new HolidayScheduleDto(holidaySchedule.Id, holidaySchedule.Closed, holidaySchedule.ClosesAt, holidaySchedule.StartDate, holidaySchedule.EndDate, holidaySchedule.OpensAt)).ToList(),
             GetContacts(service.LinkContacts)
@@ -111,7 +111,7 @@ public class DtoHelper
     }
     private static List<LinkTaxonomyDto> GetLinkTaxonomies(Location location)
     {
-        var linkTaxonomies = location.LinkTaxonomies?.Select(x => new LinkTaxonomyDto(x.Id, x.LinkType, x.LinkId, new TaxonomyDto(x.Taxonomy!.Id, x.Taxonomy.Name, x.Taxonomy.Vocabulary, x.Taxonomy.Parent))).ToList();
+        var linkTaxonomies = location.LinkTaxonomies?.Select(x => new LinkTaxonomyDto(x.Id, x.LinkType, x.LinkId, new TaxonomyDto(x.Taxonomy!.Id, x.Taxonomy.Name, x.Taxonomy.TaxonomyType, x.Taxonomy.Parent))).ToList();
 
         return linkTaxonomies ?? new List<LinkTaxonomyDto>();
     }
