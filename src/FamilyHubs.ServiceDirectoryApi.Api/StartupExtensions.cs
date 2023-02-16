@@ -3,6 +3,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Api.Endpoints;
+using FamilyHubs.ServiceDirectory.Api.Middleware;
 using FamilyHubs.ServiceDirectory.Core;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Core.Interfaces;
@@ -241,6 +242,7 @@ public static class StartupExtensions
     public static async Task ConfigureWebApplication(this WebApplication webApplication)
     {
         webApplication.UseSerilogRequestLogging();
+        webApplication.UseMiddleware<CorrelationMiddleware>();
 
         // Configure the HTTP request pipeline.
         webApplication.UseSwagger();
