@@ -61,7 +61,7 @@ public static class TestDataProvider
                 updated == false ? "Unit Test Service" : "Unit Test Service Updated",
                 @"Unit Test Service Description",
                 "accreditations",
-                DateTime.Now,
+                DateTime.UtcNow,
                 "attending access",
                 "attending type",
                 "delivery type",
@@ -246,9 +246,24 @@ public static class TestDataProvider
                     ))
             })
             .WithFundings(new List<FundingDto>())
+            .WithRegularSchedules(new List<RegularScheduleDto>
+            {
+                new RegularScheduleDto(
+                    Guid.NewGuid().ToString(),
+                    "Description",
+                    DateTime.UtcNow,
+                    DateTime.UtcNow.AddHours(8),
+                    "byDay1",
+                    "byMonth",
+                    "dtStart",
+                    "freq",
+                    "interval",
+                    DateTime.UtcNow,
+                    DateTime.UtcNow.AddMonths(6)
+                )
+            })
             .Build();
 
-        service.RegularSchedules = new List<RegularScheduleDto>();
         service.HolidaySchedules = new List<HolidayScheduleDto>();
 
         return service;

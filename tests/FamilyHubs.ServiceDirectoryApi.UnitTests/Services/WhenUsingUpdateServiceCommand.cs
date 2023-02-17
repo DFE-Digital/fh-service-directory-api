@@ -185,6 +185,50 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
+    public async Task ThenUpdateServiceWithNewServiceAtLocationAndExistingLocation()
+    {
+        //Arrange
+        var serviceDto = TestOrganisation.Services!.ElementAt(0);
+        var existingLocation = serviceDto.ServiceAtLocations!.ElementAt(0).Location;
+        var serviceAtLocationId = Guid.NewGuid().ToString();
+
+        serviceDto.Description = "Updated Description";
+        serviceDto.Fees = "Updated Fees";
+        serviceDto.Name = "Updated Name";
+        serviceDto.ServiceAtLocations!.Add(new ServiceAtLocationDto
+        {
+            Id = serviceAtLocationId,
+            Location = existingLocation
+        });
+        var command = new UpdateServiceCommand(TestOrganisation.Services?.ElementAt(0).Id ?? string.Empty, TestOrganisation.Services?.ElementAt(0) ?? default!);
+        var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
+
+
+        //Act
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+
+        var actualServices = MockApplicationDbContext.Services.Where(s => s.Id == serviceDto.Id).ToList();
+        actualServices.Should().NotBeNull();
+        actualServices.Count.Should().Be(1);
+
+        var service = actualServices.SingleOrDefault(s => s.Id == serviceDto.Id);
+
+        service.Should().NotBeNull();
+        service!.Description.Should().Be("Updated Description");
+        service.Fees.Should().Be("Updated Fees");
+        service.Name.Should().Be("Updated Name");
+        service.Description.Should().Be("Updated Description");
+
+        service.ServiceAtLocations.Should().Contain(s => s.Id == serviceAtLocationId);
+        service.ServiceAtLocations.Single(s => s.Id == serviceAtLocationId)
+            .Location.Id.Should().Be(existingLocation.Id);
+    }
+
+    [Fact]
     public async Task ThenUpdateServiceWithNewLinkContactAndExistingContact()
     {
         //Arrange
@@ -548,6 +592,89 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
 
         expectedEntity.ElementAt(0).Id.Should().Be(newItem.Id);
         expectedEntity.ElementAt(0).ServiceId.Should().Be(serviceDto.Id);
+    }
+
+    [Fact]
+    public async Task ThenUpdateServiceAddAndDeleteRegularSchedules()
+    {
+        //Arrange
+        var serviceDto = TestOrganisation.Services!.ElementAt(0);
+        var existingItem = TestOrganisation.Services!.ElementAt(0).RegularSchedules!.ElementAt(0);
+        var newId = Guid.NewGuid().ToString();
+
+        var newItem = new RegularScheduleDto(
+            newId,
+            "description",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+        
+        serviceDto.RegularSchedules!.Clear();
+        serviceDto.RegularSchedules!.Add(newItem);
+
+        var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
+        var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
+
+        //Act
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+
+        MockApplicationDbContext.RegularSchedules
+            .Where(c => c.ServiceId == serviceDto.Id)
+            .ToList().Count.Should().Be(1);
+
+        var expectedEntity = MockApplicationDbContext.RegularSchedules.Where(lc => lc.Id == newId).ToList();
+
+        expectedEntity.Should().HaveCount(1);
+        expectedEntity.ElementAt(0).Should().NotBeNull();
+
+        expectedEntity.ElementAt(0).Id.Should().Be(newItem.Id);
+        expectedEntity.ElementAt(0).ServiceId.Should().Be(serviceDto.Id);
+
+        var unexpectedEntity = MockApplicationDbContext.RegularSchedules.Where(lc => existingItem.Id == newId).ToList();
+        unexpectedEntity.Should().HaveCount(0);
+    }
+
+    [Fact]
+    public async Task ThenUpdateServiceUpdateRegularSchedules()
+    {
+        //Arrange
+        var serviceDto = TestOrganisation.Services!.ElementAt(0);
+        var regularSchedule = TestOrganisation.Services!.ElementAt(0).RegularSchedules!.ElementAt(0);
+        regularSchedule.ByDay = "ByDay";
+
+        var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
+        var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
+
+        //Act
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+
+        MockApplicationDbContext.RegularSchedules
+            .Where(c => c.Id == regularSchedule.Id)
+            .ToList().Count.Should().Be(1);
+
+        var expectedEntity = MockApplicationDbContext.RegularSchedules.Where(lc => lc.Id == regularSchedule.Id).ToList();
+
+        expectedEntity.Should().HaveCount(1);
+        expectedEntity.ElementAt(0).Should().NotBeNull();
+
+        expectedEntity.ElementAt(0).Id.Should().Be(regularSchedule.Id);
+        expectedEntity.ElementAt(0).ServiceId.Should().Be(serviceDto.Id);
+        expectedEntity.ElementAt(0).ByDay.Should().Be("ByDay");
     }
 
     [Fact]

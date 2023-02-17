@@ -166,124 +166,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
         return returnList;
     }
 
-    private ICollection<HolidaySchedule> AttachExistingHolidaySchedule(ICollection<HolidaySchedule>? unSavedEntities, ICollection<HolidaySchedule>? existing)
-    {
-        var returnList = new List<HolidaySchedule>();
-
-        if (unSavedEntities is null || !unSavedEntities.Any())
-            return returnList;
-
-        existing ??= _context.HolidaySchedules.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
-
-        for (var i = 0; i < unSavedEntities.Count; i++)
-        {
-            var unSavedItem = unSavedEntities.ElementAt(i);
-            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
-            returnList.Add(savedItem ?? unSavedItem);
-        }
-
-        return returnList;
-    }
-
-    private ICollection<RegularSchedule> AttachExistingRegularSchedule(ICollection<RegularSchedule>? unSavedEntities, ICollection<RegularSchedule>? existing)
-    {
-        var returnList = new List<RegularSchedule>();
-
-        if (unSavedEntities is null || !unSavedEntities.Any())
-            return returnList;
-
-        existing ??= _context.RegularSchedules.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
-
-        for (var i = 0; i < unSavedEntities.Count; i++)
-        {
-            var unSavedItem = unSavedEntities.ElementAt(i);
-            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
-            returnList.Add(savedItem ?? unSavedItem);
-        }
-
-        return returnList;
-    }
-
-    private ICollection<PhysicalAddress> CreateOrUpdatePhysicalAddress(ICollection<PhysicalAddress>? unSavedEntities, ICollection<PhysicalAddress>? existing)
-    {
-        var returnList = new List<PhysicalAddress>();
-
-        if (unSavedEntities is null || !unSavedEntities.Any())
-            return returnList;
-
-        existing ??= _context.PhysicalAddresses.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
-
-        for (var i = 0; i < unSavedEntities.Count; i++)
-        {
-            var unSavedItem = unSavedEntities.ElementAt(i);
-            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
-            returnList.Add(savedItem ?? unSavedItem);
-        }
-
-        return returnList;
-    }
-
-    private ICollection<ServiceAtLocation> AttachExistingServiceAtLocation(ICollection<ServiceAtLocation>? unSavedEntities)
-    {
-        var returnList = new List<ServiceAtLocation>();
-
-        if (unSavedEntities is null || !unSavedEntities.Any())
-            return returnList;
-
-        var existing = _context.ServiceAtLocations
-            .Include(l => l.HolidaySchedules)
-            .Include(l => l.RegularSchedules)
-            .Include(l => l.LinkContacts!)
-            .ThenInclude(l => l.Contact)
-            .Include(l => l.Location)
-                .ThenInclude(l => l.PhysicalAddresses)
-            .Include(l => l.Location)
-                .ThenInclude(l => l.LinkTaxonomies)!
-                .ThenInclude(l => l.Taxonomy)
-            .Include(l => l.Location)
-                .ThenInclude(l => l.LinkContacts)!
-                .ThenInclude(l => l.Contact)
-            .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
-
-        for (var i = 0; i < unSavedEntities.Count; i++)
-        {
-            var unSavedItem = unSavedEntities.ElementAt(i);
-
-            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
-
-            returnList.Add(CreateOrUpdateServiceAtLocationChildEntities(unSavedItem, savedItem));
-        }
-
-        return returnList;
-    }
-
-    private ServiceAtLocation CreateOrUpdateServiceAtLocationChildEntities(ServiceAtLocation unSavedEntity, ServiceAtLocation? existing)
-    {
-        //Update Service at Location Level data
-        var returnItem = existing ?? unSavedEntity;
-
-        returnItem.RegularSchedules = AttachExistingRegularSchedule(unSavedEntity.RegularSchedules, existing?.RegularSchedules);
-        returnItem.HolidaySchedules = AttachExistingHolidaySchedule(unSavedEntity.HolidaySchedules, existing?.HolidaySchedules);
-        returnItem.LinkContacts = AttachExistingContacts(unSavedEntity.LinkContacts, existing?.LinkContacts);
-        returnItem.Location = CreateOrUpdateLocation(unSavedEntity.Location, existing?.Location);
-
-        return returnItem;
-    }
-
-    private Location CreateOrUpdateLocation(Location unSavedEntity, Location? existing)
-    {
-        var returnItem = existing ?? unSavedEntity;
-
-        returnItem.PhysicalAddresses = CreateOrUpdatePhysicalAddress(unSavedEntity.PhysicalAddresses, existing?.PhysicalAddresses);
-
-        returnItem.LinkTaxonomies = CreateOrUpdateLinkTaxonomy(unSavedEntity.LinkTaxonomies, existing?.LinkTaxonomies);
-
-        returnItem.LinkContacts = AttachExistingContacts(unSavedEntity.LinkContacts, existing?.LinkContacts);
-
-        return returnItem;
-    }
-
-    private ICollection<ServiceTaxonomy> AttachExistingServiceTaxonomies(ICollection<ServiceTaxonomy>? unSavedEntities)
+     private ICollection<ServiceTaxonomy> AttachExistingServiceTaxonomies(ICollection<ServiceTaxonomy>? unSavedEntities)
     {
         var returnList = new List<ServiceTaxonomy>();
 
@@ -321,7 +204,124 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
         return returnList;
     }
 
-    private ICollection<LinkTaxonomy> CreateOrUpdateLinkTaxonomy(ICollection<LinkTaxonomy>? unSavedEntities, ICollection<LinkTaxonomy>? existing)
+    private ICollection<ServiceAtLocation> AttachExistingServiceAtLocation(ICollection<ServiceAtLocation>? unSavedEntities)
+    {
+        var returnList = new List<ServiceAtLocation>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.ServiceAtLocations
+            .Include(l => l.HolidaySchedules)
+            .Include(l => l.RegularSchedules)
+            .Include(l => l.LinkContacts!)
+            .ThenInclude(l => l.Contact)
+            .Include(l => l.Location)
+                .ThenInclude(l => l.PhysicalAddresses)
+            .Include(l => l.Location)
+                .ThenInclude(l => l.LinkTaxonomies)!
+                .ThenInclude(l => l.Taxonomy)
+            .Include(l => l.Location)
+                .ThenInclude(l => l.LinkContacts)!
+                .ThenInclude(l => l.Contact)
+            .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = unSavedEntities.ElementAt(i);
+
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+
+            returnList.Add(AttachExistingServiceAtLocationChildEntities(unSavedItem, savedItem));
+        }
+
+        return returnList;
+    }
+
+    private ServiceAtLocation AttachExistingServiceAtLocationChildEntities(ServiceAtLocation unSavedEntity, ServiceAtLocation? existing)
+    {
+        //Update Service at Location Level data
+        var returnItem = existing ?? unSavedEntity;
+
+        returnItem.RegularSchedules = AttachExistingRegularSchedule(unSavedEntity.RegularSchedules, existing?.RegularSchedules);
+        returnItem.HolidaySchedules = AttachExistingHolidaySchedule(unSavedEntity.HolidaySchedules, existing?.HolidaySchedules);
+        returnItem.LinkContacts = AttachExistingContacts(unSavedEntity.LinkContacts, existing?.LinkContacts);
+        returnItem.Location = AttachExistingLocation(unSavedEntity.Location, existing?.Location);
+
+        return returnItem;
+    }
+
+    private Location AttachExistingLocation(Location unSavedEntity, Location? existing)
+    {
+        var returnItem = existing ?? unSavedEntity;
+
+        returnItem.PhysicalAddresses = AttachExistingPhysicalAddress(unSavedEntity.PhysicalAddresses, existing?.PhysicalAddresses);
+
+        returnItem.LinkTaxonomies = AttachExistingLinkTaxonomy(unSavedEntity.LinkTaxonomies, existing?.LinkTaxonomies);
+
+        returnItem.LinkContacts = AttachExistingContacts(unSavedEntity.LinkContacts, existing?.LinkContacts);
+
+        return returnItem;
+    }
+
+   private ICollection<HolidaySchedule> AttachExistingHolidaySchedule(ICollection<HolidaySchedule>? unSavedEntities, ICollection<HolidaySchedule>? existing)
+    {
+        var returnList = new List<HolidaySchedule>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        existing ??= _context.HolidaySchedules.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = unSavedEntities.ElementAt(i);
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+            returnList.Add(savedItem ?? unSavedItem);
+        }
+
+        return returnList;
+    }
+
+    private ICollection<RegularSchedule> AttachExistingRegularSchedule(ICollection<RegularSchedule>? unSavedEntities, ICollection<RegularSchedule>? existing)
+    {
+        var returnList = new List<RegularSchedule>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        existing ??= _context.RegularSchedules.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = unSavedEntities.ElementAt(i);
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+            returnList.Add(savedItem ?? unSavedItem);
+        }
+
+        return returnList;
+    }
+
+    private ICollection<PhysicalAddress> AttachExistingPhysicalAddress(ICollection<PhysicalAddress>? unSavedEntities, ICollection<PhysicalAddress>? existing)
+    {
+        var returnList = new List<PhysicalAddress>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        existing ??= _context.PhysicalAddresses.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = unSavedEntities.ElementAt(i);
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+            returnList.Add(savedItem ?? unSavedItem);
+        }
+
+        return returnList;
+    }
+
+    private ICollection<LinkTaxonomy> AttachExistingLinkTaxonomy(ICollection<LinkTaxonomy>? unSavedEntities, ICollection<LinkTaxonomy>? existing)
     {
         var returnList = new List<LinkTaxonomy>();
 

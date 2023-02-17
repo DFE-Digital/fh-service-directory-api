@@ -25,4 +25,5 @@ public class ServiceAtLocation : EntityBase<string>, IAggregateRoot
     public ICollection<HolidaySchedule>? HolidaySchedules { get; set; }
     public ICollection<LinkContact>? LinkContacts { get; set; }
     public string ServiceId { get; set; } = default!;
+    public string LocationId { get; set; } = default!;
 }
