@@ -1,3 +1,5 @@
+import {compareObject} from '../support/basicFunctions';
+
 describe('taxonomies endpoints e2e', () => { 
 
     var parentTaxonomy;
@@ -21,11 +23,11 @@ describe('taxonomies endpoints e2e', () => {
 
   
     it('Get new ParentTaxonomy (GET api/taxonomies?text=name)', () => {
-      cy.request(`api/taxonomies?text=${parentTaxonomy.name}`)
+      cy.request(`api/taxonomies?text=${parentTaxonomy.name}&taxonomyType=NotSet`)
       .then((response) =>{
         expect(response.status).to.eq(200);
         var testObject = response.body.items.find(x=>x.id === parentTaxonomy.id);
-        expect(testObject).to.deep.equal(parentTaxonomy);
+        expect(compareObject(parentTaxonomy, testObject)).to.eq(true);
       })
     })
   
@@ -39,8 +41,8 @@ describe('taxonomies endpoints e2e', () => {
         })
     })
 
-    it('Get new ChildTaxonomy (GET api/taxonomies?text=name)', () => {
-        cy.request(`api/taxonomies?text=${childTaxonomy.name}`)
+    it('Get new ChildTaxonomy (GET api/taxonomies?text=name&taxonomyType=NotSet)', () => {
+        cy.request(`api/taxonomies?text=${childTaxonomy.name}&taxonomyType=NotSet`)
         .then((response) =>{
             expect(response.status).to.eq(200);
             var testObject = response.body.items.find(x=>x.id === childTaxonomy.id);
@@ -56,8 +58,8 @@ describe('taxonomies endpoints e2e', () => {
         })
     })
 
-    it('Get updated ChildTaxonomy (GET api/taxonomies?text=name)', () => {
-        cy.request(`api/taxonomies?text=${childTaxonomy.name}`)
+    it('Get updated ChildTaxonomy (GET api/taxonomies?text=name&taxonomyType=NotSet)', () => {
+        cy.request(`api/taxonomies?text=${childTaxonomy.name}&taxonomyType=NotSet`)
         .then((response) =>{
             expect(response.status).to.eq(200);
             var testObject = response.body.items.find(x=>x.id === childTaxonomy.id);

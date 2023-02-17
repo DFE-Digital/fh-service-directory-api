@@ -19,20 +19,22 @@ Cypress.Commands.add('createTestServiceJson', (name, organisationId, removeOptio
   cy.fixture('service').then(service=>{
 
       service.id = createUUID();
-      service.openReferralOrganisationId = organisationId;
+      service.organisationId = organisationId;
       service.name = name + service.id;
-      service.serviceDelivery[0].id = createUUID();
+      service.serviceDeliveries[0].id = createUUID();
       service.eligibilities[0].id = createUUID();
-      service.contacts[0].id = createUUID();
-      service.contacts[0].phones[0].id = createUUID();
-      service.cost_options[0].id = createUUID();
+
+      service.costOptions[0].id = createUUID();
       service.languages[0].id = createUUID();
-      service.service_areas[0].id = createUUID();
-      service.service_at_locations[0].id = createUUID();
-      service.service_at_locations[0].location.id = createUUID();
-      service.service_at_locations[0].location.physical_addresses[0].id = createUUID();
-      service.service_at_locations[0].regular_schedule[0].id = createUUID();
-      service.service_taxonomys = null; // Needs to be set based on value in db
+      service.serviceAreas[0].id = createUUID();
+      service.serviceAtLocations[0].id = createUUID();
+      service.serviceAtLocations[0].location.id = createUUID();
+      service.serviceAtLocations[0].location.physicalAddresses[0].id = createUUID();
+      service.serviceAtLocations[0].regularSchedules[0].id = createUUID();
+      service.serviceAtLocations[0].linkContacts[0].id = createUUID();
+      service.serviceAtLocations[0].linkContacts[0].linkId = service.serviceAtLocations[0].id;
+      service.serviceAtLocations[0].linkContacts[0].contact.id = createUUID();
+      service.serviceTaxonomies = null; // Needs to be set based on value in db
       return service;
 
   })
@@ -48,7 +50,7 @@ Cypress.Commands.add('insertTestService', (service) => {
 
 Cypress.Commands.add('getTestTaxonomy', (searchFor) => {
   // This will retrieve a test taxonomy if it exists or create and return it if it doesn't
-  cy.request('GET','api/taxonomies?text=childTaxonomyForServicesTest')
+  cy.request('GET','api/taxonomies?text=childTaxonomyForServicesTest&taxonomyType=NotSet')
     .then((response) =>{ 
       expect(response.status).to.eq(200); 
 
@@ -57,12 +59,12 @@ Cypress.Commands.add('getTestTaxonomy', (searchFor) => {
         var parentTaxonomy = {
           "id" : createUUID(),
           "name" : "parenttaxonomyForServicesTest",
-          "vocabulary":"parenttaxonomyForServicesTest"
+          "taxonomyType":1
         };
         var childTaxonomy = {
           "id" : createUUID(),
           "name" : "childTaxonomyForServicesTest",
-          "vocabulary":"childTaxonomyForServicesTest",
+          "taxonomyType":1,
           "parent":parentTaxonomy.id
         };
 
@@ -82,48 +84,6 @@ Cypress.Commands.add('getTestTaxonomy', (searchFor) => {
       }
       return response.body.items[0];
     }) 
-})
-
-Cypress.Commands.add('compareServiceObject', (expected, actual) => {
-  expect(actual.id).to.eq(expected.id); 
-  expect(actual.serviceType).to.deep.equal(expected.serviceType);
-  expect(actual.name).to.eq(expected.name);
-  expect(actual.openReferralOrganisationId).to.eq(expected.openReferralOrganisationId);
-  expect(actual.description).to.eq(expected.description);
-  expect(actual.accreditations).to.eq(expected.accreditations);
-  expect(actual.assured_date).to.eq(expected.assured_date);
-  expect(actual.attending_access).to.eq(expected.attending_access);
-  expect(actual.attending_type).to.eq(expected.attending_type);
-  expect(actual.deliverable_type).to.eq(expected.deliverable_type);
-  expect(actual.status).to.eq(expected.status);
-  
-  expect(actual.url).to.eq(expected.url);
-  expect(actual.email).to.eq(expected.email);
-  expect(actual.fees).to.eq(expected.fees);
-  expect(actual.distance).to.eq(expected.distance);
-  expect(actual.canFamilyChooseDeliveryLocation).to.eq(expected.canFamilyChooseDeliveryLocation);
-  if(expected.serviceDelivery!=null || expected.serviceDelivery!=undefined){
-    expect(actual.serviceDelivery).to.deep.equal(expected.serviceDelivery);
-  }
-  if(expected.eligibilities!=null || expected.eligibilities!=undefined){
-    expect(actual.eligibilities).to.deep.equal(expected.eligibilities);
-  }
-  if(expected.contacts!=null || expected.contacts!=undefined){
-    expect(actual.contacts).to.deep.equal(expected.contacts);
-  }
-  if(expected.cost_options!=null || expected.cost_options!=undefined){
-    expect(actual.cost_options).to.deep.equal(expected.cost_options);
-  }
-  if(expected.languages!=null || expected.languages!=undefined){
-    expect(actual.languages).to.deep.equal(expected.languages);
-  }
-  cy.compareServiceAtLocationArray(expected.service_at_locations, actual.service_at_locations);
-
-  if(expected.service_taxonomys!=null || expected.service_taxonomys!=undefined){
-    expect(actual.service_taxonomys[0].id).to.deep.equal(expected.service_taxonomys[0].id);
-  }
-
-  expect(actual.status).to.eq(expected.status);
 })
 
 Cypress.Commands.add('compareServiceAtLocationArray', (expected, actual) => {
@@ -160,7 +120,7 @@ Cypress.Commands.add('createTaxonomyJson', (parent) => {
 
     taxonomy.id = createUUID();
     taxonomy.name += taxonomy.id;
-    taxonomy.vocabulary += taxonomy.id;
+    taxonomy.taxonomyType = 1;
     if(parent != null || parent != undefined){
       taxonomy.parent = parent;
     }

@@ -1,4 +1,6 @@
+import {compareObject} from '../support/basicFunctions';
 import {createUUID} from '../support/basicFunctions'
+
 describe('Create service with minimum data then query to return it', () => {
 
     var organisation;
@@ -44,7 +46,7 @@ describe('Create service with minimum data then query to return it', () => {
         expect(response.status).to.eq(200);
         
         var testObject = response.body.items.find(x=>x.id === service.id);
-        cy.compareServiceObject(service, testObject);
+        expect(compareObject(service, testObject)).to.eq(true);
         })
     })
 
@@ -73,7 +75,7 @@ describe('Service endpoints end to end test', () => {
         cy.createTestServiceJson('Test Get Services', organisation.id , true).then((serviceJson) =>{
             
             cy.getTestTaxonomy().then((taxonomy) =>{
-                serviceJson.service_taxonomys = [
+                serviceJson.serviceTaxonomies = [
                     {
                         "id":createUUID(),
                         "taxonomy" : taxonomy, 
@@ -94,7 +96,7 @@ describe('Service endpoints end to end test', () => {
         expect(response.status).to.eq(200);
         
         var testObject = response.body;
-        cy.compareServiceObject(service, testObject);
+        expect(compareObject(service, testObject)).to.eq(true);
         })
     })
 
@@ -105,7 +107,7 @@ describe('Service endpoints end to end test', () => {
         expect(response.status).to.eq(200);
         
         var testObject = response.body.items.find(x=>x.id === service.id);
-        cy.compareServiceObject(service, testObject);
+        expect(compareObject(service, testObject)).to.eq(true);
         })
     })
 
@@ -116,7 +118,7 @@ describe('Service endpoints end to end test', () => {
         expect(response.status).to.eq(200);
         
         var testObject = response.body.find(x=>x.id === service.id);
-        cy.compareServiceObject(service, testObject);
+        expect(compareObject(service, testObject)).to.eq(true);
         })
     })
 
@@ -124,9 +126,9 @@ describe('Service endpoints end to end test', () => {
 
         service.name += 'updated';
         service.description += 'updated';
-        service.contacts[0].name += 'updated';
-        service.contacts[0].phones[0].number= '01234 56789';
-        service.service_at_locations[0].name += 'updated';
+        service.serviceAtLocations[0].linkContacts[0].contact.name += 'updated';
+        service.serviceAtLocations[0].linkContacts[0].contact.telephone= '01234 56789';
+        service.serviceAtLocations[0].location.name += 'updated';
 
         cy.request('PUT',`api/services/${service.id}`, service)
             .then((response) =>{ 
@@ -142,7 +144,7 @@ describe('Service endpoints end to end test', () => {
         expect(response.status).to.eq(200);
         
         var testObject = response.body;
-        cy.compareServiceObject(service, testObject);
+        expect(compareObject(service, testObject)).to.eq(true);
         })
     })
 

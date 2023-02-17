@@ -5,66 +5,54 @@
       "name": "Information Sharing",
       "description": ""
     },
+    "organisationId": "string",
     "name": "string",
-    "openReferralOrganisationId": "string",
     "description": "test description",
     "accreditations": null,
-    "assured_date": null,
-    "attending_access": null,
-    "attending_type": null,
-    "deliverable_type": null,
+    "assuredDate": null,
+    "attendingAccess": null,
+    "attendingType": null,
+    "deliverableType": null,
     "status": "active",
-    "url": "https://directory.salford.gov.uk/kb5/salford/directory/service.page?id=B3Z2uCshOk4&localofferchannel=2_8",
     "email": null,
     "fees": null,
     "distance": null,
     "canFamilyChooseDeliveryLocation": false,
-    "serviceDelivery": [
+    "serviceDeliveries": [
       {
-        "serviceDelivery": 1
+        "name": 1
       }
     ],
     "eligibilities": [
       {
-        "eligibility": "Children",
-        "maximum_age": 16,
-        "minimum_age": 8
+        "eligibilityDescription": "Children",
+        "maximumAge": 16,
+        "minimumAge": 8
       }
     ],
-    "contacts": [
+    "costOptions": [
       {
-        "title": "Mr",
-        "name": "Robert Walpole",
-        "phones": [
-          {
-            "number": "01676 01745"
-          }
-        ]
-      }
-    ],
-    "cost_options": [
-      {
-        "amount_description": "Session",
+        "amountDescription": "Session",
         "amount": 45,
         "linkId": null,
         "option": null,
-        "valid_from": null,
-        "valid_to": null
+        "validFrom": null,
+        "validTo": null
       }
     ],
     "languages": [
       {
-        "language": "English"
+        "name": "English"
       }
     ],
-    "service_areas": [
+    "serviceAreas": [
       {
-        "service_area": "Local",
+        "serviceAreaDescription": "Local",
         "extent": null,
         "uri": "http://statistics.data.gov.uk/id/statistical-geography/K02000001"
       }
     ],
-    "service_at_locations": [
+    "serviceAtLocations": [
       {
         "location": {
           "name": "Ordsall Neighbourhood Centre",
@@ -72,35 +60,51 @@
           "latitude": 53.474103227856105,
           "longitude": -2.2721559641660787,
           "distance": null,
-          "physical_addresses": [
+          "physicalAddresses": [
             {
-              "address_1": "2, Robert Hall Street",
+              "address1": "2, Robert Hall Street",
               "city": "Ordsall",
-              "postal_code": "M5 3LT",
+              "postCode": "M5 3LT",
               "country": "United Kingdom",
-              "state_province": "Salford"
+              "stateProvince": "Salford"
             }
           ],
           "linkTaxonomies": []
         },
-        "regular_schedule": [
+        "regularSchedules": [
           {
             "description": "",
-            "opens_at": null,
-            "closes_at": null,
-            "byday": "Friday 1.30pm - 2.30pm",
-            "bymonthday": null,
-            "dtstart": "1.30pm - 2.30pm",
+            "opensAt": null,
+            "closesAt": null,
+            "byDay": "Friday 1.30pm - 2.30pm",
+            "byMonthDay": null,
+            "dtStart": "1.30pm - 2.30pm",
             "freq": "Every Friday",
             "interval": null,
-            "valid_from": null,
-            "valid_to": null
+            "validFrom": null,
+            "validTo": null
           }
         ],
-        "holidayScheduleCollection": []
+        "holidayScheduleCollection": [],
+        "linkContacts": [
+          {
+            "id": "string",
+            "linkType": "ServiceAtLocation",
+            "linkId": "string",
+            "contact": {
+              "id": "string",
+              "title": "",
+              "name": "Robert Walpole",
+              "telephone": "01676 01745",
+              "textPhone": "01676 01745",
+              "url": "www.gov.uk",
+              "email": "help@gov.uk"
+            }
+          }
+        ]
       }
     ],
-    "service_taxonomys": [],
+    "serviceTaxonomies": [],
     "regularSchedules": [],
     "holidaySchedules": []
 }
