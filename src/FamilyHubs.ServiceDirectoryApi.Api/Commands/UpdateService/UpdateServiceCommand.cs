@@ -1,6 +1,5 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
-using FamilyHubs.ServiceDirectory.Core;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -27,7 +26,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
     private readonly ApplicationDbContext _context;
     private readonly ILogger<UpdateServiceCommandHandler> _logger;
     private readonly IMapper _mapper;
-    private UpdateServiceCommand _request = default!;
 
     public UpdateServiceCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<UpdateServiceCommandHandler> logger)
     {
@@ -39,47 +37,8 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
     public async Task<string> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
-        _request = request;
 
-        var entity = await _context.Services
-            .Include(x => x.ServiceType)
-            .Include(x => x.ServiceDeliveries)
-            .Include(x => x.Eligibilities)
-            .Include(x => x.CostOptions)
-            .Include(x => x.Fundings)
-            .Include(x => x.Languages)
-            .Include(x => x.ServiceAreas)
-            .Include(x => x.RegularSchedules)
-            .Include(x => x.HolidaySchedules)
-            .Include(x => x.LinkContacts)
-            .ThenInclude(x => x.Contact)
-            .Include(x => x.ServiceTaxonomies)
-            .ThenInclude(x => x.Taxonomy)
-
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.RegularSchedules)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.HolidaySchedules)
-
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.LinkContacts!)
-            .ThenInclude(x => x.Contact)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.PhysicalAddresses)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.LinkContacts!)
-            .ThenInclude(x => x.Contact)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
-            .ThenInclude(x => x.Taxonomy)
-            .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
+        var entity = await _context.Services.FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {
@@ -105,16 +64,16 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             entity.Status = serviceEntity.Status;
             entity.Fees = serviceEntity.Fees;
 
-            UpdateEligibility(entity.Eligibilities, request.Service.Eligibilities);
-            UpdateServiceArea(entity.ServiceAreas, request.Service.ServiceAreas);
-            UpdateServiceDelivery(entity.ServiceDeliveries, request.Service.ServiceDeliveries);
-            UpdateContacts(entity.LinkContacts, request.Service.LinkContacts, entity.Id);
-            UpdateLanguages(entity.Languages, request.Service.Languages);
-            UpdateServiceAtLocation(entity.ServiceAtLocations, request.Service.ServiceAtLocations);
-            UpdateTaxonomies(entity.ServiceTaxonomies, request.Service.ServiceTaxonomies);
-            UpdateCostOptions(entity.CostOptions, request.Service.CostOptions);
-            UpdateRegularSchedule(entity.RegularSchedules, request.Service.RegularSchedules, entity.Id, string.Empty);
-            UpdateHolidaySchedule(entity.HolidaySchedules, request.Service.HolidaySchedules, entity.Id, string.Empty);
+            entity.Eligibilities = AttachExistingEligibility(request.Service.Eligibilities);
+            entity.ServiceAreas = AttachExistingServiceArea(request.Service.ServiceAreas);
+            entity.ServiceDeliveries = AttachExistingServiceDelivery(request.Service.ServiceDeliveries);
+            entity.LinkContacts = AttachExistingContacts(request.Service.LinkContacts, entity.Id, null, null);
+            entity.Languages = AttachExistingLanguages(request.Service.Languages);
+            entity.ServiceAtLocations = AttachExistingServiceAtLocation(request.Service.ServiceAtLocations);
+            entity.ServiceTaxonomies = AttachExistingServiceTaxonomies(request.Service.ServiceTaxonomies);
+            entity.CostOptions = AttachExistingCostOptions(request.Service.CostOptions);
+            entity.RegularSchedules = AttachExistingRegularSchedule(request.Service.RegularSchedules, entity.Id, null);
+            entity.HolidaySchedules = AttachExistingHolidaySchedule(request.Service.HolidaySchedules, entity.Id, null);
 
             await _context.SaveChangesAsync(cancellationToken);
         }
@@ -127,445 +86,426 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         return entity.Id;
     }
 
-    private void UpdateEligibility(ICollection<Eligibility> existing, ICollection<EligibilityDto>? updated)
+    private ICollection<Eligibility> AttachExistingEligibility(ICollection<EligibilityDto>? unSavedEntities)
     {
-        if (updated is null || !updated.Any())
-            return;
+        var returnList = new List<Eligibility>();
 
-        var currentIds = new List<string>();
-        foreach (var updatedEligibility in updated)
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.Eligibilities.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
         {
-            var current = existing.FirstOrDefault(x => x.Id == updatedEligibility.Id);
-            if (current == null)
+            var unSavedItem = unSavedEntities.ElementAt(i);
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+
+            if (savedItem is not null)
             {
-                var entity = _mapper.Map<Eligibility>(updatedEligibility);
-                entity.ServiceId = _request.Service.Id;
-                _context.Eligibilities.Add(entity);
-                currentIds.Add(entity.Id);
+                savedItem.EligibilityDescription = unSavedItem.EligibilityDescription;
+                savedItem.MaximumAge = unSavedItem.MaximumAge;
+                savedItem.MinimumAge = unSavedItem.MinimumAge;
             }
-            else
-            {
-                currentIds.Add(updatedEligibility.Id);
-                current.EligibilityDescription = updatedEligibility.EligibilityDescription;
-                current.MaximumAge = updatedEligibility.MaximumAge;
-                current.MinimumAge = updatedEligibility.MinimumAge;
-                currentIds.Add(current.Id);
-            }
+
+            returnList.Add(savedItem ?? _mapper.Map<Eligibility>(unSavedItem));
         }
 
-        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
-        if (dataToDelete.Any())
-            _context.Eligibilities.RemoveRange(dataToDelete);
+        return returnList;
     }
 
-    private void UpdateServiceAtLocation(ICollection<ServiceAtLocation> existing, ICollection<ServiceAtLocationDto>? updated)
+    private ICollection<ServiceDelivery> AttachExistingServiceDelivery(ICollection<ServiceDeliveryDto>? unSavedEntities)
     {
-        if (updated is null || !updated.Any())
-            return;
+        var returnList = new List<ServiceDelivery>();
 
-        var currentIds = new List<string>();
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
 
-        foreach (var updatedServiceLoc in updated)
+        var existing = _context.ServiceDeliveries.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
         {
-            var current = existing.FirstOrDefault(x => x.Id == updatedServiceLoc.Id);
-            if (current == null)
+            var unSavedItem = unSavedEntities.ElementAt(i);
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+
+            if (savedItem is not null)
             {
-                var entity = _mapper.Map<ServiceAtLocation>(updatedServiceLoc);
-                entity.ServiceId = _request.Service.Id;
-                entity.HolidaySchedules?.Clear();
-                entity.RegularSchedules?.Clear();
-                entity.LinkContacts?.Clear();
-
-                entity.Location.LinkContacts?.Clear();
-                entity.Location.AccessibilityForDisabilities?.Clear();
-                entity.Location.LinkTaxonomies?.Clear();
-                entity.Location.PhysicalAddresses?.Clear();
-
-                UpdateServiceAtLocationChildEntities(entity, updatedServiceLoc);
-
-                _context.ServiceAtLocations.Add(entity);
-                currentIds.Add(entity.Id);
+                savedItem.Name = unSavedItem.Name;
             }
-            else
-            {
-                current.Location.Name = updatedServiceLoc.Location.Name;
-                current.Location.Description = updatedServiceLoc.Location.Description;
-                current.Location.Latitude = updatedServiceLoc.Location.Latitude;
-                current.Location.Longitude = updatedServiceLoc.Location.Longitude;
 
-                UpdateServiceAtLocationChildEntities(current, updatedServiceLoc);
-
-                currentIds.Add(current.Id);
-            }
+            returnList.Add(savedItem ?? _mapper.Map<ServiceDelivery>(unSavedItem));
         }
 
-        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
-        if (dataToDelete.Any())
-            _context.ServiceAtLocations.RemoveRange(dataToDelete);
+        return returnList;
     }
 
-    private void UpdateServiceAtLocationChildEntities(ServiceAtLocation existing, ServiceAtLocationDto updated)
+    private ICollection<Language> AttachExistingLanguages(ICollection<LanguageDto>? unSavedEntities)
+    {
+        var returnList = new List<Language>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.Languages.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = unSavedEntities.ElementAt(i);
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+            
+            if (savedItem is not null)
+            {
+                savedItem.Name = unSavedItem.Name;
+            }
+
+            returnList.Add(savedItem ?? _mapper.Map<Language>(unSavedItem));
+        }
+
+        return returnList;
+    }
+
+    private ICollection<CostOption> AttachExistingCostOptions(ICollection<CostOptionDto>? unSavedEntities)
+    {
+        var returnList = new List<CostOption>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.CostOptions.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = unSavedEntities.ElementAt(i);
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+            
+            if (savedItem is not null)
+            {
+                savedItem.Amount = unSavedItem.Amount;
+                savedItem.AmountDescription = unSavedItem.AmountDescription;
+                savedItem.Option = unSavedItem.Option;
+                savedItem.ValidFrom = unSavedItem.ValidFrom;
+                savedItem.ValidTo = unSavedItem.ValidTo;
+            }
+
+            returnList.Add(savedItem ?? _mapper.Map<CostOption>(unSavedItem));
+        }
+
+        return returnList;
+    }
+
+    private ICollection<ServiceArea> AttachExistingServiceArea(ICollection<ServiceAreaDto>? unSavedEntities)
+    {
+        var returnList = new List<ServiceArea>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.ServiceAreas.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = unSavedEntities.ElementAt(i);
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+
+            if (savedItem is not null)
+            {
+                savedItem.Extent = unSavedItem.Extent;
+                savedItem.ServiceAreaDescription = unSavedItem.ServiceAreaDescription;
+                savedItem.Uri = unSavedItem.Uri;
+            }
+
+            returnList.Add(savedItem ?? _mapper.Map<ServiceArea>(unSavedItem));
+        }
+
+        return returnList;
+    }
+
+    private ICollection<ServiceTaxonomy> AttachExistingServiceTaxonomies(ICollection<ServiceTaxonomyDto>? unSavedEntities)
+    {
+        var returnList = new List<ServiceTaxonomy>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.ServiceTaxonomies
+            .Include(t => t.Taxonomy)
+            .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        var newIds = unSavedEntities.Where(c => c.Taxonomy != null).Select(c => c.Taxonomy!.Id).ToList();
+        var existingChilds = _context.Taxonomies.Where(x => newIds.Contains(x.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = unSavedEntities.ElementAt(i);
+
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+
+            var itemToSave = savedItem ?? _mapper.Map<ServiceTaxonomy>(unSavedItem);
+
+            if (itemToSave.Taxonomy != null)
+            {
+                var existingTaxonomy = existing.Select(t => t.Taxonomy).SingleOrDefault(t => t!.Id == itemToSave.Taxonomy.Id)
+                                       ?? existingChilds.SingleOrDefault(t => t.Id == itemToSave.Taxonomy.Id);
+                if (existingTaxonomy is not null)
+                {
+                    itemToSave.Taxonomy = existingTaxonomy;
+                }
+            }
+
+            returnList.Add(itemToSave);
+        }
+
+        return returnList;
+    }
+
+    private ICollection<ServiceAtLocation> AttachExistingServiceAtLocation(ICollection<ServiceAtLocationDto>? unSavedEntities)
+    {
+        var returnList = new List<ServiceAtLocation>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.ServiceAtLocations
+            .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = unSavedEntities.ElementAt(i);
+
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+
+            returnList.Add(AttachExistingServiceAtLocationChildEntities(unSavedItem, savedItem));
+        }
+
+        return returnList;
+    }
+
+    private ServiceAtLocation AttachExistingServiceAtLocationChildEntities(ServiceAtLocationDto unSavedEntity, ServiceAtLocation? savedItem)
     {
         //Update Service at Location Level data
-        UpdateContacts(existing.LinkContacts ?? new List<LinkContact>(), updated.LinkContacts, existing.Id);
+        var returnItem = savedItem ?? _mapper.Map<ServiceAtLocation>(unSavedEntity);
+        returnItem.RegularSchedules = AttachExistingRegularSchedule(unSavedEntity.RegularSchedules, null, unSavedEntity.Id);
+        returnItem.HolidaySchedules = AttachExistingHolidaySchedule(unSavedEntity.HolidaySchedules, null, unSavedEntity.Id);
+        returnItem.LinkContacts = AttachExistingContacts(unSavedEntity.LinkContacts, null, unSavedEntity.Id, null);
+        returnItem.Location = AttachExistingLocation(unSavedEntity.Location);
+        returnItem.LocationId = returnItem.Location.Id;
 
-        UpdateRegularSchedule(existing.RegularSchedules ?? new List<RegularSchedule>(), updated.RegularSchedules, string.Empty, existing.Id);
-
-        UpdateHolidaySchedule(existing.HolidaySchedules ?? new List<HolidaySchedule>(), updated.HolidaySchedules, string.Empty, existing.Id);
-
-        //Update Location Level Data
-        UpdatePhysicalAddress(existing.Location.PhysicalAddresses ?? new List<PhysicalAddress>(), updated.Location.PhysicalAddresses, existing.Location);
-
-        UpdateLinkTaxonomy(existing.Location.LinkTaxonomies ?? new List<LinkTaxonomy>(), updated.Location.LinkTaxonomies, existing.Location);
-
-        UpdateContacts(existing.Location.LinkContacts ?? new List<LinkContact>(), updated.Location.LinkContacts, existing.Location.Id);
+        return returnItem;
     }
 
-    private void UpdatePhysicalAddress(ICollection<PhysicalAddress> existing, ICollection<PhysicalAddressDto>? updated, Location parentLocation)
+    private Location AttachExistingLocation(LocationDto unSavedEntity)
     {
-        if (updated is null || !updated.Any())
-            return;
-
-        var currentIds = new List<string>();
-
-        foreach (var address in updated)
+        var savedItem = _context.Locations.SingleOrDefault(e => e.Id == unSavedEntity.Id || (!string.IsNullOrWhiteSpace(e.Name) && !string.IsNullOrWhiteSpace(unSavedEntity.Name) && e.Name == unSavedEntity.Name));
+        
+        if (savedItem is not null)
         {
-            var current = existing.FirstOrDefault(x => x.Id == address.Id);
-            if (current == null)
-            {
-                var entity = _mapper.Map<PhysicalAddress>(address);
-                entity.LocationId = parentLocation.Id;
-                _context.PhysicalAddresses.Add(entity);
-                currentIds.Add(entity.Id);
-            }
-            else
-            {
-                current.LocationId = parentLocation.Id;
-                current.Address1 = address.Address1;
-                current.City = address.City;
-                current.PostCode = address.PostCode;
-                current.Country = address.Country;
-                current.StateProvince = address.StateProvince;
-                currentIds.Add(current.Id);
-            }
+            savedItem.Name = unSavedEntity.Name;
+            savedItem.Description = unSavedEntity.Description;
+            savedItem.Latitude = unSavedEntity.Latitude;
+            savedItem.Longitude = unSavedEntity.Longitude;
         }
 
-        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
-        if (dataToDelete.Any())
-            _context.PhysicalAddresses.RemoveRange(dataToDelete);
+        var returnItem = savedItem ?? _mapper.Map<Location>(unSavedEntity);
+
+        returnItem.PhysicalAddresses = AttachExistingPhysicalAddress(unSavedEntity.PhysicalAddresses, unSavedEntity.Id);
+
+        returnItem.LinkTaxonomies = AttachExistingLinkTaxonomy(unSavedEntity.LinkTaxonomies, null, unSavedEntity.Id, null);
+
+        returnItem.LinkContacts = AttachExistingContacts(unSavedEntity.LinkContacts, null, null, unSavedEntity.Id);
+
+        return returnItem;
     }
 
-    private void UpdateLinkTaxonomy(ICollection<LinkTaxonomy> existing, ICollection<LinkTaxonomyDto>? updated, Location parentLocation)
+    private ICollection<HolidaySchedule> AttachExistingHolidaySchedule(ICollection<HolidayScheduleDto>? unSavedEntities, string? serviceId, string? serviceAtLocationId)
     {
-        if (updated is null || !updated.Any())
-            return;
+        var returnList = new List<HolidaySchedule>();
 
-        var currentIds = new List<string>();
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
 
-        foreach (var updatedLinkTaxonomy in updated)
+        var existing = _context.HolidaySchedules.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
         {
-            var existingLinkTaxonomy = existing.SingleOrDefault(p => p.Id == updatedLinkTaxonomy.Id);
-            var taxonomy = _context.Taxonomies.FirstOrDefault(t => updatedLinkTaxonomy.Taxonomy != null && t.Id == updatedLinkTaxonomy.Taxonomy.Id);
+            var unSavedItem = _mapper.Map<HolidaySchedule>(unSavedEntities.ElementAt(i));
+            unSavedItem.ServiceId = serviceId!;
+            unSavedItem.ServiceAtLocationId = serviceAtLocationId!;
 
-            if (existingLinkTaxonomy == null)
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+
+            if (savedItem is not null)
             {
-                var newLinkTaxonomy = _mapper.Map<LinkTaxonomy>(updatedLinkTaxonomy);
-                newLinkTaxonomy.LinkId = parentLocation.Id;
+                savedItem.Closed = unSavedItem.Closed;
+                savedItem.OpensAt = unSavedItem.OpensAt;
+                savedItem.ClosesAt = unSavedItem.ClosesAt;
+                savedItem.EndDate = unSavedItem.EndDate;
+                savedItem.StartDate = unSavedItem.StartDate;
+            }
 
-                if (updatedLinkTaxonomy.Taxonomy != null && newLinkTaxonomy.Taxonomy != null
-                    && updatedLinkTaxonomy.Taxonomy.Id != newLinkTaxonomy.Taxonomy.Id)
+            returnList.Add(savedItem ?? unSavedItem);
+        }
+
+        return returnList;
+    }
+
+    private ICollection<RegularSchedule> AttachExistingRegularSchedule(ICollection<RegularScheduleDto>? unSavedEntities, string? serviceId, string? serviceAtLocationId)
+    {
+        var returnList = new List<RegularSchedule>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.RegularSchedules.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = _mapper.Map<RegularSchedule>(unSavedEntities.ElementAt(i));
+            unSavedItem.ServiceId = serviceId!;
+            unSavedItem.ServiceAtLocationId = serviceAtLocationId!;
+
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+            
+            if (savedItem is not null)
+            {
+                savedItem.ByDay = unSavedItem.ByDay;
+                savedItem.ByMonthDay = unSavedItem.ByMonthDay;
+                savedItem.Description = unSavedItem.Description;
+                savedItem.OpensAt = unSavedItem.OpensAt;
+                savedItem.ClosesAt = unSavedItem.ClosesAt;
+                savedItem.DtStart = unSavedItem.DtStart;
+                savedItem.Freq = unSavedItem.Freq;
+                savedItem.Interval = unSavedItem.Interval;
+                savedItem.ValidFrom = unSavedItem.ValidFrom;
+                savedItem.ValidTo = unSavedItem.ValidTo;
+            }
+
+            returnList.Add(savedItem ?? unSavedItem);
+        }
+
+        return returnList;
+    }
+
+    private ICollection<PhysicalAddress> AttachExistingPhysicalAddress(ICollection<PhysicalAddressDto>? unSavedEntities, string locationId)
+    {
+        var returnList = new List<PhysicalAddress>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.PhysicalAddresses.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = _mapper.Map<PhysicalAddress>(unSavedEntities.ElementAt(i));
+            unSavedItem.LocationId = locationId;
+
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+            
+            if (savedItem is not null)
+            {
+                savedItem.Address1 = unSavedItem.Address1;
+                savedItem.City = unSavedItem.City;
+                savedItem.Country = unSavedItem.Country;
+                savedItem.StateProvince = unSavedItem.StateProvince;
+                savedItem.PostCode = unSavedItem.PostCode;
+            }
+
+            returnList.Add(savedItem ?? unSavedItem);
+        }
+
+        return returnList;
+    }
+
+    private ICollection<LinkTaxonomy> AttachExistingLinkTaxonomy(ICollection<LinkTaxonomyDto>? unSavedEntities, string? serviceId, string? serviceAtLocationId, string? locationId)
+    {
+        var returnList = new List<LinkTaxonomy>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.LinkTaxonomies
+            .Include(t => t.Taxonomy)
+            .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        var newIds = unSavedEntities.Where(c => c.Taxonomy != null).Select(c => c.Taxonomy!.Id).ToList();
+        var existingChilds = _context.Taxonomies.Where(x => newIds.Contains(x.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+
+            var unSavedItem = _mapper.Map<LinkTaxonomy>(unSavedEntities.ElementAt(i));
+
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+
+            var itemToSave = savedItem ?? _mapper.Map<LinkTaxonomy>(unSavedItem);
+            var linkId = serviceId ?? serviceAtLocationId ?? locationId;
+            ArgumentException.ThrowIfNullOrEmpty(linkId);
+            itemToSave.LinkId = linkId;
+
+            if (itemToSave.Taxonomy != null)
+            {
+                var existingTaxonomy = existing.Select(t => t.Taxonomy).SingleOrDefault(t => t!.Id == itemToSave.Taxonomy.Id)
+                                       ?? existingChilds.SingleOrDefault(t => t.Id == itemToSave.Taxonomy.Id);
+
+                if (existingTaxonomy is not null)
                 {
-                    newLinkTaxonomy.Taxonomy = taxonomy;
+                    itemToSave.Taxonomy = existingTaxonomy;
                 }
-
-                ArgumentNullException.ThrowIfNull(newLinkTaxonomy);
-
-                _context.LinkTaxonomies.Add(newLinkTaxonomy);
-
-                currentIds.Add(newLinkTaxonomy.Id);
             }
-            else
-            {
-                existingLinkTaxonomy.LinkType = updatedLinkTaxonomy.LinkType;
-                existingLinkTaxonomy.LinkId = updatedLinkTaxonomy.LinkId;
 
-                if (updatedLinkTaxonomy.Taxonomy != null && existingLinkTaxonomy.Taxonomy != null
-                    && updatedLinkTaxonomy.Taxonomy.Id != existingLinkTaxonomy.Taxonomy.Id)
+            returnList.Add(itemToSave);
+        }
+
+        return returnList;
+    }
+
+    private ICollection<LinkContact> AttachExistingContacts(ICollection<LinkContactDto>? unSavedEntities, string? serviceId, string? serviceAtLocationId, string? locationId)
+    {
+        var returnList = new List<LinkContact>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.LinkContacts
+            .Include(t => t.Contact)
+            .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        var newIds = unSavedEntities.Select(c => c.Contact.Id).ToList();
+        var existingChilds = _context.Contacts.Where(x => newIds.Contains(x.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = unSavedEntities.ElementAt(i);
+
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+
+            var itemToSave = savedItem ?? _mapper.Map<LinkContact>(unSavedItem);
+            var linkId = serviceId ?? serviceAtLocationId ?? locationId;
+            ArgumentException.ThrowIfNullOrEmpty(linkId);
+            itemToSave.LinkId = linkId;
+
+            if (itemToSave.Contact != null)
+            {
+                var existingContact = existing.Select(t => t.Contact).SingleOrDefault(t => t!.Id == itemToSave.Contact.Id)
+                                      ?? existingChilds.SingleOrDefault(t => t.Id == itemToSave.Contact.Id);
+
+                if (existingContact is not null)
                 {
-                    existingLinkTaxonomy.Taxonomy = taxonomy;
+                    var unsavedContact = unSavedItem.Contact;
+
+                    itemToSave.Contact = existingContact;
+
+                    itemToSave.Contact.Title = unsavedContact.Name;
+                    itemToSave.Contact.Name = unsavedContact.Name;
+                    itemToSave.Contact.Email = unsavedContact.Name;
+                    itemToSave.Contact.Telephone = unsavedContact.Name;
+                    itemToSave.Contact.TextPhone = unsavedContact.Name;
+                    itemToSave.Contact.Url = unsavedContact.Name;
                 }
-
-                currentIds.Add(existingLinkTaxonomy.Id);
             }
+
+            returnList.Add(itemToSave);
         }
 
-        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
-        if (dataToDelete.Any())
-            _context.LinkTaxonomies.RemoveRange(dataToDelete);
-    }
-
-    private void UpdateHolidaySchedule(ICollection<HolidaySchedule> existing, ICollection<HolidayScheduleDto>? updated, string serviceId, string serviceAtLocationId)
-    {
-        if (updated is null || !updated.Any())
-            return;
-
-        var currentIds = new List<string>();
-        foreach (var updatedSchedule in updated)
-        {
-            var current = existing.FirstOrDefault(x => x.Id == updatedSchedule.Id);
-            if (current == null)
-            {
-                var entity = _mapper.Map<HolidaySchedule>(updatedSchedule);
-                entity.ServiceId = serviceId;
-                entity.ServiceAtLocationId = serviceAtLocationId;
-                _context.HolidaySchedules.Add(entity);
-                currentIds.Add(entity.Id);
-            }
-            else
-            {
-                current.Closed = updatedSchedule.Closed;
-                current.ClosesAt = updatedSchedule.ClosesAt;
-                current.StartDate = updatedSchedule.StartDate;
-                current.EndDate = updatedSchedule.EndDate;
-                current.OpensAt = updatedSchedule.OpensAt;
-                currentIds.Add(current.Id);
-            }
-        }
-
-        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
-        if (dataToDelete.Any())
-            _context.HolidaySchedules.RemoveRange(dataToDelete);
-    }
-
-    private void UpdateRegularSchedule(ICollection<RegularSchedule> existing, ICollection<RegularScheduleDto>? updated, string serviceId, string serviceAtLocationId)
-    {
-        if (updated is null || !updated.Any())
-            return;
-
-        var currentIds = new List<string>();
-        foreach (var updatedSchedule in updated)
-        {
-            var current = existing.FirstOrDefault(x => x.Id == updatedSchedule.Id);
-            if (current == null)
-            {
-                var entity = _mapper.Map<RegularSchedule>(updatedSchedule);
-                entity.ServiceId = serviceId;
-                entity.ServiceAtLocationId = serviceAtLocationId;
-                _context.RegularSchedules.Add(entity);
-                currentIds.Add(entity.Id);
-            }
-            else
-            {
-                current.Description = updatedSchedule.Description;
-                current.OpensAt = updatedSchedule.OpensAt;
-                current.ClosesAt = updatedSchedule.ClosesAt;
-                current.ByDay = updatedSchedule.ByDay;
-                current.ByMonthDay = updatedSchedule.ByMonthDay;
-                current.DtStart = updatedSchedule.DtStart;
-                current.Freq = updatedSchedule.Freq;
-                current.Interval = updatedSchedule.Interval;
-                current.ValidFrom = updatedSchedule.ValidFrom;
-                current.ValidTo = updatedSchedule.ValidTo;
-                currentIds.Add(current.Id);
-            }
-        }
-
-        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
-        if (dataToDelete.Any())
-            _context.RegularSchedules.RemoveRange(dataToDelete);
-    }
-
-    private void UpdateServiceArea(ICollection<ServiceArea> existing, ICollection<ServiceAreaDto>? updated)
-    {
-        if (updated is null || !updated.Any())
-            return;
-
-        var currentIds = new List<string>();
-        foreach (var updatedServiceArea in updated)
-        {
-            var current = existing.FirstOrDefault(x => x.Id == updatedServiceArea.Id);
-            if (current == null)
-            {
-                var entity = _mapper.Map<ServiceArea>(updatedServiceArea);
-                entity.ServiceId = _request.Service.Id;
-                _context.ServiceAreas.Add(entity);
-                currentIds.Add(entity.Id);
-            }
-            else
-            {
-                current.ServiceAreaDescription = updatedServiceArea.ServiceAreaDescription;
-                current.Extent = updatedServiceArea.Extent;
-                current.Uri = updatedServiceArea.Uri;
-                currentIds.Add(current.Id);
-            }
-        }
-
-        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
-        if (dataToDelete.Any())
-            _context.ServiceAreas.RemoveRange(dataToDelete);
-    }
-
-    private void UpdateCostOptions(ICollection<CostOption> existing, ICollection<CostOptionDto>? updated)
-    {
-        if (updated is null || !updated.Any())
-            return;
-
-        var currentIds = new List<string>();
-        foreach (var updatedCostOption in updated)
-        {
-            var current = existing.FirstOrDefault(x => x.Id == updatedCostOption.Id);
-            if (current == null)
-            {
-                var entity = _mapper.Map<CostOption>(updatedCostOption);
-                entity.ServiceId = _request.Service.Id;
-                _context.CostOptions.Add(entity);
-                currentIds.Add(entity.Id);
-            }
-            else
-            {
-                current.LinkId = updatedCostOption.LinkId;
-                current.Amount = updatedCostOption.Amount;
-                current.AmountDescription = updatedCostOption.AmountDescription;
-                current.Option = updatedCostOption.Option;
-                current.ValidFrom = updatedCostOption.ValidFrom;
-                current.ValidTo = updatedCostOption.ValidTo;
-                currentIds.Add(current.Id);
-            }
-        }
-
-        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
-        if (dataToDelete.Any())
-            _context.CostOptions.RemoveRange(dataToDelete);
-
-    }
-
-    private void UpdateTaxonomies(ICollection<ServiceTaxonomy> existing, ICollection<ServiceTaxonomyDto>? updated)
-    {
-        if (updated is null || !updated.Any())
-            return;
-
-        var currentIds = new List<string>();
-        foreach (var updatedServiceTaxonomy in updated)
-        {
-            var current = existing.FirstOrDefault(x => x.Id == updatedServiceTaxonomy.Id);
-            if (current == null)
-            {
-                var entity = _mapper.Map<ServiceTaxonomy>(updatedServiceTaxonomy);
-                if (updatedServiceTaxonomy.Taxonomy != null)
-                    entity.Taxonomy = _context.Taxonomies.FirstOrDefault(x => x.Id == updatedServiceTaxonomy.Taxonomy.Id);
-                entity.ServiceId = _request.Service.Id;
-                _context.ServiceTaxonomies.Add(entity);
-                currentIds.Add(entity.Id);
-            }
-            else
-            {
-                currentIds.Add(current.Id);
-            }
-        }
-
-        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
-        if (dataToDelete.Any())
-            _context.ServiceTaxonomies.RemoveRange(dataToDelete);
-    }
-
-    private void UpdateLanguages(ICollection<Language> existing, ICollection<LanguageDto>? updated)
-    {
-        if (updated is null || !updated.Any())
-            return;
-
-        var currentIds = new List<string>();
-        foreach (var updatedLanguage in updated)
-        {
-            var current = existing.FirstOrDefault(x => x.Id == updatedLanguage.Id);
-            if (current == null)
-            {
-                var entity = _mapper.Map<Language>(updatedLanguage);
-                entity.ServiceId = _request.Service.Id;
-                _context.Languages.Add(entity);
-                currentIds.Add(entity.Id);
-            }
-            else
-            {
-                current.Name = updatedLanguage.Name;
-                currentIds.Add(current.Id);
-            }
-        }
-        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
-        if (dataToDelete.Any())
-            _context.Languages.RemoveRange(dataToDelete);
-    }
-
-    private void UpdateContacts(ICollection<LinkContact> existing, ICollection<LinkContactDto>? updated, string parentId)
-    {
-        if (updated is null || !updated.Any())
-            return;
-
-        var currentIds = new List<string>();
-
-        foreach (var updatedContact in updated)
-        {
-            var current = existing.FirstOrDefault(x => x.Id == updatedContact.Id);
-            if (current == null)
-            {
-                var entity = _mapper.Map<LinkContact>(updatedContact);
-                entity.LinkId = parentId;
-
-                if (entity.Contact != null)
-                {
-                    var contact = _context.Contacts.FirstOrDefault(x => x.Id == entity.Contact.Id);
-                    if (contact != null)
-                    {
-                        entity.Contact = contact;
-                    }
-                }
-
-                _context.LinkContacts.Add(entity);
-
-                currentIds.Add(entity.Id);
-            }
-            else if (current.Contact != null)
-            {
-                current.Contact.Title = updatedContact.Contact.Title;
-                current.Contact.Name = updatedContact.Contact.Name;
-                current.Contact.Telephone = updatedContact.Contact.Telephone;
-                current.Contact.TextPhone = updatedContact.Contact.TextPhone;
-                current.Contact.Url = updatedContact.Contact.Url;
-                current.Contact.Email = updatedContact.Contact.Email;
-
-                currentIds.Add(current.Id);
-            }
-        }
-
-        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
-        if (dataToDelete.Any())
-            _context.LinkContacts.RemoveRange(dataToDelete);
-    }
-
-    private void UpdateServiceDelivery(ICollection<ServiceDelivery> existing, ICollection<ServiceDeliveryDto>? updated)
-    {
-        if (updated is null || !updated.Any())
-            return;
-
-        var currentIds = new List<string>();
-        foreach (var updatedServiceDelivery in updated)
-        {
-            var current = existing.FirstOrDefault(x => x.Id == updatedServiceDelivery.Id);
-            if (current == null)
-            {
-                var entity = _mapper.Map<ServiceDelivery>(updatedServiceDelivery);
-                entity.ServiceId = _request.Service.Id;
-                _context.ServiceDeliveries.Add(entity);
-                currentIds.Add(entity.Id);
-            }
-            else
-            {
-                current.Name = updatedServiceDelivery.Name;
-                currentIds.Add(current.Id);
-            }
-        }
-
-        var dataToDelete = existing.Where(a => !currentIds.Contains(a.Id)).ToList();
-        if (dataToDelete.Any())
-            _context.ServiceDeliveries.RemoveRange(dataToDelete);
+        return returnList;
     }
 }
