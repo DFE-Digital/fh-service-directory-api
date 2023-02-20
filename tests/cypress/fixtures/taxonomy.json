@@ -1,6 +1,6 @@
 {
     "id":"",
     "name":"test",
-    "vocabulary":"test",
+    "taxonomyType":1,
     "parent":null
 }
