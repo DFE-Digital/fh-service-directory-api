@@ -1,10 +1,12 @@
-﻿using System.Reflection;
-using FamilyHubs.ServiceDirectory.Core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Core.Interfaces.Infrastructure;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
+using IdGen;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Reflection;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository
 {
@@ -12,12 +14,18 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository
     {
         private readonly IDomainEventDispatcher _dispatcher;
         private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
+        private readonly IIdGenerator<long> _idGenerator;
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,IDomainEventDispatcher dispatcher,AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor) 
+        public ApplicationDbContext(
+            DbContextOptions<ApplicationDbContext> options,
+            IDomainEventDispatcher dispatcher,
+            AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor,
+            IIdGenerator<long> idGenerator) 
         : base(options)
         {
             _dispatcher = dispatcher;
             _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
+            _idGenerator = idGenerator;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -82,4 +90,5 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository
             return SaveChangesAsync().GetAwaiter().GetResult();
         }
     }
+
 }

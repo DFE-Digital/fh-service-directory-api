@@ -1,6 +1,7 @@
 ﻿using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services;
+using IdGen;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -8,6 +9,13 @@ namespace FamilyHubs.ServiceDirectory.Api.Data;
 
 public class DatabaseContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
+    private readonly IIdGenerator<long> _idGenerator;
+
+    public DatabaseContextFactory(IIdGenerator<long> idGenerator)
+    {
+        _idGenerator = idGenerator;
+    }
+
     public ApplicationDbContext CreateDbContext(string[] args)
     {
         var configuration = new ConfigurationBuilder()
@@ -52,7 +60,7 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<ApplicationDbC
                 new DateTimeService());
 
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-        return new ApplicationDbContext(builder.Options, null, auditableEntitySaveChangesInterceptor);
+        return new ApplicationDbContext(builder.Options, null, auditableEntitySaveChangesInterceptor, _idGenerator);
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
     }
 }

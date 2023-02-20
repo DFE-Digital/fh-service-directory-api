@@ -1,6 +1,8 @@
 ﻿using FamilyHubs.ServiceDirectory.Api.Data;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FluentAssertions;
+using IdGen;
+using Moq;
 using Xunit;
 
 namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence;
@@ -11,7 +13,8 @@ public class WhenUsingDatabaseContextFactory
     public void ThenApplicationDbContextIsReturned()
     {
         //Arrange
-        var databaseContextFactory = new DatabaseContextFactory();
+        var mockIdGenerator = new Mock<IIdGenerator<long>>();
+        var databaseContextFactory = new DatabaseContextFactory(mockIdGenerator.Object);
         string[] args = new string[0];
 
         //Act

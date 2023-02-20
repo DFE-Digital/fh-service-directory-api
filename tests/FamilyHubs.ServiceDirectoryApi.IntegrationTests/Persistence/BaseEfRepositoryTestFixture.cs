@@ -2,6 +2,7 @@
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.SharedKernel.Interfaces;
+using IdGen;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -18,10 +19,11 @@ public abstract class BaseEfRepositoryTestFixture
         var mockEventDispatcher = new Mock<IDomainEventDispatcher>();
         var mockDateTime = new Mock<IDateTime>();
         var mockCurrentUserService = new Mock<ICurrentUserService>();
+        var mockIdGenerator = new Mock<IIdGenerator<long>>();
         var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(mockCurrentUserService.Object, mockDateTime.Object);
         
 
-        DbContext = new ApplicationDbContext(options, mockEventDispatcher.Object, auditableEntitySaveChangesInterceptor);
+        DbContext = new ApplicationDbContext(options, mockEventDispatcher.Object, auditableEntitySaveChangesInterceptor, mockIdGenerator.Object);
     }
 
     protected static DbContextOptions<ApplicationDbContext> CreateNewContextOptions()

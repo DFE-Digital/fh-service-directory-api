@@ -12,6 +12,7 @@ using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services;
 using FamilyHubs.SharedKernel.Interfaces;
+using IdGen.DependencyInjection;
 using MediatR;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,6 +49,9 @@ public static class StartupExtensions
 
     public static void RegisterApplicationComponents(this WebApplicationBuilder builder)
     {
+        var generatorId = builder.Configuration.GetValue<int>("GeneratorId");
+        builder.Services.AddIdGen(generatorId);
+
         builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
         {
             containerBuilder.RegisterModule(new DefaultInfrastructureModule(builder.Environment.IsDevelopment()));
