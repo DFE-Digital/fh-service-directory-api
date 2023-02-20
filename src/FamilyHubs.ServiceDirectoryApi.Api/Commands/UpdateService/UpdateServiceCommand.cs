@@ -494,12 +494,12 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
                     itemToSave.Contact = existingContact;
 
-                    itemToSave.Contact.Title = unsavedContact.Name;
+                    itemToSave.Contact.Title = unsavedContact.Title;
                     itemToSave.Contact.Name = unsavedContact.Name;
-                    itemToSave.Contact.Email = unsavedContact.Name;
-                    itemToSave.Contact.Telephone = unsavedContact.Name;
-                    itemToSave.Contact.TextPhone = unsavedContact.Name;
-                    itemToSave.Contact.Url = unsavedContact.Name;
+                    itemToSave.Contact.Email = unsavedContact.Email;
+                    itemToSave.Contact.Telephone = unsavedContact.Telephone;
+                    itemToSave.Contact.TextPhone = unsavedContact.TextPhone;
+                    itemToSave.Contact.Url = unsavedContact.Url;
                 }
             }
 
