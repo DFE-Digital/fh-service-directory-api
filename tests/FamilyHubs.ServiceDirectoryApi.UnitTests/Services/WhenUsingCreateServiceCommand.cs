@@ -154,6 +154,43 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
+    public async Task ThenCreateNewServiceWithExistingLocation()
+    {
+        //Arrange
+        CreateOrganisation();
+
+        var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
+        var existingLocation = TestOrganisation.Services!.ElementAt(0).ServiceAtLocations!.ElementAt(0).Location;
+
+        anotherService.ServiceAtLocations!.Clear();
+        anotherService.ServiceAtLocations!.Add(new ServiceAtLocationDto(Guid.NewGuid().ToString(), existingLocation, null, null, null));
+
+        var command = new CreateServiceCommand(anotherService);
+
+        var handler = new CreateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<CreateServiceCommandHandler>>().Object);
+
+        //Act
+        MockApplicationDbContext.ServiceAtLocations
+            .Where(c => c.LocationId == existingLocation.Id)
+            .ToList().Count.Should().Be(1);
+
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().Be(anotherService.Id);
+
+        MockApplicationDbContext.ServiceAtLocations
+            .Where(c => c.LocationId == existingLocation.Id)
+            .ToList().Count.Should().Be(2);
+
+        var actualEntity = MockApplicationDbContext.Locations.Where(lc => lc.Id == existingLocation.Id).ToList();
+
+        actualEntity.Should().HaveCount(1);
+        actualEntity.ElementAt(0).Id.Should().Be(existingLocation.Id);
+    }
+
+    [Fact]
     public async Task ThenCreateNewServiceWithExistingEligibility()
     {
         //Arrange
