@@ -294,7 +294,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     private Location AttachExistingLocation(LocationDto unSavedEntity)
     {
-        var savedItem = _context.Locations.SingleOrDefault(e => e.Id == unSavedEntity.Id || (!string.IsNullOrWhiteSpace(e.Name) && !string.IsNullOrWhiteSpace(unSavedEntity.Name) && e.Name == unSavedEntity.Name));
+        var savedItem = _context.Locations.FirstOrDefault(e => e.Id == unSavedEntity.Id || (!string.IsNullOrWhiteSpace(e.Name) && !string.IsNullOrWhiteSpace(unSavedEntity.Name) && e.Name == unSavedEntity.Name));
         
         if (savedItem is not null)
         {
