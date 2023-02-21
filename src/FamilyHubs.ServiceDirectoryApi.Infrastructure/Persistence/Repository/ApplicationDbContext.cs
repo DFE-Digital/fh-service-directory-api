@@ -6,7 +6,9 @@ using FamilyHubs.SharedKernel.Interfaces;
 using IdGen;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository
 {
@@ -34,7 +36,17 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+            //modelBuilder.Entity<EntityBase<string>>(entity =>
+            //{
+            //    entity.Property(x => x.Id).HasValueGenerator(GetIdValueGenerator);
+            //});
+
             base.OnModelCreating(modelBuilder);
+        }
+
+        internal IdValueGenerator GetIdValueGenerator(IProperty property, IEntityType entityType)
+        {
+            return new IdValueGenerator(_idGenerator);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

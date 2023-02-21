@@ -19,9 +19,8 @@ public abstract class BaseEfRepositoryTestFixture
         var mockEventDispatcher = new Mock<IDomainEventDispatcher>();
         var mockDateTime = new Mock<IDateTime>();
         var mockCurrentUserService = new Mock<ICurrentUserService>();
-        var mockIdGenerator = new Mock<IIdGenerator<long>>();
         var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(mockCurrentUserService.Object, mockDateTime.Object);
-        
+        var mockIdGenerator = new Mock<IIdGenerator<long>>();
 
         DbContext = new ApplicationDbContext(options, mockEventDispatcher.Object, auditableEntitySaveChangesInterceptor, mockIdGenerator.Object);
     }

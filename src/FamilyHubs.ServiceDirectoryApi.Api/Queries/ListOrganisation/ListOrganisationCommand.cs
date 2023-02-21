@@ -20,6 +20,7 @@ public class ListOrganisationCommandHandler : IRequestHandler<ListOrganisationCo
 
     public async Task<List<OrganisationDto>> Handle(ListOrganisationCommand request, CancellationToken cancellationToken)
     {
+        var orgs = _context.Organisations.ToList();
         var organisations = await _context.Organisations
                             .Join(_context.AdminAreas, org => org.Id, oad => oad.OrganisationId,
                             (org, oad) => new { org, oad }).Select(

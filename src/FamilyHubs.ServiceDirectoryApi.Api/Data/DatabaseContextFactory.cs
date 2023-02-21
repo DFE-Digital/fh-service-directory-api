@@ -1,6 +1,7 @@
 ﻿using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services;
+using FamilyHubs.SharedKernel.Interfaces;
 using IdGen;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
