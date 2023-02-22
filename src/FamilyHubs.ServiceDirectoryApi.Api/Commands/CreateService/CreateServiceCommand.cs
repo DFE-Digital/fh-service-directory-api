@@ -38,7 +38,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             ArgumentNullException.ThrowIfNull(unsavedEntity);
 
             var existing = _context.Services.FirstOrDefault(e => unsavedEntity.Id == e.Id);
-            
+
             if (existing is not null)
                 throw new InvalidOperationException($"Service with Id: {unsavedEntity.Id} already exists, Please use Update command");
 
@@ -55,16 +55,16 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             unsavedEntity.CostOptions = AttachExistingCostOptions(unsavedEntity.CostOptions);
             unsavedEntity.RegularSchedules = AttachExistingRegularSchedule(unsavedEntity.RegularSchedules, null);
             unsavedEntity.HolidaySchedules = AttachExistingHolidaySchedule(unsavedEntity.HolidaySchedules, null);
-            
+
             unsavedEntity.ServiceAtLocations = AttachExistingServiceAtLocation(unsavedEntity.ServiceAtLocations);
-            
+
             _context.Services.Add(unsavedEntity);
 
             await _context.SaveChangesAsync(cancellationToken);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred creating taxonomy. {exceptionMessage}", ex.Message);
+            _logger.LogError(ex, "An error occurred creating service. {exceptionMessage}", ex.Message);
             throw;
         }
 
@@ -166,7 +166,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
         return returnList;
     }
 
-     private ICollection<ServiceTaxonomy> AttachExistingServiceTaxonomies(ICollection<ServiceTaxonomy>? unSavedEntities)
+    private ICollection<ServiceTaxonomy> AttachExistingServiceTaxonomies(ICollection<ServiceTaxonomy>? unSavedEntities)
     {
         var returnList = new List<ServiceTaxonomy>();
 
@@ -178,7 +178,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
 
         var newIds = unSavedEntities.Where(c => c.Taxonomy != null).Select(c => c.Taxonomy!.Id).ToList();
-        var  existingChilds = _context.Taxonomies.Where(x => newIds.Contains(x.Id)).ToList();
+        var existingChilds = _context.Taxonomies.Where(x => newIds.Contains(x.Id)).ToList();
 
         for (var i = 0; i < unSavedEntities.Count; i++)
         {
@@ -253,6 +253,8 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
 
     private Location AttachExistingLocation(Location unSavedEntity, Location? existing)
     {
+        existing ??= _context.Locations.SingleOrDefault(l => !string.IsNullOrWhiteSpace(l.Name) && !string.IsNullOrWhiteSpace(unSavedEntity.Name) && l.Name == unSavedEntity.Name);
+
         var returnItem = existing ?? unSavedEntity;
 
         returnItem.PhysicalAddresses = AttachExistingPhysicalAddress(unSavedEntity.PhysicalAddresses, existing?.PhysicalAddresses);
@@ -264,7 +266,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
         return returnItem;
     }
 
-   private ICollection<HolidaySchedule> AttachExistingHolidaySchedule(ICollection<HolidaySchedule>? unSavedEntities, ICollection<HolidaySchedule>? existing)
+    private ICollection<HolidaySchedule> AttachExistingHolidaySchedule(ICollection<HolidaySchedule>? unSavedEntities, ICollection<HolidaySchedule>? existing)
     {
         var returnList = new List<HolidaySchedule>();
 
@@ -333,7 +335,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
 
         var newIds = unSavedEntities.Where(c => c.Taxonomy != null).Select(c => c.Taxonomy!.Id).ToList();
-        var  existingChilds = _context.Taxonomies.Where(x => newIds.Contains(x.Id)).ToList();
+        var existingChilds = _context.Taxonomies.Where(x => newIds.Contains(x.Id)).ToList();
 
         for (var i = 0; i < unSavedEntities.Count; i++)
         {
@@ -372,7 +374,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
 
         var newIds = unSavedEntities.Where(c => c.Contact != null).Select(c => c.Contact!.Id).ToList();
-        var  existingChilds = _context.Contacts.Where(x => newIds.Contains(x.Id)).ToList();
+        var existingChilds = _context.Contacts.Where(x => newIds.Contains(x.Id)).ToList();
 
         for (var i = 0; i < unSavedEntities.Count; i++)
         {
@@ -385,7 +387,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             if (itemToSave.Contact != null)
             {
                 var existingContact = existing.Select(t => t.Contact).SingleOrDefault(t => t!.Id == itemToSave.Contact.Id)
-                                      ??  existingChilds.SingleOrDefault(t => t.Id == itemToSave.Contact.Id);
+                                      ?? existingChilds.SingleOrDefault(t => t.Id == itemToSave.Contact.Id);
 
                 if (existingContact is not null)
                 {
