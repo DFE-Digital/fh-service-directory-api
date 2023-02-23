@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Repository;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 
 public class ApplicationDbContextInitialiser
 {
@@ -24,8 +24,8 @@ public class ApplicationDbContextInitialiser
 
             if (_context.Database.IsInMemory())
             {
-                _context.Database.EnsureDeleted();
-                _context.Database.EnsureCreated();
+                await _context.Database.EnsureDeletedAsync();
+                await _context.Database.EnsureCreatedAsync();
             }
 
             if (_context.Database.IsSqlServer() || _context.Database.IsNpgsql())
@@ -55,37 +55,37 @@ public class ApplicationDbContextInitialiser
 
     public async Task TrySeedAsync()
     {
-        if (_context.OpenReferralOrganisations.Any())
+        if (_context.Organisations.Any())
             return;
 
-        var openReferralOrganisationSeedData = new OpenReferralOrganisationSeedData(_isProduction);
+        var organisationSeedData = new OrganisationSeedData(_isProduction);
 
         if (!_context.OrganisationTypes.Any())
         {
-            _context.OrganisationTypes.AddRange(openReferralOrganisationSeedData.SeedOrganisationTypes());
+            _context.OrganisationTypes.AddRange(organisationSeedData.SeedOrganisationTypes());
         }
 
         if (!_context.ServiceTypes.Any())
         {
-            _context.ServiceTypes.AddRange(openReferralOrganisationSeedData.SeedServiceTypes());
+            _context.ServiceTypes.AddRange(organisationSeedData.SeedServiceTypes());
         }
 
-        if (!_context.OpenReferralTaxonomies.Any())
+        if (!_context.Taxonomies.Any())
         {
-            _context.OpenReferralTaxonomies.AddRange(openReferralOrganisationSeedData.SeedOpenReferralTaxonomies());
+            _context.Taxonomies.AddRange(organisationSeedData.SeedTaxonomies());
         }
 
         await _context.SaveChangesAsync();
 
-        var openReferralOrganisations = openReferralOrganisationSeedData.SeedOpenReferralOrganistions(_context.OrganisationTypes.FirstOrDefault(x => x.Name == "LA") ?? _context.OrganisationTypes.First());
+        var organisations = organisationSeedData.SeedOrganisations(_context.OrganisationTypes.FirstOrDefault(x => x.Name == "LA") ?? _context.OrganisationTypes.First());
 
-        var taxonomies = _context.OpenReferralTaxonomies.ToList();
+        var taxonomies = _context.Taxonomies.ToList();
 
-        foreach (var openReferralOrganisation in openReferralOrganisations)
+        foreach (var organisation in organisations)
         {
-            if (openReferralOrganisation.Services != null)
+            if (organisation.Services != null)
             {
-                foreach (var service in openReferralOrganisation.Services)
+                foreach (var service in organisation.Services)
                 {
                     var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == service.ServiceType.Id);
                     if (serviceType != null)
@@ -93,7 +93,7 @@ public class ApplicationDbContextInitialiser
                         service.ServiceType = serviceType;
                     }
 
-                    foreach (var serviceTaxonomy in service.Service_taxonomys)
+                    foreach (var serviceTaxonomy in service.ServiceTaxonomies)
                     {
                         if (serviceTaxonomy.Taxonomy != null)
                         {
@@ -104,7 +104,7 @@ public class ApplicationDbContextInitialiser
                             }
                         }
                     }
-                    foreach (var serviceAtLocation in service.Service_at_locations)
+                    foreach (var serviceAtLocation in service.ServiceAtLocations)
                     {
                         if (serviceAtLocation.Location.LinkTaxonomies == null) continue;
 
@@ -120,12 +120,12 @@ public class ApplicationDbContextInitialiser
                 }
             }
 
-            _context.OpenReferralOrganisations.Add(openReferralOrganisation);
+            _context.Organisations.Add(organisation);
         }
 
-        if (!_context.OrganisationAdminDistricts.Any())
+        if (!_context.AdminAreas.Any())
         {
-            _context.OrganisationAdminDistricts.AddRange(openReferralOrganisationSeedData.SeedOrganisationAdminDistrict());
+            _context.AdminAreas.AddRange(organisationSeedData.SeedOrganisationAdminDistrict());
         }
 
         await _context.SaveChangesAsync();

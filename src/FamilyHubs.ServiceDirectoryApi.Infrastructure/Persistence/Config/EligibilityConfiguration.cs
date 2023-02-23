@@ -1,14 +1,14 @@
-﻿using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Config;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Config;
 
-public class EligibilityConfiguration : IEntityTypeConfiguration<OpenReferralEligibility>
+public class EligibilityConfiguration : IEntityTypeConfiguration<Eligibility>
 {
-    public void Configure(EntityTypeBuilder<OpenReferralEligibility> builder)
+    public void Configure(EntityTypeBuilder<Eligibility> builder)
     {
-        builder.Property(t => t.Eligibility)
+        builder.Property(t => t.EligibilityDescription)
             .IsRequired();
         builder.Property(t => t.Created)
             .IsRequired();

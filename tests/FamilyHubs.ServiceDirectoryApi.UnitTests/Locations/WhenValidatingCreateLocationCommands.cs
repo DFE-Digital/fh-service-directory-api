@@ -1,4 +1,4 @@
-﻿using fh_service_directory_api.api.Commands.CreateLocation;
+﻿using FamilyHubs.ServiceDirectory.Api.Commands.CreateLocation;
 using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.Locations;
@@ -9,9 +9,9 @@ public class WhenValidatingCreateLocationCommands
     public void ThenShouldNotErrorWhenModelIsValid()
     {
         //Arrange
-        var testLocation = WhenUsingLocationCommand.GetTestOpenReferralLocationDto();
-        var validator = new CreateOpenReferralLocationCommandValidator();
-        var testModel = new CreateOpenReferralLocationCommand(testLocation);
+        var testLocation = WhenUsingLocationCommand.GetTestLocationDto();
+        var validator = new CreateLocationCommandValidator();
+        var testModel = new CreateLocationCommand(testLocation);
 
         //Act
         var result = validator.Validate(testModel);

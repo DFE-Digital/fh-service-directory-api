@@ -1,3 +1,4 @@
+import {compareObject} from '../support/basicFunctions';
 
 describe('organisations endpoints e2e', () => {
   var organisation;
@@ -11,15 +12,7 @@ describe('organisations endpoints e2e', () => {
   it('Create Organisation (POST api/organizations)', () => {
     cy.insertTestOrganisation().then(response=>{
       organisation = response;
-    })
-  })
-
-  it('Get Organisation (GET api/organizations)', () => {
-    cy.request('api/organizations')
-    .then((response) =>{
-      expect(response.status).to.eq(200);
-      var testObject = response.body.find(x=>x.id === organisation.id);
-      expect(testObject).to.deep.equal(organisation);
+      console.log(organisation);
     })
   })
 
@@ -57,7 +50,16 @@ describe('organisations endpoints e2e', () => {
     .then((response) =>{
       expect(response.status).to.eq(200);
       var testObject = response.body;
-      expect(testObject).to.deep.equal(organisation.administractiveDistrictCode);
+      expect(testObject).to.deep.equal(organisation.adminAreaCode);
+    })
+  })
+
+  it('Get Organisation (GET api/organizations)', () => {
+    cy.request('api/organizations')
+    .then((response) =>{
+      expect(response.status).to.eq(200);
+      var testObject = response.body.find(x => x.id == organisation.id);
+      expect(compareObject(organisation, testObject)).to.eq(true);
     })
   })
 })

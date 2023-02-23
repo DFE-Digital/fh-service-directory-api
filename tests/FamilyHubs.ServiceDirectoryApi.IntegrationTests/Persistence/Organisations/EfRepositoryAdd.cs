@@ -1,34 +1,34 @@
 ﻿using AutoFixture;
+using FamilyHubs.ServiceDirectory.Core.Entities;
 using Xunit;
-using fh_service_directory_api.core.Entities;
 
-namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence.OpenReferralOrganisations;
+namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence.Organisations;
 
 public class EfRepositoryAdd : BaseEfRepositoryTestFixture
 {
     private readonly Fixture _fixture = new Fixture();
 
     [Fact]
-    public async Task AddsOrOpenReferralOrganisation()
+    public async Task AddsOrganisation()
     {
         // Arrange
-        OpenReferralData openReferralData = new OpenReferralData();
-        var OpenReferralOrganisation = openReferralData.GetTestCountyCouncil();
-        ArgumentNullException.ThrowIfNull(OpenReferralOrganisation, nameof(OpenReferralOrganisation));
+        var testData = new TestData();
+        var organisation = testData.GetTestCountyCouncil();
+        ArgumentNullException.ThrowIfNull(organisation);
 
-        var repository = GetRepository<OpenReferralOrganisation>();
-        ArgumentNullException.ThrowIfNull(repository, nameof(repository));
+        var repository = GetRepository<Organisation>();
+        ArgumentNullException.ThrowIfNull(repository);
 
         // Act
-        await repository.AddAsync(OpenReferralOrganisation);
+        await repository.AddAsync(organisation);
 
-        var addedOpenReferralOrganisation = await repository.GetByIdAsync(OpenReferralOrganisation.Id);
-        ArgumentNullException.ThrowIfNull(addedOpenReferralOrganisation, nameof(addedOpenReferralOrganisation));
+        var addedOrganisation = await repository.GetByIdAsync(organisation.Id);
+        ArgumentNullException.ThrowIfNull(addedOrganisation);
 
         await repository.SaveChangesAsync();
 
         // Assert
-        Assert.Equal(OpenReferralOrganisation, addedOpenReferralOrganisation);
-        Assert.True(!string.IsNullOrEmpty(addedOpenReferralOrganisation.Id));
+        Assert.Equal(organisation, addedOrganisation);
+        Assert.True(!string.IsNullOrEmpty(addedOrganisation.Id));
     }
 }

@@ -1,7 +1,7 @@
-﻿using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.core.Interfaces;
-using fh_service_directory_api.infrastructure.Persistence.Interceptors;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
+﻿using FamilyHubs.ServiceDirectory.Core.Interfaces;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using FamilyHubs.SharedKernel.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -33,7 +33,7 @@ public class BaseCreateDbUnitTest
         // Create a new options instance telling the context to use an
         // InMemory database and the new service provider.
         var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-        builder.UseInMemoryDatabase("OrOpenReferralOrganisations")
+        builder.UseInMemoryDatabase("Organisations")
                .UseInternalServiceProvider(serviceProvider);
 
         return builder.Options;

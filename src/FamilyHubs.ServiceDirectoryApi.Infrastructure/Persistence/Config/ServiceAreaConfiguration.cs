@@ -1,14 +1,14 @@
-﻿using fh_service_directory_api.core.Entities;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Config;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Config;
 
-public class ServiceAreaConfiguration : IEntityTypeConfiguration<OpenReferralService_Area>
+public class ServiceAreaConfiguration : IEntityTypeConfiguration<ServiceArea>
 {
-    public void Configure(EntityTypeBuilder<OpenReferralService_Area> builder)
+    public void Configure(EntityTypeBuilder<ServiceArea> builder)
     {
-        builder.Property(t => t.Service_area)
+        builder.Property(t => t.ServiceAreaDescription)
             .IsRequired();
         builder.Property(t => t.Created)
             .IsRequired();

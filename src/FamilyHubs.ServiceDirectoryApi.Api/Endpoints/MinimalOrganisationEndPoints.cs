@@ -1,35 +1,34 @@
-﻿using AutoMapper;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using fh_service_directory_api.api.Commands.CreateOpenReferralOrganisation;
-using fh_service_directory_api.api.Commands.UpdateOpenReferralOrganisation;
-using fh_service_directory_api.api.Queries.GetOpenReferralOrganisationById;
-using fh_service_directory_api.api.Queries.GetOrganisationAdminByOrganisationId;
-using fh_service_directory_api.api.Queries.GetOrganisationTypes;
-using fh_service_directory_api.api.Queries.ListOrganisation;
-using fh_service_directory_api.core.Entities;
+﻿using System.Diagnostics;
+using FamilyHubs.ServiceDirectory.Api.Commands.CreateOrganisation;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpdateOrganisation;
+using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationAdminByOrganisationId;
+using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationById;
+using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationTypes;
+using FamilyHubs.ServiceDirectory.Api.Queries.ListOrganisation;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace fh_service_directory_api.api.Endpoints;
+namespace FamilyHubs.ServiceDirectory.Api.Endpoints;
 
 public class MinimalOrganisationEndPoints
 {
     public void RegisterOrganisationEndPoints(WebApplication app)
     {
-        app.MapPost("api/organizations", [Authorize(Policy = "OrgAccess")] async ([FromBody] OpenReferralOrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPost("api/organizations", [Authorize(Policy = "OrgAccess")] async ([FromBody] OrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
-                CreateOpenReferralOrganisationCommand command = new(request);
+                var command = new CreateOrganisationCommand(request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred creating organisation (api). {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Organisations", "Create Organisation") { Tags = new[] { "Organisations" } });
@@ -38,7 +37,7 @@ public class MinimalOrganisationEndPoints
         {
             try
             {
-                GetOpenReferralOrganisationByIdCommand request = new()
+                var request = new GetOrganisationByIdCommand
                 {
                     Id = id
                 };
@@ -48,7 +47,7 @@ public class MinimalOrganisationEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred getting organisation (api). {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Organisation", "Get Organisation By Id") { Tags = new[] { "Organisations" } });
@@ -57,30 +56,30 @@ public class MinimalOrganisationEndPoints
         {
             try
             {
-                ListOpenReferralOrganisationCommand request = new();
+                var request = new ListOrganisationCommand();
                 var result = await _mediator.Send(request, cancellationToken);
                 return result;
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred listing organisation (api). {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Organisations", "List Organisations") { Tags = new[] { "Organisations" } });
 
-        app.MapPut("api/organizations/{id}", [Authorize(Policy = "AllAdminAccess")] async (string id, [FromBody] OpenReferralOrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPut("api/organizations/{id}", [Authorize(Policy = "AllAdminAccess")] async (string id, [FromBody] OrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
-                UpdateOpenReferralOrganisationCommand command = new(id, request);
+                var command = new UpdateOrganisationCommand(id, request);
                 var result = await _mediator.Send(command, cancellationToken);
                 return result;
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred updating organisation (api). {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Update Organisation", "Update Organisation By Id") { Tags = new[] { "Organisations" } });
@@ -89,14 +88,14 @@ public class MinimalOrganisationEndPoints
         {
             try
             {
-                GetOrganisationTypesCommand request = new();
+                var request = new GetOrganisationTypesCommand();
                 var result = await _mediator.Send(request, cancellationToken);
                 return result;
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred listing organisation types (api). {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Organisation types", "List Organisation types") { Tags = new[] { "Organisations" } });
@@ -105,14 +104,15 @@ public class MinimalOrganisationEndPoints
         {
             try
             {
-                GetOrganisationAdminByOrganisationIdCommand request = new(id);
+                var request =
+                    new GetOrganisationAdminByOrganisationIdCommand(id);
                 var result = await _mediator.Send(request, cancellationToken);
                 return result;
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred getting organisation admin code (api). {exceptionMessage}", ex.Message);
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Organisation Code By Organisation Id", "Get Organisation Code By Organisation Id") { Tags = new[] { "Organisations" } });

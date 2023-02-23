@@ -1,10 +1,9 @@
 ﻿using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
-using fh_service_directory_api.core.Interfaces.Entities;
 
-namespace fh_service_directory_api.core.Entities;
+namespace FamilyHubs.ServiceDirectory.Core.Entities;
 
-public class OrganisationType : EntityBase<string>, IOrganisationType, IAggregateRoot
+public class OrganisationType : EntityBase<string>, IAggregateRoot
 {
     private OrganisationType() { }
     public OrganisationType(string id, string name, string? description)
@@ -14,5 +13,5 @@ public class OrganisationType : EntityBase<string>, IOrganisationType, IAggregat
         Description = description;
     }
     public string Name { get; set; } = default!;
-    public string? Description { get; set; } = default!;
+    public string? Description { get; set; }
 }

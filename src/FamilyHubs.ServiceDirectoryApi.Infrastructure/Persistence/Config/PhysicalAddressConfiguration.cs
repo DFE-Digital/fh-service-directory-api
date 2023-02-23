@@ -1,22 +1,17 @@
-﻿using fh_service_directory_api.core.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Config;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Config;
 
 
-public class PhysicalAddressConfiguration : IEntityTypeConfiguration<OpenReferralPhysical_Address>
+public class PhysicalAddressConfiguration : IEntityTypeConfiguration<PhysicalAddress>
 {
-    public void Configure(EntityTypeBuilder<OpenReferralPhysical_Address> builder)
+    public void Configure(EntityTypeBuilder<PhysicalAddress> builder)
     {
-        builder.Property(t => t.Address_1)
+        builder.Property(t => t.Address1)
             .IsRequired();
-        builder.Property(t => t.Postal_code)
+        builder.Property(t => t.PostCode)
             .HasMaxLength(15)
             .IsRequired();
         builder.Property(t => t.Created)

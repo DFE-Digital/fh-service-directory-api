@@ -1,8 +1,6 @@
-﻿using fh_service_directory_api.infrastructure.Persistence.Repository;
-using Microsoft.AspNetCore.Authorization;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
-namespace fh_service_directory_api.api.Endpoints;
+namespace FamilyHubs.ServiceDirectory.Api.Endpoints;
 
 public class MinimalGeneralEndPoints
 {
@@ -12,20 +10,18 @@ public class MinimalGeneralEndPoints
         {
             try
             {
-                var assembly = typeof(WebMarker).Assembly;
+                var assembly = typeof(MinimalGeneralEndPoints).Assembly;
 
                 var creationDate = File.GetCreationTime(assembly.Location);
                 var version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
 
-                string useDbType = configuration.GetValue<string>("UseDbType");
+                var useDbType = configuration.GetValue<string>("UseDbType");
                 if (useDbType != "UseInMemoryDatabase")
                 {
-                    string? connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
-                    bool connectionStringOK = false;
-                    if (!string.IsNullOrEmpty(connectionString) && connectionString.Contains("Database"))
-                        connectionStringOK = true;
+                    var connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
+                    var connectionStringOk = !string.IsNullOrEmpty(connectionString) && connectionString.Contains("Database");
 
-                    return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Db Type: {useDbType}, Is Connection String OK: {connectionStringOK}");
+                    return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Db Type: {useDbType}, Is Connection String OK: {connectionStringOk}");
                 }
                 
 

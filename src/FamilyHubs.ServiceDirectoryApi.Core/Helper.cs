@@ -1,8 +1,9 @@
-﻿using GeoCoordinatePortable;
+﻿using System.Diagnostics;
+using GeoCoordinatePortable;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 
-namespace fh_service_directory_api.core;
+namespace FamilyHubs.ServiceDirectory.Core;
 
 public class Helper
 {
@@ -23,15 +24,15 @@ public class Helper
     {
         if (!string.IsNullOrEmpty(name))
         {
-            System.Diagnostics.Debug.WriteLine(name);
+            Debug.WriteLine(name);
         }
         latitude1 ??= 0.0;
         longitude1 ??= 0.0;
         latitude2 ??= 0.0;
         longitude2 ??= 0.0;
 
-        GeoCoordinate pin1 = new(latitude1.Value, longitude1.Value);
-        GeoCoordinate pin2 = new(latitude2.Value, longitude2.Value);
+        var pin1 = new GeoCoordinate(latitude1.Value, longitude1.Value);
+        var pin2 = new GeoCoordinate(latitude2.Value, longitude2.Value);
 
         return pin1.GetDistanceTo(pin2);
     }

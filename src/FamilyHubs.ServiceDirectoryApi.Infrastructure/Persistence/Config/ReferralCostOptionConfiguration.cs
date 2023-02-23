@@ -1,21 +1,16 @@
-﻿using fh_service_directory_api.core.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Config;
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Config;
 
-public class ReferralCostOptionConfiguration : IEntityTypeConfiguration<OpenReferralCost_Option>
+public class ReferralCostOptionConfiguration : IEntityTypeConfiguration<CostOption>
 {
-    public void Configure(EntityTypeBuilder<OpenReferralCost_Option> builder)
+    public void Configure(EntityTypeBuilder<CostOption> builder)
     {
         builder.Property(t => t.Amount)
             .IsRequired();
-        builder.Property(t => t.Amount_description)
+        builder.Property(t => t.AmountDescription)
             .HasMaxLength(500)
             .IsRequired();
         builder.Property(t => t.Created)

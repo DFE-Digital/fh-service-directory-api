@@ -1,45 +1,45 @@
 ﻿using AutoFixture;
+using FamilyHubs.ServiceDirectory.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
-using fh_service_directory_api.core.Entities;
 
-namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence.OpenReferralOrganisations;
+namespace FamilyHubs.ServiceDirectoryApi.IntegrationTests.Persistence.Organisations;
 
 public class EfRepositoryUpdate : BaseEfRepositoryTestFixture
 {
     private readonly Fixture _fixture = new Fixture();
 
     [Fact]
-    public async Task UpdatesOpenReferralOrganisationAfterAddingIt()
+    public async Task UpdatesOrganisationAfterAddingIt()
     {
         // Arrange
-        OpenReferralData openReferralData = new OpenReferralData();
-        var OpenReferralOrganisation = openReferralData.GetTestCountyCouncil();
-        ArgumentNullException.ThrowIfNull(OpenReferralOrganisation, nameof(OpenReferralOrganisation));
+        var testData = new TestData();
+        var organisation = testData.GetTestCountyCouncil();
+        ArgumentNullException.ThrowIfNull(organisation);
 
-        var repository = GetRepository<OpenReferralOrganisation>();
-        ArgumentNullException.ThrowIfNull(repository, nameof(repository));
-        await repository.AddAsync(OpenReferralOrganisation);
+        var repository = GetRepository<Organisation>();
+        ArgumentNullException.ThrowIfNull(repository);
+        await repository.AddAsync(organisation);
 
-        DbContext.Entry(OpenReferralOrganisation).State = EntityState.Detached;             // detach the item so we get a different instance
+        DbContext.Entry(organisation).State = EntityState.Detached;             // detach the item so we get a different instance
 
-        var addedOpenReferralOrganisation = await repository.GetByIdAsync(OpenReferralOrganisation.Id); // fetch the OpenReferralOrganisation and update its name
-        if (addedOpenReferralOrganisation == null)
+        var addedOrganisation = await repository.GetByIdAsync(organisation.Id); // fetch the Organisation and update its name
+        if (addedOrganisation == null)
         {
-            Assert.NotNull(addedOpenReferralOrganisation);
+            Assert.NotNull(addedOrganisation);
             return;
         }
 
-        Assert.NotSame(OpenReferralOrganisation, addedOpenReferralOrganisation);
+        Assert.NotSame(organisation, addedOrganisation);
 
         // Act
-        addedOpenReferralOrganisation.Name = "Brum Council";
-        await repository.UpdateAsync(addedOpenReferralOrganisation);
-        var updatedOpenReferralOrganisation = await repository.GetByIdAsync(addedOpenReferralOrganisation.Id);
+        addedOrganisation.Name = "Brum Council";
+        await repository.UpdateAsync(addedOrganisation);
+        var updatedOrganisation = await repository.GetByIdAsync(addedOrganisation.Id);
 
         // Assert
-        Assert.NotNull(updatedOpenReferralOrganisation);
-        Assert.NotEqual(OpenReferralOrganisation.Name, updatedOpenReferralOrganisation?.Name);
-        Assert.Equal(OpenReferralOrganisation.Id, updatedOpenReferralOrganisation?.Id);
+        Assert.NotNull(updatedOrganisation);
+        Assert.NotEqual(organisation.Name, updatedOrganisation?.Name);
+        Assert.Equal(organisation.Id, updatedOrganisation?.Id);
     }
 }

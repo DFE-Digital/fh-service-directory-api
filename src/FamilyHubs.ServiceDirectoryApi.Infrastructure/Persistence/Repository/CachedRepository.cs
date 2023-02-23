@@ -3,14 +3,14 @@ using FamilyHubs.SharedKernel.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace fh_service_directory_api.infrastructure.Persistence.Repository
+namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository
 {
     public class CachedRepository<T> : IReadRepository<T> where T : class, IAggregateRoot
     {
         private readonly IMemoryCache _cache;
         private readonly ILogger<CachedRepository<T>> _logger;
         private readonly EfRepository<T> _sourceRepository;
-        private MemoryCacheEntryOptions _cacheOptions;
+        private readonly MemoryCacheEntryOptions _cacheOptions;
 
         public CachedRepository(IMemoryCache cache,
             ILogger<CachedRepository<T>> logger,
@@ -71,14 +71,14 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
 
         public Task<T?> GetByIdAsync<TId>(TId id, CancellationToken cancellationToken = default) where TId : notnull
         {
-            string? key = $"{typeof(T).Name}-{id}";
+            var key = $"{typeof(T).Name}-{id}";
             _logger.LogInformation("Checking cache for " + key);
             return _cache.GetOrCreate(key, entry =>
             {
                 entry.SetOptions(_cacheOptions);
                 _logger.LogWarning("Fetching source data for " + key);
                 return _sourceRepository.GetByIdAsync(id, cancellationToken);
-            });
+            })!;
         }
 
         public Task<T?> GetBySpecAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
@@ -93,14 +93,14 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
 
         public Task<List<T>> ListAsync(CancellationToken cancellationToken = default)
         {
-            string key = $"{typeof(T).Name}-List";
+            var key = $"{typeof(T).Name}-List";
             _logger.LogInformation($"Checking cache for {key}");
             return _cache.GetOrCreate(key, entry =>
             {
                 entry.SetOptions(_cacheOptions);
                 _logger.LogWarning($"Fetching source data for {key}");
                 return _sourceRepository.ListAsync(cancellationToken);
-            });
+            })!;
         }
 
         public Task<List<T>> ListAsync(ISpecification<T> specification,
@@ -108,14 +108,14 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
         {
             if (specification.CacheEnabled)
             {
-                string key = $"{specification.CacheKey}-ListAsync";
+                var key = $"{specification.CacheKey}-ListAsync";
                 _logger.LogInformation($"Checking cache for {key}");
                 return _cache.GetOrCreate(key, entry =>
                 {
                     entry.SetOptions(_cacheOptions);
                     _logger.LogWarning($"Fetching source data for {key}");
                     return _sourceRepository.ListAsync(specification, cancellationToken);
-                });
+                })!;
             }
             return _sourceRepository.ListAsync(specification, cancellationToken);
         }
@@ -125,14 +125,14 @@ namespace fh_service_directory_api.infrastructure.Persistence.Repository
         {
             if (specification.CacheEnabled)
             {
-                string key = $"{specification.CacheKey}-ListAsync";
+                var key = $"{specification.CacheKey}-ListAsync";
                 _logger.LogInformation($"Checking cache for {key}");
                 return _cache.GetOrCreate(key, entry =>
                 {
                     entry.SetOptions(_cacheOptions);
                     _logger.LogWarning($"Fetching source data for {key}");
                     return _sourceRepository.ListAsync(specification, cancellationToken);
-                });
+                })!;
             }
             return _sourceRepository.ListAsync(specification, cancellationToken);
         }

@@ -1,17 +1,12 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Models.Api.OpenReferralOrganisations;
-using FamilyHubs.ServiceDirectory.Shared.Models.Api.OrganisationType;
-using fh_service_directory_api.infrastructure.Persistence.Repository;
+﻿using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace fh_service_directory_api.api.Queries.GetOrganisationTypes;
+namespace FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationTypes;
 
 public class GetOrganisationTypesCommand : IRequest<List<OrganisationTypeDto>>
 {
-    public GetOrganisationTypesCommand()
-    {
-
-    }
 }
 
 public class GetOrganisationTypesCommandHandler : IRequestHandler<GetOrganisationTypesCommand, List<OrganisationTypeDto>>
@@ -25,7 +20,7 @@ public class GetOrganisationTypesCommandHandler : IRequestHandler<GetOrganisatio
 
     public async Task<List<OrganisationTypeDto>> Handle(GetOrganisationTypesCommand request, CancellationToken cancellationToken)
     {
-        var orgainsationTypes = await _context.OrganisationTypes.Select(x => new OrganisationTypeDto(x.Id, x.Name, x.Description)).AsNoTracking().ToListAsync();
+        var orgainsationTypes = await _context.OrganisationTypes.Select(x => new OrganisationTypeDto(x.Id, x.Name, x.Description)).AsNoTracking().ToListAsync(cancellationToken);
 
         return orgainsationTypes;
     }
