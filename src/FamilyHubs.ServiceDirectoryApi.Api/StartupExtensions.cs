@@ -52,6 +52,8 @@ public static class StartupExtensions
         {
             containerBuilder.RegisterModule(new DefaultInfrastructureModule(builder.Environment.IsDevelopment()));
 
+            containerBuilder.RegisterType<LocationService>().As<ILocationService>().SingleInstance();
+
             containerBuilder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
 
             containerBuilder.RegisterType<DateTimeService>().As<IDateTime>().InstancePerLifetimeScope();

@@ -19,9 +19,11 @@ public class AutoMappingProfiles : Profile
         CreateMap<LinkContactDto, LinkContact>();
         CreateMap<LinkTaxonomyDto, LinkTaxonomy>();
         CreateMap<LocationDto, Location>();
+        CreateMap<LocationDto, Location>().ReverseMap();
         CreateMap<OrganisationWithServicesDto, Organisation>();
         CreateMap<OrganisationTypeDto, OrganisationType>();
         CreateMap<PhysicalAddressDto, PhysicalAddress>();
+        CreateMap<PhysicalAddressDto, PhysicalAddress>().ReverseMap();
         CreateMap<RegularScheduleDto, RegularSchedule>();
         CreateMap<RelatedOrganisationDto, RelatedOrganisation>();
         CreateMap<ServiceDto, Service>();
