@@ -61,7 +61,6 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenGetService()
     {
-        //Arrange
         CreateOrganisation();
 
         var command = new GetServicesCommand("Information Sharing", "active", "XTEST", null, null, null,
@@ -71,7 +70,6 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
         //Act
         var results = await handler.Handle(command, new CancellationToken());
 
-        //Assert
         results.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(TestOrganisation);
         ArgumentNullException.ThrowIfNull(TestOrganisation.Services);
@@ -81,7 +79,6 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenGetServicesByOrganisationId()
     {
-        //Arrange
         CreateOrganisation();
 
         var command = new GetServicesByOrganisationIdCommand(TestOrganisation.Id);
@@ -90,7 +87,6 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
         //Act
         var results = await handler.Handle(command, new CancellationToken());
 
-        //Assert
         results.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(TestOrganisation);
         ArgumentNullException.ThrowIfNull(TestOrganisation.Services);
@@ -100,33 +96,26 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenGetServicesByOrganisationId_ShouldThrowExceptionWhenNoOrganisations()
     {
-        //Arrange
         var command = new GetServicesByOrganisationIdCommand(TestOrganisation.Id);
         var handler = new GetServicesByOrganisationIdCommandHandler(MockApplicationDbContext);
 
-        // Act 
-        // Assert
+        // Act & Assert
         await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, new CancellationToken()));
-
     }
 
     [Fact]
     public async Task ThenGetServicesByOrganisationId_ShouldThrowExceptionWhenNoServices()
     {
-        //Arrange
         var command = new GetServicesByOrganisationIdCommand(TestOrganisation.Id);
         var handler = new GetServicesByOrganisationIdCommandHandler(MockApplicationDbContext);
 
-        // Act 
-        // Assert
+        // Act & Assert
         await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, new CancellationToken()));
-
     }
 
     [Fact]
     public async Task ThenGetServiceThatArePaidForWhenThereAreNone()
     {
-        //Arrange
         CreateOrganisation();
 
         var command = new GetServicesCommand("Information Sharing", "active", "XTEST", null, null, null,
@@ -136,7 +125,6 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
         //Act
         var results = await handler.Handle(command, new CancellationToken());
 
-        //Assert
         results.Should().NotBeNull();
         results.Items.Count.Should().Be(0);
     }
@@ -144,7 +132,6 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenGetServiceThatArePaidFor()
     {
-        //Arrange
         TestOrganisation.Services!.ElementAt(0).CostOptions = new List<CostOptionDto>
         {
             new(Guid.NewGuid().ToString(),
@@ -165,15 +152,15 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
         //Act
         var results = await handler.Handle(command, new CancellationToken());
 
-        //Assert
         results.Should().NotBeNull();
         results.Items.Count.Should().Be(1);
     }
 
     [Fact]
-    public async Task ThenGetServiceThatAreFree()
+    public async Task ThenGetServiceThatAreFreeWhenThereAreNoCostOptions()
     {
-        //Arrange
+        TestOrganisation.Services!.ElementAt(0).CostOptions = new List<CostOptionDto>();
+
         CreateOrganisation();
 
         var command = new GetServicesCommand("Information Sharing", "active", "XTEST", null, null, null,
@@ -183,7 +170,24 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
         //Act
         var results = await handler.Handle(command, new CancellationToken());
 
-        //Assert
+        results.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(TestOrganisation);
+        ArgumentNullException.ThrowIfNull(TestOrganisation.Services);
+        results.Items[0].Should().BeEquivalentTo(TestOrganisation.Services.ElementAt(0));
+    }
+
+    [Fact]
+    public async Task ThenGetServiceThatAreFreeWhenOptionIsFree()
+    {
+        CreateOrganisation();
+
+        var command = new GetServicesCommand("Information Sharing", "active", "XTEST", null, null, null,
+            null, null, null, 1, 10, null, null, false, null, null, null, null, null);
+        var handler = new GetServicesCommandHandler(MockApplicationDbContext);
+
+        //Act
+        var results = await handler.Handle(command, new CancellationToken());
+
         results.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(TestOrganisation);
         ArgumentNullException.ThrowIfNull(TestOrganisation.Services);
@@ -193,30 +197,24 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenDeleteService()
     {
-        //Arrange
         CreateOrganisation();
 
         var command = new DeleteServiceByIdCommand("3010521b-6e0a-41b0-b610-200edbbeeb14");
         var handler = new DeleteServiceByIdCommandHandler(MockApplicationDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);
 
         //Act
-        var results = await handler.Handle(command, new CancellationToken());
+        bool results = await handler.Handle(command, new CancellationToken());
 
-        //Assert
         results.Should().Be(true);
-
     }
 
     [Fact]
     public async Task ThenDeleteServiceThatDoesNotExist()
     {
-        //Arrange
         var command = new DeleteServiceByIdCommand(Guid.NewGuid().ToString());
         var handler = new DeleteServiceByIdCommandHandler(MockApplicationDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);
 
-        // Act 
-        // Assert
+        // Act & Assert
         await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, new CancellationToken()));
-
     }
 }
