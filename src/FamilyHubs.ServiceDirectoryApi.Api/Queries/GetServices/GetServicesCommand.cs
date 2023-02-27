@@ -171,7 +171,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         if (!service.CostOptions.Any())
             return false;
 
-        return !(service.CostOptions.Any(co => co.Amount == decimal.Zero || string.Equals(co.Option, "Free", StringComparison.OrdinalIgnoreCase)));
+        return !(service.CostOptions.Any(co => co.Amount == decimal.Zero && string.Equals(co.Option, "Free", StringComparison.OrdinalIgnoreCase)));
     }
 
     private bool IsFamilyHub(ServiceDto service)
