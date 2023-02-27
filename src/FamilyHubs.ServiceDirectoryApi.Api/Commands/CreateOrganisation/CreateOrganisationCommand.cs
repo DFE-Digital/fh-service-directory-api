@@ -13,7 +13,7 @@ public class CreateOrganisationCommand : IRequest<string>
 {
     public CreateOrganisationCommand(OrganisationWithServicesDto organisation)
     {
-        Organisation = organisation;    
+        Organisation = organisation;
     }
 
     public OrganisationWithServicesDto Organisation { get; }
