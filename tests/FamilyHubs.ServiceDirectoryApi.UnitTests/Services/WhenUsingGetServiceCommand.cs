@@ -7,7 +7,6 @@ using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetServices;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetServicesByOrganisation;
 using FamilyHubs.ServiceDirectory.Core;
-using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
@@ -125,7 +124,7 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
-    public async Task ThenGetServiceThatArePaidFor()
+    public async Task ThenGetServiceThatArePaidForWhenThereAreNone()
     {
         //Arrange
         CreateOrganisation();
@@ -140,6 +139,35 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
         //Assert
         results.Should().NotBeNull();
         results.Items.Count.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task ThenGetServiceThatArePaidFor()
+    {
+        //Arrange
+        TestOrganisation.Services!.ElementAt(0).CostOptions = new List<CostOptionDto>
+        {
+            new CostOptionDto(Guid.NewGuid().ToString(),
+                "Session",
+                10m,
+                default,
+                default,
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddHours(8))
+        };
+
+        CreateOrganisation();
+
+        var command = new GetServicesCommand("Information Sharing", "active", "XTEST", null, null, null,
+            null, null, null, 1, 10, null, null, true, null, null, null, null, null);
+        var handler = new GetServicesCommandHandler(MockApplicationDbContext);
+
+        //Act
+        var results = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        results.Should().NotBeNull();
+        results.Items.Count.Should().Be(1);
     }
 
     [Fact]

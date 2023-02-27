@@ -6,7 +6,8 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests;
 
 public static class TestDataProvider
 {
-    public static OrganisationWithServicesDto GetTestCountyCouncilDto(bool updated = false, bool newGuid = false)
+    public static OrganisationWithServicesDto GetTestCountyCouncilDto(
+        bool updated = false, bool newGuid = false)
     {
         var testCountyCouncil = new OrganisationWithServicesDto(
             "56e62852-1b0b-40e5-ac97-54a67ea957dc",
