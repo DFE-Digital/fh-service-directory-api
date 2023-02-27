@@ -147,7 +147,7 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
         //Arrange
         TestOrganisation.Services!.ElementAt(0).CostOptions = new List<CostOptionDto>
         {
-            new CostOptionDto(Guid.NewGuid().ToString(),
+            new(Guid.NewGuid().ToString(),
                 "Session",
                 10m,
                 default,
