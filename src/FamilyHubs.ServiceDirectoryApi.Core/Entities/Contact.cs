@@ -1,4 +1,5 @@
-﻿using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities.Abstract;
+using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Core.Entities;
@@ -30,4 +31,18 @@ public class Contact : EntityBase<string>, IAggregateRoot
     public string TextPhone { get; set; } = default!;
     public string? Url { get; set; }
     public string? Email { get; set; }
+}
+
+public class ContactQuery : IPaginationQuery
+{
+    public string? Id { get; set; }
+    public string? Title { get; set; }
+    public string? Name { get; set; }
+    public string? Telephone { get; set; }
+    public string? TextPhone { get; set; }
+    public string? Url { get; set; }
+    public string? Email { get; set; }
+    public int? PageNumber { get; set; }
+    public int? PageSize { get; set; }
+
 }

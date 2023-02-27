@@ -47,9 +47,9 @@ public class MinimalLocationEndPoints
         }).WithMetadata(new SwaggerOperationAttribute("Location", "Update Location As Family Hub") { Tags = new[] { "Locations" } });
 
 
-        app.MapGet("api/location", async ([FromQuery] LocationQueryParameters locationQueryParameters, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalServiceEndPoints> logger) =>
+        app.MapGet("api/location", async (string? id, string? name, string? description, string? postCode, int? pageSize, int? pageNumber, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
-            var command = new GetLocationsCommand(locationQueryParameters.Id, locationQueryParameters.Name, locationQueryParameters.Description, locationQueryParameters.PostCode);
+            var command = new GetLocationsCommand(id, name, description, postCode, pageSize, pageNumber);
             var result = await _mediator.Send(command, cancellationToken);
 
             if (result.Succeeded)
@@ -59,18 +59,5 @@ public class MinimalLocationEndPoints
             return Results.BadRequest(result.Errors);
 
         }).WithMetadata(new SwaggerOperationAttribute("List Locations", "List Locations") { Tags = new[] { "Locations" } });
-
-        //app.MapGet("api/location", async (string? id, string? name, string? description, string? postCode, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalServiceEndPoints> logger) =>
-        //{
-        //    var command = new GetLocationsCommand(id, name, description);
-        //    var result = await _mediator.Send(command, cancellationToken);
-
-        //    if (result.Succeeded)
-        //    {
-        //        return Results.Ok(result.Value);
-        //    }
-        //    return Results.BadRequest(result.Errors);
-
-        //}).WithMetadata(new SwaggerOperationAttribute("List Locations", "List Locations") { Tags = new[] { "Locations" } });
     }
 }

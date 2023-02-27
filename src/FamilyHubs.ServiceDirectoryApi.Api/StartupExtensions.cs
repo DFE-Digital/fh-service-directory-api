@@ -53,6 +53,7 @@ public static class StartupExtensions
             containerBuilder.RegisterModule(new DefaultInfrastructureModule(builder.Environment.IsDevelopment()));
 
             containerBuilder.RegisterType<LocationService>().As<ILocationService>().SingleInstance();
+            containerBuilder.RegisterType<ContactService>().As<IContactService>().SingleInstance();
 
             containerBuilder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
 
@@ -126,6 +127,8 @@ public static class StartupExtensions
             containerBuilder.RegisterType<MinimalGeneralEndPoints>();
 
             containerBuilder.RegisterType<MinimalServiceEndPoints>();
+
+            containerBuilder.RegisterType<MinimalContactsEndPoints>();
 
             containerBuilder.RegisterType<MinimalTaxonomyEndPoints>();
 
@@ -263,6 +266,9 @@ public static class StartupExtensions
         using var scope = webApplication.Services.CreateScope();
         var orgservice = scope.ServiceProvider.GetService<MinimalOrganisationEndPoints>();
         orgservice?.RegisterOrganisationEndPoints(webApplication);
+
+        var contactservice = scope.ServiceProvider.GetService<MinimalContactsEndPoints>();
+        contactservice?.RegisterContactsEndPoints(webApplication);
 
         var serservice = scope.ServiceProvider.GetService<MinimalServiceEndPoints>();
         serservice?.RegisterServiceEndPoints(webApplication);

@@ -1,4 +1,5 @@
-﻿using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities.Abstract;
+using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Core.Entities;
@@ -31,4 +32,15 @@ public class Location : EntityBase<string>, IAggregateRoot
     public ICollection<PhysicalAddress>? PhysicalAddresses { get; set; }
     public ICollection<AccessibilityForDisabilities>? AccessibilityForDisabilities { get; set; }
     public ICollection<LinkContact>? LinkContacts { get; set; }
+}
+
+public class LocationQuery : IPaginationQuery
+{
+    public string? Id { get; set; }
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+    public string? PostCode { get; set; }
+    public int? PageNumber { get; set; }
+    public int? PageSize { get; set; }
+
 }

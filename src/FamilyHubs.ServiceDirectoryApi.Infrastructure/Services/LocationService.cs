@@ -6,10 +6,10 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
 {
     public interface ILocationService
     {
-        List<Location> GetLocations(Dictionary<string, object> QueryValues);
+        Task<List<Location>> GetLocations(LocationQuery queryValues);
     }
 
-    public class LocationService : ILocationService
+    public class LocationService : BaseRepositoryService, ILocationService
     {
         private readonly ApplicationDbContext _context;
 
@@ -18,44 +18,29 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
             _context = context;
         }
 
-        public List<Location> GetLocations(Dictionary<string, object> queryValues)
+        public async Task<List<Location>> GetLocations(LocationQuery queryValues)
         {
             var locations = _context.Locations.AsQueryable();
-            if (ShouldQuery(queryValues, "Id", out var id))
-            {
-                locations = locations.Where(x => x.Id == id);
-            }
-            if (ShouldQuery(queryValues, "Name", out var name))
-            {
-                locations = locations.Where(x => x.Name == name);
-            }
-            if (ShouldQuery(queryValues, "Description", out var description))
-            {
-                locations = locations.Where(x => !string.IsNullOrEmpty(x.Description) && x.Description.Contains(description));
-            }
+
+            if (!string.IsNullOrEmpty(queryValues.Id))
+                locations = locations.Where(x => x.Id == queryValues.Id);
+
+            if (!string.IsNullOrEmpty(queryValues.Name))
+                locations = locations.Where(x => x.Name == queryValues.Name);
+
+            if (!string.IsNullOrEmpty(queryValues.Description))
+                locations = locations.Where(x => !string.IsNullOrEmpty(x.Description) && x.Description.Contains(queryValues.Description));
+
+            if (!string.IsNullOrEmpty(queryValues.PostCode))
+                locations = locations.Where(x => 
+                    x.PhysicalAddresses != null && 
+                    x.PhysicalAddresses.Where(y=>y.PostCode.ToLower().Replace(" ", "") == queryValues.PostCode.ToLower().Replace(" ", "")).Any());
 
             locations = locations.Include(x => x.PhysicalAddresses);
+            locations = locations.Include(x => x.LinkContacts);
+            locations = locations.Include(x => x.LinkTaxonomies);
 
-            return locations.ToList();
-        }
-
-        public static bool ShouldQuery(Dictionary<string, object> queryValues, string key, out string queryValue)
-        {
-
-            if (!queryValues.ContainsKey(key))
-            {
-                queryValue = string.Empty;
-                return false;
-            }
-
-            queryValue = (string)queryValues[key];//Has to be string because of overloads
-
-            if (string.IsNullOrEmpty(queryValue))
-            {
-                return false;
-            }
-
-            return true;
+            return await locations.ToListAsync();
         }
 
     }

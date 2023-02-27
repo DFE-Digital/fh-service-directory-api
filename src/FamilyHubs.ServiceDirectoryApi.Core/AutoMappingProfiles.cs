@@ -10,14 +10,14 @@ public class AutoMappingProfiles : Profile
     {
         CreateMap<AccessibilityForDisabilitiesDto, AccessibilityForDisabilities>();
         CreateMap<AdminAreaDto, AdminArea>();
-        CreateMap<ContactDto, Contact>();
+        CreateMap<ContactDto, Contact>().ReverseMap();
         CreateMap<CostOptionDto, CostOption>();
         CreateMap<EligibilityDto, Eligibility>();
         CreateMap<FundingDto, Funding>();
         CreateMap<HolidayScheduleDto, HolidaySchedule>();
         CreateMap<LanguageDto, Language>();
-        CreateMap<LinkContactDto, LinkContact>();
-        CreateMap<LinkTaxonomyDto, LinkTaxonomy>();
+        CreateMap<LinkContactDto, LinkContact>().ReverseMap();
+        CreateMap<LinkTaxonomyDto, LinkTaxonomy>().ReverseMap();
         CreateMap<LocationDto, Location>();
         CreateMap<LocationDto, Location>().ReverseMap();
         CreateMap<OrganisationWithServicesDto, Organisation>();

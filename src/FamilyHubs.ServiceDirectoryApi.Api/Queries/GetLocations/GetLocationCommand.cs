@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using FamilyHubs.ServiceDirectory.Api.Helper;
+using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel;
@@ -8,21 +10,19 @@ namespace FamilyHubs.ServiceDirectory.Api.Queries.GetLocations
 {
     public class GetLocationsCommand : IRequest<Result<PaginatedList<LocationDto>>>
     {
-        public GetLocationsCommand(string? id, string? name, string? description, string? postCode)
+        public GetLocationsCommand(string? id, string? name, string? description, string? postCode, int? pageSize, int? pageNumber)
         {
-            AddQueryParameterIfNotNull("Id", id);
-            AddQueryParameterIfNotNull("Name", name);
-            AddQueryParameterIfNotNull("Description", description);
-            AddQueryParameterIfNotNull("PosCode", postCode);
+            QueryValues = new LocationQuery { 
+                Id = id, 
+                Name = name,
+                Description = description, 
+                PostCode = postCode,
+                PageNumber = pageNumber, 
+                PageSize =pageSize
+            };
         }
 
-        public Dictionary<string, object> QueryValues { get; } = new Dictionary<string, object>();
-
-        private void AddQueryParameterIfNotNull(string key, string? value)
-        {
-            if (string.IsNullOrEmpty(value)) return;
-            QueryValues.Add(key, value);
-        }
+        public LocationQuery QueryValues { get; }
     }
 
     public class GetLocationsCommandHandler : IRequestHandler<GetLocationsCommand, Result<PaginatedList<LocationDto>>>
@@ -38,9 +38,9 @@ namespace FamilyHubs.ServiceDirectory.Api.Queries.GetLocations
 
         public async Task<Result<PaginatedList<LocationDto>>> Handle(GetLocationsCommand request, CancellationToken cancellationToken)
         {
-            var locations = _locationService.GetLocations(request.QueryValues);
+            var locations = await _locationService.GetLocations(request.QueryValues);
             var locationsDto = _mapper.Map<List<LocationDto>>(locations);
-            var paginatedList = new PaginatedList<LocationDto>(locationsDto, locationsDto.Count, 1, 10);
+            var paginatedList = PaginationHelper.PaginatedResults(locationsDto, request.QueryValues);
 
             return Result<PaginatedList<LocationDto>>.Success(paginatedList);
         }
