@@ -1,6 +1,8 @@
 ﻿using AutoFixture;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Services
 {
@@ -8,10 +10,12 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
     public class ContactServiceTests : BaseCreateDbUnitTest
     {
         private readonly Fixture _fixture;
+        private readonly ILogger<ContactService> _logger;
 
         public ContactServiceTests()
         {
             _fixture = new Fixture();
+            _logger = Mock.Of<ILogger<ContactService>>();
         }
 
         [Fact]
@@ -26,7 +30,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
             }
             await applicationDbContext.SaveChangesAsync();
 
-            var contactService = new ContactService(applicationDbContext);
+            var contactService = new ContactService(applicationDbContext, _logger);
             var query = new ContactQuery();
 
             //  Act
@@ -38,7 +42,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
         }
 
         [Fact]
-        public async Task GetLocations_HasParameters_ReturnsResults()
+        public async Task GetContacts_HasParameters_ReturnsResults()
         {
             //  Arrange
             var applicationDbContext = GetApplicationDbContext();
@@ -49,7 +53,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
             }
             await applicationDbContext.SaveChangesAsync();
 
-            var contactService = new ContactService(applicationDbContext);
+            var contactService = new ContactService(applicationDbContext, _logger);
             var query = new ContactQuery 
             {
                 Id = contacts[0]!.Id,
@@ -70,6 +74,24 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
             Assert.Equal(query.Id, results[0].Id);
             Assert.Equal(query.Name, results[0].Name);
             Assert.Equal(query.Telephone, results[0].Telephone);
+        }
+
+        [Fact]
+        public async Task UpsertContact_AddedToDbSet()
+        {
+            //  Arrange
+            var applicationDbContext = GetApplicationDbContext();
+            var contact = _fixture.Create<Contact>();
+
+            var contactService = new ContactService(applicationDbContext, _logger);
+
+            //  Act
+            var result = await contactService.UpsertContact(contact);
+
+            //  Assert
+            var addedContact = applicationDbContext.Contacts.Where(c => c.Id == contact.Id).FirstOrDefault();
+            Assert.NotNull(addedContact);
+            Assert.Equal(addedContact.Name, addedContact.Name);
         }
     }
 }

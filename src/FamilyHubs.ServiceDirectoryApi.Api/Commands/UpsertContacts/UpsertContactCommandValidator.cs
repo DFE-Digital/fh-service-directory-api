@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using System;
 using System.Text.RegularExpressions;
 
 namespace FamilyHubs.ServiceDirectory.Api.Commands.UpsertContacts
@@ -20,7 +19,7 @@ namespace FamilyHubs.ServiceDirectory.Api.Commands.UpsertContacts
             RuleFor(v => v.ContactDto.Telephone)
                 .MaximumLength(50);
 
-            RuleFor(v => v.ContactDto.Telephone)
+            RuleFor(v => v.ContactDto.TextPhone)
                 .MaximumLength(50);
 
             RuleFor(v => v.ContactDto.Url)
@@ -31,7 +30,7 @@ namespace FamilyHubs.ServiceDirectory.Api.Commands.UpsertContacts
                 .EmailAddress();
         }
 
-        public static bool ValidateUrl(string url)
+        public static bool ValidateUrl(string? url)
         {
             // just so the validation passes if the uri is not required / nullable
             if (string.IsNullOrEmpty(url))
@@ -39,7 +38,7 @@ namespace FamilyHubs.ServiceDirectory.Api.Commands.UpsertContacts
                 return true;
             }
 
-            string Pattern = @"(http(s)?://)?([\w-]+\.)+[\w-]+[\w-]+[\.]+[\][a-z.]{2,3}$+([./?%&=]*)?";
+            string Pattern = @"[\][a-z.]{2,3}$+([./?%&=]*)?";
             Regex Rgx = new Regex(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             return Rgx.IsMatch(url);
         }
