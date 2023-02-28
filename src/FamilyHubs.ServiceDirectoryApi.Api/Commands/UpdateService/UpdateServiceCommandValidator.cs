@@ -1,5 +1,5 @@
-﻿using FluentValidation;
-using System.Text.RegularExpressions;
+﻿using FamilyHubs.ServiceDirectory.Api.Helper;
+using FluentValidation;
 
 namespace FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
 
@@ -32,7 +32,7 @@ public class UpdateServiceCommandValidator : AbstractValidator<UpdateServiceComm
         {
             if (list != null)
             {
-                var hasInvalidUrl = list.Any(x => x != null && x.Contact != null && x.Contact.Url != null && !IsValidURL(x.Contact.Url));
+                var hasInvalidUrl = list.Any(x => x != null && x.Contact != null && x.Contact.Url != null && !UtilHelper.IsValidURL(x.Contact.Url));
                 if (hasInvalidUrl)
                 {
                     context.AddFailure("Contact Url must be valid");
@@ -48,7 +48,7 @@ public class UpdateServiceCommandValidator : AbstractValidator<UpdateServiceComm
                 {
                     if (item != null)
                     {
-                        var hasInvalidUrl = item.Any(x => x != null && x.Contact != null && x.Contact.Url != null && !IsValidURL(x.Contact.Url));
+                        var hasInvalidUrl = item.Any(x => x != null && x.Contact != null && x.Contact.Url != null && !UtilHelper.IsValidURL(x.Contact.Url));
                         if (hasInvalidUrl)
                         {
                             context.AddFailure("Contact Url must be valid");
@@ -59,12 +59,4 @@ public class UpdateServiceCommandValidator : AbstractValidator<UpdateServiceComm
         });
     }
 
-    private static bool IsValidURL(string URL)
-    {
-        if (string.IsNullOrEmpty(URL))
-            return true;
-        string Pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-        Regex Rgx = new(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        return Rgx.IsMatch(URL);
-    }
 }

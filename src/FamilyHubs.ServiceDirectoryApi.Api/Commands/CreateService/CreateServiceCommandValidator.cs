@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using FamilyHubs.ServiceDirectory.Api.Helper;
+using FluentValidation;
 using NetTopologySuite.Index.HPRtree;
 using System;
 using System.Text.RegularExpressions;
@@ -28,7 +29,7 @@ public class CreateServiceCommandValidator : AbstractValidator<CreateServiceComm
         {
             if (list != null)
             {
-                var hasInvalidUrl = list.Any(x => x != null && x.Contact != null && x.Contact.Url != null && !IsValidURL(x.Contact.Url));
+                var hasInvalidUrl = list.Any(x => x != null && x.Contact != null && x.Contact.Url != null && !UtilHelper.IsValidURL(x.Contact.Url));
                 if (hasInvalidUrl)
                 {
                     context.AddFailure("Contact Url must be valid");
@@ -44,7 +45,7 @@ public class CreateServiceCommandValidator : AbstractValidator<CreateServiceComm
                 {
                     if (item != null) 
                     {
-                        var hasInvalidUrl = item.Any(x => x != null && x.Contact != null && x.Contact.Url != null && !IsValidURL(x.Contact.Url));
+                        var hasInvalidUrl = item.Any(x => x != null && x.Contact != null && x.Contact.Url != null && !UtilHelper.IsValidURL(x.Contact.Url));
                         if (hasInvalidUrl)
                         {
                             context.AddFailure("Contact Url must be valid");
@@ -53,14 +54,5 @@ public class CreateServiceCommandValidator : AbstractValidator<CreateServiceComm
                 }
             }
         });
-    }
-
-    private static bool IsValidURL(string URL)
-    {
-        if (string.IsNullOrEmpty(URL))
-            return true;
-        string Pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-        Regex Rgx = new(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        return Rgx.IsMatch(URL);
     }
 }
