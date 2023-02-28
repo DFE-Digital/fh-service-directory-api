@@ -177,6 +177,33 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
+    public async Task ThenGetServiceThatArePaidForWhenZeroAmountAndCustomOption()
+    {
+        TestOrganisation.Services!.ElementAt(0).CostOptions = new List<CostOptionDto>
+        {
+            new(Guid.NewGuid().ToString(),
+                "",
+                decimal.Zero,
+                default,
+                "Custom option",
+                DateTime.UtcNow,
+                DateTime.UtcNow.AddHours(8))
+        };
+
+        CreateOrganisation();
+
+        var command = new GetServicesCommand("Information Sharing", "active", "XTEST", null, null, null,
+            null, null, null, 1, 10, null, null, true, null, null, null, null, null);
+        var handler = new GetServicesCommandHandler(MockApplicationDbContext);
+
+        //Act
+        var results = await handler.Handle(command, new CancellationToken());
+
+        results.Should().NotBeNull();
+        results.Items.Count.Should().Be(1);
+    }
+
+    [Fact]
     public async Task ThenGetServiceThatAreFreeWhenOptionIsFree()
     {
         CreateOrganisation();
