@@ -75,7 +75,8 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Domain
             Assert.Equal(location.Latitude, dbRecord.Latitude);
             Assert.Equal(location.Longitude, dbRecord.Longitude);
             Assert.Equal(location.LinkContacts!.Count, dbRecord.LinkContacts!.Count);
-            
+           // Assert.Equal(location.PhysicalAddresses!.First().Address1, dbRecord.PhysicalAddresses!.First().Address1);
+
         }
 
         private Location GenerateTestLocation()
@@ -83,24 +84,13 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Domain
             var location = _fixture.Create<Location>();
             location.Id = string.Empty;
 
-            foreach(var linkContact in location.LinkContacts)
+            foreach(var linkContact in location.LinkContacts!)
             {
                 linkContact.Id = string.Empty;
                 linkContact.LinkId= string.Empty;
                 linkContact.LinkType = string.Empty;
                 linkContact.Contact!.Id = string.Empty;
             }
-            //var linkContacts = new List<LinkContact>();
-
-            //var contactOne = new Contact(string.Empty, "Test1", "12345678", string.Empty, string.Empty, string.Empty, string.Empty);
-            //var contactTwo = new Contact(string.Empty, "Test2", "12345679", string.Empty, string.Empty, string.Empty, string.Empty);
-            //var contactThree = new Contact(string.Empty, "Test3", "12345680", string.Empty, string.Empty, string.Empty, string.Empty);
-
-            //linkContacts.Add(new LinkContact(string.Empty, string.Empty, string.Empty, contactOne));
-            //linkContacts.Add(new LinkContact(string.Empty, string.Empty, string.Empty, contactTwo));
-            //linkContacts.Add(new LinkContact(string.Empty, string.Empty, string.Empty, contactThree));
-
-            //location.LinkContacts = linkContacts;
 
             return location;
         }
