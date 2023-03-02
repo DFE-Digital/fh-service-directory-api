@@ -12,14 +12,13 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
     {
         private readonly Fixture _fixture;
         private readonly ILogger<ContactService> _logger;
-        private readonly Mock<IIdGenerator<long>> _mockIdGenerator;
+        private readonly IIdGenerator<long> _mockedIdGenerator;
 
         public ContactServiceTests()
         {
             _fixture = new Fixture();
             _logger = Mock.Of<ILogger<ContactService>>();
-            _mockIdGenerator = new Mock<IIdGenerator<long>>();
-            _mockIdGenerator.Setup(m => m.CreateId()).Returns(DateTime.Now.Ticks);
+            _mockedIdGenerator = GetMockedIdGenerator();
         }
 
         [Fact]
@@ -34,7 +33,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
             }
             await applicationDbContext.SaveChangesAsync();
 
-            var contactService = new ContactService(applicationDbContext, _mockIdGenerator.Object, _logger);
+            var contactService = new ContactService(_logger, _mockedIdGenerator,  applicationDbContext);
             var query = new ContactQuery();
 
             //  Act
@@ -57,7 +56,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
             }
             await applicationDbContext.SaveChangesAsync();
 
-            var contactService = new ContactService(applicationDbContext, _mockIdGenerator.Object, _logger);
+            var contactService = new ContactService(_logger, _mockedIdGenerator, applicationDbContext);
             var query = new ContactQuery 
             {
                 Id = contacts[0]!.Id,
@@ -87,7 +86,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
             var applicationDbContext = GetApplicationDbContext();
             var contact = _fixture.Create<Contact>();
 
-            var contactService = new ContactService(applicationDbContext, _mockIdGenerator.Object, _logger);
+            var contactService = new ContactService(_logger, _mockedIdGenerator, applicationDbContext);
 
             //  Act
             var result = await contactService.Upsert(contact);

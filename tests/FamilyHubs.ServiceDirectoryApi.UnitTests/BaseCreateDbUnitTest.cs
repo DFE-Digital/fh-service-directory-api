@@ -2,6 +2,7 @@
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.SharedKernel.Interfaces;
+using IdGen;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -37,5 +38,17 @@ public class BaseCreateDbUnitTest
                .UseInternalServiceProvider(serviceProvider);
 
         return builder.Options;
+    }
+
+    protected IIdGenerator<long> GetMockedIdGenerator()
+    {
+        var mockIdGenerator = new Mock<IIdGenerator<long>>();
+        mockIdGenerator.Setup(m => m.CreateId()).Returns(GenId);
+        return mockIdGenerator.Object;
+    }
+
+    private static long GenId()
+    {
+        return DateTime.Now.Ticks;
     }
 }

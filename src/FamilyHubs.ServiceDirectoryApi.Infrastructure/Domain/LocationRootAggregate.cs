@@ -36,6 +36,7 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Domain
             existingLocationRecord.LinkContacts = locationWithNewValues.LinkContacts;
 
             existingLocationRecord = await _locationService.Upsert(existingLocationRecord);
+
             return existingLocationRecord;
         }
 

@@ -17,7 +17,7 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
 
     public class ContactService : BaseRepositoryService<Contact, ContactService>, IContactService
     {
-        public ContactService(ApplicationDbContext context, IIdGenerator<long> idGenerator, ILogger<ContactService> logger) 
+        public ContactService(ILogger<ContactService> logger, IIdGenerator<long> idGenerator, ApplicationDbContext context) 
             :base(logger, idGenerator, context, context.Contacts)
         {
 

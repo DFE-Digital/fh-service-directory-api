@@ -11,14 +11,13 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
     public class LocationServiceTests : BaseCreateDbUnitTest
     {
         private readonly Fixture _fixture;
-        private readonly Mock<IIdGenerator<long>> _mockIdGenerator;
+        private readonly IIdGenerator<long> _mockedIdGenerator;
         private readonly ILogger<LocationService> _logger;
 
         public LocationServiceTests()
         {
             _fixture = new Fixture();
-            _mockIdGenerator = new Mock<IIdGenerator<long>>();
-            _mockIdGenerator.Setup(m => m.CreateId()).Returns(DateTime.Now.Ticks);
+            _mockedIdGenerator = GetMockedIdGenerator();
             _logger = Mock.Of<ILogger<LocationService>>();
         }
 
@@ -34,7 +33,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
             }
             await applicationDbContext.SaveChangesAsync();
 
-            var locationService = new LocationService(_logger, _mockIdGenerator.Object, applicationDbContext);
+            var locationService = new LocationService(_logger, _mockedIdGenerator, applicationDbContext);
             var query = new LocationQuery();
 
             //  Act
@@ -57,7 +56,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
             }
             await applicationDbContext.SaveChangesAsync();
 
-            var locationService = new LocationService(_logger, _mockIdGenerator.Object, applicationDbContext);
+            var locationService = new LocationService(_logger, _mockedIdGenerator, applicationDbContext);
             var query = new LocationQuery 
             {
                 Id = locations[0]!.Id,
