@@ -8,10 +8,12 @@ using FamilyHubs.ServiceDirectory.Core;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Core.Interfaces;
 using FamilyHubs.ServiceDirectory.Infrastructure;
+using FamilyHubs.ServiceDirectory.Infrastructure.Domain;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services;
 using FamilyHubs.SharedKernel.Interfaces;
+using IdGen.DependencyInjection;
 using MediatR;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,12 +50,20 @@ public static class StartupExtensions
 
     public static void RegisterApplicationComponents(this WebApplicationBuilder builder)
     {
+
+        var idGenerationInstanceId = builder.Configuration.GetValue<int?>("IdGenerationInstanceId");
+        if(idGenerationInstanceId.HasValue)
+        {
+            builder.Services.AddIdGen(idGenerationInstanceId.Value);
+        }
+
         builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
         {
             containerBuilder.RegisterModule(new DefaultInfrastructureModule(builder.Environment.IsDevelopment()));
 
             containerBuilder.RegisterType<LocationService>().As<ILocationService>().SingleInstance();
             containerBuilder.RegisterType<ContactService>().As<IContactService>().SingleInstance();
+            containerBuilder.RegisterType<LocationRootAggregate>().As<ILocationRootAggregate>().SingleInstance();
 
             containerBuilder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
 

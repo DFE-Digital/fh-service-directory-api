@@ -1,7 +1,8 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Entities;
+﻿using Ardalis.Specification;
+using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using IdGen;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
@@ -9,23 +10,22 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
     public interface IContactService
     {
         Task<List<Contact>> GetContacts(ContactQuery queryValues);
-        Task<Contact> UpsertContact(Contact contact);
+        Task<Contact> Upsert(Contact contact);
+        Task<Contact?> GetById(string id);
+        Task HydrateLinkContact(LinkContact linkContact, string linkId, string linkType);
     }
 
-    public class ContactService : BaseRepositoryService, IContactService
+    public class ContactService : BaseRepositoryService<Contact, ContactService>, IContactService
     {
-        private readonly ApplicationDbContext _context;
-        private readonly ILogger<ContactService> _logger;
-
-        public ContactService(ApplicationDbContext context, ILogger<ContactService> logger)
+        public ContactService(ApplicationDbContext context, IIdGenerator<long> idGenerator, ILogger<ContactService> logger) 
+            :base(logger, idGenerator, context, context.Contacts)
         {
-            _context = context;
-            _logger = logger;
+
         }
 
         public async Task<List<Contact>> GetContacts(ContactQuery queryValues)
         {
-            var contacts = _context.Contacts.AsQueryable();
+            var contacts = DbContext.Contacts.AsQueryable();
 
             if (!string.IsNullOrEmpty(queryValues.Id))
                 contacts = contacts.Where(x => x.Id == queryValues.Id);
@@ -51,47 +51,47 @@ namespace FamilyHubs.ServiceDirectory.Infrastructure.Services
             return await contacts.ToListAsync();
         }
 
-        public async Task<Contact> UpsertContact(Contact contact)
+        public async Task HydrateLinkContact(LinkContact linkContact, string linkId, string linkType)
         {
-            _logger.LogDebug("UpsertContact - Begin");
-
-            if (!string.IsNullOrEmpty(contact.Id))
+            var contact = await GetContact(linkContact.Contact!);
+            if (contact == null)
             {
-                var existingContact = _context.Contacts.FirstOrDefault(x => x.Id == contact.Id);
-                if (existingContact != null)
-                {
-                    return await UpdateContact(existingContact, contact);
-                }
+                contact = await Upsert(linkContact.Contact!);
             }
 
-            return await AddContact(contact);
+            linkContact.Contact = contact;
+            linkContact.LinkType = linkType;
+            linkContact.LinkId = linkId;
+            if (string.IsNullOrEmpty(linkContact.Id))
+            {
+                linkContact.Id = GetNewId();
+            }
         }
 
-        private async Task<Contact> AddContact(Contact contact)
+        protected override void UpdateEntityValues(Contact existing, Contact modified)
         {
-            _logger.LogDebug("AddContact - Begin");
-
-            _context.Contacts.Add(contact);
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation("AddContact - Success for : {id}", contact.Id);
-            return contact;
+            existing.Title = modified.Title;
+            existing.Name = modified.Name;
+            existing.TextPhone = modified.TextPhone;
+            existing.Telephone = modified.Telephone;
+            existing.Url = modified.Url;
+            existing.Email = modified.Email;
         }
 
-        private async Task<Contact> UpdateContact(Contact existingContact, Contact modifiedContact)
+        private async Task<Contact?> GetContact(Contact contact)
         {
-            _logger.LogDebug("UpdateContact - Begin");
+            if (!string.IsNullOrEmpty(contact.Id))
+            {
+                return await GetById(contact.Id);
+            }
 
-            existingContact.Title = modifiedContact.Title;
-            existingContact.Name = modifiedContact.Name;
-            existingContact.TextPhone = modifiedContact.TextPhone;
-            existingContact.Telephone = modifiedContact.Telephone;
-            existingContact.Url = modifiedContact.Url;
-            existingContact.Email = modifiedContact.Email;
-
-            await _context.SaveChangesAsync();
-            _logger.LogInformation("UpdateContact - Success for : {id}", existingContact.Id);
-            return existingContact;
+            return await DbContext.Contacts.Where(x =>
+                x.Title == contact.Title &&
+                x.Name == contact.Name &&
+                x.Telephone == contact.Telephone &&
+                x.TextPhone == contact.TextPhone &&
+                x.Url == contact.Url
+            ).FirstOrDefaultAsync();
         }
     }
 }

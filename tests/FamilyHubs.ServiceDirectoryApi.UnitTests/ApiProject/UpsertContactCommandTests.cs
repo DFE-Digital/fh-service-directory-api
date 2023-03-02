@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using AutoMapper;
-using FamilyHubs.ServiceDirectory.Api.Commands.UpsertContacts;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpsertContact;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -51,7 +51,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.ApiProject
 
             //  Assert
             Assert.True(result.Succeeded);
-            _mockContactService.Verify(x=>x.UpsertContact(It.IsAny<Contact>()), Times.Once);
+            _mockContactService.Verify(x=>x.Upsert(It.IsAny<Contact>()), Times.Once);
         }
 
         [Fact]
@@ -77,11 +77,11 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.ApiProject
 
             //  Assert
             Assert.False(result.Succeeded);
-            Assert.Contains("The length of 'Contact Dto Title' must be 50 characters or fewer. You entered 51 characters.", result.Errors);
-            Assert.Contains("The length of 'Contact Dto Name' must be 50 characters or fewer. You entered 51 characters.", result.Errors);
-            Assert.Contains("The length of 'Contact Dto Telephone' must be 50 characters or fewer. You entered 51 characters.", result.Errors);
-            Assert.Contains("The length of 'Contact Dto Text Phone' must be 50 characters or fewer. You entered 51 characters.", result.Errors);
-            Assert.Contains("'Contact Dto Email' is not a valid email address.", result.Errors);
+            Assert.Contains("The length of 'Title' must be 50 characters or fewer. You entered 51 characters.", result.Errors);
+            Assert.Contains("The length of 'Name' must be 50 characters or fewer. You entered 51 characters.", result.Errors);
+            Assert.Contains("The length of 'Telephone' must be 50 characters or fewer. You entered 51 characters.", result.Errors);
+            Assert.Contains("The length of 'Text Phone' must be 50 characters or fewer. You entered 51 characters.", result.Errors);
+            Assert.Contains("'Email' is not a valid email address.", result.Errors);
         }
     }
 }

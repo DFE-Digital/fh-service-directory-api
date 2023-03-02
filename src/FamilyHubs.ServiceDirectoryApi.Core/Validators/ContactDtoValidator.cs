@@ -1,32 +1,31 @@
-﻿using FluentValidation;
+﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FluentValidation;
 using System.Text.RegularExpressions;
 
-namespace FamilyHubs.ServiceDirectory.Api.Commands.UpsertContacts
+namespace FamilyHubs.ServiceDirectory.Core.Validators
 {
-    public class UpsertContactCommandValidator : AbstractValidator<UpsertContactCommand>
+    public class ContactDtoValidator : AbstractValidator<ContactDto>
     {
-        public UpsertContactCommandValidator()
+        public ContactDtoValidator()
         {
-            RuleFor(v => v.ContactDto)
-                .NotNull();
 
-            RuleFor(v => v.ContactDto.Title)
+            RuleFor(v => v.Title)
                 .MaximumLength(50);
 
-            RuleFor(v => v.ContactDto.Name)
+            RuleFor(v => v.Name)
                 .MaximumLength(50);
 
-            RuleFor(v => v.ContactDto.Telephone)
+            RuleFor(v => v.Telephone)
                 .MaximumLength(50);
 
-            RuleFor(v => v.ContactDto.TextPhone)
+            RuleFor(v => v.TextPhone)
                 .MaximumLength(50);
 
-            RuleFor(v => v.ContactDto.Url)
-                .Must(x=> ValidateUrl(x))
+            RuleFor(v => v.Url)
+                .Must(x => ValidateUrl(x))
                 .WithMessage("Provided URL not valid");
 
-            RuleFor(v => v.ContactDto.Email)
+            RuleFor(v => v.Email)
                 .EmailAddress();
         }
 

@@ -32,7 +32,7 @@ public class AutoMappingProfiles : Profile
         CreateMap<ServiceDeliveryDto, ServiceDelivery>();
         CreateMap<ServiceTaxonomyDto, ServiceTaxonomy>();
         CreateMap<ServiceTypeDto, ServiceType>();
-        CreateMap<TaxonomyDto, Taxonomy>();
+        CreateMap<TaxonomyDto, Taxonomy>().ReverseMap();
         CreateMap<UICacheDto, UiCache>();
     }
 }

@@ -1,6 +1,9 @@
 ﻿using AutoFixture;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services;
+using IdGen;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Services
 {
@@ -8,10 +11,15 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
     public class LocationServiceTests : BaseCreateDbUnitTest
     {
         private readonly Fixture _fixture;
+        private readonly Mock<IIdGenerator<long>> _mockIdGenerator;
+        private readonly ILogger<LocationService> _logger;
 
         public LocationServiceTests()
         {
             _fixture = new Fixture();
+            _mockIdGenerator = new Mock<IIdGenerator<long>>();
+            _mockIdGenerator.Setup(m => m.CreateId()).Returns(DateTime.Now.Ticks);
+            _logger = Mock.Of<ILogger<LocationService>>();
         }
 
         [Fact]
@@ -26,7 +34,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
             }
             await applicationDbContext.SaveChangesAsync();
 
-            var locationService = new LocationService(applicationDbContext);
+            var locationService = new LocationService(_logger, _mockIdGenerator.Object, applicationDbContext);
             var query = new LocationQuery();
 
             //  Act
@@ -49,7 +57,7 @@ namespace FamilyHubs.ServiceDirectoryApi.UnitTests.InfrastructureProject.Service
             }
             await applicationDbContext.SaveChangesAsync();
 
-            var locationService = new LocationService(applicationDbContext);
+            var locationService = new LocationService(_logger, _mockIdGenerator.Object, applicationDbContext);
             var query = new LocationQuery 
             {
                 Id = locations[0]!.Id,

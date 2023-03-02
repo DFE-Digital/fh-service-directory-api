@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using FamilyHubs.ServiceDirectory.Api.Commands.CreateLocation;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateLocation;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpsertContact;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpsertLocation;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetLocations;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -14,6 +16,7 @@ public class MinimalLocationEndPoints
 {
     public void RegisterLocationEndPoints(WebApplication app)
     {
+        // Does not appear to be functional
         app.MapPost("api/location/{taxonomyId}/{organisationId}", [Authorize(Policy = "ServiceAccess")] async (string taxonomyId, string organisationId,[FromBody] LocationDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
@@ -30,6 +33,7 @@ public class MinimalLocationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Location", "Create Location") { Tags = new[] { "Locations" } });
 
+        // Does not appear to be functional
         app.MapPut("api/location/{taxonomyId}/{organisationId}", async (string taxonomyId, string organisationId, [FromBody] LocationDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
@@ -46,8 +50,22 @@ public class MinimalLocationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Location", "Update Location As Family Hub") { Tags = new[] { "Locations" } });
 
+        app.MapPost("api/location", [Authorize(Policy = "ServiceAccess")] async ([FromBody] LocationDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalLocationEndPoints> logger) =>
+        {
+            var command = new UpsertLocationCommand(request);
+            var result = await _mediator.Send(command, cancellationToken);
 
-        app.MapGet("api/location", async (string? id, string? name, string? description, string? postCode, int? pageSize, int? pageNumber, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalServiceEndPoints> logger) =>
+            if (result.Succeeded)
+            {
+                return Results.Ok(result.Value);
+            }
+
+            return Results.BadRequest(result.Errors);
+
+        }).WithMetadata(new SwaggerOperationAttribute("Location", "Create Location") { Tags = new[] { "Locations" } });
+
+
+        app.MapGet("api/location", async (string? id, string? name, string? description, string? postCode, int? pageSize, int? pageNumber, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalLocationEndPoints> logger) =>
         {
             var command = new GetLocationsCommand(id, name, description, postCode, pageSize, pageNumber);
             var result = await _mediator.Send(command, cancellationToken);

@@ -17,6 +17,7 @@ namespace FamilyHubs.ServiceDirectory.Api.Queries.GetContacts
             { 
                 Id = id, 
                 Name = name,
+                Title= title,
                 Telephone = telephone,
                 TextPhone = textPhone,
                 Url = url,

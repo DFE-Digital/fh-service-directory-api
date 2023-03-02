@@ -1,4 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Api.Commands.UpsertContacts;
+﻿using FamilyHubs.ServiceDirectory.Api.Commands.UpsertContact;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetContacts;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
