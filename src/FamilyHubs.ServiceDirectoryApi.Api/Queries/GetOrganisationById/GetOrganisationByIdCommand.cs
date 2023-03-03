@@ -52,42 +52,45 @@ public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCom
            .ThenInclude(x => x.ServiceTaxonomies)
            .ThenInclude(x => x.Taxonomy)
 
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.ServiceAtLocations)
-           .ThenInclude(x => x.RegularSchedules)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.ServiceAtLocations)
-           .ThenInclude(x => x.HolidaySchedules)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.ServiceAtLocations)
-           .ThenInclude(x => x.LinkContacts!)
-           .ThenInclude(x => x.Contact)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.ServiceAtLocations)
-           .ThenInclude(x => x.Location)
-           .ThenInclude(x => x.PhysicalAddresses)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.ServiceAtLocations)
-           .ThenInclude(x => x.Location)
-           .ThenInclude(x => x.LinkContacts!)
-           .ThenInclude(x => x.Contact)
-
-           .Include(x => x.Services!)
-           .ThenInclude(x => x.ServiceAtLocations)
-           .ThenInclude(x => x.Location)
-           .ThenInclude(x => x.LinkTaxonomies!)
-           .ThenInclude(x => x.Taxonomy)
-
            .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity == null)
         {
             throw new NotFoundException(nameof(Organisation), request.Id);
         }
+
+        var serviceIds = entity.Services?.Select(x => x.Id);
+        if (serviceIds is not null && serviceIds.Any())
+        {
+            var serviceCollection = _context.Services.Where(x => serviceIds.Any(y => y == x.Id))
+                .Include(x => x.ServiceAtLocations)
+                .ThenInclude(x => x.RegularSchedules)
+
+                .Include(x => x.ServiceAtLocations)
+                .ThenInclude(x => x.HolidaySchedules)
+
+                .Include(x => x.ServiceAtLocations)
+                .ThenInclude(x => x.LinkContacts!)
+                .ThenInclude(x => x.Contact)
+
+                .Include(x => x.ServiceAtLocations)
+                .ThenInclude(x => x.Location)
+                .ThenInclude(x => x.PhysicalAddresses)
+
+                .Include(x => x.ServiceAtLocations)
+                .ThenInclude(x => x.Location)
+                .ThenInclude(x => x.LinkContacts!)
+                .ThenInclude(x => x.Contact)
+
+                .Include(x => x.ServiceAtLocations)
+                .ThenInclude(x => x.Location)
+                .ThenInclude(x => x.LinkTaxonomies!)
+                .ThenInclude(x => x.Taxonomy).ToList();
+
+            entity.Services = serviceCollection;
+
+        }
+
 
         List<ServiceDto> services = new List<ServiceDto>();
         if (entity.Services != null)
