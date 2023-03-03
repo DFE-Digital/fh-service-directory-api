@@ -131,6 +131,35 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             dbServices = dbServices.Where(x => x.ServiceTaxonomies.Any(serviceTaxonomy => parts.Contains(serviceTaxonomy.Taxonomy?.Id))).ToList();
         }
 
+        var serviceIds = dbServices.Select(x => x.Id);
+        if (serviceIds is not null && serviceIds.Any())
+        {
+            dbServices = await _context.Services.Where(x => serviceIds.Any(y => y == x.Id))
+                .Include(x => x.ServiceAtLocations)
+                .ThenInclude(x => x.RegularSchedules)
+
+                .Include(x => x.ServiceAtLocations)
+                .ThenInclude(x => x.HolidaySchedules)
+
+                .Include(x => x.ServiceAtLocations)
+                .ThenInclude(x => x.LinkContacts!)
+                .ThenInclude(x => x.Contact)
+
+                .Include(x => x.ServiceAtLocations)
+                .ThenInclude(x => x.Location)
+                .ThenInclude(x => x.PhysicalAddresses)
+
+                .Include(x => x.ServiceAtLocations)
+                .ThenInclude(x => x.Location)
+                .ThenInclude(x => x.LinkContacts!)
+                .ThenInclude(x => x.Contact)
+
+                .Include(x => x.ServiceAtLocations)
+                .ThenInclude(x => x.Location)
+                .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
+                .ThenInclude(x => x.Taxonomy).ToListAsync();
+        }
+
         // filter before we calculate distance and map, for efficiency
         if (request.IsFamilyHub != null)
         {
@@ -197,29 +226,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             .Include(x => x.ServiceTaxonomies)
             .ThenInclude(x => x.Taxonomy)
 
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.RegularSchedules)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.HolidaySchedules)
 
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.LinkContacts!)
-            .ThenInclude(x => x.Contact)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.PhysicalAddresses)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.LinkContacts!)
-            .ThenInclude(x => x.Contact)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
-            .ThenInclude(x => x.Taxonomy)
             .Where(x => x.Status == request.Status && x.Status != "Deleted");
 
         if (request.DistrictCode != null)
