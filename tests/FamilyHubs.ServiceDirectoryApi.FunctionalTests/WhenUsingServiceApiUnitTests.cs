@@ -265,7 +265,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         retVal.Should().NotBeNull();
         firstService.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(firstService);
-        firstService.Id.Should().Be("39f211fc-73d4-4ea1-a1c9-d8fc063d6b51");
+        firstService.Id.Should().Be("39f211fc-73d4-4ea1-a1c9-d8fc063d6b54");
     }
 
 #if DEBUG
