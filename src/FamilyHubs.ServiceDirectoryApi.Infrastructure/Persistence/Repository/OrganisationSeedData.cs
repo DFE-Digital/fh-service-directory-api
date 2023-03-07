@@ -1085,16 +1085,16 @@ public class OrganisationSeedData
                 }),
                 new List<Eligibility>(new List<Eligibility>
                 {
-                    new Eligibility("9109T3Children","Children",null,20,15,new List<Taxonomy>())
+                    new Eligibility("9109T6Children","Children",null,20,15,new List<Taxonomy>())
                 }),
                 new List<Funding>(),
                 new List<CostOption>(new List<CostOption>
                 {
-                    new CostOption("1346", "Hour", 25.0m, null, null, null, null)
+                    new CostOption("1347", "Hour", 25.0m, null, null, null, null)
                 }),
                 new List<Language>
                 {
-                    new Language("73a688a2-0dad-4674-ac63-5115c990ea1f","Afrikaans")
+                    new Language("73a688a2-0dad-4674-ac63-5115c990ea1g","Afrikaans")
                 },
                 new List<Review>(),
                 new List<ServiceArea>
@@ -1104,9 +1104,9 @@ public class OrganisationSeedData
                 new List<ServiceAtLocation>(new List<ServiceAtLocation>
                 {
                     new ServiceAtLocation(
-                        "1868",
+                        "1869",
                         new Location(
-                            "68615e6e-c9e2-4a1f-8824-a5c1da36a953",
+                            "68615e6e-c9e2-4a1f-8824-a5c1da36a954",
                             "",
                             "",
                             52.63123,
@@ -1130,11 +1130,11 @@ public class OrganisationSeedData
                         new List<LinkContact>
                         {
                             new LinkContact(
-                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b52",
-                                "1868",
+                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b53",
+                                "1869",
                                 "ServiceAtLocation",
                                 new Contact(
-                                    "1563",
+                                    "1564",
                                     "Mr",
                                     "John Smith",
                                     "01827 64328",
@@ -1148,7 +1148,768 @@ public class OrganisationSeedData
                 new List<ServiceTaxonomy>(new List<ServiceTaxonomy>
                     {
                         new ServiceTaxonomy
-                        ("9121TestDelete",
+                        ("9122TestDelete",
+                            null,
+                            new Taxonomy(
+                                "aafa1cc3-b984-4b10-89d5-27388c5432de",
+                                "Activities",
+                                TaxonomyType.ServiceCategory,
+                                "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4")
+                        )
+                    }),
+                new List<HolidaySchedule>(),
+                new List<RegularSchedule>(),
+                new List<LinkContact>()),
+            /////////////////// new seeded servcies here ///////////////////////
+            new Service(
+                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b54",
+                SeedServiceTypes().ElementAt(0),
+                parentId,
+                "Test Service - Paid - 15 to 20yrs - Somali",
+                @"This is an Somali test service.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                null,
+                true,
+                new List<ServiceDelivery>( new List<ServiceDelivery>
+                {
+                    new ServiceDelivery("d4e1fbfb-dd48-4950-b259-7547260ef839",ServiceDeliveryType.InPerson)
+                }),
+                new List<Eligibility>(new List<Eligibility>
+                {
+                    new Eligibility("9109T4Children","Children",null,20,15,new List<Taxonomy>())
+                }),
+                new List<Funding>(),
+                new List<CostOption>(new List<CostOption>
+                {
+                    new CostOption("1348", "Hour", 25.0m, null, null, null, null)
+                }),
+                new List<Language>
+                {
+                    new Language("73a688a2-0dad-4674-ac63-5115c990ea2h","Somali")
+                },
+                new List<Review>(),
+                new List<ServiceArea>
+                {
+                    new ServiceArea(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<ServiceAtLocation>(new List<ServiceAtLocation>
+                {
+                    new ServiceAtLocation(
+                        "1871",
+                        new Location(
+                            "68615e6e-c9e2-4a1f-8824-a5c1da36a955",
+                            "",
+                            "",
+                            52.63123,
+                            -1.66519,
+                            new List<LinkTaxonomy>(),
+                            new List<PhysicalAddress>(new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    Guid.NewGuid().ToString(),
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
+                                    "England",
+                                    null
+                                )
+                            }),
+                            new List<AccessibilityForDisabilities>(),
+                            new List<LinkContact>()),
+                        new List<RegularSchedule>(),
+                        new List<HolidaySchedule>(),
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b55",
+                                "1871",
+                                "ServiceAtLocation",
+                                new Contact(
+                                    "1565",
+                                    "Mr",
+                                    "John Smith",
+                                    "01827 64328",
+                                    "01827 64328",
+                                    "www.gov.uk",
+                                    "help@gov.uk")
+                            )
+                        })
+
+                }),
+                new List<ServiceTaxonomy>(new List<ServiceTaxonomy>
+                    {
+                        new ServiceTaxonomy
+                        ("9123TestDelete",
+                            null,
+                            new Taxonomy(
+                                "aafa1cc3-b984-4b10-89d5-27388c5432de",
+                                "Activities",
+                                TaxonomyType.ServiceCategory,
+                                "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4")
+                        )
+                    }),
+                new List<HolidaySchedule>(),
+                new List<RegularSchedule>(),
+                new List<LinkContact>()),
+            new Service(
+                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b53",
+                SeedServiceTypes().ElementAt(0),
+                parentId,
+                "Test Service - Free - 15 to 20yrs - Somali",
+                @"This is a test service.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                null,
+                true,
+                new List<ServiceDelivery>( new List<ServiceDelivery>
+                {
+                    new ServiceDelivery("d4e1fbfb-dd48-4950-b259-7547260ef840",ServiceDeliveryType.InPerson)
+                }),
+                new List<Eligibility>(new List<Eligibility>
+                {
+                    new Eligibility("9109T5Children","Children",null,20,15,new List<Taxonomy>())
+                }),
+                new List<Funding>(),
+                new List<CostOption>(new List<CostOption>
+                {
+                    new CostOption("1349", "Hour", 25.0m, null, null, null, null)
+                }),
+                new List<Language>
+                {
+                    new Language("73a688a2-0dad-4674-ac63-5115c990ea2i","Somali")
+                },
+                new List<Review>(),
+                new List<ServiceArea>
+                {
+                    new ServiceArea(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<ServiceAtLocation>(new List<ServiceAtLocation>
+                {
+                    new ServiceAtLocation(
+                        "1873",
+                        new Location(
+                            "68615e6e-c9e2-4a1f-8824-a5c1da36a956",
+                            "",
+                            "",
+                            52.63123,
+                            -1.66519,
+                            new List<LinkTaxonomy>(),
+                            new List<PhysicalAddress>(new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    Guid.NewGuid().ToString(),
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
+                                    "England",
+                                    null
+                                )
+                            }),
+                            new List<AccessibilityForDisabilities>(),
+                            new List<LinkContact>()),
+                        new List<RegularSchedule>(),
+                        new List<HolidaySchedule>(),
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b56",
+                                "1873",
+                                "ServiceAtLocation",
+                                new Contact(
+                                    "1566",
+                                    "Mr",
+                                    "John Smith",
+                                    "01827 64328",
+                                    "01827 64328",
+                                    "www.gov.uk",
+                                    "help@gov.uk")
+                            )
+                        })
+
+                }),
+                new List<ServiceTaxonomy>(new List<ServiceTaxonomy>
+                    {
+                        new ServiceTaxonomy
+                        ("9124TestDelete",
+                            null,
+                            new Taxonomy(
+                                "aafa1cc3-b984-4b10-89d5-27388c5432de",
+                                "Activities",
+                                TaxonomyType.ServiceCategory,
+                                "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4")
+                        )
+                    }),
+                new List<HolidaySchedule>(),
+                new List<RegularSchedule>(),
+                new List<LinkContact>()),
+            new Service(
+                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b64",
+                SeedServiceTypes().ElementAt(0),
+                parentId,
+                "Test Service 10",
+                @"This is an Afrikaans test service.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                null,
+                true,
+                new List<ServiceDelivery>( new List<ServiceDelivery>
+                {
+                    new ServiceDelivery("d4e1fbfb-dd48-4950-b259-7547260ef841",ServiceDeliveryType.InPerson)
+                }),
+                new List<Eligibility>(new List<Eligibility>
+                {
+                    new Eligibility("9109T7Children","Children",null,20,15,new List<Taxonomy>())
+                }),
+                new List<Funding>(),
+                new List<CostOption>(new List<CostOption>
+                {
+                    new CostOption("1350", "Hour", 25.0m, null, null, null, null)
+                }),
+                new List<Language>
+                {
+                    new Language("73a688a2-0dad-4674-ac63-5115c990ea1j","Afrikaans")
+                },
+                new List<Review>(),
+                new List<ServiceArea>
+                {
+                    new ServiceArea(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<ServiceAtLocation>(new List<ServiceAtLocation>
+                {
+                    new ServiceAtLocation(
+                        "1875",
+                        new Location(
+                            "68615e6e-c9e2-4a1f-8824-a5c1da36a957",
+                            "",
+                            "",
+                            52.63123,
+                            -1.66519,
+                            new List<LinkTaxonomy>(),
+                            new List<PhysicalAddress>(new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    Guid.NewGuid().ToString(),
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
+                                    "England",
+                                    null
+                                )
+                            }),
+                            new List<AccessibilityForDisabilities>(),
+                            new List<LinkContact>()),
+                        new List<RegularSchedule>(),
+                        new List<HolidaySchedule>(),
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b57",
+                                "1875",
+                                "ServiceAtLocation",
+                                new Contact(
+                                    "1967",
+                                    "Mr",
+                                    "John Smith",
+                                    "01827 64328",
+                                    "01827 64328",
+                                    "www.gov.uk",
+                                    "help@gov.uk")
+                            )
+                        })
+
+                }),
+                new List<ServiceTaxonomy>(new List<ServiceTaxonomy>
+                    {
+                        new ServiceTaxonomy
+                        ("9125TestDelete",
+                            null,
+                            new Taxonomy(
+                                "aafa1cc3-b984-4b10-89d5-27388c5432de",
+                                "Activities",
+                                TaxonomyType.ServiceCategory,
+                                "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4")
+                        )
+                    }),
+                new List<HolidaySchedule>(),
+                new List<RegularSchedule>(),
+                new List<LinkContact>()),
+            new Service(
+                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b55",
+                SeedServiceTypes().ElementAt(0),
+                parentId,
+                "Test Service 11",
+                @"This is an Afrikaans test service.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                null,
+                true,
+                new List<ServiceDelivery>( new List<ServiceDelivery>
+                {
+                    new ServiceDelivery("d4e1fbfb-dd48-4950-b259-7547260ef842",ServiceDeliveryType.InPerson)
+                }),
+                new List<Eligibility>(new List<Eligibility>
+                {
+                    new Eligibility("9109T8Children","Children",null,20,15,new List<Taxonomy>())
+                }),
+                new List<Funding>(),
+                new List<CostOption>(new List<CostOption>
+                {
+                    new CostOption("1351", "Hour", 25.0m, null, null, null, null)
+                }),
+                new List<Language>
+                {
+                    new Language("73a688a2-0dad-4674-ac63-5115c990ea1k","Afrikaans")
+                },
+                new List<Review>(),
+                new List<ServiceArea>
+                {
+                    new ServiceArea(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<ServiceAtLocation>(new List<ServiceAtLocation>
+                {
+                    new ServiceAtLocation(
+                        "1877",
+                        new Location(
+                            "68615e6e-c9e2-4a1f-8824-a5c1da36a958",
+                            "",
+                            "",
+                            52.63123,
+                            -1.66519,
+                            new List<LinkTaxonomy>(),
+                            new List<PhysicalAddress>(new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    Guid.NewGuid().ToString(),
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
+                                    "England",
+                                    null
+                                )
+                            }),
+                            new List<AccessibilityForDisabilities>(),
+                            new List<LinkContact>()),
+                        new List<RegularSchedule>(),
+                        new List<HolidaySchedule>(),
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b58",
+                                "1877",
+                                "ServiceAtLocation",
+                                new Contact(
+                                    "1568",
+                                    "Mr",
+                                    "John Smith",
+                                    "01827 64328",
+                                    "01827 64328",
+                                    "www.gov.uk",
+                                    "help@gov.uk")
+                            )
+                        })
+
+                }),
+                new List<ServiceTaxonomy>(new List<ServiceTaxonomy>
+                    {
+                        new ServiceTaxonomy
+                        ("9126TestDelete",
+                            null,
+                            new Taxonomy(
+                                "aafa1cc3-b984-4b10-89d5-27388c5432de",
+                                "Activities",
+                                TaxonomyType.ServiceCategory,
+                                "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4")
+                        )
+                    }),
+                new List<HolidaySchedule>(),
+                new List<RegularSchedule>(),
+                new List<LinkContact>()),
+            new Service(
+                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b56",
+                SeedServiceTypes().ElementAt(0),
+                parentId,
+                "Test Service 12",
+                @"This is an Afrikaans test service.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                null,
+                true,
+                new List<ServiceDelivery>( new List<ServiceDelivery>
+                {
+                    new ServiceDelivery("d4e1fbfb-dd48-4950-b259-7547260ef843",ServiceDeliveryType.InPerson)
+                }),
+                new List<Eligibility>(new List<Eligibility>
+                {
+                    new Eligibility("9109T9Children","Children",null,20,15,new List<Taxonomy>())
+                }),
+                new List<Funding>(),
+                new List<CostOption>(new List<CostOption>
+                {
+                    new CostOption("1352", "Hour", 25.0m, null, null, null, null)
+                }),
+                new List<Language>
+                {
+                    new Language("73a688a2-0dad-4674-ac63-5115c990ea1l","Afrikaans")
+                },
+                new List<Review>(),
+                new List<ServiceArea>
+                {
+                    new ServiceArea(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<ServiceAtLocation>(new List<ServiceAtLocation>
+                {
+                    new ServiceAtLocation(
+                        "1879",
+                        new Location(
+                            "68615e6e-c9e2-4a1f-8824-a5c1da36a959",
+                            "",
+                            "",
+                            52.63123,
+                            -1.66519,
+                            new List<LinkTaxonomy>(),
+                            new List<PhysicalAddress>(new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    Guid.NewGuid().ToString(),
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
+                                    "England",
+                                    null
+                                )
+                            }),
+                            new List<AccessibilityForDisabilities>(),
+                            new List<LinkContact>()),
+                        new List<RegularSchedule>(),
+                        new List<HolidaySchedule>(),
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b59",
+                                "1879",
+                                "ServiceAtLocation",
+                                new Contact(
+                                    "1569",
+                                    "Mr",
+                                    "John Smith",
+                                    "01827 64328",
+                                    "01827 64328",
+                                    "www.gov.uk",
+                                    "help@gov.uk")
+                            )
+                        })
+
+                }),
+                new List<ServiceTaxonomy>(new List<ServiceTaxonomy>
+                    {
+                        new ServiceTaxonomy
+                        ("9127TestDelete",
+                            null,
+                            new Taxonomy(
+                                "aafa1cc3-b984-4b10-89d5-27388c5432de",
+                                "Activities",
+                                TaxonomyType.ServiceCategory,
+                                "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4")
+                        )
+                    }),
+                new List<HolidaySchedule>(),
+                new List<RegularSchedule>(),
+                new List<LinkContact>()),
+            new Service(
+                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b57",
+                SeedServiceTypes().ElementAt(0),
+                parentId,
+                "Test Service 13",
+                @"This is an Afrikaans test service.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                null,
+                true,
+                new List<ServiceDelivery>( new List<ServiceDelivery>
+                {
+                    new ServiceDelivery("d4e1fbfb-dd48-4950-b259-7547260ef844",ServiceDeliveryType.InPerson)
+                }),
+                new List<Eligibility>(new List<Eligibility>
+                {
+                    new Eligibility("9109T10Children","Children",null,20,15,new List<Taxonomy>())
+                }),
+                new List<Funding>(),
+                new List<CostOption>(new List<CostOption>
+                {
+                    new CostOption("1353", "Hour", 25.0m, null, null, null, null)
+                }),
+                new List<Language>
+                {
+                    new Language("73a688a2-0dad-4674-ac63-5115c990ea1m","Afrikaans")
+                },
+                new List<Review>(),
+                new List<ServiceArea>
+                {
+                    new ServiceArea(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<ServiceAtLocation>(new List<ServiceAtLocation>
+                {
+                    new ServiceAtLocation(
+                        "1881",
+                        new Location(
+                            "68615e6e-c9e2-4a1f-8824-a5c1da36a960",
+                            "",
+                            "",
+                            52.63123,
+                            -1.66519,
+                            new List<LinkTaxonomy>(),
+                            new List<PhysicalAddress>(new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    Guid.NewGuid().ToString(),
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
+                                    "England",
+                                    null
+                                )
+                            }),
+                            new List<AccessibilityForDisabilities>(),
+                            new List<LinkContact>()),
+                        new List<RegularSchedule>(),
+                        new List<HolidaySchedule>(),
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b60",
+                                "1881",
+                                "ServiceAtLocation",
+                                new Contact(
+                                    "1570",
+                                    "Mr",
+                                    "John Smith",
+                                    "01827 64328",
+                                    "01827 64328",
+                                    "www.gov.uk",
+                                    "help@gov.uk")
+                            )
+                        })
+
+                }),
+                new List<ServiceTaxonomy>(new List<ServiceTaxonomy>
+                    {
+                        new ServiceTaxonomy
+                        ("9128TestDelete",
+                            null,
+                            new Taxonomy(
+                                "aafa1cc3-b984-4b10-89d5-27388c5432de",
+                                "Activities",
+                                TaxonomyType.ServiceCategory,
+                                "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4")
+                        )
+                    }),
+                new List<HolidaySchedule>(),
+                new List<RegularSchedule>(),
+                new List<LinkContact>()),
+            new Service(
+                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b58",
+                SeedServiceTypes().ElementAt(0),
+                parentId,
+                "Test Service 14",
+                @"This is an Afrikaans test service.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                null,
+                true,
+                new List<ServiceDelivery>( new List<ServiceDelivery>
+                {
+                    new ServiceDelivery("d4e1fbfb-dd48-4950-b259-7547260ef845",ServiceDeliveryType.InPerson)
+                }),
+                new List<Eligibility>(new List<Eligibility>
+                {
+                    new Eligibility("9109T11Children","Children",null,20,15,new List<Taxonomy>())
+                }),
+                new List<Funding>(),
+                new List<CostOption>(new List<CostOption>
+                {
+                    new CostOption("1354", "Hour", 25.0m, null, null, null, null)
+                }),
+                new List<Language>
+                {
+                    new Language("73a688a2-0dad-4674-ac63-5115c990ea1n","Afrikaans")
+                },
+                new List<Review>(),
+                new List<ServiceArea>
+                {
+                    new ServiceArea(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<ServiceAtLocation>(new List<ServiceAtLocation>
+                {
+                    new ServiceAtLocation(
+                        "1883",
+                        new Location(
+                            "68615e6e-c9e2-4a1f-8824-a5c1da36a961",
+                            "",
+                            "",
+                            52.63123,
+                            -1.66519,
+                            new List<LinkTaxonomy>(),
+                            new List<PhysicalAddress>(new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    Guid.NewGuid().ToString(),
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
+                                    "England",
+                                    null
+                                )
+                            }),
+                            new List<AccessibilityForDisabilities>(),
+                            new List<LinkContact>()),
+                        new List<RegularSchedule>(),
+                        new List<HolidaySchedule>(),
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b61",
+                                "1883",
+                                "ServiceAtLocation",
+                                new Contact(
+                                    "1571",
+                                    "Mr",
+                                    "John Smith",
+                                    "01827 64328",
+                                    "01827 64328",
+                                    "www.gov.uk",
+                                    "help@gov.uk")
+                            )
+                        })
+
+                }),
+                new List<ServiceTaxonomy>(new List<ServiceTaxonomy>
+                    {
+                        new ServiceTaxonomy
+                        ("9129TestDelete",
+                            null,
+                            new Taxonomy(
+                                "aafa1cc3-b984-4b10-89d5-27388c5432de",
+                                "Activities",
+                                TaxonomyType.ServiceCategory,
+                                "16f3a451-e88d-4ad0-b53f-c8925d1cc9e4")
+                        )
+                    }),
+                new List<HolidaySchedule>(),
+                new List<RegularSchedule>(),
+                new List<LinkContact>()),
+            new Service(
+                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b59",
+                SeedServiceTypes().ElementAt(0),
+                parentId,
+                "Test Service 15",
+                @"This is an Afrikaans test service.",
+                null,
+                null,
+                null,
+                null,
+                null,
+                "active",
+                null,
+                true,
+                new List<ServiceDelivery>( new List<ServiceDelivery>
+                {
+                    new ServiceDelivery("d4e1fbfb-dd48-4950-b259-7547260ef846",ServiceDeliveryType.InPerson)
+                }),
+                new List<Eligibility>(new List<Eligibility>
+                {
+                    new Eligibility("9109T12Children","Children",null,20,15,new List<Taxonomy>())
+                }),
+                new List<Funding>(),
+                new List<CostOption>(new List<CostOption>
+                {
+                    new CostOption("1355", "Hour", 25.0m, null, null, null, null)
+                }),
+                new List<Language>
+                {
+                    new Language("73a688a2-0dad-4674-ac63-5115c990ea1o","Afrikaans")
+                },
+                new List<Review>(),
+                new List<ServiceArea>
+                {
+                    new ServiceArea(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                },
+                new List<ServiceAtLocation>(new List<ServiceAtLocation>
+                {
+                    new ServiceAtLocation(
+                        "1884",
+                        new Location(
+                            "68615e6e-c9e2-4a1f-8824-a5c1da36a962",
+                            "",
+                            "",
+                            52.63123,
+                            -1.66519,
+                            new List<LinkTaxonomy>(),
+                            new List<PhysicalAddress>(new List<PhysicalAddress>
+                            {
+                                new PhysicalAddress(
+                                    Guid.NewGuid().ToString(),
+                                    "7A Boyce's Ave, Clifton",
+                                    "Bristol",
+                                    "BS8 4AA",
+                                    "England",
+                                    null
+                                )
+                            }),
+                            new List<AccessibilityForDisabilities>(),
+                            new List<LinkContact>()),
+                        new List<RegularSchedule>(),
+                        new List<HolidaySchedule>(),
+                        new List<LinkContact>
+                        {
+                            new LinkContact(
+                                "39f211fc-73d4-4ea1-a1c9-d8fc063d6b62",
+                                "1884",
+                                "ServiceAtLocation",
+                                new Contact(
+                                    "1572",
+                                    "Mr",
+                                    "John Smith",
+                                    "01827 64328",
+                                    "01827 64328",
+                                    "www.gov.uk",
+                                    "help@gov.uk")
+                            )
+                        })
+
+                }),
+                new List<ServiceTaxonomy>(new List<ServiceTaxonomy>
+                    {
+                        new ServiceTaxonomy
+                        ("9130TestDelete",
                             null,
                             new Taxonomy(
                                 "aafa1cc3-b984-4b10-89d5-27388c5432de",
