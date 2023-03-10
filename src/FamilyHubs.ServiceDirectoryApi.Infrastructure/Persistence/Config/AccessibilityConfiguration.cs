@@ -7,13 +7,11 @@ public class AccessibilityConfiguration : IEntityTypeConfiguration<Accessibility
 {
     public void Configure(EntityTypeBuilder<AccessibilityForDisabilities> builder)
     {
-        builder.Property(t => t.Accessibility)
-            .IsRequired();
         builder.Property(t => t.Created)
             .IsRequired();
+        
         builder.Property(t => t.CreatedBy)
             .HasMaxLength(255)
             .IsRequired();
-
     }
 }

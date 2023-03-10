@@ -58,76 +58,13 @@ public class ApplicationDbContextInitialiser
         if (_context.Organisations.Any())
             return;
 
-        var organisationSeedData = new OrganisationSeedData(_isProduction);
-
-        if (!_context.OrganisationTypes.Any())
-        {
-            _context.OrganisationTypes.AddRange(organisationSeedData.SeedOrganisationTypes());
-        }
-
-        if (!_context.ServiceTypes.Any())
-        {
-            _context.ServiceTypes.AddRange(organisationSeedData.SeedServiceTypes());
-        }
+        var organisationSeedData = new OrganisationSeedData(_isProduction, _context);
 
         if (!_context.Taxonomies.Any())
         {
-            _context.Taxonomies.AddRange(organisationSeedData.SeedTaxonomies());
+            await organisationSeedData.SeedTaxonomies();
         }
 
-        await _context.SaveChangesAsync();
-
-        var organisations = organisationSeedData.SeedOrganisations(_context.OrganisationTypes.FirstOrDefault(x => x.Name == "LA") ?? _context.OrganisationTypes.First());
-
-        var taxonomies = _context.Taxonomies.ToList();
-
-        foreach (var organisation in organisations)
-        {
-            if (organisation.Services != null)
-            {
-                foreach (var service in organisation.Services)
-                {
-                    var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == service.ServiceType.Id);
-                    if (serviceType != null)
-                    {
-                        service.ServiceType = serviceType;
-                    }
-
-                    foreach (var serviceTaxonomy in service.ServiceTaxonomies)
-                    {
-                        if (serviceTaxonomy.Taxonomy != null)
-                        {
-                            var taxonomy = taxonomies.FirstOrDefault(x => x.Id == serviceTaxonomy.Taxonomy.Id);
-                            if (taxonomy != null)
-                            {
-                                serviceTaxonomy.Taxonomy = taxonomy;
-                            }
-                        }
-                    }
-                    foreach (var serviceAtLocation in service.ServiceAtLocations)
-                    {
-                        if (serviceAtLocation.Location.LinkTaxonomies == null) continue;
-
-                        foreach (var linkTaxonomy in serviceAtLocation.Location.LinkTaxonomies)
-                        {
-                            var taxonomy = taxonomies.FirstOrDefault(x => x.Id == linkTaxonomy.Taxonomy?.Id);
-                            if (taxonomy != null)
-                            {
-                                linkTaxonomy.Taxonomy = taxonomy;
-                            }
-                        }
-                    }
-                }
-            }
-
-            _context.Organisations.Add(organisation);
-        }
-
-        if (!_context.AdminAreas.Any())
-        {
-            _context.AdminAreas.AddRange(organisationSeedData.SeedOrganisationAdminDistrict());
-        }
-
-        await _context.SaveChangesAsync();
+        await organisationSeedData.SeedOrganisations();
     }
 }

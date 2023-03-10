@@ -64,20 +64,19 @@ public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStar
         builder
             .ConfigureServices(services =>
             {
-            // Remove the app's ApplicationDbContext registration.
+                // Remove the app's ApplicationDbContext registration.
                 var descriptor = services.SingleOrDefault(
-            d => d.ServiceType ==
-                typeof(DbContextOptions<ApplicationDbContext>));
+            d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
 
-                if (descriptor != null)
+                if (descriptor is not null)
                 {
                     services.Remove(descriptor);
                 }
 
-            // This should be set for each individual test run
+                // This should be set for each individual test run
                 var inMemoryCollectionName = Guid.NewGuid().ToString();
 
-            // Add ApplicationDbContext using an in-memory database for testing.
+                // Add ApplicationDbContext using an in-memory database for testing.
                 services.AddDbContext<ApplicationDbContext>(options =>
                 {
                     options.UseInMemoryDatabase(inMemoryCollectionName);

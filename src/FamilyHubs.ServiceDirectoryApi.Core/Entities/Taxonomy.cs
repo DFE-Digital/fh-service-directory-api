@@ -4,18 +4,9 @@ using FamilyHubs.SharedKernel.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Core.Entities;
 
-public class Taxonomy : EntityBase<string>, IAggregateRoot
+public class Taxonomy : EntityBase<long>, IAggregateRoot
 {
-    private Taxonomy() { }
-    public Taxonomy(string id, string name, TaxonomyType taxonomyType, string? parent)
-    {
-        Id = id;
-        Name = name;
-        TaxonomyType = taxonomyType;
-        Parent = parent;
-    }
-
-    public string Name { get; set; } = default!;
+    public required string Name { get; set; }
     public TaxonomyType TaxonomyType { get; set; }
-    public string? Parent { get; set; }
+    public long? ParentId { get; set; }
 }

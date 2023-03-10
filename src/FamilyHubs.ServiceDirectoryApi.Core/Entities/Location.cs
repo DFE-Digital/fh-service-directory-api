@@ -1,34 +1,24 @@
-﻿using FamilyHubs.SharedKernel;
+﻿using FamilyHubs.ServiceDirectory.Shared.Enums;
+using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Core.Entities;
 
-public class Location : EntityBase<string>, IAggregateRoot
+public class Location : EntityBase<long>, IAggregateRoot
 {
-    private Location() { }
-    public Location(string id, string name, string? description, double latitude, double longitude,
-        ICollection<LinkTaxonomy>? linkTaxonomies,
-        ICollection<PhysicalAddress>? physicalAddresses,
-        ICollection<AccessibilityForDisabilities>? accessibilityForDisabilities,
-        ICollection<LinkContact>? linkContacts
-        )
-    {
-        Id = id;
-        Name = name;
-        Description = description;
-        Latitude = latitude;
-        Longitude = longitude;
-        LinkTaxonomies = linkTaxonomies;
-        PhysicalAddresses = physicalAddresses;
-        AccessibilityForDisabilities = accessibilityForDisabilities;
-        LinkContacts = linkContacts;
-    }
-    public string Name { get; set; } = default!;
+    public required LocationType LocationType { get; set; }
+    public required string? Name { get; set; }
     public string? Description { get; set; }
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
-    public ICollection<LinkTaxonomy>? LinkTaxonomies { get; set; }
-    public ICollection<PhysicalAddress>? PhysicalAddresses { get; set; }
-    public ICollection<AccessibilityForDisabilities>? AccessibilityForDisabilities { get; set; }
-    public ICollection<LinkContact>? LinkContacts { get; set; }
+    public required double Latitude { get; set; }
+    public required double Longitude { get; set; }
+    public required string Address1 { get; set; }
+    public string? Address2 { get; set; }
+    public required string City { get; set; }
+    public required string PostCode { get; set; }
+    public required string StateProvince { get; set; }
+    public required string Country { get; set; }
+    public ICollection<AccessibilityForDisabilities> AccessibilityForDisabilities { get; set; } = new List<AccessibilityForDisabilities>();
+    public ICollection<RegularSchedule> RegularSchedules { get; set; } = new List<RegularSchedule>();
+    public ICollection<HolidaySchedule> HolidaySchedules { get; set; } = new List<HolidaySchedule>();
+    public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
 }

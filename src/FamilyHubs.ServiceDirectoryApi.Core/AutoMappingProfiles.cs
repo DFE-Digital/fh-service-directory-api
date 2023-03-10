@@ -8,29 +8,21 @@ public class AutoMappingProfiles : Profile
 {
     public AutoMappingProfiles()
     {
-        CreateMap<AccessibilityForDisabilitiesDto, AccessibilityForDisabilities>();
-        CreateMap<AdminAreaDto, AdminArea>();
-        CreateMap<ContactDto, Contact>();
-        CreateMap<CostOptionDto, CostOption>();
-        CreateMap<EligibilityDto, Eligibility>();
-        CreateMap<FundingDto, Funding>();
-        CreateMap<HolidayScheduleDto, HolidaySchedule>();
-        CreateMap<LanguageDto, Language>();
-        CreateMap<LinkContactDto, LinkContact>();
-        CreateMap<LinkTaxonomyDto, LinkTaxonomy>();
-        CreateMap<LocationDto, Location>();
-        CreateMap<OrganisationWithServicesDto, Organisation>();
-        CreateMap<OrganisationTypeDto, OrganisationType>();
-        CreateMap<PhysicalAddressDto, PhysicalAddress>();
-        CreateMap<RegularScheduleDto, RegularSchedule>();
-        CreateMap<RelatedOrganisationDto, RelatedOrganisation>();
-        CreateMap<ServiceDto, Service>();
-        CreateMap<ServiceAreaDto, ServiceArea>();
-        CreateMap<ServiceAtLocationDto, ServiceAtLocation>();
-        CreateMap<ServiceDeliveryDto, ServiceDelivery>();
-        CreateMap<ServiceTaxonomyDto, ServiceTaxonomy>();
-        CreateMap<ServiceTypeDto, ServiceType>();
-        CreateMap<TaxonomyDto, Taxonomy>();
-        CreateMap<UICacheDto, UiCache>();
+        CreateMap<AccessibilityForDisabilitiesDto, AccessibilityForDisabilities>().ReverseMap();
+        CreateMap<ContactDto, Contact>().ReverseMap();
+        CreateMap<CostOptionDto, CostOption>().ReverseMap();
+        CreateMap<EligibilityDto, Eligibility>().ReverseMap();
+        CreateMap<FundingDto, Funding>().ReverseMap();
+        CreateMap<HolidayScheduleDto, HolidaySchedule>().ReverseMap();
+        CreateMap<LanguageDto, Language>().ReverseMap();
+        CreateMap<LocationDto, Location>().ReverseMap();
+        CreateMap<OrganisationWithServicesDto, Organisation>().ReverseMap();
+        CreateMap<RegularScheduleDto, RegularSchedule>().ReverseMap();
+        CreateMap<ReviewDto, Review>().ReverseMap();
+        CreateMap<ServiceDto, Service>().ReverseMap();
+        CreateMap<ServiceAreaDto, ServiceArea>().ReverseMap();
+        CreateMap<ServiceDeliveryDto, ServiceDelivery>().ReverseMap();
+        CreateMap<TaxonomyDto, Taxonomy>().ReverseMap();
+        CreateMap<Organisation, OrganisationDto>().ReverseMap();
     }
 }

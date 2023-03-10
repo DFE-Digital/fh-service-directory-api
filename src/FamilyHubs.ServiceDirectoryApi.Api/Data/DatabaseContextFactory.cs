@@ -1,6 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
-using FamilyHubs.ServiceDirectory.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -28,7 +27,7 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<ApplicationDbC
             case "UseSqlServerDatabase":
                 {
                     var connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
-                    if (connectionString != null)
+                    if (connectionString is not null)
                         builder.UseSqlServer(connectionString, b => b.MigrationsAssembly("FamilyHubs.ServiceDirectoryApi.Api"));
 
                 }
@@ -37,7 +36,7 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<ApplicationDbC
             case "UsePostgresDatabase":
                 {
                     var connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
-                    if (connectionString != null)
+                    if (connectionString is not null)
                         builder
                             .UseNpgsql(connectionString, b => b.MigrationsAssembly("FamilyHubs.ServiceDirectoryApi.Api"))
                             .UseLowerCaseNamingConvention()
@@ -48,11 +47,10 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<ApplicationDbC
         }
 
         var auditableEntitySaveChangesInterceptor =
-            new AuditableEntitySaveChangesInterceptor(new CurrentUserService(new HttpContextAccessor()),
-                new DateTimeService());
+            new AuditableEntitySaveChangesInterceptor(new CurrentUserService(new HttpContextAccessor()));
 
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-        return new ApplicationDbContext(builder.Options, null, auditableEntitySaveChangesInterceptor);
+        return new ApplicationDbContext(builder.Options, auditableEntitySaveChangesInterceptor);
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
     }
 }

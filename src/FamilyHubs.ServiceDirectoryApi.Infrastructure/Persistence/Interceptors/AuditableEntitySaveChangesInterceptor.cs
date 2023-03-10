@@ -1,23 +1,22 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Interfaces;
+﻿using FamilyHubs.ServiceDirectory.Core.Entities;
+using FamilyHubs.ServiceDirectory.Core.Entities.ManyToMany;
+using FamilyHubs.ServiceDirectory.Core.Interfaces;
 using FamilyHubs.SharedKernel;
-using FamilyHubs.SharedKernel.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 
 public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 {
     private readonly ICurrentUserService _currentUserService;
-    private readonly IDateTime _dateTime;
 
-    public AuditableEntitySaveChangesInterceptor(
-        ICurrentUserService currentUserService,
-        IDateTime dateTime)
+    public AuditableEntitySaveChangesInterceptor(ICurrentUserService currentUserService)
     {
         _currentUserService = currentUserService;
-        _dateTime = dateTime;
     }
 
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
@@ -36,27 +35,20 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 
     public void UpdateEntities(DbContext? context)
     {
-        if (context == null) return;
+        if (context is null) return;
 
-        foreach (var entry in context.ChangeTracker.Entries<EntityBase<string>>())
+        foreach (var entry in context.ChangeTracker.Entries<EntityBase<long>>())
         {
             if (entry.State == EntityState.Added)
             {
-                if (entry.Entity.CreatedBy == null)
-                {
-                    if (_currentUserService.UserId != null)
-                        entry.Entity.CreatedBy = _currentUserService.UserId;
-                    else
-                        entry.Entity.CreatedBy = "System";
-
-                }
-                entry.Entity.Created = _dateTime.Now;
+                entry.Entity.CreatedBy ??= _currentUserService.UserId ?? "System";
+                entry.Entity.Created = DateTime.UtcNow;
             }
 
-            if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
+            if (entry.State is EntityState.Added or EntityState.Modified || entry.HasChangedOwnedEntities())
             {
                 entry.Entity.LastModifiedBy = _currentUserService.UserId;
-                entry.Entity.LastModified = _dateTime.Now;
+                entry.Entity.LastModified = DateTime.UtcNow;
             }
         }
     }
@@ -66,7 +58,7 @@ public static class Extensions
 {
     public static bool HasChangedOwnedEntities(this EntityEntry entry) =>
         entry.References.Any(r =>
-            r.TargetEntry != null &&
+            r.TargetEntry is not null &&
             r.TargetEntry.Metadata.IsOwned() &&
             (r.TargetEntry.State == EntityState.Added || r.TargetEntry.State == EntityState.Modified));
 }

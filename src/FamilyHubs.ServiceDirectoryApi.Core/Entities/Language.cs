@@ -3,16 +3,8 @@ using FamilyHubs.SharedKernel.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Core.Entities;
 
-public class Language : EntityBase<string>, IAggregateRoot
+public class Language : EntityBase<long>, IAggregateRoot
 {
-    private Language() { }
-    public Language(
-        string id, 
-        string name)
-    {
-        Id = id;
-        Name = name;
-    }
-    public string Name { get; set; } = default!;
-    public string ServiceId { get; set; } = default!;
+    public required string Name { get; set; }
+    public long ServiceId { get; set; }
 }

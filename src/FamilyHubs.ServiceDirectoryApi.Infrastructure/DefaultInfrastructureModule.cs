@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Autofac;
-using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
 using MediatR;
@@ -20,17 +19,17 @@ public class DefaultInfrastructureModule : Module
         //var coreAssembly =
         //  Assembly.GetAssembly(typeof(Project)); // TODO: Replace "Project" with any type from your Core project
         //var infrastructureAssembly = Assembly.GetAssembly(typeof(StartupSetup));
-        //if (coreAssembly != null)
+        //if (coreAssembly is not null)
         //{
         //    _assemblies.Add(coreAssembly);
         //}
 
-        //if (infrastructureAssembly != null)
+        //if (infrastructureAssembly is not null)
         //{
         //    _assemblies.Add(infrastructureAssembly);
         //}
 
-        if (callingAssembly != null)
+        if (callingAssembly is not null)
         {
             _assemblies.Add(callingAssembly);
         }
@@ -52,11 +51,6 @@ public class DefaultInfrastructureModule : Module
 
     private void RegisterCommonDependencies(ContainerBuilder builder)
     {
-        builder.RegisterGeneric(typeof(EfRepository<>))
-          .As(typeof(IRepository<>))
-          .As(typeof(IReadRepository<>))
-          .InstancePerLifetimeScope();
-
         builder
           .RegisterType<Mediator>()
           .As<IMediator>()

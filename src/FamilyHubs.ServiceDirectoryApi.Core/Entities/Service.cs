@@ -1,103 +1,34 @@
-﻿using System.Collections.ObjectModel;
+﻿using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Core.Entities;
 
-public class Service : EntityBase<string>, IAggregateRoot
+public class Service : EntityBase<long>, IAggregateRoot
 {
-    public Service() { }
-
-    public Service(string id,
-        ServiceType serviceType,
-        string organisationId,
-        string name,
-        string? description,
-        string? accreditations,
-        DateTime? assuredDate,
-        string? attendingAccess,
-        string? attendingType,
-        string? deliverableType,
-        string? status,
-        string? fees,
-        bool canFamilyChooseDeliveryLocation,
-        ICollection<ServiceDelivery> serviceDeliveries,
-        ICollection<Eligibility> eligibilities,
-        ICollection<Funding> fundings,
-        ICollection<CostOption> costOptions,
-        ICollection<Language> languages,
-        ICollection<Review> reviews,
-        ICollection<ServiceArea> serviceAreas,
-        ICollection<ServiceAtLocation> serviceAtLocations,
-        ICollection<ServiceTaxonomy> serviceTaxonomies,
-        ICollection<HolidaySchedule> holidaySchedules,
-        ICollection<RegularSchedule> regularSchedules,
-        ICollection<LinkContact> linkContacts)
-    {
-        Id = id;
-        ServiceType = serviceType;
-        OrganisationId = organisationId;   
-        Name = name;
-        Description = description;
-        Accreditations = accreditations;
-        AssuredDate = assuredDate;
-        AttendingAccess = attendingAccess;
-        AttendingType = attendingType;
-        DeliverableType = deliverableType;
-        Status = status;
-        Fees = fees;
-        CanFamilyChooseDeliveryLocation = canFamilyChooseDeliveryLocation;
-        Eligibilities = eligibilities;
-        Fundings = fundings;
-        HolidaySchedules = holidaySchedules;
-        Languages = languages;
-        RegularSchedules = regularSchedules;
-        Reviews = reviews;
-        CostOptions = costOptions;
-        ServiceAreas = serviceAreas;
-        ServiceAtLocations = serviceAtLocations;
-        ServiceTaxonomies = serviceTaxonomies;
-        ServiceDeliveries = serviceDeliveries;
-        LinkContacts = linkContacts;
-    }
-
-    public ServiceType ServiceType { get; set; } = default!;
-    public string OrganisationId { get; set; } = default!;  
-    public string Name { get; set; } = default!;
+    public required string ServiceOwnerReferenceId { get; set; }
+    public required ServiceType ServiceType { get; set; }
+    public long OrganisationId { get; set; }  
+    public required string Name { get; set; }
     public string? Description { get; set; }
-    public string? Accreditations { get; set; }
-    public DateTime? AssuredDate { get; set; }
-    public string? AttendingAccess { get; set; }
-    public string? AttendingType { get; set; }
-    public string? DeliverableType { get; set; }
-    public string? Status { get; set; }
+    public ServiceStatusType Status { get; set; }
     public string? Fees { get; set; }
+    public string? Accreditations { get; set; }
+    public DeliverableType DeliverableType { get; set; }
+    public DateTime? AssuredDate { get; set; }
+    public AttendingType AttendingType { get; set; }
+    public AttendingAccessType AttendingAccess { get; set; }
     public bool CanFamilyChooseDeliveryLocation { get; set; }
-    public ICollection<ServiceDelivery> ServiceDeliveries { get; set; } = new Collection<ServiceDelivery>();
-    public ICollection<Eligibility> Eligibilities { get; set; } = new Collection<Eligibility>();
-    public ICollection<Funding> Fundings { get; set; } = new Collection<Funding>();
-    public ICollection<HolidaySchedule> HolidaySchedules { get; set; } = new Collection<HolidaySchedule>();
-    public ICollection<Language> Languages { get; set; } = new Collection<Language>();
-    public ICollection<RegularSchedule> RegularSchedules { get; set; } = new Collection<RegularSchedule>();
-    public ICollection<Review> Reviews { get; set; } = new Collection<Review>();
-    public ICollection<LinkContact> LinkContacts { get; set; } = new Collection<LinkContact>();
-    public ICollection<CostOption> CostOptions { get; set; } = new Collection<CostOption>();
-    public ICollection<ServiceArea> ServiceAreas { get; set; } = new Collection<ServiceArea>();
-    public ICollection<ServiceAtLocation> ServiceAtLocations { get; set; } = new Collection<ServiceAtLocation>();
-    public ICollection<ServiceTaxonomy> ServiceTaxonomies { get; set; } = new Collection<ServiceTaxonomy>();
-
-    public void Update(Service service)
-    {
-        Id = service.Id;
-        ServiceType = service.ServiceType;
-        Name = service.Name;
-        Description = service.Description;
-        Accreditations = service.Accreditations;
-        AssuredDate = service.AssuredDate;
-        AttendingAccess = service.AttendingAccess;
-        AttendingType = service.AttendingType;
-        DeliverableType = service.DeliverableType;
-        Status = service.Status;
-        Fees = service.Fees;
-    }
+    public ICollection<ServiceDelivery> ServiceDeliveries { get; set; } = new List<ServiceDelivery>();
+    public ICollection<Eligibility> Eligibilities { get; set; } = new List<Eligibility>();
+    public ICollection<Funding> Fundings { get; set; } = new List<Funding>();
+    public ICollection<CostOption> CostOptions { get; set; } = new List<CostOption>();
+    public ICollection<Language> Languages { get; set; } = new List<Language>();
+    public ICollection<ServiceArea> ServiceAreas { get; set; } = new List<ServiceArea>();
+    public ICollection<Location> Locations { get; set; } = new List<Location>();
+    public ICollection<Taxonomy> Taxonomies { get; set; } = new List<Taxonomy>();
+    public ICollection<RegularSchedule> RegularSchedules { get; set; } = new List<RegularSchedule>();
+    public ICollection<HolidaySchedule> HolidaySchedules { get; set; } = new List<HolidaySchedule>();
+    public ICollection<Review> Reviews { get; set; } = new List<Review>();
+    public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
 }

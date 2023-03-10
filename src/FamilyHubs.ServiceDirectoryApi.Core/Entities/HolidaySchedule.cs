@@ -3,30 +3,13 @@ using FamilyHubs.SharedKernel.Interfaces;
 
 namespace FamilyHubs.ServiceDirectory.Core.Entities;
 
-public class HolidaySchedule : EntityBase<string>, IAggregateRoot
+public class HolidaySchedule : EntityBase<long>, IAggregateRoot
 {
-    private HolidaySchedule() { }
-    public HolidaySchedule(
-        string id, 
-        bool closed, 
-        DateTime? closesAt, 
-        DateTime? startDate, 
-        DateTime? endDate, 
-        DateTime? opensAt
-        )
-    {
-        Id = id;
-        Closed = closed;
-        ClosesAt = closesAt;
-        StartDate = startDate;
-        EndDate = endDate;
-        OpensAt = opensAt;
-    }
     public bool Closed { get; set; }
-    public DateTime? ClosesAt { get; set; }
-    public DateTime? StartDate { get; set; }
-    public DateTime? EndDate { get; set; }
     public DateTime? OpensAt { get; set; }
-    public string ServiceAtLocationId { get; set; } = default!;
-    public string ServiceId { get; set; } = default!;
+    public DateTime? ClosesAt { get; set; }
+    public required DateTime StartDate { get; set; }
+    public required DateTime EndDate { get; set; }
+    public long? ServiceId { get; set; }
+    public long? LocationId { get; set; }
 }
