@@ -1,8 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Api.Helper;
 using FluentValidation;
-using NetTopologySuite.Index.HPRtree;
-using System;
-using System.Text.RegularExpressions;
 
 namespace FamilyHubs.ServiceDirectory.Api.Commands.CreateService;
 
@@ -13,7 +10,7 @@ public class CreateServiceCommandValidator : AbstractValidator<CreateServiceComm
         RuleFor(v => v.Service)
             .NotNull();
 
-        RuleFor(v => v.Service.Id)
+        RuleFor(v => v.Service.ServiceOwnerReferenceId)
             .MinimumLength(1)
             .MaximumLength(50)
             .NotNull()
@@ -25,32 +22,27 @@ public class CreateServiceCommandValidator : AbstractValidator<CreateServiceComm
             .NotNull()
             .NotEmpty();
 
-        RuleFor(v => v.Service.LinkContacts).Custom((list, context) => 
+        RuleFor(v => v.Service.Contacts).Custom((list, context) =>
         {
-            if (list != null)
+            if (list is null) return;
+            
+            var hasInvalidUrl = list.Any(x => x.Url is not null && !UtilHelper.IsValidURL(x.Url));
+            if (hasInvalidUrl)
             {
-                var hasInvalidUrl = list.Any(x => x != null && x.Contact != null && x.Contact.Url != null && !UtilHelper.IsValidURL(x.Contact.Url));
+                context.AddFailure("Contact Url must be valid");
+            }
+        });
+
+        RuleFor(v => v.Service.Locations).Custom((list, context) =>
+        {
+            if (list is null) return;
+            
+            foreach (var item in list.Select(x => x.Contacts))
+            {
+                var hasInvalidUrl = item.Any(x => x.Url is not null && !UtilHelper.IsValidURL(x.Url));
                 if (hasInvalidUrl)
                 {
                     context.AddFailure("Contact Url must be valid");
-                }
-            }       
-        });
-
-        RuleFor(v => v.Service.ServiceAtLocations).Custom((list, context) => 
-        {
-            if (list != null)
-            {
-                foreach (var item in list.Select(x => x.LinkContacts)) 
-                {
-                    if (item != null) 
-                    {
-                        var hasInvalidUrl = item.Any(x => x != null && x.Contact != null && x.Contact.Url != null && !UtilHelper.IsValidURL(x.Contact.Url));
-                        if (hasInvalidUrl)
-                        {
-                            context.AddFailure("Contact Url must be valid");
-                        }
-                    }
                 }
             }
         });

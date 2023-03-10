@@ -1,9 +1,10 @@
 ﻿using Ardalis.GuardClauses;
-using FamilyHubs.ServiceDirectory.Api.Helper;
-using FamilyHubs.ServiceDirectory.Core;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,44 +12,44 @@ namespace FamilyHubs.ServiceDirectory.Api.Queries.GetServicesByOrganisation;
 
 public class GetServicesByOrganisationIdCommand : IRequest<List<ServiceDto>>
 {
-    public GetServicesByOrganisationIdCommand(string id)
+    public GetServicesByOrganisationIdCommand(long id)
     {
         Id = id;
     }
 
-    public string Id { get; }
+    public long Id { get; }
 }
 
 public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServicesByOrganisationIdCommand, List<ServiceDto>>
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public GetServicesByOrganisationIdCommandHandler(ApplicationDbContext context)
+    public GetServicesByOrganisationIdCommandHandler(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<List<ServiceDto>> Handle(GetServicesByOrganisationIdCommand request, CancellationToken cancellationToken)
     {
         var organisation = _context.Organisations
-            .Include(x => x.OrganisationType)
-            .Include(x => x.Services!.Where(s => s.Status != "Deleted"))
+            .Include(x => x.Services.Where(s => s.Status != ServiceStatusType.Deleted))
             .FirstOrDefault(x => x.Id == request.Id);
 
-        if (organisation == null)
+        if (organisation is null)
         {
-            throw new NotFoundException(nameof(Service), request.Id);
+            throw new NotFoundException(nameof(Service), request.Id.ToString());
         }
 
-        var ids = organisation.Services?.Select(x => x.Id).ToList();
+        var ids = organisation.Services.Select(x => x.Id).ToList();
 
-        if (ids == null || !ids.Any())
+        if (ids is null || !ids.Any())
         {
-            throw new NotFoundException(nameof(Service), request.Id);
+            throw new NotFoundException(nameof(Service), request.Id.ToString());
         }
 
         var entity = await _context.Services
-            .Include(x => x.ServiceType)
             .Include(x => x.ServiceDeliveries)
             .Include(x => x.Eligibilities)
             .Include(x => x.CostOptions)
@@ -57,45 +58,30 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
             .Include(x => x.ServiceAreas)
             .Include(x => x.RegularSchedules)
             .Include(x => x.HolidaySchedules)
-            .Include(x => x.LinkContacts)
-            .ThenInclude(x => x.Contact)
-            .Include(x => x.ServiceTaxonomies)
-            .ThenInclude(x => x.Taxonomy)
+            .Include(x => x.Contacts)
+            .Include(x => x.Taxonomies)
 
-            .Include(x => x.ServiceAtLocations)
+            .Include(x => x.Locations)
             .ThenInclude(x => x.RegularSchedules)
             
-            .Include(x => x.ServiceAtLocations)
+            .Include(x => x.Locations)
             .ThenInclude(x => x.HolidaySchedules)
 
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.LinkContacts!)
-            .ThenInclude(x => x.Contact)
+            .Include(x => x.Locations)
+            .ThenInclude(x => x.Contacts)
             
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.PhysicalAddresses)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.LinkContacts!)
-            .ThenInclude(x => x.Contact)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
-            .ThenInclude(x => x.Taxonomy)
             .Where(x => ids.Contains(x.Id))
+            
+            .AsSplitQuery()
+            
+            .ProjectTo<ServiceDto>(_mapper.ConfigurationProvider)
+            
             .ToListAsync(cancellationToken);
 
-        if (entity == null)
-        {
-            throw new NotFoundException(nameof(Service), request.Id);
-        }
+        if (entity is null)
+            throw new NotFoundException(nameof(Service), request.Id.ToString());
 
-        var result = DtoHelper.GetServicesDto(entity);
-
-        return result;
+        return entity;
     }
 }
 

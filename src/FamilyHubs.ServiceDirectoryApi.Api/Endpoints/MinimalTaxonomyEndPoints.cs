@@ -32,7 +32,7 @@ public class MinimalTaxonomyEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Taxonomy", "Create Taxonomy") { Tags = new[] { "Taxonomies" } });
 
-        app.MapPut("api/taxonomies/{id}", [Authorize(Policy = "ServiceAccess")] async (string id, [FromBody] TaxonomyDto request, CancellationToken cancellationToken, ISender mediator, IMapper mapper, ILogger<MinimalTaxonomyEndPoints> logger) =>
+        app.MapPut("api/taxonomies/{id}", [Authorize(Policy = "ServiceAccess")] async (long id, [FromBody] TaxonomyDto request, CancellationToken cancellationToken, ISender mediator, IMapper mapper, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
             {

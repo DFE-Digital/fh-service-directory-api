@@ -1,6 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Api.Helper;
-using FamilyHubs.ServiceDirectory.Core;
-using FamilyHubs.ServiceDirectory.Core.Constants;
+﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -13,7 +11,7 @@ namespace FamilyHubs.ServiceDirectory.Api.Queries.GetServices;
 
 public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
 {
-    public GetServicesCommand(string? serviceType, string? status, string? districtCode, int? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs)
+    public GetServicesCommand(ServiceType serviceType, ServiceStatusType status, string? districtCode, int? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs)
     {
         ServiceType = serviceType;
         Status = status;
@@ -36,8 +34,8 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
         MaxFamilyHubs = maxFamilyHubs;
     }
 
-    public string? ServiceType { get; }
-    public string? Status { get; set; }
+    public ServiceType ServiceType { get; }
+    public ServiceStatusType Status { get; set; }
     public string? DistrictCode { get; }
     public int? MaximumAge { get; }
     public int? MinimumAge { get; }
@@ -60,36 +58,89 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
 public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, PaginatedList<ServiceDto>>
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public GetServicesCommandHandler(ApplicationDbContext context)
+    public GetServicesCommandHandler(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<PaginatedList<ServiceDto>> Handle(GetServicesCommand request, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(request.Status))
-            request.Status = "active";
+        if (request.Status == ServiceStatusType.NotSet)
+            request.Status = ServiceStatusType.Active;
 
-        var entities = await GetServices(request);
+        var dbServices = await GetServices(request, cancellationToken);
+
+        var filteredServices = _mapper.Map<List<ServiceDto>>(dbServices);
+        filteredServices = SortServicesDto(request, filteredServices);
+
+        var pageList = filteredServices.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToList();
+        var result = new PaginatedList<ServiceDto>(pageList, filteredServices.Count, request.PageNumber, request.PageSize);
+
+        return result;
+    }
+
+    private async Task<List<Service>> GetServices(GetServicesCommand request, CancellationToken cancellationToken)
+    {
+        var services = _context.Services
+            .Include(x => x.ServiceDeliveries)
+            .Include(x => x.Eligibilities)
+            .Include(x => x.CostOptions)
+            .Include(x => x.Fundings)
+            .Include(x => x.Languages)
+            .Include(x => x.ServiceAreas)
+            .Include(x => x.RegularSchedules)
+            .Include(x => x.HolidaySchedules)
+            .Include(x => x.Contacts)
+            .Include(x => x.Taxonomies)
+
+            .Where(x => x.Status == request.Status && x.Status != ServiceStatusType.Deleted);
+
+        if (request.DistrictCode != null)
+        {
+            var organisationIds = await _context.Organisations.Where(x => x.AdminAreaCode == request.DistrictCode).Select(x => x.Id).ToListAsync(cancellationToken);
+            services = services.Where(x => organisationIds.Contains(x.OrganisationId));
+        }
+
+        if (request.ServiceType != ServiceType.NotSet)
+        {
+            services = services.Where(x => x.ServiceType == request.ServiceType);
+        }
+
+        if (!string.IsNullOrEmpty(request.TaxonomyIds))
+        {
+            var parts = request.TaxonomyIds.Split(',').Select(long.Parse);
+            services = services.Where(x => x.Taxonomies.Any(st => parts.Any(taxonomyId => taxonomyId  == st.Id)));
+        }
+
+        if (request.CanFamilyChooseLocation is true)
+        {
+            services = services.Where(x => x.CanFamilyChooseDeliveryLocation);
+        }
+
+        if (!string.IsNullOrEmpty(request.Languages))
+        {
+            var parts = request.Languages.Split(',');
+            services = services.Where(x => x.Languages.Any(language => parts.Any(languageName => languageName == language.Name)));
+        }
 
         if (request.MaximumAge != null)
-            entities = entities.Where(x => x.Eligibilities.Any(eligibility => eligibility.MaximumAge <= request.MaximumAge.Value));
+            services = services.Where(x => x.Eligibilities.Any(eligibility => eligibility.MaximumAge <= request.MaximumAge.Value));
 
         if (request.MinimumAge != null)
-            entities = entities.Where(x => x.Eligibilities.Any(eligibility => eligibility.MinimumAge >= request.MinimumAge.Value));
+            services = services.Where(x => x.Eligibilities.Any(eligibility => eligibility.MinimumAge >= request.MinimumAge.Value));
 
         if (request.GivenAge != null)
-            entities = entities.Where(x => x.Eligibilities.Any(eligibility => eligibility.MinimumAge <= request.GivenAge.Value && eligibility.MaximumAge >= request.GivenAge.Value));
+            services = services.Where(x => x.Eligibilities.Any(eligibility => eligibility.MinimumAge <= request.GivenAge.Value && eligibility.MaximumAge >= request.GivenAge.Value));
 
         if (!string.IsNullOrEmpty(request.Text))
-            entities = entities.Where(x => x.Name.Contains(request.Text) || x.Description != null && x.Description.Contains(request.Text));
+            services = services.Where(x => x.Name.Contains(request.Text) || x.Description != null && x.Description.Contains(request.Text));
 
-        var dbServices = await entities.ToListAsync(cancellationToken);
-        if (request.Latitude is not null && request.Longitude is not null && request.Meters is not null)
-            dbServices = dbServices.Where(x => Core.Helper.GetDistance(request.Latitude, request.Longitude, x.ServiceAtLocations.FirstOrDefault()?.Location.Latitude, x.ServiceAtLocations.FirstOrDefault()?.Location.Longitude, x.Name) < request.Meters).ToList();
+        var dbServices = await services.ToListAsync(cancellationToken);
 
-        //ServiceDeliveries
+        // ServiceDeliveries
         if (!string.IsNullOrEmpty(request.ServiceDeliveries))
         {
             var servicesFilteredByDelMethod = new List<Service>();
@@ -102,68 +153,65 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             dbServices = servicesFilteredByDelMethod;
         }
 
-        //Languages
-        if (!string.IsNullOrEmpty(request.Languages))
-        {
-            var servicesFilteredByLanguages = new List<Service>();
-            var parts = request.Languages.Split(',');
-
-            foreach (var part in parts)
-                servicesFilteredByLanguages.AddRange(dbServices.Where(x => x.Languages.Any(language => language.Name == part)).ToList());
-
-            dbServices = servicesFilteredByLanguages;
-        }
-
         if (request.IsPaidFor != null)
         {
             dbServices = dbServices.Where(x => IsPaidFor(x) == request.IsPaidFor).ToList();
         }
 
-        //Can families choose location
-        if (request.CanFamilyChooseLocation is true)
+        var serviceIds = dbServices.Select(x => x.Id).ToList();
+        if (serviceIds.Any())
         {
-            dbServices = dbServices.Where(x => x.CanFamilyChooseDeliveryLocation).ToList();
+            dbServices = await _context.Services.Where(x => serviceIds.Any(y => y == x.Id))
+                .Include(x => x.Locations)
+                .ThenInclude(x => x.RegularSchedules)
+
+                .Include(x => x.Locations)
+                .ThenInclude(x => x.HolidaySchedules)
+
+                .Include(x => x.Locations)
+                .ThenInclude(x => x.Contacts)
+                
+                .ToListAsync(cancellationToken);
         }
 
-        if (!string.IsNullOrEmpty(request.TaxonomyIds))
-        {
-            var parts = request.TaxonomyIds.Split(',');
-            dbServices = dbServices.Where(x => x.ServiceTaxonomies.Any(serviceTaxonomy => parts.Contains(serviceTaxonomy.Taxonomy?.Id))).ToList();
-        }
-
-        // filter before we calculate distance and map, for efficiency
         if (request.IsFamilyHub != null)
         {
-            dbServices = dbServices.Where(s =>
-                s.ServiceAtLocations.FirstOrDefault()?.Location.LinkTaxonomies
-                    ?.Any(lt => string.Equals(lt.Taxonomy?.Id, TaxonomyDtoIds.FamilyHub, StringComparison.OrdinalIgnoreCase)) == request.IsFamilyHub).ToList();
+            dbServices = dbServices
+                .Where(s => s.Locations.Any(lt => lt.LocationType == LocationType.FamilyHub) == request.IsFamilyHub)
+                .ToList();
         }
 
-        var filteredServices = DtoHelper.GetServicesDto(dbServices);
+        return dbServices;
+    }
+
+    private List<ServiceDto> SortServicesDto(GetServicesCommand request, List<ServiceDto> services)
+    {
         if (request.Latitude is not null && request.Longitude is not null)
         {
-            foreach (var service in filteredServices)
+            foreach (var service in services)
             {
                 service.Distance = Core.Helper.GetDistance(
-                    request.Latitude,
+                request.Latitude,
                     request.Longitude,
-                    service.ServiceAtLocations?.FirstOrDefault()?.Location.Latitude,
-                    service.ServiceAtLocations?.FirstOrDefault()?.Location.Longitude);
+                    service.Locations.FirstOrDefault()?.Latitude,
+                    service.Locations.FirstOrDefault()?.Longitude);
             }
 
-            filteredServices = filteredServices.OrderBy(x => x.Distance).ToList();
+            if (request.Meters is not null)
+            {
+                services = services.Where(x => x.Distance < request.Meters).ToList();
+            }
+            services = services.OrderBy(x => x.Distance).ToList();
         }
 
         if (request.IsFamilyHub is null && request.MaxFamilyHubs != null)
         {
             // MaxFamilyHubs is really a flag to only include the nearest max family hubs at the start of the results set (when not filtering by IsFamilyHub)
-            filteredServices = (filteredServices.Where(IsFamilyHub).Take(request.MaxFamilyHubs.Value)
-                .Concat(filteredServices.Where(s => !IsFamilyHub(s)))).ToList();
+            services = (services.Where(IsFamilyHub).Take(request.MaxFamilyHubs.Value)
+                .Concat(services.Where(s => !IsFamilyHub(s)))).ToList();
         }
 
-        var pageList = filteredServices.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToList();
-        var result = new PaginatedList<ServiceDto>(pageList, filteredServices.Count, request.PageNumber, request.PageSize);
-        return result;
+        return services;
     }
 
     private bool IsPaidFor(Service service)
@@ -176,67 +224,6 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
 
     private bool IsFamilyHub(ServiceDto service)
     {
-        return service.ServiceAtLocations?.FirstOrDefault()?.Location.LinkTaxonomies
-            ?.Any(lt => string.Equals(lt.Taxonomy?.Id, TaxonomyDtoIds.FamilyHub, StringComparison.OrdinalIgnoreCase)) == true;
-    }
-
-    private async Task<IQueryable<Service>> GetServices(GetServicesCommand request)
-    {
-        var services = _context.Services
-            .Include(x => x.ServiceType)
-            .Include(x => x.ServiceDeliveries)
-            .Include(x => x.Eligibilities)
-            .Include(x => x.CostOptions)
-            .Include(x => x.Fundings)
-            .Include(x => x.Languages)
-            .Include(x => x.ServiceAreas)
-            .Include(x => x.RegularSchedules)
-            .Include(x => x.HolidaySchedules)
-            .Include(x => x.LinkContacts)
-            .ThenInclude(x => x.Contact)
-            .Include(x => x.ServiceTaxonomies)
-            .ThenInclude(x => x.Taxonomy)
-
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.RegularSchedules)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.HolidaySchedules)
-
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.LinkContacts!)
-            .ThenInclude(x => x.Contact)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.PhysicalAddresses)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.LinkContacts!)
-            .ThenInclude(x => x.Contact)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
-            .ThenInclude(x => x.Taxonomy)
-            .Where(x => x.Status == request.Status && x.Status != "Deleted");
-
-        if (request.DistrictCode != null)
-        {
-            var organisationIds = await _context.AdminAreas.Where(x => x.Code == request.DistrictCode).Select(x => x.OrganisationId).ToListAsync();
-            services = services.Where(x => organisationIds.Contains(x.OrganisationId));
-        }
-
-        if (request.ServiceType != null)
-        {
-            var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.ServiceType || x.Name == request.ServiceType);
-            if (serviceType != null)
-            {
-                services = services.Where(x => x.ServiceType.Id == serviceType.Id);
-            }
-        }
-
-        return services;
+        return service.Locations.Any(lt => lt.LocationType == LocationType.FamilyHub);
     }
 }

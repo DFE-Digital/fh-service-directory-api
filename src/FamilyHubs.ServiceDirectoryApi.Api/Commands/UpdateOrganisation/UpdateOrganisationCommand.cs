@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Api.Commands.UpdateOrganisation;
 
-public class UpdateOrganisationCommand : IRequest<string>
+public class UpdateOrganisationCommand : IRequest<long>
 {
-    public UpdateOrganisationCommand(string id, OrganisationWithServicesDto organisation)
+    public UpdateOrganisationCommand(long id, OrganisationWithServicesDto organisation)
     {
         Id = id;
         Organisation = organisation;
@@ -20,10 +20,10 @@ public class UpdateOrganisationCommand : IRequest<string>
 
     public OrganisationWithServicesDto Organisation { get; }
 
-    public string Id { get; }
+    public long Id { get; }
 }
 
-public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisationCommand, string>
+public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisationCommand, long>
 {
     private readonly ApplicationDbContext _context;
     private readonly ILogger<UpdateOrganisationCommandHandler> _logger;
@@ -38,33 +38,24 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         _mapper = mapper;
     }
 
-    public async Task<string> Handle(UpdateOrganisationCommand request, CancellationToken cancellationToken)
+    public async Task<long> Handle(UpdateOrganisationCommand request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
         var entity = await _context.Organisations
-          .Include(x => x.OrganisationType)
-          .Include(x => x.Services!)
+          .Include(x => x.Services)
           .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
-        if (entity == null)
-        {
-            throw new NotFoundException(nameof(Organisation), request.Id);
-        }
+        if (entity is null)
+            throw new NotFoundException(nameof(Organisation), request.Id.ToString());
 
         try
         {
             var org = _mapper.Map<Organisation>(request.Organisation);
-            var organisationType = _context.OrganisationTypes.FirstOrDefault(x => x.Id == request.Organisation.OrganisationType.Id);
-            if (organisationType != null)
-            {
-                org.OrganisationType = organisationType;
-            }
+            
+            _context.Update(org);
 
-            entity.Update(org);
-            AddOrUpdateAdministrativeDistrict(request, entity);
-
-            if (entity.Services != null && request.Organisation.Services != null)
+            if (request.Organisation.Services.Any())
             {
                 // Update and Insert children
                 foreach (var childModel in request.Organisation.Services)
@@ -93,26 +84,5 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         }
 
         return entity.Id;
-    }
-
-    private void AddOrUpdateAdministrativeDistrict(UpdateOrganisationCommand request, Organisation organisation)
-    {
-        if (!string.IsNullOrEmpty(request.Organisation.AdminAreaCode))
-        {
-            var organisationAdminDistrict = _context.AdminAreas.FirstOrDefault(x => x.OrganisationId == organisation.Id);
-            if (organisationAdminDistrict == null)
-            {
-                var entity = new AdminArea(
-                    Guid.NewGuid().ToString(),
-                    request.Organisation.AdminAreaCode,
-                    organisation.Id);
-
-                _context.AdminAreas.Add(entity);
-            }
-            else
-            {
-                organisationAdminDistrict.Code = request.Organisation.AdminAreaCode;
-            }
-        }
     }
 }

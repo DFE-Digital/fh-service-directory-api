@@ -1,18 +1,19 @@
 ﻿using Ardalis.GuardClauses;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Api.Commands.DeleteService;
 public class DeleteServiceByIdCommand : IRequest<bool>
 {
-    public DeleteServiceByIdCommand(string id)
+    public DeleteServiceByIdCommand(long id)
     {
         Id = id;
     }
 
-    public string Id { get; }
+    public long Id { get; }
 }
 
 public class DeleteServiceByIdCommandHandler : IRequestHandler<DeleteServiceByIdCommand, bool>
@@ -33,12 +34,10 @@ public class DeleteServiceByIdCommandHandler : IRequestHandler<DeleteServiceById
             var entity = await _context.Services
                 .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(Service), request.Id);
-            }
+            if (entity is null)
+                throw new NotFoundException(nameof(Service), request.Id.ToString());
 
-            entity.Status = "Deleted";
+            entity.Status = ServiceStatusType.Deleted;
 
             await _context.SaveChangesAsync(cancellationToken);
 

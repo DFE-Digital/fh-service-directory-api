@@ -17,12 +17,12 @@ public class MinimalOrganisationEndPoints
 {
     public void RegisterOrganisationEndPoints(WebApplication app)
     {
-        app.MapPost("api/organizations", [Authorize(Policy = "OrgAccess")] async ([FromBody] OrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPost("api/organizations", [Authorize(Policy = "OrgAccess")] async ([FromBody] OrganisationWithServicesDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
                 var command = new CreateOrganisationCommand(request);
-                var result = await _mediator.Send(command, cancellationToken);
+                var result = await mediator.Send(command, cancellationToken);
                 return result;
             }
             catch (Exception ex)
@@ -33,7 +33,7 @@ public class MinimalOrganisationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Organisations", "Create Organisation") { Tags = new[] { "Organisations" } });
 
-        app.MapGet("api/organizations/{id}", async (string id, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapGet("api/organizations/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
@@ -41,7 +41,7 @@ public class MinimalOrganisationEndPoints
                 {
                     Id = id
                 };
-                var result = await _mediator.Send(request, cancellationToken);
+                var result = await mediator.Send(request, cancellationToken);
                 return result;
             }
             catch (Exception ex)
@@ -52,12 +52,12 @@ public class MinimalOrganisationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Organisation", "Get Organisation By Id") { Tags = new[] { "Organisations" } });
 
-        app.MapGet("api/organizations", async (CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapGet("api/organizations", async (CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
                 var request = new ListOrganisationCommand();
-                var result = await _mediator.Send(request, cancellationToken);
+                var result = await mediator.Send(request, cancellationToken);
                 return result;
             }
             catch (Exception ex)
@@ -68,12 +68,12 @@ public class MinimalOrganisationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Organisations", "List Organisations") { Tags = new[] { "Organisations" } });
 
-        app.MapPut("api/organizations/{id}", [Authorize(Policy = "AllAdminAccess")] async (string id, [FromBody] OrganisationWithServicesDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPut("api/organizations/{id}", [Authorize(Policy = "AllAdminAccess")] async (long id, [FromBody] OrganisationWithServicesDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
                 var command = new UpdateOrganisationCommand(id, request);
-                var result = await _mediator.Send(command, cancellationToken);
+                var result = await mediator.Send(command, cancellationToken);
                 return result;
             }
             catch (Exception ex)
@@ -84,12 +84,12 @@ public class MinimalOrganisationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Update Organisation", "Update Organisation By Id") { Tags = new[] { "Organisations" } });
 
-        app.MapGet("api/organizationtypes", async (CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapGet("api/organizationtypes", async (CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
                 var request = new GetOrganisationTypesCommand();
-                var result = await _mediator.Send(request, cancellationToken);
+                var result = await mediator.Send(request, cancellationToken);
                 return result;
             }
             catch (Exception ex)
@@ -100,13 +100,13 @@ public class MinimalOrganisationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Organisation types", "List Organisation types") { Tags = new[] { "Organisations" } });
 
-        app.MapGet("api/organizationAdminCode/{id}", async (string id, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapGet("api/organizationAdminCode/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
                 var request =
                     new GetOrganisationAdminByOrganisationIdCommand(id);
-                var result = await _mediator.Send(request, cancellationToken);
+                var result = await mediator.Send(request, cancellationToken);
                 return result;
             }
             catch (Exception ex)

@@ -6,7 +6,7 @@ using MediatR;
 
 namespace FamilyHubs.ServiceDirectory.Api.Commands.CreateTaxonomy;
 
-public class CreateTaxonomyCommand : IRequest<string>
+public class CreateTaxonomyCommand : IRequest<long>
 {
     public CreateTaxonomyCommand(TaxonomyDto taxonomy)
     {
@@ -16,7 +16,7 @@ public class CreateTaxonomyCommand : IRequest<string>
     public TaxonomyDto Taxonomy { get; }
 }
 
-public class CreateTaxonomyCommandHandler : IRequestHandler<CreateTaxonomyCommand, string>
+public class CreateTaxonomyCommandHandler : IRequestHandler<CreateTaxonomyCommand, long>
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -29,7 +29,7 @@ public class CreateTaxonomyCommandHandler : IRequestHandler<CreateTaxonomyComman
         _logger = logger;
     }
 
-    public async Task<string> Handle(CreateTaxonomyCommand request, CancellationToken cancellationToken)
+    public async Task<long> Handle(CreateTaxonomyCommand request, CancellationToken cancellationToken)
     {
         try
         {

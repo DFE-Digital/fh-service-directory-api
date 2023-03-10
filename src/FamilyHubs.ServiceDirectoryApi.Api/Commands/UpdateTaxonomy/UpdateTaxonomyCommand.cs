@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Api.Commands.UpdateTaxonomy;
 
-public class UpdateTaxonomyCommand : IRequest<string>
+public class UpdateTaxonomyCommand : IRequest<long>
 {
-    public UpdateTaxonomyCommand(string id, TaxonomyDto taxonomy)
+    public UpdateTaxonomyCommand(long id, TaxonomyDto taxonomy)
     {
         Id = id;
         Taxonomy = taxonomy;
@@ -17,10 +17,10 @@ public class UpdateTaxonomyCommand : IRequest<string>
 
     public TaxonomyDto Taxonomy { get; }
 
-    public string Id { get; }
+    public long Id { get; }
 }
 
-public class UpdateTaxonomyCommandHandler : IRequestHandler<UpdateTaxonomyCommand, string>
+public class UpdateTaxonomyCommandHandler : IRequestHandler<UpdateTaxonomyCommand, long>
 {
     private readonly ApplicationDbContext _context;
     private readonly ILogger<UpdateTaxonomyCommandHandler> _logger;
@@ -31,23 +31,21 @@ public class UpdateTaxonomyCommandHandler : IRequestHandler<UpdateTaxonomyComman
         _logger = logger;
     }
 
-    public async Task<string> Handle(UpdateTaxonomyCommand request, CancellationToken cancellationToken)
+    public async Task<long> Handle(UpdateTaxonomyCommand request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
 
         var entity = await _context.Taxonomies
           .SingleOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
-        if (entity == null)
-        {
-            throw new NotFoundException(nameof(Taxonomy), request.Id);
-        }
+        if (entity is null)
+            throw new NotFoundException(nameof(Taxonomy), request.Id.ToString());
 
         try
         {
             entity.Name = request.Taxonomy.Name;
             entity.TaxonomyType = request.Taxonomy.TaxonomyType;
-            entity.Parent = request.Taxonomy.Parent;
+            entity.ParentId = request.Taxonomy.ParentId;
 
             await _context.SaveChangesAsync(cancellationToken);
         }

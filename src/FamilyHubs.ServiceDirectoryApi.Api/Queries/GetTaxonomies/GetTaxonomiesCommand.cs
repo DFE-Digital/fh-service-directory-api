@@ -1,9 +1,10 @@
-﻿using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Api.Queries.GetTaxonomies;
 
@@ -26,28 +27,25 @@ public class GetTaxonomiesCommand : IRequest<PaginatedList<TaxonomyDto>>
 public class GetTaxonomiesCommandHandler : IRequestHandler<GetTaxonomiesCommand, PaginatedList<TaxonomyDto>>
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public GetTaxonomiesCommandHandler(ApplicationDbContext context)
+    public GetTaxonomiesCommandHandler(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<PaginatedList<TaxonomyDto>> Handle(GetTaxonomiesCommand request, CancellationToken cancellationToken)
     {
-        var filteredTaxonomies = await _context.Taxonomies
+        var filteredTaxonomies = _context.Taxonomies
             .Where(t => request.Text == null || t.Name.Contains(request.Text))
             .Where(t => request.TaxonomyType == TaxonomyType.NotSet || t.TaxonomyType == request.TaxonomyType)
-            .Select(x => new TaxonomyDto(
-                x.Id,
-                x.Name,
-                x.TaxonomyType,
-                x.Parent
-            ))
-            .ToListAsync(cancellationToken: cancellationToken);
+            
+            .ProjectTo<TaxonomyDto>(_mapper.ConfigurationProvider)
 
-        var pagedList = filteredTaxonomies.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToList();
-        
-        var result = new PaginatedList<TaxonomyDto>(pagedList, filteredTaxonomies.Count, request.PageNumber, request.PageSize);
+            .AsQueryable();
+
+        var result = await PaginatedList<TaxonomyDto>.CreateAsync(filteredTaxonomies, request.PageNumber, request.PageSize);
         
         return result;
     }

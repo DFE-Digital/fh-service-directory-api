@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Api.Commands.CreateService;
 
-public class CreateServiceCommand : IRequest<string>
+public class CreateServiceCommand : IRequest<long>
 {
     public CreateServiceCommand(ServiceDto service)
     {
@@ -17,11 +17,12 @@ public class CreateServiceCommand : IRequest<string>
     public ServiceDto Service { get; }
 }
 
-public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand, string>
+public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand, long>
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
     private readonly ILogger<CreateServiceCommandHandler> _logger;
+    private List<Contact> _dbContacts = new List<Contact>();
 
     public CreateServiceCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<CreateServiceCommandHandler> logger)
     {
@@ -30,7 +31,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
         _logger = logger;
     }
 
-    public async Task<string> Handle(CreateServiceCommand request, CancellationToken cancellationToken)
+    public async Task<long> Handle(CreateServiceCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -42,21 +43,19 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             if (existing is not null)
                 throw new InvalidOperationException($"Service with Id: {unsavedEntity.Id} already exists, Please use Update command");
 
-            var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.Service.ServiceType.Id);
-            if (serviceType != null)
-                unsavedEntity.ServiceType = serviceType;
+            _dbContacts = await _context.Contacts.ToListAsync(cancellationToken);
 
             unsavedEntity.Eligibilities = AttachExistingEligibility(unsavedEntity.Eligibilities);
             unsavedEntity.ServiceAreas = AttachExistingServiceArea(unsavedEntity.ServiceAreas);
             unsavedEntity.ServiceDeliveries = AttachExistingServiceDelivery(unsavedEntity.ServiceDeliveries);
-            unsavedEntity.LinkContacts = AttachExistingContacts(unsavedEntity.LinkContacts, null);
+            unsavedEntity.Contacts = AttachExistingContacts(unsavedEntity.Contacts, _dbContacts);
             unsavedEntity.Languages = AttachExistingLanguages(unsavedEntity.Languages);
-            unsavedEntity.ServiceTaxonomies = AttachExistingServiceTaxonomies(unsavedEntity.ServiceTaxonomies);
+            unsavedEntity.Taxonomies = AttachExistingServiceTaxonomies(unsavedEntity.Taxonomies);
             unsavedEntity.CostOptions = AttachExistingCostOptions(unsavedEntity.CostOptions);
             unsavedEntity.RegularSchedules = AttachExistingRegularSchedule(unsavedEntity.RegularSchedules, null);
             unsavedEntity.HolidaySchedules = AttachExistingHolidaySchedule(unsavedEntity.HolidaySchedules, null);
 
-            unsavedEntity.ServiceAtLocations = AttachExistingServiceAtLocation(unsavedEntity.ServiceAtLocations);
+            unsavedEntity.Locations = AttachExistingLocation(unsavedEntity.Locations);
 
             _context.Services.Add(unsavedEntity);
 
@@ -166,104 +165,55 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
         return returnList;
     }
 
-    private ICollection<ServiceTaxonomy> AttachExistingServiceTaxonomies(ICollection<ServiceTaxonomy>? unSavedEntities)
+    private ICollection<Taxonomy> AttachExistingServiceTaxonomies(ICollection<Taxonomy>? unSavedEntities)
     {
-        var returnList = new List<ServiceTaxonomy>();
+        var returnList = new List<Taxonomy>();
 
         if (unSavedEntities is null || !unSavedEntities.Any())
             return returnList;
 
-        var existing = _context.ServiceTaxonomies
-            .Include(t => t.Taxonomy)
-            .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
-
-        var newIds = unSavedEntities.Where(c => c.Taxonomy != null).Select(c => c.Taxonomy!.Id).ToList();
-        var existingChilds = _context.Taxonomies.Where(x => newIds.Contains(x.Id)).ToList();
+        var existing = _context.Taxonomies.Where(e => unSavedEntities.Select(c => c.Name).Contains(e.Name)).ToList();
 
         for (var i = 0; i < unSavedEntities.Count; i++)
         {
             var unSavedItem = unSavedEntities.ElementAt(i);
-
             var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
-
-            var itemToSave = savedItem ?? unSavedItem;
-
-            if (itemToSave.Taxonomy != null)
-            {
-                var existingTaxonomy = existing.Select(t => t.Taxonomy).SingleOrDefault(t => t!.Id == itemToSave.Taxonomy.Id)
-                                       ?? existingChilds.SingleOrDefault(t => t.Id == itemToSave.Taxonomy.Id);
-                if (existingTaxonomy is not null)
-                {
-                    itemToSave.Taxonomy = existingTaxonomy;
-                }
-            }
-
-            returnList.Add(itemToSave);
+            returnList.Add(savedItem ?? unSavedItem);
         }
 
         return returnList;
     }
 
-    private ICollection<ServiceAtLocation> AttachExistingServiceAtLocation(ICollection<ServiceAtLocation>? unSavedEntities)
+    private ICollection<Location> AttachExistingLocation(ICollection<Location>? unSavedEntities)
     {
-        var returnList = new List<ServiceAtLocation>();
+        var returnList = new List<Location>();
 
         if (unSavedEntities is null || !unSavedEntities.Any())
             return returnList;
 
-        var existing = _context.ServiceAtLocations
-            .Include(l => l.HolidaySchedules)
-            .Include(l => l.RegularSchedules)
-            .Include(l => l.LinkContacts!)
-            .ThenInclude(l => l.Contact)
-            .Include(l => l.Location)
-                .ThenInclude(l => l.PhysicalAddresses)
-            .Include(l => l.Location)
-                .ThenInclude(l => l.LinkTaxonomies)!
-                .ThenInclude(l => l.Taxonomy)
-            .Include(l => l.Location)
-                .ThenInclude(l => l.LinkContacts)!
-                .ThenInclude(l => l.Contact)
-            .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+        var existing = (from dbLocation in _context.Locations
+                join newLocation in unSavedEntities on
+                    new {dbLocation.Name, dbLocation.PostCode} equals 
+                    new {newLocation.Name, newLocation.PostCode}
+                select dbLocation)
+            .ToList();
 
         for (var i = 0; i < unSavedEntities.Count; i++)
         {
             var unSavedItem = unSavedEntities.ElementAt(i);
-
             var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
-
-            returnList.Add(AttachExistingServiceAtLocationChildEntities(unSavedItem, savedItem));
+            var returnItem = savedItem ?? unSavedItem;
+            
+            //TODO implement AccessibilityForDisabilities when we start to have this data
+            //returnItem.AccessibilityForDisabilities = AttachExistingAccessibilityForDisabilities()
+            returnItem.Contacts = AttachExistingContacts(unSavedItem.Contacts, _dbContacts);
+            returnItem.HolidaySchedules = AttachExistingHolidaySchedule(unSavedItem.HolidaySchedules, savedItem?.HolidaySchedules);
+            returnItem.RegularSchedules = AttachExistingRegularSchedule(unSavedItem.RegularSchedules, savedItem?.RegularSchedules);
+            
+            returnList.Add(returnItem);
         }
 
         return returnList;
-    }
-
-    private ServiceAtLocation AttachExistingServiceAtLocationChildEntities(ServiceAtLocation unSavedEntity, ServiceAtLocation? existing)
-    {
-        //Update Service at Location Level data
-        var returnItem = existing ?? unSavedEntity;
-
-        returnItem.RegularSchedules = AttachExistingRegularSchedule(unSavedEntity.RegularSchedules, existing?.RegularSchedules);
-        returnItem.HolidaySchedules = AttachExistingHolidaySchedule(unSavedEntity.HolidaySchedules, existing?.HolidaySchedules);
-        returnItem.LinkContacts = AttachExistingContacts(unSavedEntity.LinkContacts, existing?.LinkContacts);
-        returnItem.Location = AttachExistingLocation(unSavedEntity.Location, existing?.Location);
-
-        return returnItem;
-    }
-
-    private Location AttachExistingLocation(Location unSavedEntity, Location? existing)
-    {
-        existing ??= _context.Locations.SingleOrDefault(l => !string.IsNullOrWhiteSpace(l.Name) && !string.IsNullOrWhiteSpace(unSavedEntity.Name) && l.Name == unSavedEntity.Name);
-
-        var returnItem = existing ?? unSavedEntity;
-
-        returnItem.PhysicalAddresses = AttachExistingPhysicalAddress(unSavedEntity.PhysicalAddresses, existing?.PhysicalAddresses);
-
-        returnItem.LinkTaxonomies = AttachExistingLinkTaxonomy(unSavedEntity.LinkTaxonomies, existing?.LinkTaxonomies);
-
-        returnItem.LinkContacts = AttachExistingContacts(unSavedEntity.LinkContacts, existing?.LinkContacts);
-
-        return returnItem;
     }
 
     private ICollection<HolidaySchedule> AttachExistingHolidaySchedule(ICollection<HolidaySchedule>? unSavedEntities, ICollection<HolidaySchedule>? existing)
@@ -303,99 +253,26 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
 
         return returnList;
     }
-
-    private ICollection<PhysicalAddress> AttachExistingPhysicalAddress(ICollection<PhysicalAddress>? unSavedEntities, ICollection<PhysicalAddress>? existing)
+    
+    private ICollection<Contact> AttachExistingContacts(ICollection<Contact>? unSavedEntities, ICollection<Contact> allContacts)
     {
-        var returnList = new List<PhysicalAddress>();
+        var returnList = new List<Contact>();
 
         if (unSavedEntities is null || !unSavedEntities.Any())
             return returnList;
 
-        existing ??= _context.PhysicalAddresses.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+        var existing = (from dbContact in allContacts
+            join newContact in unSavedEntities on
+                new { dbContact.Name, dbContact.Email, dbContact.Telephone } equals 
+                new { newContact.Name, newContact.Email, newContact.Telephone }
+            select dbContact)
+            .ToList();
 
         for (var i = 0; i < unSavedEntities.Count; i++)
         {
             var unSavedItem = unSavedEntities.ElementAt(i);
             var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
             returnList.Add(savedItem ?? unSavedItem);
-        }
-
-        return returnList;
-    }
-
-    private ICollection<LinkTaxonomy> AttachExistingLinkTaxonomy(ICollection<LinkTaxonomy>? unSavedEntities, ICollection<LinkTaxonomy>? existing)
-    {
-        var returnList = new List<LinkTaxonomy>();
-
-        if (unSavedEntities is null || !unSavedEntities.Any())
-            return returnList;
-
-        existing ??= _context.LinkTaxonomies
-            .Include(t => t.Taxonomy)
-            .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
-
-        var newIds = unSavedEntities.Where(c => c.Taxonomy != null).Select(c => c.Taxonomy!.Id).ToList();
-        var existingChilds = _context.Taxonomies.Where(x => newIds.Contains(x.Id)).ToList();
-
-        for (var i = 0; i < unSavedEntities.Count; i++)
-        {
-            var unSavedItem = unSavedEntities.ElementAt(i);
-
-            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
-
-            var itemToSave = savedItem ?? unSavedItem;
-
-            if (itemToSave.Taxonomy != null)
-            {
-                var existingTaxonomy = existing.Select(t => t.Taxonomy).SingleOrDefault(t => t!.Id == itemToSave.Taxonomy.Id)
-                                       ?? existingChilds.SingleOrDefault(t => t.Id == itemToSave.Taxonomy.Id);
-
-                if (existingTaxonomy is not null)
-                {
-                    itemToSave.Taxonomy = existingTaxonomy;
-                }
-            }
-
-            returnList.Add(itemToSave);
-        }
-
-        return returnList;
-    }
-
-    private ICollection<LinkContact> AttachExistingContacts(ICollection<LinkContact>? unSavedEntities, ICollection<LinkContact>? existing)
-    {
-        var returnList = new List<LinkContact>();
-
-        if (unSavedEntities is null || !unSavedEntities.Any())
-            return returnList;
-
-        existing ??= _context.LinkContacts
-            .Include(t => t.Contact)
-            .Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
-
-        var newIds = unSavedEntities.Where(c => c.Contact != null).Select(c => c.Contact!.Id).ToList();
-        var existingChilds = _context.Contacts.Where(x => newIds.Contains(x.Id)).ToList();
-
-        for (var i = 0; i < unSavedEntities.Count; i++)
-        {
-            var unSavedItem = unSavedEntities.ElementAt(i);
-
-            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
-
-            var itemToSave = savedItem ?? unSavedItem;
-
-            if (itemToSave.Contact != null)
-            {
-                var existingContact = existing.Select(t => t.Contact).SingleOrDefault(t => t!.Id == itemToSave.Contact.Id)
-                                      ?? existingChilds.SingleOrDefault(t => t.Id == itemToSave.Contact.Id);
-
-                if (existingContact is not null)
-                {
-                    itemToSave.Contact = existingContact;
-                }
-            }
-
-            returnList.Add(itemToSave);
         }
 
         return returnList;

@@ -10,8 +10,6 @@ using FamilyHubs.ServiceDirectory.Core.Interfaces;
 using FamilyHubs.ServiceDirectory.Infrastructure;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
-using FamilyHubs.ServiceDirectory.Infrastructure.Services;
-using FamilyHubs.SharedKernel.Interfaces;
 using MediatR;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -54,8 +52,6 @@ public static class StartupExtensions
 
             containerBuilder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
 
-            containerBuilder.RegisterType<DateTimeService>().As<IDateTime>().InstancePerLifetimeScope();
-
             containerBuilder.RegisterType<CurrentUserService>().As<ICurrentUserService>().InstancePerLifetimeScope();
 
             containerBuilder.RegisterType<AuditableEntitySaveChangesInterceptor>();
@@ -96,6 +92,7 @@ public static class StartupExtensions
                         options = new DbContextOptionsBuilder<ApplicationDbContext>()
                             .UseSqlServer(builder.Configuration.GetConnectionString("ServiceDirectoryConnection") ??
                                           string.Empty)
+                            .UseLoggerFactory(LoggerFactory.Create(lb => lb.AddConsole()))
                             .Options;
                     }
                     break;
@@ -105,6 +102,7 @@ public static class StartupExtensions
                         options = new DbContextOptionsBuilder<ApplicationDbContext>()
                             .UseNpgsql(builder.Configuration.GetConnectionString("ServiceDirectoryConnection") ?? string.Empty)
                             .UseLowerCaseNamingConvention()
+                            .UseLoggerFactory(LoggerFactory.Create(lb => lb.AddConsole()))
                             .Options;
                     }
                     break;
@@ -126,10 +124,6 @@ public static class StartupExtensions
             containerBuilder.RegisterType<MinimalServiceEndPoints>();
 
             containerBuilder.RegisterType<MinimalTaxonomyEndPoints>();
-
-            containerBuilder.RegisterType<MinimalLocationEndPoints>();
-
-            containerBuilder.RegisterType<MinimalUiCacheEndPoints>();
 
             containerBuilder.RegisterType<ApplicationDbContextInitialiser>();
 
@@ -259,23 +253,17 @@ public static class StartupExtensions
     private static async Task RegisterEndPoints(this WebApplication webApplication)
     {
         using var scope = webApplication.Services.CreateScope();
-        var orgservice = scope.ServiceProvider.GetService<MinimalOrganisationEndPoints>();
-        orgservice?.RegisterOrganisationEndPoints(webApplication);
+        var organisationEndPoints = scope.ServiceProvider.GetService<MinimalOrganisationEndPoints>();
+        organisationEndPoints?.RegisterOrganisationEndPoints(webApplication);
 
-        var serservice = scope.ServiceProvider.GetService<MinimalServiceEndPoints>();
-        serservice?.RegisterServiceEndPoints(webApplication);
+        var serviceEndPoints = scope.ServiceProvider.GetService<MinimalServiceEndPoints>();
+        serviceEndPoints?.RegisterServiceEndPoints(webApplication);
 
-        var taxonyservice = scope.ServiceProvider.GetService<MinimalTaxonomyEndPoints>();
-        taxonyservice?.RegisterTaxonomyEndPoints(webApplication);
+        var taxonomyEndPoints = scope.ServiceProvider.GetService<MinimalTaxonomyEndPoints>();
+        taxonomyEndPoints?.RegisterTaxonomyEndPoints(webApplication);
 
-        var locationservice = scope.ServiceProvider.GetService<MinimalLocationEndPoints>();
-        locationservice?.RegisterLocationEndPoints(webApplication);
-
-        var uiCacheservice = scope.ServiceProvider.GetService<MinimalUiCacheEndPoints>();
-        uiCacheservice?.RegisterUiCacheEndPoints(webApplication);
-
-        var genservice = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
-        genservice?.RegisterMinimalGeneralEndPoints(webApplication);
+        var generalEndPoints = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
+        generalEndPoints?.RegisterMinimalGeneralEndPoints(webApplication);
 
         try
         {

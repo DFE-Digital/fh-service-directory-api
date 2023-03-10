@@ -8,12 +8,12 @@ namespace FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationAdminByOrganisa
 
 public class GetOrganisationAdminByOrganisationIdCommand : IRequest<string>
 {
-    public GetOrganisationAdminByOrganisationIdCommand(string organisationId)
+    public GetOrganisationAdminByOrganisationIdCommand(long organisationId)
     {
         OrganisationId = organisationId;
     }
 
-    public string OrganisationId { get; }
+    public long OrganisationId { get; }
 }
 
 public class GetOrganisationAdminByOrganisationIdCommandHandler : IRequestHandler<GetOrganisationAdminByOrganisationIdCommand, string>
@@ -26,15 +26,13 @@ public class GetOrganisationAdminByOrganisationIdCommandHandler : IRequestHandle
     }
     public async Task<string> Handle(GetOrganisationAdminByOrganisationIdCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.AdminAreas
-           .FirstOrDefaultAsync(p => p.OrganisationId == request.OrganisationId, cancellationToken);
+        var entity = await _context.Organisations
+           .FirstOrDefaultAsync(p => p.Id == request.OrganisationId, cancellationToken);
 
-        if (entity == null)
-        {
-            throw new NotFoundException(nameof(Organisation), request.OrganisationId);
-        }
+        if (entity is null)
+            throw new NotFoundException(nameof(Organisation), request.OrganisationId.ToString());
 
-        return entity.Code;
+        return entity.AdminAreaCode;
     }
 }
 

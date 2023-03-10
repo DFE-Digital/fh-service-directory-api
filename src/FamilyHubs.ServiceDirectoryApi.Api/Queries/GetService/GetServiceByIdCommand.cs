@@ -1,6 +1,6 @@
 ﻿using Ardalis.GuardClauses;
-using FamilyHubs.ServiceDirectory.Api.Helper;
-using FamilyHubs.ServiceDirectory.Core;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -11,27 +11,28 @@ namespace FamilyHubs.ServiceDirectory.Api.Queries.GetService;
 
 public class GetServiceByIdCommand : IRequest<ServiceDto>
 {
-    public GetServiceByIdCommand(string id)
+    public GetServiceByIdCommand(long id)
     {
         Id = id;
     }
 
-    public string Id { get; }
+    public long Id { get; }
 }
 
 public class GetServiceByIdCommandHandler : IRequestHandler<GetServiceByIdCommand, ServiceDto>
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public GetServiceByIdCommandHandler(ApplicationDbContext context)
+    public GetServiceByIdCommandHandler(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<ServiceDto> Handle(GetServiceByIdCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Services
-            .Include(x => x.ServiceType)
             .Include(x => x.ServiceDeliveries)
             .Include(x => x.Eligibilities)
             .Include(x => x.CostOptions)
@@ -40,44 +41,23 @@ public class GetServiceByIdCommandHandler : IRequestHandler<GetServiceByIdComman
             .Include(x => x.ServiceAreas)
             .Include(x => x.RegularSchedules)
             .Include(x => x.HolidaySchedules)
-            .Include(x => x.LinkContacts)
-            .ThenInclude(x => x.Contact)
-            .Include(x => x.ServiceTaxonomies)
-            .ThenInclude(x => x.Taxonomy)
-
-            .Include(x => x.ServiceAtLocations)
+            .Include(x => x.Contacts)
+            .Include(x => x.Taxonomies)
+            .Include(x => x.Locations)
+            .ThenInclude(x => x.Contacts)
+            .Include(x => x.Locations)
             .ThenInclude(x => x.RegularSchedules)
-            
-            .Include(x => x.ServiceAtLocations)
+            .Include(x => x.Locations)
             .ThenInclude(x => x.HolidaySchedules)
-
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.LinkContacts!)
-            .ThenInclude(x => x.Contact)
+            .AsSplitQuery()
+            .ProjectTo<ServiceDto>(_mapper.ConfigurationProvider)
             
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.PhysicalAddresses)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.LinkContacts!)
-            .ThenInclude(x => x.Contact)
-            
-            .Include(x => x.ServiceAtLocations)
-            .ThenInclude(x => x.Location)
-            .ThenInclude(x => x.LinkTaxonomies!.Where(lt => lt.LinkType == LinkType.Location))
-            .ThenInclude(x => x.Taxonomy)
-
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
         
-        if (entity == null)
-        {
-            throw new NotFoundException(nameof(Service), request.Id);
-        }
-
-        var result = DtoHelper.GetServiceDto(entity);
-        return result;
+        if (entity is null)
+            throw new NotFoundException(nameof(Service), request.Id.ToString());
+        
+        return entity;
     }
 }
 
