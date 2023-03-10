@@ -11,7 +11,7 @@ public class WhenValidatingUpdateOrganisationCommands
         //Arrange
         var testOrganisation = TestDataProvider.GetTestCountyCouncilRecord();
         var validator = new UpdateOrganisationCommandValidator();
-        var testModel = new UpdateOrganisationCommand("Id", testOrganisation);
+        var testModel = new UpdateOrganisationCommand(Random.Shared.Next(), testOrganisation);
 
         //Act
         var result = validator.Validate(testModel);
@@ -26,7 +26,7 @@ public class WhenValidatingUpdateOrganisationCommands
         //Arrange
         var testOrganisation = TestDataProvider.GetTestCountyCouncilRecord();
         var validator = new UpdateOrganisationCommandValidator();
-        var testModel = new UpdateOrganisationCommand("", testOrganisation);
+        var testModel = new UpdateOrganisationCommand(Random.Shared.Next(), testOrganisation);
 
         //Act
         var result = validator.Validate(testModel);
@@ -40,9 +40,9 @@ public class WhenValidatingUpdateOrganisationCommands
     {
         //Arrange
         var testOrganisation = TestDataProvider.GetTestCountyCouncilRecord();
-        testOrganisation.Id = string.Empty;
+        testOrganisation.Id = Random.Shared.Next();
         var validator = new UpdateOrganisationCommandValidator();
-        var testModel = new UpdateOrganisationCommand("Id", testOrganisation);
+        var testModel = new UpdateOrganisationCommand(Random.Shared.Next(), testOrganisation);
 
         //Act
         var result = validator.Validate(testModel);
@@ -58,7 +58,7 @@ public class WhenValidatingUpdateOrganisationCommands
         var testOrganisation = TestDataProvider.GetTestCountyCouncilRecord();
         testOrganisation.Name = string.Empty;
         var validator = new UpdateOrganisationCommandValidator();
-        var testModel = new UpdateOrganisationCommand("Id", testOrganisation);
+        var testModel = new UpdateOrganisationCommand(Random.Shared.Next(), testOrganisation);
 
         //Act
         var result = validator.Validate(testModel);

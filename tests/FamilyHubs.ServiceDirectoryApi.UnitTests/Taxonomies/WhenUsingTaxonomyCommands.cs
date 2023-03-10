@@ -32,7 +32,7 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(testTaxonomy.Id);
     }
 
@@ -57,20 +57,25 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
     public async Task ThenUpdateTaxonomy()
     {
         var mockApplicationDbContext = GetApplicationDbContext();
-        var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", TaxonomyType.ServiceCategory, null);
+        var dbTaxonomy = new Taxonomy
+        {
+            Name = "Test 1 Taxonomy",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null
+        };
         mockApplicationDbContext.Taxonomies.Add(dbTaxonomy);
         await mockApplicationDbContext.SaveChangesAsync();
         var testTaxonomy = GetTestTaxonomyDto();
         var logger = new Mock<ILogger<UpdateTaxonomyCommandHandler>>();
 
-        var command = new UpdateTaxonomyCommand("a3226044-5c89-4257-8b07-f29745a22e2c", testTaxonomy);
+        var command = new UpdateTaxonomyCommand(dbTaxonomy.Id, testTaxonomy);
         var handler = new UpdateTaxonomyCommandHandler(mockApplicationDbContext, logger.Object);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(testTaxonomy.Id);
     }
 
@@ -79,12 +84,17 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
     {
         // Arrange
         var dbContext = GetApplicationDbContext();
-        var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", TaxonomyType.ServiceCategory, null);
+        var dbTaxonomy = new Taxonomy
+        {
+            Name = "Test 1 Taxonomy",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null
+        };
         dbContext.Taxonomies.Add(dbTaxonomy);
         await dbContext.SaveChangesAsync();
         var logger = new Mock<ILogger<UpdateTaxonomyCommandHandler>>();
         var handler = new UpdateTaxonomyCommandHandler(dbContext, logger.Object);
-        var command = new UpdateTaxonomyCommand("a3226044-5c89-4257-8b07-f29745a22e2c", default!);
+        var command = new UpdateTaxonomyCommand(dbTaxonomy.Id, default!);
 
         // Act
         //Assert
@@ -99,7 +109,7 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
         var dbContext = GetApplicationDbContext();
         var logger = new Mock<ILogger<UpdateTaxonomyCommandHandler>>();
         var handler = new UpdateTaxonomyCommandHandler(dbContext, logger.Object);
-        var command = new UpdateTaxonomyCommand("a3226044-5c89-4257-8b07-f29745a22e2c", default!);
+        var command = new UpdateTaxonomyCommand(Random.Shared.Next(), default!);
 
         // Act
         //Assert
@@ -111,20 +121,27 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
     public async Task ThenGetTaxonomies()
     {
         var mockApplicationDbContext = GetApplicationDbContext();
-        var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", TaxonomyType.ServiceCategory, null);
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        var mapper = new Mapper(configuration);
+        var dbTaxonomy = new Taxonomy
+        {
+            Name = "Test 1 Taxonomy",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null
+        };
         mockApplicationDbContext.Taxonomies.Add(dbTaxonomy);
         await mockApplicationDbContext.SaveChangesAsync();
 
 
         var command = new GetTaxonomiesCommand(TaxonomyType.NotSet, 1, null, null);
-        var handler = new GetTaxonomiesCommandHandler(mockApplicationDbContext);
+        var handler = new GetTaxonomiesCommandHandler(mockApplicationDbContext, mapper);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
-        result.Items[0].Id.Should().Be("a3226044-5c89-4257-8b07-f29745a22e2c");
         result.Items[0].Name.Should().Be("Test 1 Taxonomy");
         result.Items[0].TaxonomyType.Should().Be(TaxonomyType.ServiceCategory);
     }
@@ -133,23 +150,35 @@ public class WhenUsingTaxonomyCommands : BaseCreateDbUnitTest
     public async Task ThenGetTaxonomiesWithNullRequest()
     {
         var mockApplicationDbContext = GetApplicationDbContext();
-        var dbTaxonomy = new Taxonomy("a3226044-5c89-4257-8b07-f29745a22e2c", "Test 1 Taxonomy", TaxonomyType.ServiceCategory, null);
+        var myProfile = new AutoMappingProfiles();
+        var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+        var mapper = new Mapper(configuration);
+        var dbTaxonomy = new Taxonomy
+        {
+            Name = "Test 1 Taxonomy",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null
+        };
         mockApplicationDbContext.Taxonomies.Add(dbTaxonomy);
         await mockApplicationDbContext.SaveChangesAsync();
-        var handler = new GetTaxonomiesCommandHandler(mockApplicationDbContext);
+        var handler = new GetTaxonomiesCommandHandler(mockApplicationDbContext, mapper);
 
         //Act
         var result = await handler.Handle(new GetTaxonomiesCommand(TaxonomyType.NotSet, null, null, null), new CancellationToken());
 
         //Assert
         result.Should().NotBeNull();
-        result.Items[0].Id.Should().Be("a3226044-5c89-4257-8b07-f29745a22e2c");
         result.Items[0].Name.Should().Be("Test 1 Taxonomy");
         result.Items[0].TaxonomyType.Should().Be(TaxonomyType.ServiceCategory);
     }
 
     private static TaxonomyDto GetTestTaxonomyDto()
     {
-        return new TaxonomyDto("a3226044-5c89-4257-8b07-f29745a22e2c", "Test Taxonomy", TaxonomyType.ServiceCategory, null);
+        return new TaxonomyDto
+        {
+            Name = "Test Taxonomy",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null
+        };
     }
 }

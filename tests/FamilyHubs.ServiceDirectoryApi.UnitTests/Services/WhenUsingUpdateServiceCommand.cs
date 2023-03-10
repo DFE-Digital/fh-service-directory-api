@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Api.Commands.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Api.Commands.CreateService;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
 using FamilyHubs.ServiceDirectory.Core;
+using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
@@ -70,7 +71,7 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(service.Id);
     }
 
@@ -78,17 +79,12 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     public async Task ThenUpdateServiceWithExistingContact()
     {
         //Arrange
-        var existingContact = TestOrganisation.Services!.ElementAt(0).LinkContacts!.ElementAt(0).Contact;
+        var existingContact = TestOrganisation.Services.ElementAt(0).Contacts.ElementAt(0);
         var service = TestDataProvider.GetTestCountyCouncilServicesDto(TestOrganisation.Id);
 
         service.Name = "Unit Test Update Service Name";
         service.Description = "Unit Test Update Service Name";
-        service.LinkContacts!.Add(new LinkContactDto(
-            Guid.NewGuid().ToString(),
-            service.Id,
-            "Service",
-            existingContact
-            ));
+        service.Contacts.Add(existingContact);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, UpdateLogger.Object);
@@ -97,55 +93,39 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(service.Id);
 
         var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.LinkId == service.Id).ToList();
 
         linkContacts.Should().HaveCount(2);
-        linkContacts.ElementAt(0).Contact.Should().NotBeNull();
-        linkContacts.ElementAt(1).Contact.Should().NotBeNull();
-
-        linkContacts.ElementAt(0).Contact!.Id.Should().Be(existingContact.Id);
-        linkContacts.ElementAt(1).Contact!.Id.Should().Be(existingContact.Id);
+        linkContacts.ElementAt(0).ContactId.Should().Be(existingContact.Id);
     }
 
     [Fact]
     public async Task ThenUpdateServiceWithNewServiceAtLocation()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-
-        var serviceAtLocationId = Guid.NewGuid().ToString();
-        var locationId = Guid.NewGuid().ToString();
-        var physicalAddressId = Guid.NewGuid().ToString();
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
 
         serviceDto.Description = "Updated Description";
         serviceDto.Fees = "Updated Fees";
         serviceDto.Name = "Updated Name";
-        serviceDto.ServiceAtLocations!.Add(new ServiceAtLocationDto
+        var newLocation = new LocationDto
         {
-            Id = serviceAtLocationId,
-            Location = new LocationDto
-            {
-                Id = locationId,
-                Name = "New Location",
-                Description = "new Description",
-                PhysicalAddresses = new List<PhysicalAddressDto>
-                {
-                    new PhysicalAddressDto
-                    {
-                        Id = physicalAddressId,
-                        Address1 = "Address1",
-                        City = "City",
-                        Country = "Country",
-                        PostCode = "PostCode",
-                        StateProvince = "StateProvince"
-                    }
-                }
-            }
-        });
-        var command = new UpdateServiceCommand(TestOrganisation.Services?.ElementAt(0).Id ?? string.Empty, TestOrganisation.Services?.ElementAt(0) ?? default!);
+            Name = "New Location",
+            Description = "new Description",
+            Address1 = "Address1",
+            City = "City",
+            Country = "Country",
+            PostCode = "PostCode",
+            StateProvince = "StateProvince",
+            LocationType = LocationType.NotSet,
+            Latitude = 0,
+            Longitude = 0
+        };
+        serviceDto.Locations.Add(newLocation);
+        var command = new UpdateServiceCommand(TestOrganisation.Services.ElementAt(0).Id, TestOrganisation.Services.ElementAt(0));
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
 
 
@@ -153,8 +133,8 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         var actualServices = MockApplicationDbContext.Services.Where(s => s.Id == serviceDto.Id).ToList();
         actualServices.Should().NotBeNull();
@@ -168,39 +148,30 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         service.Name.Should().Be("Updated Name");
         service.Description.Should().Be("Updated Description");
 
-        service.ServiceAtLocations.Should().Contain(s => s.Id == serviceAtLocationId);
-        service.ServiceAtLocations.Single(s => s.Id == serviceAtLocationId)
-            .Location.Id.Should().Be(locationId);
-
-        var location = service.ServiceAtLocations.Single(s => s.Id == serviceAtLocationId)
-            .Location;
+        service.Locations.Should().Contain(s => s.Name == newLocation.Name && s.PostCode == newLocation.PostCode);
+        var location = service.Locations.Single(s => s.Name == newLocation.Name && s.PostCode == newLocation.PostCode);
 
         location.Name.Should().Be("New Location");
         location.Description.Should().Be("new Description");
-        location.PhysicalAddresses.Should().NotBeEmpty();
-        location.PhysicalAddresses!.ElementAt(0).Address1.Should().Be("Address1");
-        location.PhysicalAddresses!.ElementAt(0).City.Should().Be("City");
-        location.PhysicalAddresses!.ElementAt(0).PostCode.Should().Be("PostCode");
-        location.PhysicalAddresses!.ElementAt(0).StateProvince.Should().Be("StateProvince");
+        location.Address1.Should().Be("Address1");
+        location.City.Should().Be("City");
+        location.PostCode.Should().Be("PostCode");
+        location.StateProvince.Should().Be("StateProvince");
     }
 
     [Fact]
     public async Task ThenUpdateServiceWithNewServiceAtLocationAndExistingLocation()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var existingLocation = serviceDto.ServiceAtLocations!.ElementAt(0).Location;
-        var serviceAtLocationId = Guid.NewGuid().ToString();
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
+        var existingLocation = serviceDto.Locations.ElementAt(0);
 
         serviceDto.Description = "Updated Description";
         serviceDto.Fees = "Updated Fees";
         serviceDto.Name = "Updated Name";
-        serviceDto.ServiceAtLocations!.Add(new ServiceAtLocationDto
-        {
-            Id = serviceAtLocationId,
-            Location = existingLocation
-        });
-        var command = new UpdateServiceCommand(TestOrganisation.Services?.ElementAt(0).Id ?? string.Empty, TestOrganisation.Services?.ElementAt(0) ?? default!);
+        serviceDto.Locations.Add(existingLocation);
+
+        var command = new UpdateServiceCommand(TestOrganisation.Services.ElementAt(0).Id, TestOrganisation.Services.ElementAt(0));
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
 
 
@@ -208,8 +179,8 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         var actualServices = MockApplicationDbContext.Services.Where(s => s.Id == serviceDto.Id).ToList();
         actualServices.Should().NotBeNull();
@@ -223,25 +194,17 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         service.Name.Should().Be("Updated Name");
         service.Description.Should().Be("Updated Description");
 
-        service.ServiceAtLocations.Should().Contain(s => s.Id == serviceAtLocationId);
-        service.ServiceAtLocations.Single(s => s.Id == serviceAtLocationId)
-            .Location.Id.Should().Be(existingLocation.Id);
+        service.Locations.Should().Contain(s => s.Id == existingLocation.Id);
     }
 
     [Fact]
     public async Task ThenUpdateServiceWithNewLinkContactAndExistingContact()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var existingContact = serviceDto.LinkContacts!.ElementAt(0).Contact;
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
+        var existingContact = serviceDto.Contacts.ElementAt(0);
 
-        var newLinkContactId = Guid.NewGuid().ToString();
-        serviceDto.LinkContacts!.Add(new LinkContactDto(
-            newLinkContactId,
-            serviceDto.Id,
-            "Service",
-            existingContact
-            ));
+        serviceDto.Contacts.Add(existingContact);
 
         var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
@@ -250,37 +213,28 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         MockApplicationDbContext.Contacts
             .Where(c => c.Id == existingContact.Id)
             .ToList().Count.Should().Be(1);
 
-        var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.Id == newLinkContactId).ToList();
+        var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.ContactId == existingContact.Id).ToList();
 
         linkContacts.Should().HaveCount(1);
-        linkContacts.ElementAt(0).Contact.Should().NotBeNull();
-
-        linkContacts.ElementAt(0).Contact!.Id.Should().Be(existingContact.Id);
+        linkContacts.ElementAt(0).ContactId.Should().Be(existingContact.Id);
     }
 
     [Fact]
     public async Task ThenUpdateServiceWithExistingContactForServiceAtLocation()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var serviceAtLocationDto = serviceDto.ServiceAtLocations!.ElementAt(0);
-        var existingContact = serviceAtLocationDto.LinkContacts!.ElementAt(0).Contact;
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
+        var serviceAtLocationDto = serviceDto.Locations.ElementAt(0);
+        var existingContact = serviceAtLocationDto.Contacts.ElementAt(0);
 
-        var newLinkContactId = Guid.NewGuid().ToString();
-        serviceDto.ServiceAtLocations!.ElementAt(0)
-            .LinkContacts!.Add(new LinkContactDto(
-            newLinkContactId,
-            serviceAtLocationDto.Id,
-            "ServiceAtLocation",
-            existingContact
-            ));
+        serviceDto.Locations.ElementAt(0).Contacts.Add(existingContact);
 
         var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
@@ -289,23 +243,146 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.LinkId == serviceAtLocationDto.Id).ToList();
 
         linkContacts.Should().HaveCount(2);
-        linkContacts.ElementAt(0).Contact.Should().NotBeNull();
-        linkContacts.ElementAt(0).Contact!.Id.Should().Be(existingContact.Id);
-        linkContacts.ElementAt(1).Contact.Should().NotBeNull();
-        linkContacts.ElementAt(1).Contact!.Id.Should().Be(existingContact.Id);
+        linkContacts.ElementAt(0).ContactId.Should().Be(existingContact.Id);
+        linkContacts.ElementAt(1).ContactId.Should().Be(existingContact.Id);
+    }
+
+    [Fact]
+    public async Task ThenUpdateServiceAddNewAddress()
+    {
+        //Arrange
+        var newLocation = new LocationDto
+        {
+            LocationType = LocationType.NotSet,
+            Name = "Name",
+            Latitude = 0,
+            Longitude = 0,
+            Address1 = "address1",
+            City = "city",
+            PostCode = "postcode",
+            StateProvince = "stateProvince",
+            Country = "country"
+        };
+
+        TestOrganisation.Services.ElementAt(0).Locations.Add(newLocation);
+
+        var command = new UpdateServiceCommand(TestOrganisation.Services.ElementAt(0).Id, TestOrganisation.Services.ElementAt(0));
+        var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
+
+        //Act
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
+
+        var expectedEntity = MockApplicationDbContext.Locations.Where(s => s.Name == newLocation.Name && s.PostCode == newLocation.PostCode).ToList();
+
+        expectedEntity.Should().HaveCount(1);
+        expectedEntity.ElementAt(0).Should().NotBeNull();
+
+        expectedEntity.ElementAt(0).Id.Should().Be(newLocation.Id);
+    }
+
+    [Fact]
+    public async Task ThenUpdateServiceUpdateExistingAddress()
+    {
+        //Arrange
+        var addressDto = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+
+        addressDto.Address1 = "address1";
+        addressDto.City = "city";
+        addressDto.PostCode = "postcode";
+        addressDto.Country = "country";
+        addressDto.StateProvince = "stateProvince";
+
+        var command = new UpdateServiceCommand(TestOrganisation.Services.ElementAt(0).Id, TestOrganisation.Services.ElementAt(0));
+        var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
+
+        //Act
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
+
+        var expectedEntity = MockApplicationDbContext.Locations.Where(lc => lc.Id == addressDto.Id).ToList();
+
+        expectedEntity.Should().HaveCount(1);
+        expectedEntity.ElementAt(0).Should().NotBeNull();
+
+        expectedEntity.ElementAt(0).Id.Should().Be(addressDto.Id);
+        expectedEntity.ElementAt(0).Should().BeEquivalentTo(addressDto);
+    }
+
+    [Fact]
+    public async Task ThenUpdateServiceAttachExistingAddress()
+    {
+        //Arrange
+        var locationDto = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        var newItem = new LocationDto
+        {
+            LocationType = LocationType.NotSet,
+            Name = "Name",
+            Latitude = 0,
+            Longitude = 0,
+            Address1 = "address1",
+            City = "city",
+            PostCode = "postcode",
+            StateProvince = "stateProvince",
+            Country = "country"
+        };
+
+        TestOrganisation.Services.ElementAt(0).Locations.Clear();
+        TestOrganisation.Services.ElementAt(0).Locations.Add(newItem);
+
+        var newEntity = new Location
+        {
+            LocationType = LocationType.NotSet,
+            Name = "Name",
+            Latitude = 0,
+            Longitude = 0,
+            Address1 = "address1",
+            City = "city",
+            PostCode = "postcode",
+            StateProvince = "stateProvince",
+            Country = "country"
+        };
+
+        MockApplicationDbContext.Locations.Add(newEntity);
+
+        await MockApplicationDbContext.SaveChangesAsync();
+
+        var command = new UpdateServiceCommand(TestOrganisation.Services.ElementAt(0).Id, TestOrganisation.Services.ElementAt(0));
+        var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
+
+        //Act
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
+
+        var expectedEntity = MockApplicationDbContext.Locations.Where(lc => lc.Id == locationDto.Id).ToList();
+
+        expectedEntity.Should().HaveCount(1);
+        expectedEntity.ElementAt(0).Should().NotBeNull();
+
+        expectedEntity.ElementAt(0).Id.Should().Be(newItem.Id);
+        expectedEntity.ElementAt(0).Should().BeEquivalentTo(newItem);
     }
 
     [Fact]
     public async Task ThenUpdateServiceWithNewNestedRecords()
     {
         //Arrange
-        var command = new UpdateServiceCommand(TestOrganisation.Services?.ElementAt(0).Id ?? string.Empty, TestOrganisation.Services?.ElementAt(0) ?? default!);
+        var command = new UpdateServiceCommand(TestOrganisation.Services.ElementAt(0).Id, TestOrganisation.Services.ElementAt(0));
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
 
 
@@ -313,25 +390,25 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
     }
 
     [Fact]
     public async Task ThenUpdateServiceExistingEligibilities()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var newId = Guid.NewGuid().ToString();
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
 
-        var newItem = new EligibilityDto(
-            newId,
-            "Test",
-            1,
-            2
-        );
+        var newItem = new EligibilityDto
+        {
+            ServiceId = serviceDto.Id,
+            MaximumAge = 2,
+            MinimumAge = 0,
+            EligibilityType = EligibilityType.NotSet
+        };
 
-        serviceDto.Eligibilities!.Add(newItem);
+        serviceDto.Eligibilities.Add(newItem);
 
         var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
@@ -340,14 +417,14 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         MockApplicationDbContext.Eligibilities
             .Where(c => c.Id == newItem.Id)
             .ToList().Count.Should().Be(1);
 
-        var expectedEntity = MockApplicationDbContext.Eligibilities.Where(lc => lc.Id == newId).ToList();
+        var expectedEntity = MockApplicationDbContext.Eligibilities.Where(lc => lc.ServiceId == serviceDto.Id).ToList();
 
         expectedEntity.Should().HaveCount(1);
         expectedEntity.ElementAt(0).Should().NotBeNull();
@@ -360,17 +437,17 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     public async Task ThenUpdateServiceExistingServiceAreas()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var newId = Guid.NewGuid().ToString();
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
 
-        var newItem = new ServiceAreaDto(
-            newId,
-            "Test",
-            "Test",
-            "Test"
-        );
+        var newItem = new ServiceAreaDto
+        {
+            Uri = "Test",
+            Extent = "Test",
+            ServiceAreaName = "Test",
+            ServiceId = serviceDto.Id
+        };
 
-        serviceDto.ServiceAreas!.Add(newItem);
+        serviceDto.ServiceAreas.Add(newItem);
 
         var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
@@ -379,14 +456,14 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         MockApplicationDbContext.ServiceAreas
             .Where(c => c.Id == newItem.Id)
             .ToList().Count.Should().Be(1);
 
-        var expectedEntity = MockApplicationDbContext.ServiceAreas.Where(lc => lc.Id == newId).ToList();
+        var expectedEntity = MockApplicationDbContext.ServiceAreas.Where(lc => lc.ServiceId == serviceDto.Id).ToList();
 
         expectedEntity.Should().HaveCount(1);
         expectedEntity.ElementAt(0).Should().NotBeNull();
@@ -399,15 +476,15 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     public async Task ThenUpdateServiceExistingServiceDeliveries()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var newId = Guid.NewGuid().ToString();
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
 
-        var newItem = new ServiceDeliveryDto(
-            newId,
-            ServiceDeliveryType.Online
-        );
+        var newItem = new ServiceDeliveryDto
+        {
+            Name = ServiceDeliveryType.Online,
+            ServiceId = serviceDto.Id
+        };
         
-        serviceDto.ServiceDeliveries!.Add(newItem);
+        serviceDto.ServiceDeliveries.Add(newItem);
 
         var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
@@ -416,14 +493,14 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         MockApplicationDbContext.ServiceDeliveries
             .Where(c => c.Id == newItem.Id)
             .ToList().Count.Should().Be(1);
 
-        var expectedEntity = MockApplicationDbContext.ServiceDeliveries.Where(lc => lc.Id == newId).ToList();
+        var expectedEntity = MockApplicationDbContext.ServiceDeliveries.Where(lc => lc.ServiceId == serviceDto.Id).ToList();
 
         expectedEntity.Should().HaveCount(1);
         expectedEntity.ElementAt(0).Should().NotBeNull();
@@ -436,15 +513,15 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     public async Task ThenUpdateServiceExistingLanguages()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var newId = Guid.NewGuid().ToString();
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
 
-        var newItem = new LanguageDto(
-            newId,
-            "Name"
-        );
+        var newItem = new LanguageDto
+        {
+            ServiceId = serviceDto.Id,
+            Name = "Name"
+        };
         
-        serviceDto.Languages!.Add(newItem);
+        serviceDto.Languages.Add(newItem);
 
         var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
@@ -453,14 +530,14 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         MockApplicationDbContext.Languages
             .Where(c => c.Id == newItem.Id)
             .ToList().Count.Should().Be(1);
 
-        var expectedEntity = MockApplicationDbContext.Languages.Where(lc => lc.Id == newId).ToList();
+        var expectedEntity = MockApplicationDbContext.Languages.Where(lc => lc.ServiceId == serviceDto.Id).ToList();
 
         expectedEntity.Should().HaveCount(1);
         expectedEntity.ElementAt(0).Should().NotBeNull();
@@ -473,15 +550,15 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     public async Task ThenUpdateServiceExistingServiceTaxonomies()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var newId = Guid.NewGuid().ToString();
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
 
-        var newItem = new ServiceTaxonomyDto(
-            newId,
-            null
-        );
+        var newItem = new TaxonomyDto
+        {
+            Name = "Name",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+        };
         
-        serviceDto.ServiceTaxonomies!.Add(newItem);
+        serviceDto.Taxonomies.Add(newItem);
 
         var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
@@ -490,19 +567,19 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         MockApplicationDbContext.ServiceTaxonomies
-            .Where(c => c.Id == newItem.Id)
+            .Where(c => c.TaxonomyId == newItem.Id)
             .ToList().Count.Should().Be(1);
 
-        var expectedEntity = MockApplicationDbContext.ServiceTaxonomies.Where(lc => lc.Id == newId).ToList();
+        var expectedEntity = MockApplicationDbContext.ServiceTaxonomies.Where(lc => lc.ServiceId == serviceDto.Id).ToList();
 
         expectedEntity.Should().HaveCount(1);
         expectedEntity.ElementAt(0).Should().NotBeNull();
 
-        expectedEntity.ElementAt(0).Id.Should().Be(newItem.Id);
+        expectedEntity.ElementAt(0).TaxonomyId.Should().Be(newItem.Id);
         expectedEntity.ElementAt(0).ServiceId.Should().Be(serviceDto.Id);
     }
 
@@ -510,20 +587,16 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     public async Task ThenUpdateServiceExistingCostOptions()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var newId = Guid.NewGuid().ToString();
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
 
-        var newItem = new CostOptionDto(
-            newId,
-            "test",
-            12,
-            null,
-            null,
-            null,
-            null
-        );
+        var newItem = new CostOptionDto
+        {
+            ServiceId = serviceDto.Id,
+            Amount = 12,
+            AmountDescription = "test",
+        };
         
-        serviceDto.CostOptions!.Add(newItem);
+        serviceDto.CostOptions.Add(newItem);
 
         var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
@@ -532,14 +605,14 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         MockApplicationDbContext.CostOptions
             .Where(c => c.Id == newItem.Id)
             .ToList().Count.Should().Be(1);
 
-        var expectedEntity = MockApplicationDbContext.CostOptions.Where(lc => lc.Id == newId).ToList();
+        var expectedEntity = MockApplicationDbContext.CostOptions.Where(lc => lc.ServiceId == serviceDto.Id).ToList();
 
         expectedEntity.Should().HaveCount(1);
         expectedEntity.ElementAt(0).Should().NotBeNull();
@@ -552,24 +625,15 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     public async Task ThenUpdateServiceExistingRegularSchedules()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var newId = Guid.NewGuid().ToString();
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
 
-        var newItem = new RegularScheduleDto(
-            newId,
-            "test",
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
+        var newItem = new RegularScheduleDto
+        {
+            ServiceId = serviceDto.Id,
+            Description = "Test"
+        };
         
-        serviceDto.RegularSchedules!.Add(newItem);
+        serviceDto.RegularSchedules.Add(newItem);
 
         var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
@@ -578,14 +642,14 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         MockApplicationDbContext.RegularSchedules
             .Where(c => c.Id == newItem.Id)
             .ToList().Count.Should().Be(1);
 
-        var expectedEntity = MockApplicationDbContext.RegularSchedules.Where(lc => lc.Id == newId).ToList();
+        var expectedEntity = MockApplicationDbContext.RegularSchedules.Where(lc => lc.ServiceId == serviceDto.Id).ToList();
 
         expectedEntity.Should().HaveCount(1);
         expectedEntity.ElementAt(0).Should().NotBeNull();
@@ -598,26 +662,17 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     public async Task ThenUpdateServiceAddAndDeleteRegularSchedules()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var existingItem = TestOrganisation.Services!.ElementAt(0).RegularSchedules!.ElementAt(0);
-        var newId = Guid.NewGuid().ToString();
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
+        var existingItem = TestOrganisation.Services.ElementAt(0).RegularSchedules.ElementAt(0);
 
-        var newItem = new RegularScheduleDto(
-            newId,
-            "description",
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
+        var newItem = new RegularScheduleDto
+        {
+            ServiceId = serviceDto.Id,
+            Description = "Description"
+        };
         
-        serviceDto.RegularSchedules!.Clear();
-        serviceDto.RegularSchedules!.Add(newItem);
+        serviceDto.RegularSchedules.Clear();
+        serviceDto.RegularSchedules.Add(newItem);
 
         var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
@@ -626,14 +681,14 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         MockApplicationDbContext.RegularSchedules
             .Where(c => c.ServiceId == serviceDto.Id)
             .ToList().Count.Should().Be(1);
 
-        var expectedEntity = MockApplicationDbContext.RegularSchedules.Where(lc => lc.Id == newId).ToList();
+        var expectedEntity = MockApplicationDbContext.RegularSchedules.Where(lc => lc.ServiceId == serviceDto.Id).ToList();
 
         expectedEntity.Should().HaveCount(1);
         expectedEntity.ElementAt(0).Should().NotBeNull();
@@ -641,7 +696,7 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         expectedEntity.ElementAt(0).Id.Should().Be(newItem.Id);
         expectedEntity.ElementAt(0).ServiceId.Should().Be(serviceDto.Id);
 
-        var unexpectedEntity = MockApplicationDbContext.RegularSchedules.Where(lc => existingItem.Id == newId).ToList();
+        var unexpectedEntity = MockApplicationDbContext.RegularSchedules.Where(lc => existingItem.ServiceId == serviceDto.Id).ToList();
         unexpectedEntity.Should().HaveCount(0);
     }
 
@@ -649,8 +704,8 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     public async Task ThenUpdateServiceUpdateRegularSchedules()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var regularSchedule = TestOrganisation.Services!.ElementAt(0).RegularSchedules!.ElementAt(0);
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
+        var regularSchedule = TestOrganisation.Services.ElementAt(0).RegularSchedules.ElementAt(0);
         regularSchedule.ByDay = "ByDay";
 
         var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
@@ -660,8 +715,8 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         MockApplicationDbContext.RegularSchedules
             .Where(c => c.Id == regularSchedule.Id)
@@ -681,19 +736,16 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
     public async Task ThenUpdateServiceExistingHolidaySchedules()
     {
         //Arrange
-        var serviceDto = TestOrganisation.Services!.ElementAt(0);
-        var newId = Guid.NewGuid().ToString();
+        var serviceDto = TestOrganisation.Services.ElementAt(0);
 
-        var newItem = new HolidayScheduleDto(
-            newId,
-            false,
-            null,
-            null,
-            null,
-            null
-        );
+        var newItem = new HolidayScheduleDto
+        {
+            Closed = false,
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow
+        };
         
-        serviceDto.HolidaySchedules!.Add(newItem);
+        serviceDto.HolidaySchedules.Add(newItem);
 
         var command = new UpdateServiceCommand(serviceDto.Id, serviceDto);
         var handler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<UpdateServiceCommandHandler>>().Object);
@@ -702,14 +754,14 @@ public class WhenUsingUpdateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
-        result.Should().Be(TestOrganisation.Services?.ElementAt(0).Id);
+        result.Should().NotBe(0);
+        result.Should().Be(TestOrganisation.Services.ElementAt(0).Id);
 
         MockApplicationDbContext.HolidaySchedules
             .Where(c => c.Id == newItem.Id)
             .ToList().Count.Should().Be(1);
 
-        var expectedEntity = MockApplicationDbContext.HolidaySchedules.Where(lc => lc.Id == newId).ToList();
+        var expectedEntity = MockApplicationDbContext.HolidaySchedules.Where(lc => lc.ServiceId == serviceDto.Id).ToList();
 
         expectedEntity.Should().HaveCount(1);
         expectedEntity.ElementAt(0).Should().NotBeNull();

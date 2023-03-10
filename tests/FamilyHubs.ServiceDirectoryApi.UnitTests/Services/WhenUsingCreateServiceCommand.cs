@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectory.Core;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -71,7 +72,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(anotherService.Id);
     }
 
@@ -83,7 +84,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
 
         var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
 
-        var contact = Mapper.Map<Contact>(anotherService.LinkContacts!.ElementAt(0).Contact);
+        var contact = Mapper.Map<Contact>(anotherService.Contacts.ElementAt(0));
         MockApplicationDbContext.Contacts.Add(contact);
         await MockApplicationDbContext.SaveChangesAsync();
 
@@ -99,7 +100,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(anotherService.Id);
 
         MockApplicationDbContext.Contacts
@@ -109,9 +110,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.LinkId == anotherService.Id).ToList();
 
         linkContacts.Should().HaveCount(1);
-        linkContacts.ElementAt(0).Contact.Should().NotBeNull();
-
-        linkContacts.ElementAt(0).Contact!.Id.Should().Be(contact.Id);
+        linkContacts.ElementAt(0).ContactId.Should().Be(contact.Id);
     }
 
     [Fact]
@@ -122,7 +121,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
 
         var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
 
-        var contact = Mapper.Map<Contact>(anotherService.ServiceAtLocations!.ElementAt(0).LinkContacts!.ElementAt(0).Contact);
+        var contact = Mapper.Map<Contact>(anotherService.Locations.ElementAt(0).Contacts.ElementAt(0));
         MockApplicationDbContext.Contacts.Add(contact);
         await MockApplicationDbContext.SaveChangesAsync();
 
@@ -138,19 +137,17 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(anotherService.Id);
 
         MockApplicationDbContext.Contacts
             .Where(c => c.Id == contact.Id)
             .ToList().Count.Should().Be(1);
 
-        var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.LinkId == anotherService.ServiceAtLocations!.ElementAt(0).Id).ToList();
+        var linkContacts = MockApplicationDbContext.LinkContacts.Where(lc => lc.LinkId == anotherService.Locations.ElementAt(0).Id).ToList();
 
         linkContacts.Should().HaveCount(1);
-        linkContacts.ElementAt(0).Contact.Should().NotBeNull();
-
-        linkContacts.ElementAt(0).Contact!.Id.Should().Be(contact.Id);
+        linkContacts.ElementAt(0).ContactId.Should().Be(contact.Id);
     }
 
     [Fact]
@@ -160,10 +157,10 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         CreateOrganisation();
 
         var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
-        var existingLocation = TestOrganisation.Services!.ElementAt(0).ServiceAtLocations!.ElementAt(0).Location;
+        var existingLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
 
-        anotherService.ServiceAtLocations!.Clear();
-        anotherService.ServiceAtLocations!.Add(new ServiceAtLocationDto(Guid.NewGuid().ToString(), existingLocation, null, null, null));
+        anotherService.Locations.Clear();
+        anotherService.Locations.Add(existingLocation);
 
         var command = new CreateServiceCommand(anotherService);
 
@@ -177,7 +174,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(anotherService.Id);
 
         MockApplicationDbContext.ServiceAtLocations
@@ -191,6 +188,134 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
     }
 
     [Fact]
+    public async Task ThenCreateNewServiceWithExistingAddress()
+    {
+        //Arrange
+        CreateOrganisation();
+
+        var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
+        var existingAddress = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+
+        var anotherLocation = anotherService.Locations.ElementAt(0);
+
+        anotherLocation.Name = existingAddress.Name;
+        anotherLocation.Address1 = existingAddress.Address1;
+        anotherLocation.City = existingAddress.City;
+        anotherLocation.PostCode = existingAddress.PostCode;
+        anotherLocation.Country = existingAddress.Country;
+        anotherLocation.StateProvince = existingAddress.StateProvince;
+
+        var command = new CreateServiceCommand(anotherService);
+
+        var handler = new CreateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<CreateServiceCommandHandler>>().Object);
+
+        //Act
+        MockApplicationDbContext.Locations.Where(c => c.Id == anotherLocation.Id)
+            .ToList().Count.Should().Be(1);
+
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(anotherService.Id);
+
+        var expectedEntity = MockApplicationDbContext.Locations.Where(lc => lc.Id == anotherLocation.Id).ToList();
+
+        expectedEntity.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public async Task ThenCreateNewServiceWithNewAdditionalAddress()
+    {
+        //Arrange
+        CreateOrganisation();
+
+        var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
+
+        //add new address with new ID should still attach the address to existing address
+        var newLocation = new LocationDto
+        {
+            LocationType = LocationType.NotSet,
+            Name = "",
+            Latitude = 0,
+            Longitude = 0,
+            Address1 = "Address1",
+            City = "City",
+            PostCode = "PostCode",
+            StateProvince = "StateProvince",
+            Country = "Country",
+        };
+        anotherService.Locations.Add(newLocation);
+
+        anotherService.Locations.Count.Should().Be(2);
+
+        MockApplicationDbContext.Locations
+            .Where(c => c.Name == newLocation.Name && c.PostCode == newLocation.PostCode)
+            .ToList().Count.Should().Be(0);
+
+        //Act
+        var command = new CreateServiceCommand(anotherService);
+        var handler = new CreateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<CreateServiceCommandHandler>>().Object);
+
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(anotherService.Id);
+
+        MockApplicationDbContext.Locations
+            .Where(c => c.Name == newLocation.Name && c.PostCode == newLocation.PostCode)
+            .ToList().Count.Should().Be(1);
+
+        var actualEntity = MockApplicationDbContext.ServiceAtLocations.Where(lc => lc.ServiceId == anotherService.Id).ToList();
+
+        actualEntity.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public async Task ThenCreateNewServiceWithExistingButUpdateAddress()
+    {
+        //Arrange
+        CreateOrganisation();
+
+        var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
+        var existingLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        //add existing address with new ID should still attach the address to existing address
+
+        existingLocation.Address1 = "Address1";
+        existingLocation.City = "City";
+        existingLocation.PostCode = "PostCode";
+        existingLocation.Country = "Country";
+        existingLocation.StateProvince = "StateProvince";
+
+        //Act
+        var dbAddress = MockApplicationDbContext.Locations.Where(c => c.Id == existingLocation.Id).ToList();
+        dbAddress.Count.Should().Be(1);
+        dbAddress.ElementAt(0).Address1.Should().NotBe("Address1");
+
+        var command = new CreateServiceCommand(anotherService);
+
+        var handler = new CreateServiceCommandHandler(MockApplicationDbContext, Mapper, new Mock<ILogger<CreateServiceCommandHandler>>().Object);
+
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(anotherService.Id);
+
+        var actualEntity = MockApplicationDbContext.Locations.Where(c => c.Id == existingLocation.Id).ToList();
+
+        actualEntity.Should().HaveCount(1);
+        actualEntity.ElementAt(0).Id.Should().Be(existingLocation.Id);
+
+        actualEntity.ElementAt(0).Address1.Should().Be("Address1");
+        actualEntity.ElementAt(0).City.Should().Be("City");
+        actualEntity.ElementAt(0).PostCode.Should().Be("PostCode");
+        actualEntity.ElementAt(0).Country.Should().Be("Country");
+        actualEntity.ElementAt(0).StateProvince.Should().Be("StateProvince");
+    }
+
+    [Fact]
     public async Task ThenCreateNewServiceWithExistingEligibility()
     {
         //Arrange
@@ -198,7 +323,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
 
         var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
 
-        var entity = Mapper.Map<Eligibility>(anotherService.Eligibilities!.ElementAt(0));
+        var entity = Mapper.Map<Eligibility>(anotherService.Eligibilities.ElementAt(0));
         entity.ServiceId = anotherService.Id;
         MockApplicationDbContext.Eligibilities.Add(entity);
         await MockApplicationDbContext.SaveChangesAsync();
@@ -215,7 +340,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(anotherService.Id);
 
         MockApplicationDbContext.Eligibilities
@@ -236,7 +361,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
 
         var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
 
-        var entity = Mapper.Map<ServiceArea>(anotherService.ServiceAreas!.ElementAt(0));
+        var entity = Mapper.Map<ServiceArea>(anotherService.ServiceAreas.ElementAt(0));
         entity.ServiceId = anotherService.Id;
         MockApplicationDbContext.ServiceAreas.Add(entity);
         await MockApplicationDbContext.SaveChangesAsync();
@@ -253,7 +378,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(anotherService.Id);
 
         MockApplicationDbContext.ServiceAreas
@@ -274,7 +399,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
 
         var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
 
-        var entity = Mapper.Map<Language>(anotherService.Languages!.ElementAt(0));
+        var entity = Mapper.Map<Language>(anotherService.Languages.ElementAt(0));
         entity.ServiceId = anotherService.Id;
         MockApplicationDbContext.Languages.Add(entity);
         await MockApplicationDbContext.SaveChangesAsync();
@@ -291,7 +416,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(anotherService.Id);
 
         MockApplicationDbContext.Languages
@@ -312,7 +437,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
 
         var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
 
-        var entity = Mapper.Map<CostOption>(anotherService.CostOptions!.ElementAt(0));
+        var entity = Mapper.Map<CostOption>(anotherService.CostOptions.ElementAt(0));
         entity.ServiceId = anotherService.Id;
         MockApplicationDbContext.CostOptions.Add(entity);
         await MockApplicationDbContext.SaveChangesAsync();
@@ -329,7 +454,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(anotherService.Id);
 
         MockApplicationDbContext.CostOptions
@@ -350,7 +475,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
 
         var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
 
-        var entity = Mapper.Map<RegularSchedule>(anotherService.RegularSchedules!.ElementAt(0));
+        var entity = Mapper.Map<RegularSchedule>(anotherService.RegularSchedules.ElementAt(0));
         entity.ServiceId = anotherService.Id;
         MockApplicationDbContext.RegularSchedules.Add(entity);
         await MockApplicationDbContext.SaveChangesAsync();
@@ -367,7 +492,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(anotherService.Id);
 
         MockApplicationDbContext.RegularSchedules
@@ -388,7 +513,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
 
         var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
 
-        var entity = Mapper.Map<HolidaySchedule>(anotherService.HolidaySchedules!.ElementAt(0));
+        var entity = Mapper.Map<HolidaySchedule>(anotherService.HolidaySchedules.ElementAt(0));
         entity.ServiceId = anotherService.Id;
         MockApplicationDbContext.HolidaySchedules.Add(entity);
         await MockApplicationDbContext.SaveChangesAsync();
@@ -405,7 +530,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(anotherService.Id);
 
         MockApplicationDbContext.HolidaySchedules
@@ -426,7 +551,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
 
         var anotherService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisation.Id);
 
-        var entity = Mapper.Map<ServiceDelivery>(anotherService.ServiceDeliveries!.ElementAt(0));
+        var entity = Mapper.Map<ServiceDelivery>(anotherService.ServiceDeliveries.ElementAt(0));
         entity.ServiceId = anotherService.Id;
         MockApplicationDbContext.ServiceDeliveries.Add(entity);
         await MockApplicationDbContext.SaveChangesAsync();
@@ -443,7 +568,7 @@ public class WhenUsingCreateServiceCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(anotherService.Id);
 
         MockApplicationDbContext.ServiceDeliveries

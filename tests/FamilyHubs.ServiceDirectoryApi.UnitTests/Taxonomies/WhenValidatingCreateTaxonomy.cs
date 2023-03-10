@@ -12,7 +12,12 @@ public class WhenValidatingCreateTaxonomy
     {
         //Arrange
         var validator = new CreateTaxonomyCommandValidator();
-        var testModel = new CreateTaxonomyCommand(new TaxonomyDto("Id", "Name", TaxonomyType.ServiceCategory, null));
+        var testModel = new CreateTaxonomyCommand(new TaxonomyDto
+        {
+            Name = "Name",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null
+        });
 
         //Act
         var result = validator.Validate(testModel);
@@ -26,7 +31,12 @@ public class WhenValidatingCreateTaxonomy
     {
         //Arrange
         var validator = new CreateTaxonomyCommandValidator();
-        var testModel = new CreateTaxonomyCommand(new TaxonomyDto("", "Name", TaxonomyType.ServiceCategory, null));
+        var testModel = new CreateTaxonomyCommand(new TaxonomyDto
+        {
+            Name = "Name",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null
+        });
 
         //Act
         var result = validator.Validate(testModel);
@@ -40,7 +50,12 @@ public class WhenValidatingCreateTaxonomy
     {
         //Arrange
         var validator = new CreateTaxonomyCommandValidator();
-        var testModel = new CreateTaxonomyCommand(new TaxonomyDto("Id", "", TaxonomyType.ServiceCategory, null));
+        var testModel = new CreateTaxonomyCommand(new TaxonomyDto
+        {
+            Name = "",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null
+        });
 
         //Act
         var result = validator.Validate(testModel);

@@ -1,7 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Interfaces;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
-using FamilyHubs.SharedKernel.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -13,11 +12,9 @@ public class BaseCreateDbUnitTest
     protected ApplicationDbContext GetApplicationDbContext()
     {
         var options = CreateNewContextOptions();
-        var mockEventDispatcher = new Mock<IDomainEventDispatcher>();
-        var mockDateTime = new Mock<IDateTime>();
         var mockCurrentUserService = new Mock<ICurrentUserService>();
-        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(mockCurrentUserService.Object, mockDateTime.Object);
-        var mockApplicationDbContext = new ApplicationDbContext(options, mockEventDispatcher.Object, auditableEntitySaveChangesInterceptor);
+        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(mockCurrentUserService.Object);
+        var mockApplicationDbContext = new ApplicationDbContext(options, auditableEntitySaveChangesInterceptor);
 
         return mockApplicationDbContext;
     }

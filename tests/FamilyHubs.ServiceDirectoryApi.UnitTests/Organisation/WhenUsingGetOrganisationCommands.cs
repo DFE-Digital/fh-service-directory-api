@@ -2,19 +2,16 @@
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Api.Commands.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Api.Commands.CreateService;
-using FamilyHubs.ServiceDirectory.Api.Commands.UpdateOrganisation;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationAdminByOrganisationId;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationById;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationTypes;
 using FamilyHubs.ServiceDirectory.Api.Queries.ListOrganisation;
 using FamilyHubs.ServiceDirectory.Core;
-using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
@@ -64,7 +61,7 @@ public class WhenUsingGetOrganisationCommands : BaseCreateDbUnitTest
         CreateOrganisation();
 
         var getCommand = new GetOrganisationByIdCommand { Id = TestOrganisation.Id };
-        var getHandler = new GetOrganisationByIdHandler(MockApplicationDbContext);
+        var getHandler = new GetOrganisationByIdHandler(MockApplicationDbContext, Mapper);
         TestOrganisation.Logo = "";
 
         //Act
@@ -79,8 +76,8 @@ public class WhenUsingGetOrganisationCommands : BaseCreateDbUnitTest
     public async Task ThenGetOrganisationById_ShouldThrowExceptionWhenIdDoesNotExist()
     {
         //Arrange
-        var getCommand = new GetOrganisationByIdCommand { Id = Guid.NewGuid().ToString() };
-        var getHandler = new GetOrganisationByIdHandler(MockApplicationDbContext);
+        var getCommand = new GetOrganisationByIdCommand { Id = Random.Shared.Next() };
+        var getHandler = new GetOrganisationByIdHandler(MockApplicationDbContext, Mapper);
 
         // Act 
         // Assert
@@ -94,7 +91,7 @@ public class WhenUsingGetOrganisationCommands : BaseCreateDbUnitTest
         CreateOrganisation();
         
         var getCommand = new ListOrganisationCommand();
-        var getHandler = new ListOrganisationCommandHandler(MockApplicationDbContext);
+        var getHandler = new ListOrganisationCommandHandler(MockApplicationDbContext, Mapper);
         TestOrganisation.Logo = "";
 
         //Act
@@ -105,7 +102,7 @@ public class WhenUsingGetOrganisationCommands : BaseCreateDbUnitTest
         result[0].Should().BeEquivalentTo(TestOrganisation, opts => opts
             .Excluding(si => si.Services)
             .Excluding(si => si.AdminAreaCode)
-            .Excluding(si => si.LinkContacts)
+            .Excluding(si => si.Contacts)
         );
     }
 
@@ -113,15 +110,8 @@ public class WhenUsingGetOrganisationCommands : BaseCreateDbUnitTest
     public async Task ThenListOrganisationTypes()
     {
         //Arrange
-        var seedData = new OrganisationSeedData(false);
-        if (!MockApplicationDbContext.AdminAreas.Any())
-        {
-            MockApplicationDbContext.OrganisationTypes.AddRange(seedData.SeedOrganisationTypes());
-            await MockApplicationDbContext.SaveChangesAsync();
-        }
-
         var getCommand = new GetOrganisationTypesCommand();
-        var getHandler = new GetOrganisationTypesCommandHandler(MockApplicationDbContext);
+        var getHandler = new GetOrganisationTypesCommandHandler();
 
         //Act
         var result = await getHandler.Handle(getCommand, new CancellationToken());

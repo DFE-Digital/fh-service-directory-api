@@ -20,6 +20,5 @@ public class WhenUsingDatabaseContextFactory
         //Assert
         result.Should().NotBeNull();
         result.Should().BeOfType<ApplicationDbContext>();
-
     }
 }

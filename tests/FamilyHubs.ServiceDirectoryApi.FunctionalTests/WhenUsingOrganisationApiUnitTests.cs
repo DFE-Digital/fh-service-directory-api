@@ -2,7 +2,6 @@
 using System.Text;
 using System.Text.Json;
 using FamilyHubs.ServiceDirectory.Core.Entities;
-using FamilyHubs.ServiceDirectory.Shared.Builders;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
@@ -52,7 +51,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(_client.BaseAddress + "api/organizations/72e653e8-1d05-4821-84e9-9177571a6013"),
+            RequestUri = new Uri(_client.BaseAddress + "api/organizations/1"),
 
         };
 
@@ -67,7 +66,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(retVal);
-        retVal.Id.Should().Be("72e653e8-1d05-4821-84e9-9177571a6013");
+        retVal.Id.Should().Be(1);
     }
 
 #if DEBUG
@@ -114,7 +113,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<List<OrganisationTypeDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var retVal = await JsonSerializer.DeserializeAsync<List<string>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
@@ -135,7 +134,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(_client.BaseAddress + "api/organizationAdminCode/72e653e8-1d05-4821-84e9-9177571a6013"),
+            RequestUri = new Uri(_client.BaseAddress + "api/organizationAdminCode/1"),
         };
 
         using var response = await _client.SendAsync(request);
@@ -160,7 +159,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(_client.BaseAddress + "api/organizations/72e653e8-1d05-4821-84e9-9177571a6013"),
+            RequestUri = new Uri(_client.BaseAddress + "api/organizations/1"),
 
         };
 
@@ -174,21 +173,22 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
         var retVal = await JsonSerializer.DeserializeAsync<OrganisationWithServicesDto>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         ArgumentNullException.ThrowIfNull(retVal);
 
-        var update = new OrganisationWithServicesDto(
-            retVal.Id,
-            new OrganisationTypeDto(retVal.OrganisationType.Id, retVal.OrganisationType.Name, retVal.OrganisationType.Description),
-            retVal.Name,
-            retVal.Description + " Update Test",
-            retVal.Logo,
-            retVal.Uri,
-            retVal.Url,
-            retVal.Services
-            );
+        var update = new OrganisationWithServicesDto
+        {
+            OrganisationType = retVal.OrganisationType,
+            Id = retVal.Id,
+            Name = retVal.Name,
+            Description = retVal.Description + " Update Test",
+            AdminAreaCode = retVal.AdminAreaCode,
+            Logo = retVal.Logo,
+            Uri = retVal.Uri,
+            Url = retVal.Url,
+        };
 
         var updaterequest = new HttpRequestMessage
         {
             Method = HttpMethod.Put,
-            RequestUri = new Uri(_client.BaseAddress + "api/organizations/72e653e8-1d05-4821-84e9-9177571a6013"),
+            RequestUri = new Uri(_client.BaseAddress + "api/organizations/1"),
             Content = new StringContent(JsonConvert.SerializeObject(update), Encoding.UTF8, "application/json"),
         };
 
@@ -216,272 +216,206 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
 
     private OrganisationWithServicesDto GetTestCountyCouncilRecord()
     {
-        var bristolCountyCouncil = new OrganisationWithServicesDto(
-            "ba1cca90-b02a-4a0b-afa0-d8aed1083c0d",
-            new OrganisationTypeDto("1", "LA", "Local Authority"),
-            "Test County Council",
-            "Test County Council",
-            null,
-            new Uri("https://www.test.gov.uk/").ToString(),
-            "https://www.test.gov.uk/",
-            new List<ServiceDto>
-            {
-                 GetTestCountyCouncilServicesRecord("ba1cca90-b02a-4a0b-afa0-d8aed1083c0d")
-            }
-            )
+        var bristolCountyCouncil = new OrganisationWithServicesDto
         {
-            AdminAreaCode = "E06000023"
+            AdminAreaCode = "E06000023",
+            OrganisationType = OrganisationType.LA,
+            Name = "Test County Council",
+            Description = "Test County Council",
+            Url = new Uri("https://www.test.gov.uk/").ToString(),
+            Uri = "https://www.test.gov.uk/",
+            Services = new List<ServiceDto>
+            {
+                GetTestCountyCouncilServicesRecord(0)
+            }
         };
 
         return bristolCountyCouncil;
     }
 
-    public static ServiceDto GetTestCountyCouncilServicesRecord(string parentId)
+    public static ServiceDto GetTestCountyCouncilServicesRecord(long parentId)
     {
-        var contactId = Guid.NewGuid().ToString();
-
-        var builder = new ServicesDtoBuilder();
-        var service = builder.WithMainProperties("c1b5dd80-7506-4424-9711-fe175fa13eb8",
-                new ServiceTypeDto("1", "Information Sharing", ""),
-                parentId,
-                "Test Organisation for Children with Tracheostomies",
-                @"Test Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
-                null,
-                null,
-                null,
-                null,
-                null,
-                "active",
-                null, false)
-            .WithServiceDelivery(new List<ServiceDeliveryDto>
+        var serviceId = "c1b5dd80-7506-4424-9711-fe175fa13eb8";
+        
+        var service = new ServiceDto
+        {
+            ServiceOwnerReferenceId = serviceId,
+            ServiceType = ServiceType.InformationSharing,
+            Name = "Test Organisation for Children with Tracheostomies",
+            Description = @"Test Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
+            ServiceDeliveries = new List<ServiceDeliveryDto>
+            {
+                new ServiceDeliveryDto
                 {
-                    new ServiceDeliveryDto(Guid.NewGuid().ToString(),ServiceDeliveryType.Online)
-                })
-            .WithEligibility(new List<EligibilityDto>
+                    Name = ServiceDeliveryType.Online,
+                }
+            },
+            Eligibilities = new List<EligibilityDto>
+            {
+                new EligibilityDto
                 {
-                    new EligibilityDto("Test9109Children","Test9109Children",0,13)
-                })
-            .WithLinkContact(new List<LinkContactDto>
+                    MaximumAge = 13,
+                    MinimumAge = 0
+                }
+            },
+            Contacts = new List<ContactDto>
             {
-                new LinkContactDto(
-                    "c1b5dd80-7506-4424-9711-fe175fa13eb1",
-                    "c1b5dd80-7506-4424-9711-fe175fa13eb8",
-                    "Service",
-                new ContactDto(
-                    contactId,
-                    "Service",
-                    string.Empty,
-                    "01827 65780",
-                    "01827 65780",
-                    "www.testservice.com",
-                    "support@testservice.com"
-                    ))
-            })
-            .WithCostOption(new List<CostOptionDto>())
-            .WithLanguages(new List<LanguageDto>
+                new ContactDto
+                {
+                    Name = "Service",
+                    Title = string.Empty,
+                    Telephone = "01827 65780",
+                    TextPhone = "01827 65780",
+                    Url = "www.testservice.com",
+                    Email = "support@testservice.com"
+                }
+            },
+            Languages = new List<LanguageDto>
             {
-                    new LanguageDto("442a06cd-aa14-4ea3-9f11-b45c1bc4861f", "English")
-                })
-            .WithServiceAreas(new List<ServiceAreaDto>
+                new LanguageDto
+                {
+                    Name = "English"
+                }
+            },
+            ServiceAreas = new List<ServiceAreaDto>
             {
-                    new ServiceAreaDto(Guid.NewGuid().ToString(), "National", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
-                })
-            .WithServiceAtLocations(new List<ServiceAtLocationDto>
+                new ServiceAreaDto
+                {
+                    Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
+                    ServiceAreaName = "National",
+                    Extent = null
+                }
+            },
+            Locations = new List<LocationDto>
             {
-                    new ServiceAtLocationDto(
-                        "Test17499",
-                        new LocationDto(
-                            "a878aadc-6097-4a0f-b3e1-77fd4511175d",
-                            "",
-                            "",
-                            52.6312,
-                            -1.66526,
-                            new List<PhysicalAddressDto>
-                            {
-                                new PhysicalAddressDto(
-                                    Guid.NewGuid().ToString(),
-                                    "75 Sheepcote Lane",
-                                    ", Stathe, Tamworth, Staffordshire, ",
-                                    "B77 3JN",
-                                    "England",
-                                    null
-                                    )
-                            },
-                            new List<LinkTaxonomyDto>
-                            {
-                                new LinkTaxonomyDto(
-                                    Guid.NewGuid().ToString(),
-                                    "Location",
-                                    "a878aadc-6097-4a0f-b3e1-77fd4511175d",
-                                    new TaxonomyDto(
-                                        //todo: real guid
-                                        Guid.NewGuid().ToString(),
-                                        "Family_hub",
-                                        TaxonomyType.LocationType,
-                                        null
-                                        )
-                                    )
-                            },
-                            new List<LinkContactDto>()
-                            ),
-                        new List<RegularScheduleDto>(),
-                        new List<HolidayScheduleDto>(),
-                        new List<LinkContactDto>()
-                        )
-
-                })
-            .WithServiceTaxonomies(new List<ServiceTaxonomyDto>
+                new LocationDto
+                {
+                    LocationType = LocationType.FamilyHub,
+                    Name = "",
+                    Latitude = 52.6312,
+                    Longitude = -1.66526,
+                    Address1 = "75 Sheepcote Lane",
+                    City = ", Stathe, Tamworth, Staffordshire, ",
+                    PostCode = "B77 3JN",
+                    StateProvince = "",
+                    Country = "England",
+                }
+            },
+            Taxonomies = new List<TaxonomyDto>
             {
-                    new ServiceTaxonomyDto("Test9107",
-                    new TaxonomyDto(
-                        "Test bccsource:Organisation",
-                        "Organisation",
-                        TaxonomyType.ServiceCategory,
-                        null
-                        )),
-
-                    new ServiceTaxonomyDto("Test9108",
-                    new TaxonomyDto(
-                        "Test bccprimaryservicetype:38",
-                        "Support",
-                        TaxonomyType.ServiceCategory,
-                        null
-                        )),
-
-                    new ServiceTaxonomyDto("Test9109",
-                    new TaxonomyDto(
-                        "Test bccagegroup:37",
-                        "Children",
-                        TaxonomyType.ServiceCategory,
-                        null
-                        )),
-
-                    new ServiceTaxonomyDto("Test9110",
-                    new TaxonomyDto(
-                        "Testbccusergroup:56",
-                        "Long Term Health Conditions",
-                        TaxonomyType.ServiceCategory,
-                        null
-                        ))
-                })
-            .Build();
+                new TaxonomyDto
+                {
+                    Name = "Organisation",
+                    TaxonomyType = TaxonomyType.ServiceCategory
+                },
+                new TaxonomyDto
+                {
+                    Name = "Support",
+                    TaxonomyType = TaxonomyType.ServiceCategory
+                },
+                new TaxonomyDto
+                {
+                    Name = "Children",
+                    TaxonomyType = TaxonomyType.ServiceCategory
+                },
+                new TaxonomyDto
+                {
+                    Name = "Long Term Health Conditions",
+                    TaxonomyType = TaxonomyType.ServiceCategory
+                }
+            }
+        };
 
         return service;
     }
 
     public static ServiceDto GetTestCountyCouncilServicesCreateRecord(string parentId)
     {
-        var contactId = Guid.NewGuid().ToString();
+        var serviceId = "9066bccb-79cb-401f-818f-86ad23b022cf";
 
-        var builder = new ServicesDtoBuilder();
-        var service = builder.WithMainProperties("9066bccb-79cb-401f-818f-86ad23b022cf",
-                new ServiceTypeDto("1", "Information Sharing", ""),
-                parentId,
-                "Test1 Organisation for Children with Tracheostomies",
-                @"Test1 Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
-                null,
-                null,
-                null,
-                null,
-                null,
-                "active",
-                null,
-                false)
-            .WithServiceDelivery(new List<ServiceDeliveryDto>
+        var service = new ServiceDto
+        {
+            ServiceOwnerReferenceId = serviceId,
+            ServiceType = ServiceType.InformationSharing,
+            Name = "Test1 Organisation for Children with Tracheostomies",
+            Description = @"Test1 Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
+            ServiceDeliveries = new List<ServiceDeliveryDto>
+            {
+                new ServiceDeliveryDto
                 {
-                    new ServiceDeliveryDto(Guid.NewGuid().ToString(),ServiceDeliveryType.Online)
-                })
-            .WithEligibility(new List<EligibilityDto>
+                    Name = ServiceDeliveryType.Online,
+                }
+            },
+            Eligibilities = new List<EligibilityDto>
+            {
+                new EligibilityDto
                 {
-                    new EligibilityDto("Test91091Children","Test91091Children",0,13)
-                })
-            .WithLinkContact(new List<LinkContactDto>
+                    MaximumAge = 13,
+                    MinimumAge = 0
+                }
+            },
+            Contacts = new List<ContactDto>
             {
-                new LinkContactDto(
-                    "9066bccb-79cb-401f-818f-86ad23b022ca",
-                    "9066bccb-79cb-401f-818f-86ad23b022cf",
-                    "Service",
-                new ContactDto(
-                    contactId,
-                    "Service",
-                    string.Empty,
-                    "01827 65770",
-                    "01827 65770",
-                    "www.testservice1.com",
-                    "support@testservice1.com"
-                    ))
-            })
-            .WithCostOption(new List<CostOptionDto>())
-            .WithLanguages(new List<LanguageDto>
+                new ContactDto
+                {
+                    Name =  "Service",
+                    Title = string.Empty,
+                    Telephone = "01827 65770",
+                    TextPhone = "01827 65770",
+                    Url = "www.testservice1.com",
+                    Email = "support@testservice1.com"
+                }
+            },
+            Languages = new List<LanguageDto>
             {
-                    new LanguageDto("943bc803-39f4-4805-8805-bc7d3eeae3ff", "English")
-                })
-            .WithServiceAreas(new List<ServiceAreaDto>
+                new LanguageDto
+                {
+                    Name = "English"
+                }
+            },
+            ServiceAreas = new List<ServiceAreaDto>
             {
-                    new ServiceAreaDto(Guid.NewGuid().ToString(), "National", null,"http://statistics.data.gov.uk/id/statistical-geography/K02000001")
-                })
-            .WithServiceAtLocations(new List<ServiceAtLocationDto>
+                new ServiceAreaDto
+                {
+                    ServiceAreaName = "National",
+                    Extent = null,
+                    Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
+                }
+            },
+            Locations = new List<LocationDto>
             {
-                    new ServiceAtLocationDto(
-                        "Test1749",
-                        new LocationDto(
-                            "86119575-017f-4eeb-b92e-cb3f62d54840",
-                            "",
-                            "",
-                            52.6312,
-                            -1.66526,
-                            new List<PhysicalAddressDto>
-                            {
-                                new PhysicalAddressDto(
-                                    Guid.NewGuid().ToString(),
-                                    "76 Sheepcote Lane",
-                                    ", Stathe, Tamworth, Staffordshire, ",
-                                    "B77 3JN",
-                                    "England",
-                                    null
-                                    )
-                            },
-                            new List<LinkTaxonomyDto>
-                            {
-                                new LinkTaxonomyDto(
-                                    Guid.NewGuid().ToString(),
-                                    "Location",
-                                    "86119575-017f-4eeb-b92e-cb3f62d54840",
-                                    new TaxonomyDto(
-                                        //todo: real guid
-
-                                        Guid.NewGuid().ToString(),
-                                        "Family_hub",
-                                        TaxonomyType.LocationType,
-                                        null
-                                    )
-                                )
-                            },
-                            new List<LinkContactDto>()
-                            ),
-                        new List<RegularScheduleDto>(),
-                        new List<HolidayScheduleDto>(),
-                        new List<LinkContactDto>()
-                        )
-            })
-            .Build();
+                new LocationDto
+                {
+                    Name = "Test",
+                    Description = "",
+                    Latitude = 52.6312,
+                    Longitude = -1.66526,
+                    Address1 = "76 Sheepcote Lane",
+                    City = ", Stathe, Tamworth, Staffordshire, ",
+                    PostCode = "B77 3JN",
+                    Country = "England",
+                    StateProvince = "null",
+                    LocationType = LocationType.FamilyHub
+                }
+            }
+        };
 
         return service;
     }
 
     private Organisation GetTestCountyCouncil()
     {
-        var bristolCountyCouncil = new Organisation(
-            "ba1cca90-b02a-4a0b-afa0-d8aed1083c0d",
-            new OrganisationType("1", "LA", "Local Authority"),
-            "Test County Council",
-            "Test County Council",
-            null,
-            new Uri("https://www.test.gov.uk/").ToString(),
-            "https://www.test.gov.uk/",
-            null,
-            GetTestCountyCouncilServices(),
-            new List<LinkContact>());
+        var bristolCountyCouncil = new Organisation
+        {
+            OrganisationType = OrganisationType.LA,
+            Name = "Test County Council",
+            Description = "Test County Council",
+            AdminAreaCode = "",
+            Url = new Uri("https://www.test.gov.uk/").ToString(),
+            Uri = "https://www.test.gov.uk/",
+            Logo = null,
+            Services = GetTestCountyCouncilServices()
+        };
 
         return bristolCountyCouncil;
     }
@@ -490,125 +424,98 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
     {
         return new List<Service>
         {
-            new Service(
-                "c1b5dd80-7506-4424-9711-fe175fa13eb8",
-                new ServiceType("1", "Information Sharing", ""),
-                "ba1cca90-b02a-4a0b-afa0-d8aed1083c0d",
-                "Test Organisation for Children with Tracheostomies",
-                @"Test Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
-                null,
-                null,
-                null,
-                "active",
-                "www.testservice.com",
-                "support@testservice.com",
-                null,
-                false,
-                new List<ServiceDelivery>
+            new Service
+            {
+                ServiceOwnerReferenceId = "c1b5dd80-7506-4424-9711-fe175fa13eb8",
+                OrganisationId = 1,
+                ServiceType = ServiceType.InformationSharing,
+                Name = "Test Organisation for Children with Tracheostomies",
+                Description = @"Test Organisation for for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
+                AttendingAccess = AttendingAccessType.NotSet,
+                AttendingType = AttendingType.NotSet,
+                DeliverableType = DeliverableType.NotSet,
+                Status = ServiceStatusType.Active,
+                CanFamilyChooseDeliveryLocation = false,
+                ServiceDeliveries = new List<ServiceDelivery>
                 {
-                    new ServiceDelivery(Guid.NewGuid().ToString(),ServiceDeliveryType.Online)
+                    new ServiceDelivery
+                    {
+                        Name = ServiceDeliveryType.Online,
+                    }
                 },
-                new List<Eligibility>
+                Eligibilities = new List<Eligibility>
                 {
-                    new Eligibility("Test9109Children","",null,0,13,new List<Taxonomy>())
+                    new Eligibility
+                    {
+                        MaximumAge = 13,
+                        MinimumAge = 0,
+                    }
                 },
-                new List<Funding>(),
-                new List<CostOption>(),
-                new List<Language>(),
-                new List<Review>(),
-                new List<ServiceArea>
+                ServiceAreas = new List<ServiceArea>
                 {
-                    new ServiceArea(Guid.NewGuid().ToString(), "National", null, null, "http://statistics.data.gov.uk/id/statistical-geography/K02000001")
+                    new ServiceArea
+                    {
+                        ServiceAreaName = "National",
+                        Extent = null,
+                        Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
+                    }
                 },
-                new List<ServiceAtLocation>
+                Locations = new List<Location>
                 {
-                    new ServiceAtLocation(
-                        "Test1749",
-                        new Location(
-                            "a878aadc-6097-4a0f-b3e1-77fd4511175d",
-                            "",
-                            "",
-                            52.6312,
-                            -1.66526,
-                            new List<LinkTaxonomy>(),
-                            new List<PhysicalAddress>
-                            {
-                                new PhysicalAddress(
-                                    Guid.NewGuid().ToString(),
-                                    "75 Sheepcote Lane",
-                                    ", Stathe, Tamworth, Staffordshire, ",
-                                    "B77 3JN",
-                                    "England",
-                                    null
-                                )
-                            },
-                            new List<AccessibilityForDisabilities>(),
-                            new List<LinkContact>()),
-                        new List<RegularSchedule>(),
-                        new List<HolidaySchedule>(),
-                        new List<LinkContact>())
-
+                    new Location
+                    {
+                        Name = "",
+                        Description = "",
+                        Latitude = 52.6312,
+                        Longitude = -1.66526,
+                        Address1 = "75 Sheepcote Lane",
+                        City = ", Stathe, Tamworth, Staffordshire, ",
+                        PostCode = "B77 3JN",
+                        Country = "England",
+                        LocationType = LocationType.NotSet,
+                        StateProvince = "",
+                    }
                 },
-                new List<ServiceTaxonomy>
+                Taxonomies = new List<Taxonomy>
                 {
-                    new ServiceTaxonomy
-                    ("Test9107",
-                        null,
-                        new Taxonomy(
-                            "Test bccsource:Organisation",
-                            "Organisation",
-                            TaxonomyType.ServiceCategory,
-                            null
-                        )),
-
-                    new ServiceTaxonomy
-                    ("Test9108",
-                        null,
-                        new Taxonomy(
-                            "Test bccprimaryservicetype:38",
-                            "Support",
-                            TaxonomyType.ServiceCategory,
-                            null
-                        )),
-
-                    new ServiceTaxonomy
-                    ("Test9109",
-                        null,
-                        new Taxonomy(
-                            "Test bccagegroup:37",
-                            "Children",
-                            TaxonomyType.ServiceCategory,
-                            null
-                        )),
-
-                    new ServiceTaxonomy
-                    ("Test9110",
-                        null,
-                        new Taxonomy(
-                            "Testbccusergroup:56",
-                            "Long Term Health Conditions",
-                            TaxonomyType.ServiceCategory,
-                            null
-                        ))
+                    new Taxonomy
+                    {
+                        Name = "Organisation",
+                        TaxonomyType = TaxonomyType.ServiceCategory,
+                        ParentId = null
+                    },
+                    new Taxonomy
+                    {
+                        Name = "Support",
+                        TaxonomyType = TaxonomyType.ServiceCategory,
+                        ParentId = null
+                    },
+                    new Taxonomy
+                    {
+                        Name = "Children",
+                        TaxonomyType = TaxonomyType.ServiceCategory,
+                        ParentId = null
+                    },
+                    new Taxonomy
+                    {
+                        Name = "Long Term Health Conditions",
+                        TaxonomyType = TaxonomyType.ServiceCategory,
+                        ParentId = null
+                    }
                 },
-                new List<HolidaySchedule>(),
-                new List<RegularSchedule>(),
-                new List<LinkContact>
+                Contacts = new List<Contact>
                 {
-                    new LinkContact(
-                        "c1b5dd80-7506-4424-9711-fe175fa13eb8",
-                        "c1b5dd80-7506-4424-9711-fe175fa13eb1",
-                        "Service",
-                    new Contact(
-                        "Test1567",
-                        "",
-                        "",
-                        "01827 65779",
-                        "01827 65779",
-                        "www.gov.uk",
-                        "help@gov.uk"))
-                })
-
+                    new Contact
+                    {
+                        Name = "",
+                        Title = "",
+                        Telephone = "01827 65779",
+                        TextPhone = "01827 65779",
+                        Url = "www.gov.uk",
+                        Email = "help@gov.uk"
+                    }
+                },
+            }
         };
     }
 }

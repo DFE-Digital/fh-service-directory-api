@@ -12,7 +12,7 @@ public class WhenValidatingServiceCommands
     public void ThenShouldCreateServiceCommandNotErrorWhenModelIsValid()
     {
         //Arrange
-        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2("56e62852-1b0b-40e5-ac97-54a67ea957dc");
+        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());
         var validator = new CreateServiceCommandValidator();
         var testModel = new CreateServiceCommand(testService);
 
@@ -27,7 +27,7 @@ public class WhenValidatingServiceCommands
     public void ThenShouldUpdateServiceCommandNotErrorWhenModelIsValid()
     {
         //Arrange
-        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2("56e62852-1b0b-40e5-ac97-54a67ea957dc");
+        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());
         var validator = new UpdateServiceCommandValidator();
         var testModel = new UpdateServiceCommand(testService.Id, testService);
 
@@ -43,7 +43,7 @@ public class WhenValidatingServiceCommands
     {
         //Arrange
         var validator = new DeleteServiceByIdCommandValidator();
-        var testModel = new DeleteServiceByIdCommand("1");
+        var testModel = new DeleteServiceByIdCommand(1);
 
         //Act
         var result = validator.Validate(testModel);
@@ -57,7 +57,7 @@ public class WhenValidatingServiceCommands
     {
         //Arrange
         var validator = new GetServiceByIdCommandValidator();
-        var testModel = new GetServiceByIdCommand("3010521b-6e0a-41b0-b610-200edbbeeb14");
+        var testModel = new GetServiceByIdCommand(Random.Shared.Next());
 
         //Act
         var result = validator.Validate(testModel);
@@ -75,21 +75,15 @@ public class WhenValidatingServiceCommands
     public void ThenShouldValidateServiceAtLocationContactUrlWhenCreatingService_ShouldReturnNoErrors(string url)
     {
         //Arrange
-        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2("56e62852-1b0b-40e5-ac97-54a67ea957dc");
-        if (testService.ServiceAtLocations is not null)
+        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());
+        foreach (var serviceAtLocation in testService.Locations)
         {
-            foreach (var serviceAtLocation in testService.ServiceAtLocations)
+            foreach (var item in serviceAtLocation.Contacts)
             {
-                if (serviceAtLocation is not null && serviceAtLocation.LinkContacts is not null)
-                {
-                    foreach (var item in serviceAtLocation.LinkContacts)
-                    {
-                        item.Contact.Url = url;
-                    }
-                }
+                item.Url = url;
             }
         }
-        
+
 
         var validator = new CreateServiceCommandValidator();
         var testModel = new CreateServiceCommand(testService);
@@ -108,18 +102,12 @@ public class WhenValidatingServiceCommands
     public void ThenShouldValidateServiceAtLocationContactUrlWhenCreatingService_ShouldReturnErrors(string url)
     {
         //Arrange
-        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2("56e62852-1b0b-40e5-ac97-54a67ea957dc");
-        if (testService.ServiceAtLocations is not null)
+        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());
+        foreach (var serviceAtLocation in testService.Locations)
         {
-            foreach (var serviceAtLocation in testService.ServiceAtLocations)
+            foreach (var item in serviceAtLocation.Contacts)
             {
-                if (serviceAtLocation is not null && serviceAtLocation.LinkContacts is not null)
-                {
-                    foreach (var item in serviceAtLocation.LinkContacts)
-                    {
-                        item.Contact.Url = url;
-                    }
-                }
+                item.Url = url;
             }
         }
 
@@ -143,18 +131,12 @@ public class WhenValidatingServiceCommands
     public void ThenShouldValidateServiceAtLocationContactUrlWhenUpdatingService_ShouldReturnNoErrors(string url)
     {
         //Arrange
-        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2("56e62852-1b0b-40e5-ac97-54a67ea957dc");
-        if (testService.ServiceAtLocations is not null)
+        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());
+        foreach (var serviceAtLocation in testService.Locations)
         {
-            foreach (var serviceAtLocation in testService.ServiceAtLocations)
+            foreach (var item in serviceAtLocation.Contacts)
             {
-                if (serviceAtLocation is not null && serviceAtLocation.LinkContacts is not null)
-                {
-                    foreach (var item in serviceAtLocation.LinkContacts)
-                    {
-                        item.Contact.Url = url;
-                    }
-                }
+                item.Url = url;
             }
         }
         var validator = new UpdateServiceCommandValidator();
@@ -174,18 +156,12 @@ public class WhenValidatingServiceCommands
     public void ThenShouldValidateServiceAtLocationContactUrlWhenUpdatingService_ShouldReturnErrors(string url)
     {
         //Arrange
-        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2("56e62852-1b0b-40e5-ac97-54a67ea957dc");
-        if (testService.ServiceAtLocations is not null)
+        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());
+        foreach (var serviceAtLocation in testService.Locations)
         {
-            foreach (var serviceAtLocation in testService.ServiceAtLocations)
+            foreach (var item in serviceAtLocation.Contacts)
             {
-                if (serviceAtLocation is not null && serviceAtLocation.LinkContacts is not null)
-                {
-                    foreach (var item in serviceAtLocation.LinkContacts)
-                    {
-                        item.Contact.Url = url;
-                    }
-                }
+                item.Url = url;
             }
         }
         var validator = new UpdateServiceCommandValidator();

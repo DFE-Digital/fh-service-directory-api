@@ -32,7 +32,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
         response.EnsureSuccessStatusCode();
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<TaxonomyDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        
+
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         ArgumentNullException.ThrowIfNull(retVal);
         retVal.Should().NotBeNull();
@@ -46,8 +46,13 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
 #endif
     public async Task ThenTheTaxonomyIsCreated()
     {
-        var commandtaxonomy = new TaxonomyDto(Guid.NewGuid().ToString(), "Test-AddTaxonomy", TaxonomyType.ServiceCategory, null);
-        
+        var commandtaxonomy = new TaxonomyDto
+        {
+            Name = "Test-AddTaxonomy",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null,
+        };
+
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
@@ -64,7 +69,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
         var stringResult = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        stringResult.Should().Be(commandtaxonomy.Id);
+        long.Parse(stringResult).Should().Be(commandtaxonomy.Id);
     }
 
 #if DEBUG
@@ -74,7 +79,12 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
 #endif
     public async Task ThenTheTaxonomyIsUpdated()
     {
-        var commandtaxonomy = new TaxonomyDto(Guid.NewGuid().ToString(), "Test-UpdateTaxonomy", TaxonomyType.ServiceCategory, null);
+        var commandtaxonomy = new TaxonomyDto
+        {
+            Name = "Test-UpdateTaxonomy",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null
+        };
 
         var request = new HttpRequestMessage
         {
@@ -91,8 +101,13 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
 
         await response.Content.ReadAsStringAsync();
 
-        var updatedtaxonomy = new TaxonomyDto(commandtaxonomy.Id, "Test-IsUpdateTaxonomy", TaxonomyType.ServiceCategory, null);
-
+        var updatedtaxonomy = new TaxonomyDto
+        {
+            Id = commandtaxonomy.Id,
+            Name = "Test-IsUpdateTaxonomy",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null
+        };
         var updaterequest = new HttpRequestMessage
         {
             Method = HttpMethod.Put,
@@ -109,6 +124,6 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
         var updateStringResult = await updateresponse.Content.ReadAsStringAsync();
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        updateStringResult.Should().Be(updatedtaxonomy.Id);
+        long.Parse(updateStringResult).Should().Be(updatedtaxonomy.Id);
     }
 }

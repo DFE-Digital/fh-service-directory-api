@@ -7,9 +7,9 @@ using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetServices;
 using FamilyHubs.ServiceDirectory.Api.Queries.GetServicesByOrganisation;
 using FamilyHubs.ServiceDirectory.Core;
-using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -65,9 +65,9 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
         //Arrange
         CreateOrganisation();
 
-        var command = new GetServicesCommand("Information Sharing", "active", "XTEST", null, null, null,
+        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null, null, null,
             null, null, null, 1, 10, null, null, null, null, null, null, null, null);
-        var handler = new GetServicesCommandHandler(MockApplicationDbContext);
+        var handler = new GetServicesCommandHandler(MockApplicationDbContext, Mapper);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
@@ -86,7 +86,7 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
         CreateOrganisation();
 
         var command = new GetServicesByOrganisationIdCommand(TestOrganisation.Id);
-        var handler = new GetServicesByOrganisationIdCommandHandler(MockApplicationDbContext);
+        var handler = new GetServicesByOrganisationIdCommandHandler(MockApplicationDbContext, Mapper);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
@@ -103,7 +103,7 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
     {
         //Arrange
         var command = new GetServicesByOrganisationIdCommand(TestOrganisation.Id);
-        var handler = new GetServicesByOrganisationIdCommandHandler(MockApplicationDbContext);
+        var handler = new GetServicesByOrganisationIdCommandHandler(MockApplicationDbContext, Mapper);
 
         // Act 
         // Assert
@@ -116,7 +116,7 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
     {
         //Arrange
         var command = new GetServicesByOrganisationIdCommand(TestOrganisation.Id);
-        var handler = new GetServicesByOrganisationIdCommandHandler(MockApplicationDbContext);
+        var handler = new GetServicesByOrganisationIdCommandHandler(MockApplicationDbContext, Mapper);
 
         // Act 
         // Assert
@@ -130,9 +130,9 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
         //Arrange
         CreateOrganisation();
 
-        var command = new GetServicesCommand("Information Sharing", "active", "XTEST", null, null, null,
+        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null, null, null,
             null, null, null, 1, 10, null, null, true, null, null, null, null, null);
-        var handler = new GetServicesCommandHandler(MockApplicationDbContext);
+        var handler = new GetServicesCommandHandler(MockApplicationDbContext, Mapper);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
@@ -148,9 +148,9 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
         //Arrange
         CreateOrganisation();
 
-        var command = new GetServicesCommand("Information Sharing", "active", "XTEST", null, null, null,
+        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null, null, null,
             null, null, null, 1, 10, null, null, false, null, null, null, null, null);
-        var handler = new GetServicesCommandHandler(MockApplicationDbContext);
+        var handler = new GetServicesCommandHandler(MockApplicationDbContext, Mapper);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
@@ -168,7 +168,7 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
         //Arrange
         CreateOrganisation();
 
-        var command = new DeleteServiceByIdCommand("3010521b-6e0a-41b0-b610-200edbbeeb14");
+        var command = new DeleteServiceByIdCommand(1);
         var handler = new DeleteServiceByIdCommandHandler(MockApplicationDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);
 
         //Act
@@ -183,7 +183,7 @@ public class WhenUsingGetServiceCommand : BaseCreateDbUnitTest
     public async Task ThenDeleteServiceThatDoesNotExist()
     {
         //Arrange
-        var command = new DeleteServiceByIdCommand(Guid.NewGuid().ToString());
+        var command = new DeleteServiceByIdCommand(Random.Shared.Next());
         var handler = new DeleteServiceByIdCommandHandler(MockApplicationDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);
 
         // Act 

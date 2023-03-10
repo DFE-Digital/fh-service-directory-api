@@ -10,7 +10,7 @@ public class WhenValidatingGetServicesByOrganisationId
     {
         //Arrange
         var validator = new GetServicesByOrganisationIdCommandValidator();
-        var testModel = new GetServicesByOrganisationIdCommand("56e62852-1b0b-40e5-ac97-54a67ea957dc");
+        var testModel = new GetServicesByOrganisationIdCommand(Random.Shared.Next());
 
         //Act
         var result = validator.Validate(testModel);

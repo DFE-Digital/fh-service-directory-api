@@ -1,7 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Interfaces;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Interceptors;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
-using FamilyHubs.SharedKernel.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -15,13 +14,11 @@ public abstract class BaseEfRepositoryTestFixture
     protected BaseEfRepositoryTestFixture()
     {
         var options = CreateNewContextOptions();
-        var mockEventDispatcher = new Mock<IDomainEventDispatcher>();
-        var mockDateTime = new Mock<IDateTime>();
         var mockCurrentUserService = new Mock<ICurrentUserService>();
-        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(mockCurrentUserService.Object, mockDateTime.Object);
+        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(mockCurrentUserService.Object);
         
 
-        DbContext = new ApplicationDbContext(options, mockEventDispatcher.Object, auditableEntitySaveChangesInterceptor);
+        DbContext = new ApplicationDbContext(options, auditableEntitySaveChangesInterceptor);
     }
 
     protected static DbContextOptions<ApplicationDbContext> CreateNewContextOptions()
@@ -39,10 +36,5 @@ public abstract class BaseEfRepositoryTestFixture
                .UseInternalServiceProvider(serviceProvider);
 
         return builder.Options;
-    }
-
-    protected EfRepository<T> GetRepository<T>() where T : class, IAggregateRoot
-    {
-        return new EfRepository<T>(DbContext);
     }
 }

@@ -10,7 +10,7 @@ public class WhenValidatingOrganisationGetById
     {
         //Arrange
         var validator = new GetOrganisationByIdCommandValidator();
-        var testModel = new GetOrganisationByIdCommand { Id = "Id"};
+        var testModel = new GetOrganisationByIdCommand { Id = Random.Shared.Next() };
 
         //Act
         var result = validator.Validate(testModel);

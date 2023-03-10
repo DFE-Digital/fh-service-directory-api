@@ -21,22 +21,6 @@ public class WhenValidatingCreateOrganisationCommands
     }
 
     [Fact]
-    public void ThenShouldErrorWhenModelHasNoId()
-    {
-        //Arrange
-        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-        testOrganisation.Id = string.Empty;
-        var validator = new CreateOrganisationCommandValidator();
-        var testModel = new CreateOrganisationCommand(testOrganisation);
-
-        //Act
-        var result = validator.Validate(testModel);
-
-        //Assert
-        result.Errors.Any(x => x.PropertyName == "Organisation.Id").Should().BeTrue();
-    }
-
-    [Fact]
     public void ThenShouldErrorWhenModelHasNoName()
     {
         //Arrange

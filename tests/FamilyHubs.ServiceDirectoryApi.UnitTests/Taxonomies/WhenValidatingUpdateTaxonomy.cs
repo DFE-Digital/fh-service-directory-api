@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Api.Commands.UpdateTaxonomy;
+﻿using System.Security.Cryptography;
+using FamilyHubs.ServiceDirectory.Api.Commands.UpdateTaxonomy;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
@@ -11,8 +12,15 @@ public class WhenValidatingUpdateTaxonomy
     public void ThenShouldNotErrorWhenModelIsValid()
     {
         //Arrange
+        var id = Random.Shared.Next();
         var validator = new UpdateTaxonomyCommandValidator();
-        var testModel = new UpdateTaxonomyCommand("Id", new TaxonomyDto("Id", "Name", TaxonomyType.ServiceCategory, null));
+        var testModel = new UpdateTaxonomyCommand(id, new TaxonomyDto
+        {
+            Id = id,
+            Name = "Name",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null
+        });
 
         //Act
         var result = validator.Validate(testModel);
@@ -26,7 +34,14 @@ public class WhenValidatingUpdateTaxonomy
     {
         //Arrange
         var validator = new UpdateTaxonomyCommandValidator();
-        var testModel = new UpdateTaxonomyCommand("", new TaxonomyDto("Id", "Name", TaxonomyType.ServiceCategory, null));
+        var testModel = new UpdateTaxonomyCommand(0, 
+            new TaxonomyDto
+            {
+                Id = 0,
+                Name = "Name",
+                TaxonomyType = TaxonomyType.ServiceCategory,
+                ParentId = null
+            });
 
         //Act
         var result = validator.Validate(testModel);
@@ -35,26 +50,19 @@ public class WhenValidatingUpdateTaxonomy
         result.Errors.Any(x => x.PropertyName == "Id").Should().BeTrue();
     }
 
-    [Fact]
-    public void ThenShouldErrorWhenModelHasNoId()
-    {
-        //Arrange
-        var validator = new UpdateTaxonomyCommandValidator();
-        var testModel = new UpdateTaxonomyCommand("Id", new TaxonomyDto("", "Name", TaxonomyType.ServiceCategory, null));
-
-        //Act
-        var result = validator.Validate(testModel);
-
-        //Assert
-        result.Errors.Any(x => x.PropertyName == "Taxonomy.Id").Should().BeTrue();
-    }
 
     [Fact]
     public void ThenShouldErrorWhenModelHasNoName()
     {
         //Arrange
         var validator = new UpdateTaxonomyCommandValidator();
-        var testModel = new UpdateTaxonomyCommand("Id", new TaxonomyDto("Id", "", TaxonomyType.ServiceCategory, null));
+        var testModel = new UpdateTaxonomyCommand(0, new TaxonomyDto
+        {
+            Id = 0,
+            Name = "",
+            TaxonomyType = TaxonomyType.ServiceCategory,
+            ParentId = null
+        });
 
         //Act
         var result = validator.Validate(testModel);

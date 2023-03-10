@@ -1,20 +1,14 @@
-﻿using Ardalis.GuardClauses;
-using AutoMapper;
+﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Api.Commands.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Api.Commands.CreateService;
-using FamilyHubs.ServiceDirectory.Api.Commands.UpdateOrganisation;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
-using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationAdminByOrganisationId;
-using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationById;
-using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationTypes;
-using FamilyHubs.ServiceDirectory.Api.Queries.ListOrganisation;
 using FamilyHubs.ServiceDirectory.Core;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
@@ -30,16 +24,16 @@ public class WhenUsingCreateOrganisationCommand : BaseCreateDbUnitTest
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         Mapper = new Mapper(configuration);
         MockApplicationDbContext = GetApplicationDbContext();
-        
+
         MockMediatR = new Mock<ISender>();
         var createServiceCommandHandler = new CreateServiceCommandHandler(MockApplicationDbContext, Mapper, NullLogger<CreateServiceCommandHandler>.Instance);
         var updateServiceCommandHandler = new UpdateServiceCommandHandler(MockApplicationDbContext, Mapper, NullLogger<UpdateServiceCommandHandler>.Instance);
         MockMediatR.Setup(m => m.Send(It.IsAny<CreateServiceCommand>(), It.IsAny<CancellationToken>()))
-            .Callback<object, CancellationToken>((notification, cToken) => 
+            .Callback<object, CancellationToken>((notification, cToken) =>
                 createServiceCommandHandler.Handle((CreateServiceCommand)notification, cToken).GetAwaiter().GetResult());
 
         MockMediatR.Setup(m => m.Send(It.IsAny<UpdateServiceCommand>(), It.IsAny<CancellationToken>()))
-            .Callback<object, CancellationToken>((notification, cToken) => 
+            .Callback<object, CancellationToken>((notification, cToken) =>
                 updateServiceCommandHandler.Handle((UpdateServiceCommand)notification, cToken).GetAwaiter().GetResult());
     }
 
@@ -68,7 +62,7 @@ public class WhenUsingCreateOrganisationCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(createOrganisationCommand, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(TestOrganisation.Id);
     }
 
@@ -76,7 +70,7 @@ public class WhenUsingCreateOrganisationCommand : BaseCreateDbUnitTest
     public async Task ThenCreateOrganisationWithExistingServiceLinkContact()
     {
         //Arrange
-        var contact = Mapper.Map<Contact>(TestOrganisation.Services!.ElementAt(0).LinkContacts!.ElementAt(0).Contact);
+        var contact = Mapper.Map<Contact>(TestOrganisation.Services.ElementAt(0).Contacts.ElementAt(0));
         MockApplicationDbContext.Contacts.Add(contact);
         await MockApplicationDbContext.SaveChangesAsync();
 
@@ -91,26 +85,25 @@ public class WhenUsingCreateOrganisationCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(createOrganisationCommand, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(TestOrganisation.Id);
 
         MockApplicationDbContext.Contacts
             .Where(c => c.Id == contact.Id)
             .ToList().Count.Should().Be(1);
 
-        var linkContacts = MockApplicationDbContext.LinkContacts.SingleOrDefault(lc => lc.LinkId == TestOrganisation.Services!.ElementAt(0).Id);
+        var linkContacts = MockApplicationDbContext.LinkContacts.SingleOrDefault(lc => lc.LinkId == TestOrganisation.Services.ElementAt(0).Id);
 
         linkContacts.Should().NotBeNull();
-        linkContacts!.Contact.Should().NotBeNull();
-        linkContacts.Contact!.Id.Should().Be(contact.Id);
+        linkContacts!.ContactId.Should().Be(contact.Id);
     }
 
     [Fact]
     public async Task ThenCreateOrganisationWithExistingContactForServiceAtLocation()
     {
         //Arrange
-        var serviceAtLocation = TestOrganisation.Services!.ElementAt(0).ServiceAtLocations!.ElementAt(0);
-        var contact = Mapper.Map<Contact>(serviceAtLocation.LinkContacts!.ElementAt(0).Contact);
+        var serviceAtLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        var contact = Mapper.Map<Contact>(serviceAtLocation.Contacts.ElementAt(0));
         MockApplicationDbContext.Contacts.Add(contact);
         await MockApplicationDbContext.SaveChangesAsync();
 
@@ -125,7 +118,7 @@ public class WhenUsingCreateOrganisationCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(createOrganisationCommand, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(TestOrganisation.Id);
 
         MockApplicationDbContext.Contacts
@@ -135,8 +128,7 @@ public class WhenUsingCreateOrganisationCommand : BaseCreateDbUnitTest
         var linkContacts = MockApplicationDbContext.LinkContacts.SingleOrDefault(lc => lc.LinkId == serviceAtLocation.Id);
 
         linkContacts.Should().NotBeNull();
-        linkContacts!.Contact.Should().NotBeNull();
-        linkContacts.Contact!.Id.Should().Be(contact.Id);
+        linkContacts!.ContactId.Should().Be(contact.Id);
     }
 
     [Fact]
@@ -145,16 +137,14 @@ public class WhenUsingCreateOrganisationCommand : BaseCreateDbUnitTest
         //Arrange
         CreateOrganisation();
 
-        var relatedOrganisation = new OrganisationWithServicesDto(
-            "e0dc6a0c-2f9c-48c6-a222-1232abbf9000",
-            new OrganisationTypeDto("2", "VCFS", "Voluntary, Charitable, Faith Sector"),
-            "Related VCS",
-            "Related VCS",
-            null,
-            new Uri("https://www.relatedvcs.gov.uk/").ToString(),
-            "https://www.related.gov.uk/",
-            new List<ServiceDto>())
+        var relatedOrganisation = new OrganisationWithServicesDto
         {
+            OrganisationType = OrganisationType.VCFS,
+            Name = "Related VCS",
+            Description = "Related VCS",
+            Logo = null,
+            Uri = new Uri("https://www.relatedvcs.gov.uk/").ToString(),
+            Url = "https://www.related.gov.uk/",
             AdminAreaCode = "XTEST"
         };
 
@@ -165,7 +155,7 @@ public class WhenUsingCreateOrganisationCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(relatedOrganisation.Id);
     }
 
@@ -182,7 +172,7 @@ public class WhenUsingCreateOrganisationCommand : BaseCreateDbUnitTest
         var result = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        result.Should().NotBeNull();
+        result.Should().NotBe(0);
         result.Should().Be(anotherOrganisation.Id);
     }
 

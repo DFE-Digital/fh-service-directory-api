@@ -11,15 +11,16 @@ public class WhenUsingFunding : BaseCreateDbUnitTest
         //Arrange
         var mockApplicationDbContext = GetApplicationDbContext();
         
-        var funding = new Funding("96c0cfa6-0057-403c-9f4b-c9c111b742ec", "source")
+        var funding = new Funding
         {
-            ServiceId = "96c0cfa6-0057-403c-9f4b-c9c111b74211"
+            ServiceId = 1,
+            Source = "Source"
         };
 
         //Act
         mockApplicationDbContext.Fundings.Add(funding);
         mockApplicationDbContext.SaveChanges();
-        var result = mockApplicationDbContext.Fundings.FirstOrDefault(x => x.Id == "96c0cfa6-0057-403c-9f4b-c9c111b742ec");
+        var result = mockApplicationDbContext.Fundings.FirstOrDefault(x => x.Id == funding.Id);
 
         //Assert
         result.Should().NotBeNull();
