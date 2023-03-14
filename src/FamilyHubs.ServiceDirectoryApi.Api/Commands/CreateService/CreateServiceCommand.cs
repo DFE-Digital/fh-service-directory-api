@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace FamilyHubs.ServiceDirectory.Api.Commands.CreateService;
 
@@ -42,6 +43,11 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             if (existing is not null)
                 throw new InvalidOperationException($"Service with Id: {unsavedEntity.Id} already exists, Please use Update command");
 
+            if (unsavedEntity != null && unsavedEntity.ServiceAtLocations != null)
+            {
+                await CreateRegularSchedulesThatDoNotExist(unsavedEntity, cancellationToken); 
+            }
+           
             var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.Service.ServiceType.Id);
             if (serviceType != null)
                 unsavedEntity.ServiceType = serviceType;
@@ -69,6 +75,43 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
         }
 
         return request.Service.Id;
+    }
+
+    private async Task CreateRegularSchedulesThatDoNotExist(Service unsavedEntity, CancellationToken cancellationToken)
+    {
+        bool added = false;
+        if (unsavedEntity != null && unsavedEntity.ServiceAtLocations != null)
+        {
+            var regularSchedules = unsavedEntity.ServiceAtLocations.Select(x => x.RegularSchedules);
+            if (regularSchedules != null && regularSchedules.Any()) 
+            {
+                foreach (ICollection<RegularSchedule>? regularSchedulecollection in regularSchedules)
+                {
+                    if (regularSchedulecollection != null && regularSchedulecollection.Any())
+                    {
+                        foreach (RegularSchedule regularSchedule in regularSchedulecollection)
+                        {
+                            if (regularSchedule != null)
+                            {
+                                var schedule = _context.RegularSchedules.SingleOrDefault(x => x.Id == regularSchedule.Id);
+                                if (schedule == null)
+                                {
+                                    _context.RegularSchedules.Add(regularSchedule);
+                                    added = true;
+                                }
+                            }
+                        }
+                    }
+
+                    
+                }
+            }
+        }
+
+        if (added)
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
     }
 
     private ICollection<Eligibility> AttachExistingEligibility(ICollection<Eligibility>? unSavedEntities)
