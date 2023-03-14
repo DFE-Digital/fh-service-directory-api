@@ -50,6 +50,11 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             var serviceEntity = _mapper.Map<Service>(request.Service);
             ArgumentNullException.ThrowIfNull(serviceEntity);
 
+            if (serviceEntity != null && serviceEntity.ServiceAtLocations != null)
+            {
+                await CreateRegularSchedulesThatDoNotExist(serviceEntity, cancellationToken);
+            }
+
             var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.Service.ServiceType.Id);
             if (serviceType != null)
                 entity.ServiceType = serviceType;
@@ -443,8 +448,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
             if (itemToSave.Taxonomy != null)
             {
-                var existingTaxonomy = existing.Select(t => t.Taxonomy).SingleOrDefault(t => t!.Id == itemToSave.Taxonomy.Id)
-                                       ?? existingChilds.SingleOrDefault(t => t.Id == itemToSave.Taxonomy.Id);
+                var existingTaxonomy = existingChilds.SingleOrDefault(t => t.Id == itemToSave.Taxonomy.Id);
 
                 if (existingTaxonomy is not null)
                 {
@@ -507,5 +511,40 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         }
 
         return returnList;
+    }
+
+    private async Task CreateRegularSchedulesThatDoNotExist(Service unsavedEntity, CancellationToken cancellationToken)
+    {
+        bool added = false;
+        if (unsavedEntity != null && unsavedEntity.ServiceAtLocations != null)
+        {
+            var regularSchedules = unsavedEntity.ServiceAtLocations.Select(x => x.RegularSchedules);
+            if (regularSchedules != null && regularSchedules.Any())
+            {
+                foreach (ICollection<RegularSchedule>? regularSchedulecollection in regularSchedules)
+                {
+                    if (regularSchedulecollection != null && regularSchedulecollection.Any())
+                    {
+                        foreach (RegularSchedule regularSchedule in regularSchedulecollection)
+                        {
+                            if (regularSchedule != null)
+                            {
+                                var schedule = _context.RegularSchedules.SingleOrDefault(x => x.Id == regularSchedule.Id);
+                                if (schedule == null)
+                                {
+                                    _context.RegularSchedules.Add(regularSchedule);
+                                    added = true;
+                                }
+                            }
+                        }
+
+                        if (added)
+                        {
+                            await _context.SaveChangesAsync(cancellationToken);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

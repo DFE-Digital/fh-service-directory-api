@@ -101,16 +101,14 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
                                 }
                             }
                         }
-                    }
 
-                    
+                        if (added)
+                        {
+                            await _context.SaveChangesAsync(cancellationToken);
+                        }
+                    }
                 }
             }
-        }
-
-        if (added)
-        {
-            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 
