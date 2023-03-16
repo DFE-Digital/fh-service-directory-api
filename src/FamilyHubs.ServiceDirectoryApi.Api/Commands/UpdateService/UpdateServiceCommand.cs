@@ -248,8 +248,8 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
             if (itemToSave.Taxonomy != null)
             {
-                var existingTaxonomy = existing.Select(t => t.Taxonomy).SingleOrDefault(t => t!.Id == itemToSave.Taxonomy.Id)
-                                       ?? existingChilds.SingleOrDefault(t => t.Id == itemToSave.Taxonomy.Id);
+                var existingTaxonomy = existingChilds.SingleOrDefault(t => t.Id == itemToSave.Taxonomy.Id);
+
                 if (existingTaxonomy is not null)
                 {
                     itemToSave.Taxonomy = existingTaxonomy;
