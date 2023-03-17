@@ -30,7 +30,7 @@ public class MinimalGeneralEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred getting info (api). {exceptionMessage}", ex.Message);
-                Debug.WriteLine(ex.Message);
+                
                 throw;
             }
         });

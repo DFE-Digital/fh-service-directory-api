@@ -18,7 +18,7 @@ public class Program
 
             builder.ConfigureHost();
 
-            builder.RegisterApplicationComponents();
+            builder.Services.RegisterApplicationComponents(builder.Configuration);
 
             builder.Services.ConfigureServices(builder.Configuration, builder.Environment.IsProduction());
             
