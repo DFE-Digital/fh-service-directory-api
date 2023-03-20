@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Ardalis.Specification;
+using AutoMapper;
 using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -52,6 +53,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             if (serviceType != null)
                 unsavedEntity.ServiceType = serviceType;
 
+            unsavedEntity.Fundings = AttachExistingFunding(unsavedEntity.Id, unsavedEntity.Fundings);
             unsavedEntity.Eligibilities = AttachExistingEligibility(unsavedEntity.Eligibilities);
             unsavedEntity.ServiceAreas = AttachExistingServiceArea(unsavedEntity.ServiceAreas);
             unsavedEntity.ServiceDeliveries = AttachExistingServiceDelivery(unsavedEntity.ServiceDeliveries);
@@ -110,6 +112,26 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
                 }
             }
         }
+    }
+
+    private ICollection<Funding> AttachExistingFunding(string serviceId, ICollection<Funding>? unSavedEntities)
+    {
+        var returnList = new List<Funding>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.Fundings.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = unSavedEntities.ElementAt(i);
+            unSavedItem.ServiceId = serviceId;
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+            returnList.Add(savedItem ?? unSavedItem);
+        }
+
+        return returnList;
     }
 
     private ICollection<Eligibility> AttachExistingEligibility(ICollection<Eligibility>? unSavedEntities)

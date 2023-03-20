@@ -55,20 +55,29 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
                 await CreateRegularSchedulesThatDoNotExist(serviceEntity, cancellationToken);
             }
 
+            if (serviceEntity != null && serviceEntity.Fundings != null && serviceEntity.Fundings.Any())
+            {
+                await CreateFundingsThatDoNotExist(request.Service.Fundings, cancellationToken);
+            }
+                
             var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.Service.ServiceType.Id);
             if (serviceType != null)
                 entity.ServiceType = serviceType;
 
-            entity.Name = serviceEntity.Name;
-            entity.Description = serviceEntity.Description;
-            entity.Accreditations = serviceEntity.Accreditations;
-            entity.AssuredDate = serviceEntity.AssuredDate;
-            entity.AttendingAccess = serviceEntity.AttendingAccess;
-            entity.AttendingType = serviceEntity.AttendingType;
-            entity.DeliverableType = serviceEntity.DeliverableType;
-            entity.Status = serviceEntity.Status;
-            entity.Fees = serviceEntity.Fees;
+            if (serviceEntity is not null)
+            {
+                entity.Name = serviceEntity.Name;
+                entity.Description = serviceEntity.Description;
+                entity.Accreditations = serviceEntity.Accreditations;
+                entity.AssuredDate = serviceEntity.AssuredDate;
+                entity.AttendingAccess = serviceEntity.AttendingAccess;
+                entity.AttendingType = serviceEntity.AttendingType;
+                entity.DeliverableType = serviceEntity.DeliverableType;
+                entity.Status = serviceEntity.Status;
+                entity.Fees = serviceEntity.Fees;
+            }
 
+            entity.Fundings = AttachExistingFunding(request.Id, request.Service.Fundings);
             entity.Eligibilities = AttachExistingEligibility(request.Service.Eligibilities);
             entity.ServiceAreas = AttachExistingServiceArea(request.Service.ServiceAreas);
             entity.ServiceDeliveries = AttachExistingServiceDelivery(request.Service.ServiceDeliveries);
@@ -89,6 +98,56 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         }
 
         return entity.Id;
+    }
+
+    private async Task CreateFundingsThatDoNotExist(ICollection<FundingDto>? unSavedEntities, CancellationToken cancellationToken)
+    {
+        if (unSavedEntities == null)
+            return;
+
+        List<Funding> allFunding = _context.Fundings.ToList();
+
+        bool added = false;
+        foreach (var funding in unSavedEntities)
+        {
+            if (!allFunding.Any(x => x.Id == funding.Id))
+            {
+                _context.Fundings.Add(new Funding(funding.Id, funding.Source));
+                added = true;
+            }
+        }
+
+        if (added)
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+        
+    }
+
+    private ICollection<Funding> AttachExistingFunding(string serviceId, ICollection<FundingDto>? unSavedEntities)
+    {
+        var returnList = new List<Funding>();
+
+        if (unSavedEntities is null || !unSavedEntities.Any())
+            return returnList;
+
+        var existing = _context.Fundings.Where(e => unSavedEntities.Select(c => c.Id).Contains(e.Id)).ToList();
+
+        for (var i = 0; i < unSavedEntities.Count; i++)
+        {
+            var unSavedItem = unSavedEntities.ElementAt(i);
+            var savedItem = existing.FirstOrDefault(x => x.Id == unSavedItem.Id);
+
+            if (savedItem is not null)
+            {
+                savedItem.Source = unSavedItem.Source;
+                savedItem.ServiceId = serviceId;
+            }
+
+            returnList.Add(savedItem ?? _mapper.Map<Funding>(unSavedItem));
+        }
+
+        return returnList;
     }
 
     private ICollection<Eligibility> AttachExistingEligibility(ICollection<EligibilityDto>? unSavedEntities)
