@@ -9,6 +9,8 @@ using FamilyHubs.ServiceDirectory.Data.Repository;
 using FluentValidation;
 using MediatR;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -61,7 +63,7 @@ public static class StartupExtensions
     {
         services.AddAutoMapper((serviceProvider, cfg) =>
         {
-            var auditProperties = new[] {"CreatedBy", "Created", "LastModified", "LastModified"};
+            var auditProperties = new[] { "CreatedBy", "Created", "LastModified", "LastModified" };
             cfg.AddProfile<AutoMappingProfiles>();
             cfg.AddCollectionMappers();
             cfg.UseEntityFrameworkCoreModel<ApplicationDbContext>(serviceProvider);
@@ -72,27 +74,32 @@ public static class StartupExtensions
     private static void RegisterAppDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<AuditableEntitySaveChangesInterceptor>();
-
         services.AddTransient<ApplicationDbContextInitialiser>();
+
+        var connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
+        ArgumentException.ThrowIfNullOrEmpty(connectionString);
+
+        var useSqlite = configuration.GetValue<bool?>("UseSqlite");
+        ArgumentNullException.ThrowIfNull(useSqlite);
+
+        //DO not remove, This will prevent Application from starting if wrong type of connection string is provided
+        var connection = (useSqlite == true)
+            ? new SqliteConnectionStringBuilder(connectionString).ToString()
+            : new SqlConnectionStringBuilder(connectionString).ToString();
 
         // Register Entity Framework
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            var connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
-            ArgumentException.ThrowIfNullOrEmpty(connectionString);
-
-            var useSqlite = configuration.GetValue<bool?>("UseSqlite");
-            ArgumentNullException.ThrowIfNull(useSqlite);
-
             if (useSqlite == true)
             {
-                options.UseSqlite(connectionString, mg =>
+                options.UseSqlite(connection, mg =>
                     mg.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString()));
-                return;
             }
-            
-            options.UseSqlServer(connectionString, mg =>
-                mg.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString()));
+            else
+            {
+                options.UseSqlServer(connection, mg =>
+                    mg.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString()));
+            }
         });
     }
 
