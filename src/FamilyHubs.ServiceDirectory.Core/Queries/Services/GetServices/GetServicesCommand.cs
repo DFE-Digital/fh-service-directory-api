@@ -12,10 +12,10 @@ namespace FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 
 public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
 {
-    public GetServicesCommand(ServiceType serviceType, ServiceStatusType status, string? districtCode, int? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs)
+    public GetServicesCommand(ServiceType? serviceType, ServiceStatusType? status, string? districtCode, int? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs)
     {
-        ServiceType = serviceType;
-        Status = status;
+        ServiceType = serviceType ?? ServiceType.NotSet;
+        Status = status ?? ServiceStatusType.NotSet;
         DistrictCode = districtCode;
         MaximumAge = maximumAge;
         MinimumAge = minimumAge;

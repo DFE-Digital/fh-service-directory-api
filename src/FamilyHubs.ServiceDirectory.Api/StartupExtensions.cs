@@ -81,6 +81,16 @@ public static class StartupExtensions
             var connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
             ArgumentException.ThrowIfNullOrEmpty(connectionString);
 
+            var useSqlite = configuration.GetValue<bool?>("UseSqlite");
+            ArgumentNullException.ThrowIfNull(useSqlite);
+
+            if (useSqlite == true)
+            {
+                options.UseSqlite(connectionString, mg =>
+                    mg.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString()));
+                return;
+            }
+            
             options.UseSqlServer(connectionString, mg =>
                 mg.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString()));
         });
@@ -164,7 +174,8 @@ public static class StartupExtensions
         {
             // Seed Database
             var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-            await initialiser.InitialiseAsync(webApplication.Environment.IsProduction());
+            var shouldRestDatabaseOnRestart = webApplication.Configuration.GetValue<bool>("ShouldRestDatabaseOnRestart");
+            await initialiser.InitialiseAsync(webApplication.Environment.IsProduction(), shouldRestDatabaseOnRestart);
         }
         catch (Exception ex)
         {

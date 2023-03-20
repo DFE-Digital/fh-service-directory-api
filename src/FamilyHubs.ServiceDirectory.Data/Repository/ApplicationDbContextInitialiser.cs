@@ -15,14 +15,16 @@ public class ApplicationDbContextInitialiser
         _context = context;
     }
 
-    public async Task InitialiseAsync(bool isProduction)
+    public async Task InitialiseAsync(bool isProduction, bool shouldRestDatabaseOnRestart)
     {
         try
         {
             if (!isProduction)
             {
-                await _context.Database.EnsureDeletedAsync();
-                
+
+                if (shouldRestDatabaseOnRestart) 
+                    await _context.Database.EnsureDeletedAsync();
+
                 if(_context.Database.IsSqlServer())
                     await _context.Database.MigrateAsync();
                 else

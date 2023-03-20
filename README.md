@@ -30,5 +30,13 @@ To Add Migration
 To Apply Latest Schema Manually
 
 <br />
-dotnet ef database update --project ..\FamilyHubs.ServiceDirectory.data
+ dotnet ef database update --project ..\FamilyHubs.ServiceDirectory.data
+<br />
+
+## cypress tests
+Run the API (debug or non debug both fine)
+open powershell at ..\fh-service-directory-api\tests\cypress
+
+<br />
+ npx cypress open 
 <br />

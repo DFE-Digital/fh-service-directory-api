@@ -16,7 +16,7 @@ public class MinimalServiceEndPoints
 {
     public void RegisterServiceEndPoints(WebApplication app)
     {
-        app.MapGet("api/services", async (ServiceType serviceType, ServiceStatusType status, string ? districtCode, int ? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string ? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
+        app.MapGet("api/services", async (ServiceType? serviceType, ServiceStatusType? status, string ? districtCode, int ? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string ? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
             {
