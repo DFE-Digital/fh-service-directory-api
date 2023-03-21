@@ -6,11 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
-
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     private readonly string _serviceDirectoryConnection;
-
     public CustomWebApplicationFactory()
     {
         _serviceDirectoryConnection = $"Data Source=sd-{Random.Shared.Next().ToString()}.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;Recursive Triggers=True;Default Timeout=30;Pooling=True";

@@ -65,7 +65,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Contacts.Count.Should().Be(1);
+        actualService!.Eligibilities.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.Eligibilities.SingleOrDefault(s => s.EligibilityType == expected.EligibilityType);
         actualEntity.Should().NotBeNull();
@@ -135,7 +135,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Contacts.Count.Should().Be(1);
+        actualService!.ServiceAreas.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.ServiceAreas.SingleOrDefault(s => s.ServiceAreaName == expected.ServiceAreaName);
         actualEntity.Should().NotBeNull();
@@ -204,7 +204,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Contacts.Count.Should().Be(1);
+        actualService!.ServiceDeliveries.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.ServiceDeliveries.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
@@ -272,7 +272,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Contacts.Count.Should().Be(1);
+        actualService!.Languages.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.Languages.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
@@ -847,7 +847,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Contacts.Count.Should().Be(1);
+        actualService!.Locations.Count.Should().Be(1);
 
         var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
         actualContact.Should().NotBeNull();

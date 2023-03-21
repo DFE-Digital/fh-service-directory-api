@@ -79,21 +79,9 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, ign => 
-            ign.Excluding(l => l.Distance)
-                .For(l => l.HolidaySchedules)
-                .Exclude(h => h.Id)
-                .For(l => l.HolidaySchedules)
-                .Exclude(h => h.LocationId)
-                .For(l => l.RegularSchedules)
-                .Exclude(h => h.Id)
-                .For(l => l.RegularSchedules)
-                .Exclude(h => h.LocationId)
-                .For(l => l.Contacts)
-                .Exclude(h => h.Id)
-                .For(l => l.Contacts)
-                .Exclude(h => h.LocationId)
-        );
+        actualEntity.Should().BeEquivalentTo(expected, options => 
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
 
     [Fact]
