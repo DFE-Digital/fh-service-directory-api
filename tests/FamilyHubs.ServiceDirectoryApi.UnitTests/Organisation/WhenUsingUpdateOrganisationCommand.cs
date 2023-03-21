@@ -63,6 +63,19 @@ public class WhenUsingUpdateOrganisationCommand : BaseCreateDbUnitTest
         ArgumentNullException.ThrowIfNull(updateTestOrganisation);
         if (updateTestOrganisation.Services != null && updateTestOrganisation.Services.ElementAt(0).Fundings != null)
         {
+            updateTestOrganisation?.Services?.ElementAt(0)?.ServiceAtLocations?.ElementAt(0)?.RegularSchedules?.Add(new RegularScheduleDto("5c7077c8-6965-4810-a2db-e8307634d963",
+                            "Description",
+                            DateTime.UtcNow,
+                            DateTime.UtcNow.AddHours(8),
+                            "Monday",
+                            "byMonth",
+                            "dtStart",
+                            "freq",
+                            "interval",
+                            DateTime.UtcNow,
+                            DateTime.UtcNow.AddMonths(6)));
+
+           
             updateTestOrganisation?.Services?.ElementAt(0)?.Fundings?.Add(new FundingDto("b6a8a39c-33a3-4887-8caa-9b5a2de95b28", "Additional Funding"));
         }
 
