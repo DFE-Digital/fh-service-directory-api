@@ -245,7 +245,10 @@ public static class TestDataProvider
                         null
                     ))
             })
-            .WithFundings(new List<FundingDto>())
+            .WithFundings(new List<FundingDto>()
+            {
+                new FundingDto("ab4291bb-a60f-46b9-af33-ba11a5d924af", "Test Funding")
+            })
             .WithRegularSchedules(new List<RegularScheduleDto>
             {
                 new RegularScheduleDto(

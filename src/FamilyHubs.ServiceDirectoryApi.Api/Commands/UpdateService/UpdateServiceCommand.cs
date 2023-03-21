@@ -57,7 +57,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
             if (serviceEntity != null && serviceEntity.Fundings != null && serviceEntity.Fundings.Any())
             {
-                await CreateFundingsThatDoNotExist(request.Service.Fundings, cancellationToken);
+                await CreateFundingsThatDoNotExist(request.Service.Id, request.Service.Fundings, cancellationToken);
             }
                 
             var serviceType = _context.ServiceTypes.FirstOrDefault(x => x.Id == request.Service.ServiceType.Id);
@@ -100,7 +100,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         return entity.Id;
     }
 
-    private async Task CreateFundingsThatDoNotExist(ICollection<FundingDto>? unSavedEntities, CancellationToken cancellationToken)
+    private async Task CreateFundingsThatDoNotExist(string serviceId, ICollection<FundingDto>? unSavedEntities, CancellationToken cancellationToken)
     {
         if (unSavedEntities == null)
             return;
@@ -112,7 +112,9 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         {
             if (!allFunding.Any(x => x.Id == funding.Id))
             {
-                _context.Fundings.Add(new Funding(funding.Id, funding.Source));
+                Funding fundingItem = new Funding(funding.Id, funding.Source);
+                fundingItem.ServiceId = serviceId;
+                _context.Fundings.Add(fundingItem);
                 added = true;
             }
         }

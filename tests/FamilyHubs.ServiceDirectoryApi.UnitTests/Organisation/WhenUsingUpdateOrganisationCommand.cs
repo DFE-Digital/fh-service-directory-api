@@ -1,15 +1,10 @@
-﻿using Ardalis.GuardClauses;
+﻿using Ardalis.Specification;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Api.Commands.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Api.Commands.CreateService;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateOrganisation;
 using FamilyHubs.ServiceDirectory.Api.Commands.UpdateService;
-using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationAdminByOrganisationId;
-using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationById;
-using FamilyHubs.ServiceDirectory.Api.Queries.GetOrganisationTypes;
-using FamilyHubs.ServiceDirectory.Api.Queries.ListOrganisation;
 using FamilyHubs.ServiceDirectory.Core;
-using FamilyHubs.ServiceDirectory.Core.Entities;
 using FamilyHubs.ServiceDirectory.Infrastructure.Persistence.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
@@ -25,7 +20,6 @@ public class WhenUsingUpdateOrganisationCommand : BaseCreateDbUnitTest
     public WhenUsingUpdateOrganisationCommand()
     {
         TestOrganisation = TestDataProvider.GetTestCountyCouncilDto();
-
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         Mapper = new Mapper(configuration);
@@ -66,6 +60,11 @@ public class WhenUsingUpdateOrganisationCommand : BaseCreateDbUnitTest
         var updateLogger = new Mock<ILogger<UpdateOrganisationCommandHandler>>();
         
         var updateTestOrganisation = TestDataProvider.GetTestCountyCouncilDto(true);
+        ArgumentNullException.ThrowIfNull(updateTestOrganisation);
+        if (updateTestOrganisation.Services != null && updateTestOrganisation.Services.ElementAt(0).Fundings != null)
+        {
+            updateTestOrganisation?.Services?.ElementAt(0)?.Fundings?.Add(new FundingDto("b6a8a39c-33a3-4887-8caa-9b5a2de95b28", "Additional Funding"));
+        }
 
 
         var updateCommand = new UpdateOrganisationCommand(updateTestOrganisation.Id, updateTestOrganisation);
