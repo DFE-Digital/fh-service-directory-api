@@ -72,7 +72,7 @@ public class MinimalServiceEndPoints
                 
                 throw;
             }
-        }).WithMetadata(new SwaggerOperationAttribute("Get Service by Id", "Get Service by Id") { Tags = new[] { "Services" } });
+        }).WithMetadata(new SwaggerOperationAttribute("Get Service by OwnerReferenceId", "Get Service by OwnerReferenceId") { Tags = new[] { "Services" } });
 
         app.MapGet("api/organisationservices/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
