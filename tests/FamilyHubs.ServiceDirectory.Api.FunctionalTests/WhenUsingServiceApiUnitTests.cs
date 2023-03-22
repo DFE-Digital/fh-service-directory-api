@@ -405,4 +405,29 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         items!.Where(i => i.Description == "Family Hub").Should().HaveCount(1);
     }
+
+    [Fact]
+    public async Task ThenTheServicesByOwnerReferenceIdAreRetrieved()
+    {
+        var getServicesUrlBuilder = new GetServicesUrlBuilder();
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(Client.BaseAddress + $"api/servicesByOwnerReference/Bristol-Service-1")
+        };
+
+        using var response = await Client.SendAsync(request);
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+            ArgumentException.ThrowIfNullOrEmpty(responseContent);
+
+        var retVal = JsonSerializer.Deserialize<ServiceDto>(responseContent, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        retVal.Should().NotBeNull();
+        retVal!.ServiceOwnerReferenceId.Should().Be("Bristol-Service-1");
+    }
 }

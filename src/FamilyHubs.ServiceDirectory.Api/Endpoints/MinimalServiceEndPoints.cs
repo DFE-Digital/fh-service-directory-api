@@ -2,6 +2,7 @@
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.DeleteService;
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.UpdateService;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServiceById;
+using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServiceByOwnerReferenceIdCommand;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganisationId;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -49,6 +50,25 @@ public class MinimalServiceEndPoints
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred getting open referral service by id. {exceptionMessage}", ex.Message);
+                
+                throw;
+            }
+        }).WithMetadata(new SwaggerOperationAttribute("Get Service by Id", "Get Service by Id") { Tags = new[] { "Services" } });
+
+        app.MapGet("api/servicesByOwnerReference/{ownerReferenceId}", async (string ownerReferenceId, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
+        {
+            try
+            {
+                var command = new GetServiceByOwnerReferenceIdCommand
+                {
+                    OwnerReferenceId = ownerReferenceId
+                };
+                var result = await mediator.Send(command, cancellationToken);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred getting open referral service by OwnerReferenceId. {exceptionMessage}", ex.Message);
                 
                 throw;
             }
