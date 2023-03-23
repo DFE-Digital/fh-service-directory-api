@@ -14,7 +14,7 @@ public class UpdateOrganisationCommandValidator : AbstractValidator<UpdateOrgani
 
         RuleFor(v => v.Organisation.Name)
             .MinimumLength(1)
-            .MaximumLength(50)
+            .MaximumLength(255)
             .NotNull()
             .NotEmpty();
     }

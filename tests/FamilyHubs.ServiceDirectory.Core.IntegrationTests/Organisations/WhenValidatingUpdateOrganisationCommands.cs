@@ -53,4 +53,37 @@ public class WhenValidatingUpdateOrganisationCommands
         //Assert
         result.Errors.Any(x => x.PropertyName == "Organisation.Name").Should().BeTrue();
     }
+
+    [Fact]
+    public void ThenShouldUpdateOrganisationCommandNotErrorWhenNameIsLessThen255Char()
+    {
+        //Arrange
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto2();
+        testOrganisation.Id = Random.Shared.Next();
+        testOrganisation.Name = string.Join(string.Empty, Enumerable.Range(0, 254).Select(_ => "a"));
+        var validator = new UpdateOrganisationCommandValidator();
+        var testModel = new UpdateOrganisationCommand(testOrganisation.Id, testOrganisation);
+
+        //Act
+        var result = validator.Validate(testModel);
+
+        //Assert
+        result.Errors.Any().Should().BeFalse();
+    }
+
+    [Fact]
+    public void ThenShouldUpdateOrganisationCommandHasErrorsWhenNameIsGreaterThen255Char()
+    {
+        //Arrange
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto2();
+        testOrganisation.Name = string.Join(string.Empty, Enumerable.Range(0, 256).Select(_ => "a"));
+        var validator = new UpdateOrganisationCommandValidator();
+        var testModel = new UpdateOrganisationCommand(testOrganisation.Id, testOrganisation);
+
+        //Act
+        var result = validator.Validate(testModel);
+
+        //Assert
+        result.Errors.Any().Should().BeTrue();
+    }
 }

@@ -35,4 +35,36 @@ public class WhenValidatingCreateOrganisationCommands
         //Assert
         result.Errors.Any(x => x.PropertyName == "Organisation.Name").Should().BeTrue();
     }
+
+    [Fact]
+    public void ThenShouldCreateOrganisationCommandNotErrorWhenNameIsLessThen255Char()
+    {
+        //Arrange
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto2();
+        testOrganisation.Name = string.Join(string.Empty, Enumerable.Range(0, 254).Select(_ => "a"));
+        var validator = new CreateOrganisationCommandValidator();
+        var testModel = new CreateOrganisationCommand(testOrganisation);
+
+        //Act
+        var result = validator.Validate(testModel);
+
+        //Assert
+        result.Errors.Any().Should().BeFalse();
+    }
+
+    [Fact]
+    public void ThenShouldCreateOrganisationCommandHasErrorsWhenNameIsGreaterThen255Char()
+    {
+        //Arrange
+        var testOrganisation = TestDataProvider.GetTestCountyCouncilDto2();
+        testOrganisation.Name = string.Join(string.Empty, Enumerable.Range(0, 256).Select(_ => "a"));
+        var validator = new CreateOrganisationCommandValidator();
+        var testModel = new CreateOrganisationCommand(testOrganisation);
+
+        //Act
+        var result = validator.Validate(testModel);
+
+        //Assert
+        result.Errors.Any().Should().BeTrue();
+    }
 }
