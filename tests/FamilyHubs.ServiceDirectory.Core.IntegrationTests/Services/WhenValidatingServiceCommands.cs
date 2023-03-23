@@ -39,6 +39,71 @@ public class WhenValidatingServiceCommands
     }
 
     [Fact]
+    public void ThenShouldCreateServiceCommandNotErrorWhenNameIsLessThen255Char()
+    {
+        //Arrange
+        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());
+        testService.Name = string.Join(string.Empty, Enumerable.Range(0, 254).Select(_ => "a"));
+        var validator = new CreateServiceCommandValidator();
+        var testModel = new CreateServiceCommand(testService);
+
+        //Act
+        var result = validator.Validate(testModel);
+
+        //Assert
+        result.Errors.Any().Should().BeFalse();
+    }
+
+    [Fact]
+    public void ThenShouldUpdateServiceCommandNotErrorWhenNameIsLessThen255Char()
+    {
+        //Arrange
+        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());
+        testService.Id = Random.Shared.Next();
+        testService.Name = string.Join(string.Empty, Enumerable.Range(0, 254).Select(_ => "a"));
+        var validator = new UpdateServiceCommandValidator();
+        var testModel = new UpdateServiceCommand(testService.Id, testService);
+
+        //Act
+        var result = validator.Validate(testModel);
+
+        //Assert
+        result.Errors.Any().Should().BeFalse();
+    }
+
+    [Fact]
+    public void ThenShouldCreateServiceCommandHasErrorsWhenNameIsGreaterThen255Char()
+    {
+        //Arrange
+        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());
+        testService.Name = string.Join(string.Empty, Enumerable.Range(0, 256).Select(_ => "a"));
+        var validator = new CreateServiceCommandValidator();
+        var testModel = new CreateServiceCommand(testService);
+
+        //Act
+        var result = validator.Validate(testModel);
+
+        //Assert
+        result.Errors.Any().Should().BeTrue();
+    }
+
+    [Fact]
+    public void ThenShouldUpdateServiceCommandHasErrorsWhenNameIsGreaterThen255Char()
+    {
+        //Arrange
+        var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());
+        testService.Name = string.Join(string.Empty, Enumerable.Range(0, 256).Select(_ => "a"));
+        var validator = new UpdateServiceCommandValidator();
+        var testModel = new UpdateServiceCommand(testService.Id, testService);
+
+        //Act
+        var result = validator.Validate(testModel);
+
+        //Assert
+        result.Errors.Any().Should().BeTrue();
+    }
+
+    [Fact]
     public void ThenShouldDeleteServiceByIdCommandNotErrorWhenModelIsValid()
     {
         //Arrange

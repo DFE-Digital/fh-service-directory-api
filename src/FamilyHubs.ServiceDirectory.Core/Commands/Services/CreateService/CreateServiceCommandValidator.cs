@@ -18,7 +18,7 @@ public class CreateServiceCommandValidator : AbstractValidator<CreateServiceComm
 
         RuleFor(v => v.Service.Name)
             .MinimumLength(1)
-            .MaximumLength(50)
+            .MaximumLength(255)
             .NotNull()
             .NotEmpty();
 
