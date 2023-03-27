@@ -15,17 +15,12 @@ public class MinimalGeneralEndPoints
                 var creationDate = File.GetCreationTime(assembly.Location);
                 var version = FileVersionInfo.GetVersionInfo(assembly.Location).ProductVersion;
 
-                var useDbType = configuration.GetValue<string>("UseDbType");
-                if (useDbType != "UseInMemoryDatabase")
-                {
-                    var connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
-                    var connectionStringOk = !string.IsNullOrEmpty(connectionString) && connectionString.Contains("Database");
+                var useSqlite = configuration.GetValue<bool>("UseSqlite");
 
-                    return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Db Type: {useDbType}, Is Connection String OK: {connectionStringOk}");
-                }
-                
+                var connectionString = configuration.GetConnectionString("ServiceDirectoryConnection");
+                var connectionStringOk = !string.IsNullOrEmpty(connectionString) && connectionString.Contains("Database");
 
-                return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Db Type: {useDbType}");
+                return Results.Ok($"Version: {version}, Last Updated: {creationDate}, Db Type: {(useSqlite ? "Sqlite" : "SQLServer")}, Is Connection String OK: {connectionStringOk}");
             }
             catch (Exception ex)
             {

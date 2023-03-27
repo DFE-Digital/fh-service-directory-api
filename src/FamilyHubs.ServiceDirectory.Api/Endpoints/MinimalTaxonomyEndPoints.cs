@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using FamilyHubs.ServiceDirectory.Core.Commands.Taxonomies.CreateTaxonomy;
+﻿using FamilyHubs.ServiceDirectory.Core.Commands.Taxonomies.CreateTaxonomy;
 using FamilyHubs.ServiceDirectory.Core.Commands.Taxonomies.UpdateTaxonomy;
 using FamilyHubs.ServiceDirectory.Core.Queries.Taxonomies.GetTaxonomies;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -30,7 +29,7 @@ public class MinimalTaxonomyEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Taxonomy", "Create Taxonomy") { Tags = new[] { "Taxonomies" } });
 
-        app.MapPut("api/taxonomies/{id}", async (long id, [FromBody] TaxonomyDto request, CancellationToken cancellationToken, ISender mediator, IMapper mapper, ILogger<MinimalTaxonomyEndPoints> logger) =>
+        app.MapPut("api/taxonomies/{id}", async (long id, [FromBody] TaxonomyDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalTaxonomyEndPoints> logger) =>
         {
             try
             {
