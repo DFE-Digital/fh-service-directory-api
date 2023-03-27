@@ -14,11 +14,7 @@ public class WhenGettingApiInfoUnitTest
     }
 
 
-#if DEBUG
     [Fact]
-#else
-    [Fact(Skip = "This test should be run locally")]
-#endif
     public async Task ThenReturnsVersionAndLastUpdateDate()
     {
         var response = await _client.GetAsync("api/info");
