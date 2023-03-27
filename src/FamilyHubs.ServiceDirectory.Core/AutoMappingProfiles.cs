@@ -21,7 +21,6 @@ public class AutoMappingProfiles : Profile
         CreateMap<ServiceDeliveryDto, ServiceDelivery>().ReverseMap();
         CreateMap<OrganisationDto, Organisation>().ReverseMap();
         CreateMap<OrganisationWithServicesDto, Organisation>().ReverseMap();
-        CreateMap<OrganisationExDto, Organisation>().ReverseMap();
 
         CreateMap<LocationDto, Location>().ReverseMap();
         CreateMap<Location, Location>();
