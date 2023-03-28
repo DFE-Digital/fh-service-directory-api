@@ -9,6 +9,9 @@ public class CreateOrganisationCommandValidator : AbstractValidator<CreateOrgani
         RuleFor(v => v.Organisation)
             .NotNull();
 
+        RuleFor(v => v.Organisation.Id)
+            .Equal(0);
+
         RuleFor(v => v.Organisation.Name)
             .MinimumLength(1)
             .MaximumLength(255)

@@ -127,7 +127,7 @@ public class WhenValidatingServiceCommands
     {
         //Arrange
         var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());
-        testService.Id = 1;
+        testService.Id = 0;
         foreach (var serviceAtLocation in testService.Locations)
         {
             foreach (var item in serviceAtLocation.Contacts)

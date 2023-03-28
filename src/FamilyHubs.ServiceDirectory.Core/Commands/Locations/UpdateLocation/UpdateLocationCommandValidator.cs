@@ -15,10 +15,16 @@ public class UpdateLocationCommandValidator : AbstractValidator<UpdateLocationCo
 
         RuleFor(v => v.Location.Name)
             .MinimumLength(1)
-            .MaximumLength(50)
+            .MaximumLength(255)
             .NotNull()
             .NotEmpty();
 
+        RuleFor(v => v.Location.PostCode)
+            .MinimumLength(5)
+            .MaximumLength(15)
+            .NotNull()
+            .NotEmpty();
+        
         RuleFor(v => v.Location.Contacts).Custom((list, context) =>
         {
             if (list is null) return;

@@ -7,7 +7,6 @@ public class DeleteServiceByIdCommandValidator : AbstractValidator<DeleteService
     public DeleteServiceByIdCommandValidator()
     {
         RuleFor(v => v.Id)
-            .NotNull()
-            .NotEmpty();
+            .NotEqual(0);
     }
 }

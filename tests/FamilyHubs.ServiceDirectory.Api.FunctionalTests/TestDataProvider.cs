@@ -72,7 +72,7 @@ public static class TestDataProvider
                         new LocationDto
                         {
                             LocationType = LocationType.FamilyHub,
-                            Name = "",
+                            Name = "Test Location Name",
                             Latitude = 52.6312,
                             Longitude = -1.66526,
                             Address1 = "75 Sheepcote Lane",
