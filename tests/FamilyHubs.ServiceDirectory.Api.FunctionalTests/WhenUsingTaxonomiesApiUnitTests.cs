@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
-using FamilyHubs.SharedKernel;
+using FamilyHubs.ServiceDirectory.Shared.Models;
 using FluentAssertions;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;

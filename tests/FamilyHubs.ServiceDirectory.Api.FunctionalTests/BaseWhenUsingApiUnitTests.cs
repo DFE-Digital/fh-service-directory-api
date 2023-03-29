@@ -1,5 +1,4 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Repository;
-using FluentAssertions.Common;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;

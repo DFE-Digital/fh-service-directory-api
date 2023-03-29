@@ -4,7 +4,7 @@ using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
-using FamilyHubs.SharedKernel;
+using FamilyHubs.ServiceDirectory.Shared.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

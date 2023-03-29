@@ -69,7 +69,7 @@ public static class StartupExtensions
             cfg.UseEntityFrameworkCoreModel<ApplicationDbContext>(serviceProvider);
             cfg.ShouldMapProperty = pi => !auditProperties.Contains(pi.Name);
         }, typeof(AutoMappingProfiles));
-    }
+    } 
 
     private static void RegisterAppDbContext(this IServiceCollection services, IConfiguration configuration)
     {

@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
-using FamilyHubs.SharedKernel;
+using FamilyHubs.ServiceDirectory.Shared.Models;
 using FluentAssertions;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -409,12 +409,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServicesByOwnerReferenceIdAreRetrieved()
     {
-        var getServicesUrlBuilder = new GetServicesUrlBuilder();
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/servicesByOwnerReference/Bristol-Service-1")
+            RequestUri = new Uri(Client.BaseAddress + "api/servicesByOwnerReference/Bristol-Service-1")
         };
 
         using var response = await Client.SendAsync(request);
