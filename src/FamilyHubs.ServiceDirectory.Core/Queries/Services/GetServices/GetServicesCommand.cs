@@ -143,7 +143,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             services = services.Where(s => s.Locations.Any(lt => lt.LocationType == LocationType.FamilyHub) == request.IsFamilyHub);
 
         if (request.IsPaidFor is not null)
-            services = services.Where(s => s.CostOptions.Any(co => co.Amount == decimal.Zero || co.Option == null || co.Option.ToLower() == "free".ToLower()) != request.IsPaidFor.Value);
+            services = services.Where(s => s.CostOptions.Count > 0 && s.CostOptions.Any(co => co.Amount == decimal.Zero || co.Option == null || co.Option.ToLower() == "free".ToLower()) != request.IsPaidFor.Value);
 
         if (!string.IsNullOrEmpty(request.ServiceDeliveries))
         {
