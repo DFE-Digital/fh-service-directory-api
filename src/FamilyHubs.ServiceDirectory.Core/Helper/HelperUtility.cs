@@ -48,6 +48,7 @@ public static class HelperUtility
             }
             else
             {
+                unSavedItem.Id = savedItem.Id;
                 savedItem = mapper.Map(unSavedItem, savedItem);
                 returnList.Add(savedItem);
             }
