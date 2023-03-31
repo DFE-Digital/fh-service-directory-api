@@ -1,32 +1,68 @@
 ﻿using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
+using AutoMapper;
+using FamilyHubs.ServiceDirectory.Data.Entities;
+using FamilyHubs.ServiceDirectory.Data.Entities.Base;
+using FamilyHubs.ServiceDirectory.Data.Repository;
 using GeoCoordinatePortable;
-using NetTopologySuite;
-using NetTopologySuite.Geometries;
 
 namespace FamilyHubs.ServiceDirectory.Core.Helper;
 
 public static class HelperUtility
 {
+    public static void AttachExistingManyToMany(this Service service, ApplicationDbContext context, IMapper mapper)
+    {
+        var existingLocations = service.Locations.Select(s => $"{s.Name}{s.PostCode}").ToList();
+        service.Locations = service.Locations.AddOrAttachExisting(context, mapper, 
+            l => existingLocations.Contains(l.Name + l.PostCode),
+            (s, d) => $"{s.Name}{s.PostCode}" == $"{d.Name}{d.PostCode}");
+
+        var existingTaxonomies = service.Taxonomies.Select(s => s.Name).ToList();
+        service.Taxonomies = service.Taxonomies.AddOrAttachExisting(context, mapper, 
+            t => existingTaxonomies.Contains(t.Name),
+            (s, d) => s.Name == d.Name);
+    }
+    
+    public static IList<TEntity> AddOrAttachExisting<TEntity>(this IList<TEntity> unSavedEntities, 
+        ApplicationDbContext context, 
+        IMapper mapper, 
+        Expression<Func<TEntity, bool>> searchPredicate,
+        Func<TEntity, TEntity, bool> matchingPredicate
+        ) where TEntity : EntityBase<long>
+    {
+        var returnList = new List<TEntity>();
+
+        if (!unSavedEntities.Any())
+            return returnList;
+        
+        var existing = context.Set<TEntity>().Where(searchPredicate).ToList();
+
+        foreach (var unSavedItem in unSavedEntities)
+        {
+            var savedItem = existing.SingleOrDefault(saved => matchingPredicate(saved, unSavedItem));
+            
+            if (savedItem is null)
+            {
+                returnList.Add(unSavedItem);
+            }
+            else
+            {
+                savedItem = mapper.Map(unSavedItem, savedItem);
+                returnList.Add(savedItem);
+            }
+        }
+        
+        return returnList;
+    }
+    
     public static bool IsValidUrl(string url)
     {
         if (string.IsNullOrEmpty(url))
             return true;
-        const string pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-        Regex rgx = new(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        const string Pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
+        var rgx = new Regex(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         return rgx.IsMatch(url);
-    }
-
-    public static Point CreatePoint(double latitude, double longitude)
-    {
-        // 4326 is most common coordinate system used by GPS/Maps
-        var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(4326);
-
-        // see https://docs.microsoft.com/en-us/ef/core/modeling/spatial
-        // Longitude and Latitude
-        var newLocation = geometryFactory.CreatePoint(new Coordinate(longitude, latitude));
-
-        return newLocation;
     }
 
     //return distance in meters https://stackoverflow.com/questions/6366408/calculating-distance-between-two-latitude-and-longitude-geocoordinates

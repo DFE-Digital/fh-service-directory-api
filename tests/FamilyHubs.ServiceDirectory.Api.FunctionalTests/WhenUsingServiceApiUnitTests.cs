@@ -61,14 +61,13 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var item = retVal?.Items.FirstOrDefault(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
         ArgumentNullException.ThrowIfNull(item);
 
-        item.Name += " Changed";
-        item.Description += " Changed";
+        var updatedItem = item with {Name = "Updated Service Name", Description = "Updated Service Description"};
 
         var updateRequest = new HttpRequestMessage
         {
             Method = HttpMethod.Put,
             RequestUri = new Uri(Client.BaseAddress + $"api/services/{item.Id}"),
-            Content = new StringContent(JsonConvert.SerializeObject(item), Encoding.UTF8, "application/json"),
+            Content = new StringContent(JsonConvert.SerializeObject(updatedItem), Encoding.UTF8, "application/json"),
         };
 
         using var updateResponse = await Client.SendAsync(updateRequest);

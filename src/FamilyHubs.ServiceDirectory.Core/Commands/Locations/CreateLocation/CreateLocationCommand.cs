@@ -37,10 +37,10 @@ public class CreateLocationCommandHandler : IRequestHandler<CreateLocationComman
         {
             var entity = await _context.Locations
                 .IgnoreAutoIncludes()
-                .FirstOrDefaultAsync(x => x.Id == request.Location.Id, cancellationToken);
+                .FirstOrDefaultAsync(x => x.Name+x.PostCode == request.Location.Name+request.Location.PostCode, cancellationToken);
 
             if (entity is not null)
-                throw new ArgumentException("Duplicate Id");
+                throw new ArgumentException($"Duplicate Location with Id:{request.Location.Id} Name:{request.Location.Name} and PostCode:{request.Location.PostCode} Already Exists, Please use Update Command");
 
             var location = _mapper.Map<Location>(request.Location);
 

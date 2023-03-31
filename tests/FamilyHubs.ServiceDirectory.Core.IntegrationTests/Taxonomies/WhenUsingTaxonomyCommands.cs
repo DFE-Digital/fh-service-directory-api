@@ -30,19 +30,6 @@ public class WhenUsingTaxonomyCommands : DataIntegrationTestBase
     }
 
     [Fact]
-    public async Task ThenHandle_ShouldThrowArgumentNullException_WhenEntityIsNull()
-    {
-        // Arrange
-        var logger = new Logger<CreateTaxonomyCommandHandler>(new LoggerFactory());
-        var handler = new CreateTaxonomyCommandHandler(TestDbContext, Mapper, logger);
-        var command = new CreateTaxonomyCommand(default!);
-
-        // Act
-        //Assert
-        await Assert.ThrowsAsync<ArgumentNullException>(() => handler.Handle(command, CancellationToken.None));
-    }
-
-    [Fact]
     public async Task ThenUpdateTaxonomy()
     {
         var dbTaxonomy = new Taxonomy

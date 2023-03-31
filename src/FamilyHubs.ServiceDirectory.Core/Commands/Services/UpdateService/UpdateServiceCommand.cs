@@ -1,7 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
+using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
-using FamilyHubs.ServiceDirectory.Data.Entities.Base;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -29,7 +29,8 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
     private readonly ILogger<UpdateServiceCommandHandler> _logger;
     private readonly IMapper _mapper;
 
-    public UpdateServiceCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<UpdateServiceCommandHandler> logger)
+    public UpdateServiceCommandHandler(ApplicationDbContext context, IMapper mapper,
+        ILogger<UpdateServiceCommandHandler> logger)
     {
         _context = context;
         _logger = logger;
@@ -43,16 +44,12 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         //Many to Many needs to be included otherwise EF core does not know how to perform merge on navigation tables
         var entity = await _context.Services
             .Include(s => s.Taxonomies)
-
             .Include(s => s.Locations)
             .ThenInclude(l => l.Contacts)
-
             .Include(s => s.Locations)
             .ThenInclude(l => l.HolidaySchedules)
-
             .Include(s => s.Locations)
             .ThenInclude(l => l.RegularSchedules)
-
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity is null)
@@ -62,8 +59,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         {
             entity = _mapper.Map(request.Service, entity);
 
-            entity.Locations = AddOrAttachExisting(entity.Locations);
-            entity.Taxonomies = AddOrAttachExisting(entity.Taxonomies);
+            entity.AttachExistingManyToMany(_context, _mapper);
 
             _context.Services.Update(entity);
 
@@ -76,33 +72,5 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         }
 
         return entity.Id;
-    }
-
-    public IList<TEntity> AddOrAttachExisting<TEntity>(IList<TEntity> unSavedEntities) where TEntity : EntityBase<long>
-    {
-        var returnList = new List<TEntity>();
-
-        if (!unSavedEntities.Any())
-            return returnList;
-
-        var existingIds = unSavedEntities.Where(s => s.Id != 0).Select(s => s.Id).ToList();
-        var existing = _context.Set<TEntity>().Where(x => existingIds.Contains(x.Id)).ToList();
-
-        foreach (var unSavedItem in unSavedEntities)
-        {
-            var savedItem = existing.SingleOrDefault(x => x.Id == unSavedItem.Id);
-
-            if (savedItem is null)
-            {
-                returnList.Add(unSavedItem);
-            }
-            else
-            {
-                savedItem = _mapper.Map(unSavedItem, savedItem);
-                returnList.Add(savedItem);
-            }
-        }
-
-        return returnList;
     }
 }

@@ -686,9 +686,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     {
         //Arrange
         await CreateOrganisation();
-        var expected = TestDataProvider.GetTestCountyCouncilDto2().Services.ElementAt(0).Locations.ElementAt(0);
+        var expected = TestDataProvider.GetTestCountyCouncilDto2().Services.ElementAt(0).Locations.ElementAt(0) with { Name = "Existing Location already Saved in DB" };
         expected.Id = await CreateLocation(expected);
-        expected.Name = "Existing Location already Saved in DB";
 
         var service = TestOrganisation.Services.ElementAt(0);
         service.Locations.Add(expected);

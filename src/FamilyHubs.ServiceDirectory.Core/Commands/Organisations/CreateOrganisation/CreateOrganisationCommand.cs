@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
-using FamilyHubs.ServiceDirectory.Data.Entities.Base;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -25,7 +25,8 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
     private readonly IMapper _mapper;
     private readonly ILogger<CreateOrganisationCommandHandler> _logger;
 
-    public CreateOrganisationCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<CreateOrganisationCommandHandler> logger)
+    public CreateOrganisationCommandHandler(ApplicationDbContext context, IMapper mapper,
+        ILogger<CreateOrganisationCommandHandler> logger)
     {
         _context = context;
         _mapper = mapper;
@@ -45,8 +46,10 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
 
             if (request.Organisation.AssociatedOrganisationId is not null)
             {
-                var associatedOrganisation = _context.Organisations.SingleOrDefault(o => o.Id == request.Organisation.AssociatedOrganisationId);
-                if (associatedOrganisation is null) throw new InvalidOperationException("Invalid Associated Organisation ID");
+                var associatedOrganisation =
+                    _context.Organisations.SingleOrDefault(o => o.Id == request.Organisation.AssociatedOrganisationId);
+                if (associatedOrganisation is null)
+                    throw new InvalidOperationException("Invalid Associated Organisation ID");
                 request.Organisation.AdminAreaCode = associatedOrganisation.AdminAreaCode;
             }
 
@@ -54,8 +57,7 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
 
             foreach (var service in organisation.Services)
             {
-                service.Locations = AddOrAttachExisting(service.Locations);
-                service.Taxonomies = AddOrAttachExisting(service.Taxonomies);
+                service.AttachExistingManyToMany(_context, _mapper);
             }
 
             _context.Organisations.Add(organisation);
@@ -69,33 +71,5 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
             _logger.LogError(ex, "An error occurred creating organisation. {exceptionMessage}", ex.Message);
             throw;
         }
-    }
-
-    public IList<TEntity> AddOrAttachExisting<TEntity>(IList<TEntity> unSavedEntities) where TEntity : EntityBase<long>
-    {
-        var returnList = new List<TEntity>();
-
-        if (!unSavedEntities.Any())
-            return returnList;
-
-        var existingIds = unSavedEntities.Where(s => s.Id != 0).Select(s => s.Id);
-        var existing = _context.Set<TEntity>().Where(x => existingIds.Contains(x.Id)).ToList();
-
-        foreach (var unSavedItem in unSavedEntities)
-        {
-            var savedItem = existing.SingleOrDefault(x => x.Id == unSavedItem.Id);
-
-            if (savedItem is null)
-            {
-                returnList.Add(unSavedItem);
-            }
-            else
-            {
-                savedItem = _mapper.Map(unSavedItem, savedItem);
-                returnList.Add(savedItem);
-            }
-        }
-
-        return returnList;
     }
 }

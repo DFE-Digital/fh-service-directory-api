@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.ServiceDirectory.Core.Commands.Taxonomies.CreateTaxonomy;
@@ -34,15 +35,19 @@ public class CreateTaxonomyCommandHandler : IRequestHandler<CreateTaxonomyComman
     {
         try
         {
-            var entity = _mapper.Map<Taxonomy>(request.Taxonomy);
+            var entity = await _context.Taxonomies
+                .FirstOrDefaultAsync(x => x.Name == request.Taxonomy.Name, cancellationToken);
 
-            ArgumentNullException.ThrowIfNull(entity);
+            if (entity is not null)
+                throw new ArgumentException($"Duplicate Location with Id:{request.Taxonomy.Id} Name:{request.Taxonomy.Name} Already Exists, Please use Update Command");
 
-            _context.Taxonomies.Add(entity);
+            var taxonomy = _mapper.Map<Taxonomy>(request.Taxonomy);
+
+            _context.Taxonomies.Add(taxonomy);
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return entity.Id;
+            return taxonomy.Id;
         }
         catch (Exception ex)
         {

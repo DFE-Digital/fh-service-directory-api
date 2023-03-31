@@ -802,7 +802,7 @@ public static class TestDataProvider
                     new Location
                     {
                         LocationType = LocationType.NotSet,
-                        Name = "test",
+                        Name = "Bristol-Service-1-Location",
                         Description = "",
                         Longitude = .48801070060149D,
                         Latitude = -1.66526,
@@ -871,7 +871,7 @@ public static class TestDataProvider
                     new Location
                     {
                         LocationType = LocationType.NotSet,
-                        Name = "",
+                        Name = "Bristol-Service-2-Location",
                         Description = "",
                         Longitude = .6312,
                         Latitude = -1.66526,
@@ -952,7 +952,7 @@ public static class TestDataProvider
                     new Location
                     {
                         LocationType = LocationType.NotSet,
-                        Name = "",
+                        Name = "Bristol-Service-3-Location",
                         Description = "",
                         Longitude = .63123,
                         Latitude = -1.66519,
@@ -1042,7 +1042,7 @@ public static class TestDataProvider
                     new Location
                     {
                         LocationType = LocationType.NotSet,
-                        Name = "",
+                        Name = "Bristol-Service-4-Location",
                         Description = "",
                         Longitude = .63123,
                         Latitude = -1.66519,

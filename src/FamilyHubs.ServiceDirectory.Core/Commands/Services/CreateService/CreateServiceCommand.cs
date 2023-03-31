@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
-using FamilyHubs.ServiceDirectory.Data.Entities.Base;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -25,7 +25,8 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
     private readonly IMapper _mapper;
     private readonly ILogger<CreateServiceCommandHandler> _logger;
 
-    public CreateServiceCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<CreateServiceCommandHandler> logger)
+    public CreateServiceCommandHandler(ApplicationDbContext context, IMapper mapper,
+        ILogger<CreateServiceCommandHandler> logger)
     {
         _context = context;
         _mapper = mapper;
@@ -45,8 +46,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
 
             var service = _mapper.Map<Service>(request.Service);
 
-            service.Locations = AddOrAttachExisting(service.Locations);
-            service.Taxonomies = AddOrAttachExisting(service.Taxonomies);
+            service.AttachExistingManyToMany(_context, _mapper);
 
             _context.Services.Add(service);
 
@@ -59,33 +59,5 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             _logger.LogError(ex, "An error occurred creating organisation. {exceptionMessage}", ex.Message);
             throw;
         }
-    }
-
-    public IList<TEntity> AddOrAttachExisting<TEntity>(IList<TEntity> unSavedEntities) where TEntity : EntityBase<long>
-    {
-        var returnList = new List<TEntity>();
-
-        if (!unSavedEntities.Any())
-            return returnList;
-
-        var existingIds = unSavedEntities.Where(s => s.Id != 0).Select(s => s.Id);
-        var existing = _context.Set<TEntity>().Where(x => existingIds.Contains(x.Id)).ToList();
-
-        foreach (var unSavedItem in unSavedEntities)
-        {
-            var savedItem = existing.SingleOrDefault(x => x.Id == unSavedItem.Id);
-
-            if (savedItem is null)
-            {
-                returnList.Add(unSavedItem);
-            }
-            else
-            {
-                savedItem = _mapper.Map(unSavedItem, savedItem);
-                returnList.Add(savedItem);
-            }
-        }
-
-        return returnList;
     }
 }

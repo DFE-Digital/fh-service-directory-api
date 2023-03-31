@@ -116,7 +116,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         if (!string.IsNullOrEmpty(request.TaxonomyIds))
         {
             var parts = request.TaxonomyIds.Split(',').Select(long.Parse);
-            services = services.Where(x => x.Taxonomies.Any(st => parts.Any(taxonomyId => taxonomyId == st.Id)));
+            services = services.Where(x => x.Taxonomies.Count == 0 || x.Taxonomies.Any(st => parts.Any(taxonomyId => taxonomyId == st.Id)));
         }
 
         if (request.CanFamilyChooseLocation is true) services = services.Where(x => x.CanFamilyChooseDeliveryLocation);
@@ -124,7 +124,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         if (!string.IsNullOrEmpty(request.Languages))
         {
             var parts = request.Languages.Split(',');
-            services = services.Where(x => x.Languages.Any(language => parts.Any(languageName => languageName == language.Name)));
+            services = services.Where(x => x.Languages.Count == 0 || x.Languages.Any(language => language.Name == string.Empty || parts.Any(languageName => languageName == language.Name)));
         }
 
         if (request.MaximumAge is not null)

@@ -1,7 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
+using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
-using FamilyHubs.ServiceDirectory.Data.Entities.Base;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
@@ -29,7 +29,8 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
     private readonly ILogger<UpdateOrganisationCommandHandler> _logger;
     private readonly IMapper _mapper;
 
-    public UpdateOrganisationCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<UpdateOrganisationCommandHandler> logger)
+    public UpdateOrganisationCommandHandler(ApplicationDbContext context, IMapper mapper,
+        ILogger<UpdateOrganisationCommandHandler> logger)
     {
         _context = context;
         _logger = logger;
@@ -43,19 +44,15 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         var entity = await _context.Organisations
             .Include(o => o.Services)
             .ThenInclude(s => s.Taxonomies)
-
             .Include(o => o.Services)
             .ThenInclude(s => s.Locations)
             .ThenInclude(l => l.Contacts)
-
             .Include(o => o.Services)
             .ThenInclude(s => s.Locations)
             .ThenInclude(l => l.HolidaySchedules)
-
             .Include(o => o.Services)
             .ThenInclude(s => s.Locations)
             .ThenInclude(l => l.RegularSchedules)
-
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity is null)
@@ -64,10 +61,10 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         try
         {
             entity = _mapper.Map(request.Organisation, entity);
+            
             foreach (var service in entity.Services)
             {
-                service.Locations = AddOrAttachExisting(service.Locations);
-                service.Taxonomies = AddOrAttachExisting(service.Taxonomies);
+                service.AttachExistingManyToMany(_context, _mapper);
             }
 
             _context.Organisations.Update(entity);
@@ -81,33 +78,5 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         }
 
         return entity.Id;
-    }
-
-    public IList<TEntity> AddOrAttachExisting<TEntity>(IList<TEntity> unSavedEntities) where TEntity : EntityBase<long>
-    {
-        var returnList = new List<TEntity>();
-
-        if (!unSavedEntities.Any())
-            return returnList;
-
-        var existingIds = unSavedEntities.Where(s => s.Id != 0).Select(s => s.Id);
-        var existing = _context.Set<TEntity>().Where(x => existingIds.Contains(x.Id)).ToList();
-
-        foreach (var unSavedItem in unSavedEntities)
-        {
-            var savedItem = existing.SingleOrDefault(x => x.Id == unSavedItem.Id);
-
-            if (savedItem is null)
-            {
-                returnList.Add(unSavedItem);
-            }
-            else
-            {
-                savedItem = _mapper.Map(unSavedItem, savedItem);
-                returnList.Add(savedItem);
-            }
-        }
-
-        return returnList;
     }
 }
