@@ -68,7 +68,7 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred creating organisation. {exceptionMessage}", ex.Message);
+            _logger.LogError(ex, "An error occurred creating organisation with Name:{name}.", request.Organisation.Name);
             throw;
         }
     }

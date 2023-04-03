@@ -55,7 +55,7 @@ public class UpdateLocationCommandHandler : IRequestHandler<UpdateLocationComman
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred updating organisation. {exceptionMessage}", ex.Message);
+            _logger.LogError(ex, "An error occurred updating Location with Id:{Id}.", request.Location.Id);
             throw;
         }
 

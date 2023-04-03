@@ -45,11 +45,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         var entity = await _context.Services
             .Include(s => s.Taxonomies)
             .Include(s => s.Locations)
-            .ThenInclude(l => l.Contacts)
-            .Include(s => s.Locations)
-            .ThenInclude(l => l.HolidaySchedules)
-            .Include(s => s.Locations)
-            .ThenInclude(l => l.RegularSchedules)
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity is null)
@@ -67,7 +62,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred updating organisation. {exceptionMessage}", ex.Message);
+            _logger.LogError(ex, "An error occurred updating Service with Id:{ServiceRef}.", entity.ServiceOwnerReferenceId);
             throw;
         }
 

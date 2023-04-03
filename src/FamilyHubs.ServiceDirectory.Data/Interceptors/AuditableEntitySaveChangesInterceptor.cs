@@ -27,7 +27,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 
         foreach (var entry in context.ChangeTracker.Entries<ServiceLocationSharedEntityBase>())
         {
-            if (entry.State == EntityState.Modified && entry.Entity.ServiceId is null && entry.Entity.LocationId is null)
+            if (entry is { State: EntityState.Modified, Entity: { ServiceId: null, LocationId: null } })
             {
                 entry.State = EntityState.Deleted;
             }

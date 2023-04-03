@@ -56,7 +56,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred creating organisation. {exceptionMessage}", ex.Message);
+            _logger.LogError(ex, "An error occurred creating Service with Id:{ServiceRef}.", request.Service.ServiceOwnerReferenceId);
             throw;
         }
     }

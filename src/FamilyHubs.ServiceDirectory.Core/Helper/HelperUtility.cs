@@ -14,34 +14,34 @@ public static class HelperUtility
     public static void AttachExistingManyToMany(this Service service, ApplicationDbContext context, IMapper mapper)
     {
         var existingLocations = service.Locations.Select(s => $"{s.Name}{s.PostCode}").ToList();
-        service.Locations = service.Locations.AddOrAttachExisting(context, mapper, 
+        service.Locations = service.Locations.AddOrAttachExisting(context, mapper,
             l => existingLocations.Contains(l.Name + l.PostCode),
             (s, d) => $"{s.Name}{s.PostCode}" == $"{d.Name}{d.PostCode}");
 
         var existingTaxonomies = service.Taxonomies.Select(s => s.Name).ToList();
-        service.Taxonomies = service.Taxonomies.AddOrAttachExisting(context, mapper, 
+        service.Taxonomies = service.Taxonomies.AddOrAttachExisting(context, mapper,
             t => existingTaxonomies.Contains(t.Name),
             (s, d) => s.Name == d.Name);
     }
-    
-    public static IList<TEntity> AddOrAttachExisting<TEntity>(this IList<TEntity> unSavedEntities, 
-        ApplicationDbContext context, 
-        IMapper mapper, 
+
+    public static IList<TEntity> AddOrAttachExisting<TEntity>(this IList<TEntity> unSavedEntities,
+        ApplicationDbContext context,
+        IMapper mapper,
         Expression<Func<TEntity, bool>> searchPredicate,
         Func<TEntity, TEntity, bool> matchingPredicate
-        ) where TEntity : EntityBase<long>
+    ) where TEntity : EntityBase<long>
     {
         var returnList = new List<TEntity>();
 
         if (!unSavedEntities.Any())
             return returnList;
-        
+
         var existing = context.Set<TEntity>().Where(searchPredicate).ToList();
 
         foreach (var unSavedItem in unSavedEntities)
         {
             var savedItem = existing.SingleOrDefault(saved => matchingPredicate(saved, unSavedItem));
-            
+
             if (savedItem is null)
             {
                 returnList.Add(unSavedItem);
@@ -53,10 +53,10 @@ public static class HelperUtility
                 returnList.Add(savedItem);
             }
         }
-        
+
         return returnList;
     }
-    
+
     public static bool IsValidUrl(string url)
     {
         if (string.IsNullOrEmpty(url))
@@ -73,6 +73,7 @@ public static class HelperUtility
         {
             Debug.WriteLine(name);
         }
+
         latitude1 ??= 0.0;
         longitude1 ??= 0.0;
         latitude2 ??= 0.0;

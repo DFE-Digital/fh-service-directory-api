@@ -46,13 +46,6 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
             .ThenInclude(s => s.Taxonomies)
             .Include(o => o.Services)
             .ThenInclude(s => s.Locations)
-            .ThenInclude(l => l.Contacts)
-            .Include(o => o.Services)
-            .ThenInclude(s => s.Locations)
-            .ThenInclude(l => l.HolidaySchedules)
-            .Include(o => o.Services)
-            .ThenInclude(s => s.Locations)
-            .ThenInclude(l => l.RegularSchedules)
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity is null)
@@ -73,7 +66,7 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred updating organisation. {exceptionMessage}", ex.Message);
+            _logger.LogError(ex, "An error occurred updating organisation with Name:{name}.", request.Organisation.Name);
             throw;
         }
 

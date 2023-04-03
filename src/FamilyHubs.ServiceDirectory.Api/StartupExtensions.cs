@@ -63,7 +63,7 @@ public static class StartupExtensions
     {
         services.AddAutoMapper((serviceProvider, cfg) =>
         {
-            var auditProperties = new[] { "CreatedBy", "Created", "LastModified", "LastModified" };
+            var auditProperties = new[] { "Created", "CreatedBy", "LastModified", "LastModifiedBy" };
             cfg.AddProfile<AutoMappingProfiles>();
             cfg.AddCollectionMappers();
             cfg.UseEntityFrameworkCoreModel<ApplicationDbContext>(serviceProvider);

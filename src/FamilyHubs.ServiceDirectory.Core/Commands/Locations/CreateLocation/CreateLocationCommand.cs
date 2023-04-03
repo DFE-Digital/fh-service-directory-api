@@ -52,7 +52,7 @@ public class CreateLocationCommandHandler : IRequestHandler<CreateLocationComman
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred creating organisation. {exceptionMessage}", ex.Message);
+            _logger.LogError(ex, "An error occurred creating Location with Id:{Id}.", request.Location.Id);
             throw;
         }
     }
