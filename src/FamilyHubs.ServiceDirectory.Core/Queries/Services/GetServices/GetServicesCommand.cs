@@ -167,17 +167,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         }
 
         var dbServices = await services.ToListAsync(cancellationToken);
-
-        if (request.IsFamilyHub is null && request.MaxFamilyHubs is not null)
-        {
-            // MaxFamilyHubs is really a flag to only include the nearest max family hubs at the start of the results set (when not filtering by IsFamilyHub)
-            dbServices = dbServices
-                .Where(s => s.Locations.Any(lt => lt.LocationType == LocationType.FamilyHub))
-                .Take(request.MaxFamilyHubs.Value)
-                .Concat(dbServices.Where(s => s.Locations.Any(lt => lt.LocationType == LocationType.FamilyHub) == false))
-                .ToList();
-        }
-
+        
         return dbServices;
     }
 
@@ -198,9 +188,22 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             {
                 services = services.Where(x => x.Distance < request.Meters).ToList();
             }
-            services = services.OrderBy(x => x.Distance).ToList();
+            
+            services = services
+                .OrderBy(x => x.Distance)
+                .ToList();
         }
-
+        
+        if (request.IsFamilyHub is null && request.MaxFamilyHubs is not null)
+        {
+            // MaxFamilyHubs is really a flag to only include the nearest max family hubs at the start of the results set (when not filtering by IsFamilyHub)
+            services = services
+                .Where(s => s.Locations.Any(lt => lt.LocationType == LocationType.FamilyHub))
+                .Take(request.MaxFamilyHubs.Value)
+                .Concat(services.Where(s => s.Locations.Any(lt => lt.LocationType == LocationType.FamilyHub) == false))
+                .ToList();
+        }
+        
         return services;
     }
 }
