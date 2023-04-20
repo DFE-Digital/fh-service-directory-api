@@ -10,7 +10,8 @@ public class RegularScheduleConfiguration : IEntityTypeConfiguration<RegularSche
     {
         builder.HasEnum(t => t.Freq);
 
-        builder.HasEnum(t => t.Weekday);
+        builder.Property(t => t.Weekday)
+            .IsRequired(false);
 
         builder.Property(t => t.ServiceId)
             .IsRequired(false);

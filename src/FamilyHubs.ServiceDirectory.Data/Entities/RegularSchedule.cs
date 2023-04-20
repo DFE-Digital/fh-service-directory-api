@@ -5,7 +5,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
 public class RegularSchedule : ServiceLocationSharedEntityBase
 {
-    public DayOfWeek Weekday { get; set; }
+    public DayOfWeek? Weekday { get; set; }
     public DateTime? OpensAt { get; set; }
     public DateTime? ClosesAt { get; set; }
     public DateTime? ValidFrom { get; set; }
