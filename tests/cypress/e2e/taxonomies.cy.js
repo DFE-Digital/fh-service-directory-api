@@ -16,6 +16,7 @@ describe('taxonomies endpoints e2e', () => {
         parentTaxonomy = taxonomy;
         cy.request('POST','api/taxonomies', parentTaxonomy)
         .then((response) =>{
+          parentTaxonomy.id = response.body;
           expect(response.status).to.eq(200);
         })
       })
@@ -36,6 +37,7 @@ describe('taxonomies endpoints e2e', () => {
             childTaxonomy = taxonomy;
             cy.request('POST','api/taxonomies', childTaxonomy)
             .then((response) =>{
+            childTaxonomy.id = response.body;
             expect(response.status).to.eq(200);
             })
         })
@@ -46,7 +48,7 @@ describe('taxonomies endpoints e2e', () => {
         .then((response) =>{
             expect(response.status).to.eq(200);
             var testObject = response.body.items.find(x=>x.id === childTaxonomy.id);
-            expect(testObject).to.deep.equal(childTaxonomy);
+            expect(compareObject(testObject, childTaxonomy)).to.eq(true);
         })
     })
 
@@ -63,7 +65,7 @@ describe('taxonomies endpoints e2e', () => {
         .then((response) =>{
             expect(response.status).to.eq(200);
             var testObject = response.body.items.find(x=>x.id === childTaxonomy.id);
-            expect(testObject).to.deep.equal(childTaxonomy);
+            expect(compareObject(testObject, childTaxonomy)).to.eq(true);
         })
     })
 })

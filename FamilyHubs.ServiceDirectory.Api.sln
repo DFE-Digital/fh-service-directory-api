@@ -3,21 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectoryApi.Api", "src\FamilyHubs.ServiceDirectoryApi.Api\FamilyHubs.ServiceDirectoryApi.Api.csproj", "{CC5903B6-913F-4500-8387-CBFEEFC3A364}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectory.Api", "src\FamilyHubs.ServiceDirectory.Api\FamilyHubs.ServiceDirectory.Api.csproj", "{CC5903B6-913F-4500-8387-CBFEEFC3A364}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectoryApi.Core", "src\FamilyHubs.ServiceDirectoryApi.Core\FamilyHubs.ServiceDirectoryApi.Core.csproj", "{D38C4458-BF60-4F17-99B1-20861054A4BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectory.Core", "src\FamilyHubs.ServiceDirectory.Core\FamilyHubs.ServiceDirectory.Core.csproj", "{D38C4458-BF60-4F17-99B1-20861054A4BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectoryApi.Infrastructure", "src\FamilyHubs.ServiceDirectoryApi.Infrastructure\FamilyHubs.ServiceDirectoryApi.Infrastructure.csproj", "{B28C97CE-C80B-4E53-B4FB-5E5A7C074615}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectory.Data", "src\FamilyHubs.ServiceDirectory.Data\FamilyHubs.ServiceDirectory.Data.csproj", "{B28C97CE-C80B-4E53-B4FB-5E5A7C074615}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectoryApi.FunctionalTests", "tests\FamilyHubs.ServiceDirectoryApi.FunctionalTests\FamilyHubs.ServiceDirectoryApi.FunctionalTests.csproj", "{3DBAE65A-F5D6-4EEA-87CF-9EA050913639}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectory.Api.FunctionalTests", "tests\FamilyHubs.ServiceDirectory.Api.FunctionalTests\FamilyHubs.ServiceDirectory.Api.FunctionalTests.csproj", "{3DBAE65A-F5D6-4EEA-87CF-9EA050913639}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectory.Core.IntegrationTests", "tests\FamilyHubs.ServiceDirectory.Core.IntegrationTests\FamilyHubs.ServiceDirectory.Core.IntegrationTests.csproj", "{9EF985D9-04A4-4C8F-92AB-9D4619204EFC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1C50039F-F676-441D-AB2B-27E317150619}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{657D5F3F-BCC0-45FE-BBA1-81B9DA91F76B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectoryApi.UnitTests", "tests\FamilyHubs.ServiceDirectoryApi.UnitTests\FamilyHubs.ServiceDirectoryApi.UnitTests.csproj", "{9EF985D9-04A4-4C8F-92AB-9D4619204EFC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectoryApi.IntegrationTests", "tests\FamilyHubs.ServiceDirectoryApi.IntegrationTests\FamilyHubs.ServiceDirectoryApi.IntegrationTests.csproj", "{0F574F3A-41AE-418D-8B7A-6EC4B0C338AF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2EB528F3-2012-4938-8D3D-DF114941801A}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +48,6 @@ Global
 		{9EF985D9-04A4-4C8F-92AB-9D4619204EFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EF985D9-04A4-4C8F-92AB-9D4619204EFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EF985D9-04A4-4C8F-92AB-9D4619204EFC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0F574F3A-41AE-418D-8B7A-6EC4B0C338AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F574F3A-41AE-418D-8B7A-6EC4B0C338AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F574F3A-41AE-418D-8B7A-6EC4B0C338AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F574F3A-41AE-418D-8B7A-6EC4B0C338AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,7 +58,6 @@ Global
 		{B28C97CE-C80B-4E53-B4FB-5E5A7C074615} = {1C50039F-F676-441D-AB2B-27E317150619}
 		{3DBAE65A-F5D6-4EEA-87CF-9EA050913639} = {657D5F3F-BCC0-45FE-BBA1-81B9DA91F76B}
 		{9EF985D9-04A4-4C8F-92AB-9D4619204EFC} = {657D5F3F-BCC0-45FE-BBA1-81B9DA91F76B}
-		{0F574F3A-41AE-418D-8B7A-6EC4B0C338AF} = {657D5F3F-BCC0-45FE-BBA1-81B9DA91F76B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {595459F6-7C3F-4CDE-B354-B39494D33BDA}

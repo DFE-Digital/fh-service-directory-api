@@ -1,110 +1,161 @@
 {
-    "id": "string",
-    "serviceType": {
-      "id": "1",
-      "name": "Information Sharing",
-      "description": ""
-    },
-    "organisationId": "string",
+    "id": 0,
+    "organisationId": 0,
+    "serviceOwnerReferenceId": "string",
+    "serviceType": 1,
     "name": "string",
-    "description": "test description",
-    "accreditations": null,
-    "assuredDate": null,
-    "attendingAccess": null,
-    "attendingType": null,
-    "deliverableType": null,
-    "status": "active",
-    "email": null,
-    "fees": null,
-    "distance": null,
-    "canFamilyChooseDeliveryLocation": false,
+    "description": "string",
+    "status": 1,
+    "fees": "string",
+    "accreditations": "string",
+    "deliverableType": 0,
+    "assuredDate": "2023-03-17T10:42:11.246Z",
+    "attendingType": 0,
+    "attendingAccess": 0,
+    "distance": 0,
+    "canFamilyChooseDeliveryLocation": true,
     "serviceDeliveries": [
-      {
-        "name": 1
-      }
+        {
+            "name": 0
+        }
     ],
     "eligibilities": [
-      {
-        "eligibilityDescription": "Children",
-        "maximumAge": 16,
-        "minimumAge": 8
-      }
+        {
+            "eligibilityType": 0,
+            "maximumAge": 0,
+            "minimumAge": 0
+        }
+    ],
+    "fundings": [
+        {
+            "source": "string"
+        }
     ],
     "costOptions": [
-      {
-        "amountDescription": "Session",
-        "amount": 45,
-        "linkId": null,
-        "option": null,
-        "validFrom": null,
-        "validTo": null
-      }
+        {
+            "validFrom": "2023-03-17T10:42:11.246Z",
+            "validTo": "2023-03-17T10:42:11.246Z",
+            "option": "string",
+            "amount": 0,
+            "amountDescription": "string"
+        }
     ],
     "languages": [
-      {
-        "name": "English"
-      }
+        {
+            "name": "string"
+        }
     ],
     "serviceAreas": [
-      {
-        "serviceAreaDescription": "Local",
-        "extent": null,
-        "uri": "http://statistics.data.gov.uk/id/statistical-geography/K02000001"
-      }
+        {
+            "serviceAreaName": "string",
+            "extent": "string",
+            "uri": "string"
+        }
     ],
-    "serviceAtLocations": [
-      {
-        "location": {
-          "name": "Ordsall Neighbourhood Centre",
-          "description": "2, Robert Hall Street M5 3LT",
-          "latitude": 53.474103227856105,
-          "longitude": -2.2721559641660787,
-          "distance": null,
-          "physicalAddresses": [
-            {
-              "address1": "2, Robert Hall Street",
-              "city": "Ordsall",
-              "postCode": "M5 3LT",
-              "country": "United Kingdom",
-              "stateProvince": "Salford"
-            }
-          ],
-          "linkTaxonomies": []
-        },
-        "regularSchedules": [
-          {
-            "description": "",
-            "opensAt": null,
-            "closesAt": null,
-            "byDay": "Friday 1.30pm - 2.30pm",
-            "byMonthDay": null,
-            "dtStart": "1.30pm - 2.30pm",
-            "freq": "Every Friday",
-            "interval": null,
-            "validFrom": null,
-            "validTo": null
-          }
-        ],
-        "holidayScheduleCollection": [],
-        "linkContacts": [
-          {
-            "id": "string",
-            "linkType": "ServiceAtLocation",
-            "linkId": "string",
-            "contact": {
-              "id": "string",
-              "title": "",
-              "name": "Robert Walpole",
-              "telephone": "01676 01745",
-              "textPhone": "01676 01745",
-              "url": "www.gov.uk",
-              "email": "help@gov.uk"
-            }
-          }
-        ]
-      }
+    "locations": [
+        {
+            "locationType": 0,
+            "name": "string",
+            "description": "string",
+            "latitude": 0,
+            "longitude": 0,
+            "address1": "string",
+            "address2": "string",
+            "city": "string",
+            "postCode": "string",
+            "stateProvince": "string",
+            "country": "string",
+            "distance": 0,
+            "accessibilityForDisabilities": [
+                {
+                    "accessibility": "string"
+                }
+            ],
+            "regularSchedules": [
+                {
+                    "weekday": 0,
+                    "opensAt": "2023-03-17T10:42:11.246Z",
+                    "closesAt": "2023-03-17T10:42:11.246Z",
+                    "validFrom": "2023-03-17T10:42:11.246Z",
+                    "validTo": "2023-03-17T10:42:11.246Z",
+                    "dtStart": "string",
+                    "freq": 0,
+                    "interval": "string",
+                    "byDay": "string",
+                    "byMonthDay": "string",
+                    "description": "string"
+                }
+            ],
+            "holidaySchedules": [
+                {
+                    "closed": true,
+                    "opensAt": "2023-03-17T10:42:11.247Z",
+                    "closesAt": "2023-03-17T10:42:11.247Z",
+                    "startDate": "2023-03-17T10:42:11.247Z",
+                    "endDate": "2023-03-17T10:42:11.247Z"
+                }
+            ],
+            "contacts": [
+                {
+                    "title": "string",
+                    "name": "string",
+                    "telephone": "string",
+                    "textPhone": "string",
+                    "url": "https://gov.uk",
+                    "email": "string"
+                }
+            ]
+        }
     ],
-    "serviceTaxonomies": [],
-    "regularSchedules": [],
-    "holidaySchedules": []
+    "taxonomies": [
+        {
+            "name": "string",
+            "taxonomyType": 0,
+            "parentId": 0
+        }
+    ],
+    "regularSchedules": [
+        {
+            "weekday": 0,
+            "opensAt": "2023-03-17T10:42:11.247Z",
+            "closesAt": "2023-03-17T10:42:11.247Z",
+            "validFrom": "2023-03-17T10:42:11.247Z",
+            "validTo": "2023-03-17T10:42:11.247Z",
+            "dtStart": "string",
+            "freq": 0,
+            "interval": "string",
+            "byDay": "string",
+            "byMonthDay": "string",
+            "description": "string"
+        }
+    ],
+    "holidaySchedules": [
+        {
+            "closed": true,
+            "opensAt": "2023-03-17T10:42:11.247Z",
+            "closesAt": "2023-03-17T10:42:11.247Z",
+            "startDate": "2023-03-17T10:42:11.247Z",
+            "endDate": "2023-03-17T10:42:11.247Z"
+        }
+    ],
+    "reviews": [
+        {
+            "title": "string",
+            "description": "string",
+            "date": "2023-03-17T10:42:11.247Z",
+            "score": "string",
+            "url": "https://gov.uk",
+            "widget": "string"
+        }
+    ],
+    "contacts": [
+        {
+            "title": "string",
+            "name": "string",
+            "telephone": "string",
+            "textPhone": "string",
+            "url": "https://gov.uk",
+            "email": "string"
+        }
+    ]
 }

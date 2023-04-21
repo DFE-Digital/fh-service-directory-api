@@ -1,0 +1,147 @@
+﻿using AutoMapper;
+using AutoMapper.EquivalencyExpression;
+using FamilyHubs.ServiceDirectory.Data.Entities;
+using FamilyHubs.ServiceDirectory.Data.Interceptors;
+using FamilyHubs.ServiceDirectory.Data.Repository;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
+
+namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests;
+
+public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
+{
+    public OrganisationWithServicesDto TestOrganisation { get; set; }
+    public OrganisationDto TestOrganisationWithoutAnyServices { get; set; }
+    public IMapper Mapper { get; }
+    public ApplicationDbContext TestDbContext { get; }
+    public static NullLogger<T> GetLogger<T>() => new NullLogger<T>();
+
+    public DataIntegrationTestBase()
+    {
+        TestOrganisation = TestDataProvider.GetTestCountyCouncilDto();
+
+        TestOrganisationWithoutAnyServices = TestDataProvider.GetTestCountyCouncilWithoutAnyServices();
+
+        var serviceProvider = CreateNewServiceProvider();
+
+        TestDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+
+        Mapper = serviceProvider.GetRequiredService<IMapper>();
+
+        InitialiseDatabase();
+    }
+
+    public async Task<OrganisationWithServicesDto> CreateOrganisation(OrganisationWithServicesDto? organisationDto = null)
+    {
+        var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisation);
+
+        TestDbContext.Organisations.Add(organisationWithServices);
+
+        await TestDbContext.SaveChangesAsync();
+
+        return Mapper.Map(organisationWithServices, organisationDto ?? TestOrganisation);
+    }
+
+    public async Task<OrganisationDto> CreateOrganisationWithoutAnyServices(OrganisationDto? organisationDto = null)
+    {
+        var organisationWithoutAnyServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisationWithoutAnyServices);
+
+        TestDbContext.Organisations.Add(organisationWithoutAnyServices);
+
+        await TestDbContext.SaveChangesAsync();
+
+        return Mapper.Map(organisationWithoutAnyServices, organisationDto ?? TestOrganisationWithoutAnyServices);
+    }
+
+    public async Task<long> CreateLocation(LocationDto locationDto)
+    {
+        var existingLocation = Mapper.Map<Location>(locationDto);
+
+        TestDbContext.Locations.Add(existingLocation);
+
+        await TestDbContext.SaveChangesAsync();
+
+        return existingLocation.Id;
+    }
+
+    public async Task<long> CreateTaxonomy(TaxonomyDto taxonomyDto)
+    {
+        var existingLocation = Mapper.Map<Taxonomy>(taxonomyDto);
+
+        TestDbContext.Taxonomies.Add(existingLocation);
+        await TestDbContext.SaveChangesAsync();
+
+        return existingLocation.Id;
+    }
+
+    public async Task<List<Service>> CreateManyTestServicesQueryTesting()
+    {
+        var testOrganisations = TestDbContext.Organisations.Select(o => new { o.Id, o.Name })
+            .Where(o => o.Name == "Bristol County Council" || o.Name == "Salford City Council")
+            .ToDictionary(arg => arg.Name, arg => arg.Id);
+
+        var services = new List<Service>();
+
+        services.AddRange(TestDataProvider.SeedBristolServices(testOrganisations["Bristol County Council"]));
+        services.AddRange(TestDataProvider.SeedSalfordService(testOrganisations["Salford City Council"]));
+
+
+        TestDbContext.Services.AddRange(services);
+
+        await TestDbContext.SaveChangesAsync();
+
+        return services;
+    }
+
+    private void InitialiseDatabase()
+    {
+        TestDbContext.Database.EnsureDeleted();
+        TestDbContext.Database.EnsureCreated();
+
+        var organisationSeedData = new OrganisationSeedData(TestDbContext);
+
+        if (!TestDbContext.Taxonomies.Any())
+            organisationSeedData.SeedTaxonomies().GetAwaiter().GetResult();
+
+        if (!TestDbContext.Organisations.Any())
+            organisationSeedData.SeedOrganisations().GetAwaiter().GetResult();
+    }
+
+    protected static ServiceProvider CreateNewServiceProvider()
+    {
+        var serviceDirectoryConnection = $"Data Source=sd-{Random.Shared.Next().ToString()}.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;Recursive Triggers=True;Default Timeout=30;Pooling=True";
+        
+        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor();
+
+        return new ServiceCollection().AddEntityFrameworkSqlite()
+            .AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder =>
+            {
+                dbContextOptionsBuilder.UseSqlite(serviceDirectoryConnection, opt =>
+                {
+                    opt.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());
+                });
+            })
+            .AddSingleton(auditableEntitySaveChangesInterceptor)
+            .AddAutoMapper((serviceProvider, cfg) =>
+            {
+                var auditProperties = new[] { "CreatedBy", "Created", "LastModified", "LastModified" };
+                cfg.AddProfile<AutoMappingProfiles>();
+                cfg.AddCollectionMappers();
+                cfg.UseEntityFrameworkCoreModel<ApplicationDbContext>(serviceProvider);
+                cfg.ShouldMapProperty = pi => !auditProperties.Contains(pi.Name);
+            }, typeof(AutoMappingProfiles))
+            .BuildServiceProvider();
+    }
+
+    public void Dispose()
+    {
+        DisposeAsync().GetAwaiter().GetResult();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await TestDbContext.Database.EnsureDeletedAsync();
+    }
+}

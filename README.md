@@ -2,7 +2,7 @@
 
 ## Requirements
 
-* DotNet Core 6.0 and any supported IDE for DEV running.
+* DotNet Core 7.0 and any supported IDE for DEV running.
 
 ## About
 
@@ -14,17 +14,29 @@ This repos has been built using the "Clean Architecture Design" taken from Steve
 
 In the appsetting.json file set the UseDbType with one of the following options:
 
-* "UseInMemoryDatabase"
 * "SqlServerDatabase"
-* "Postgres"
 
-The startup project is: FamilyHubs.ServiceDirectoryApi.Api
+The startup project is: FamilyHubs.ServiceDirectory.Api
 Starting the API will then show the swagger definition with the available operations.
 
 ## Migrations
 
 To Add Migration
+
 <br />
-dotnet ef migrations add CreateIntialSchema -c ApplicationDbContext --output-dir ../FamilyHubs.ServiceDirectoryApi.Infrastructure/Persistence/Data
+ dotnet ef migrations add CreateIntialSchema --project ..\FamilyHubs.ServiceDirectory.data
 <br />
-dotnet ef database update -c ApplicationDbContext
+
+To Apply Latest Schema Manually
+
+<br />
+ dotnet ef database update --project ..\FamilyHubs.ServiceDirectory.data
+<br />
+
+## cypress tests
+Run the API (debug or non debug both fine)
+open powershell at ..\fh-service-directory-api\tests\cypress
+
+<br />
+ npx cypress open 
+<br />

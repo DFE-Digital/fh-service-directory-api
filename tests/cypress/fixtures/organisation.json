@@ -1,14 +1,11 @@
 {
-  "organisationType": {
-    "id": "1",
-    "name": "LA",
-    "description": "Local Authority"
-  },
-  "id": "aa7147bc-48b1-4094-a532-0a4d3be929cc",
-  "name": "Test Organisation",
-  "description": "Test organisation description",
-  "logo": "",
-  "uri": "https://www.testorg.gov.uk/",
-  "url": "https://www.testorg.gov.uk/",
-  "adminAreaCode": "E12345678"
+    "id": 0,
+    "organisationType": 1,
+    "name": "Test Organisation",
+    "description": "Test organisation description",
+    "associatedOrganisationId": null,
+    "logo": "",
+    "uri": "https://www.testorg.gov.uk/",
+    "url": "https://www.testorg.gov.uk/",
+    "adminAreaCode": "E12345678"
 }

@@ -9,44 +9,44 @@ describe('organisations endpoints e2e', () => {
     }
   });
 
-  it('Create Organisation (POST api/organizations)', () => {
+  it('Create Organisation (POST api/organisations)', () => {
     cy.insertTestOrganisation().then(response=>{
       organisation = response;
       console.log(organisation);
     })
   })
 
-  it('Get Organisation by ID (GET api/organizations/{id})', () => {
-    cy.request(`api/organizations/${organisation.id}`)
+  it('Get Organisation by ID (GET api/organisations/{id})', () => {
+    cy.request(`api/organisations/${organisation.id}`)
     .then((response) =>{
       expect(response.status).to.eq(200);
       var testObject = response.body;
-      expect(testObject.name).to.eq(organisation.name);
+      expect(compareObject(testObject, organisation)).to.eq(true);
       organisation = testObject;
     })
   })
 
-  it('Update Organisation (PUT api/organizations/{id})', () => {
+  it('Update Organisation (PUT api/organisations/{id})', () => {
 
     organisation.name += 'Updated';
 
-    cy.request('PUT', `api/organizations/${organisation.id}`, organisation)
+    cy.request('PUT', `api/organisations/${organisation.id}`, organisation)
     .then((response) =>{
       expect(response.status).to.eq(200);
     })
   })
 
-  it('Validate Organization Updated (GET api/organizations/{id})', () => {
-    cy.request(`api/organizations/${organisation.id}`)
+  it('Validate Organization Updated (GET api/organisations/{id})', () => {
+    cy.request(`api/organisations/${organisation.id}`)
     .then((response) =>{
       expect(response.status).to.eq(200);
       var testObject = response.body;
-      expect(testObject.name).to.eq(organisation.name);
+      expect(compareObject(testObject, organisation)).to.eq(true);
     })
   })
 
-  it('Get Organisation (GET api/organizationAdminCode/{id})', () => {
-    cy.request(`api/organizationAdminCode/${organisation.id}`)
+  it('Get Organisation (GET api/organisationAdminCode/{id})', () => {
+    cy.request(`api/organisationAdminCode/${organisation.id}`)
     .then((response) =>{
       expect(response.status).to.eq(200);
       var testObject = response.body;
@@ -54,8 +54,8 @@ describe('organisations endpoints e2e', () => {
     })
   })
 
-  it('Get Organisation (GET api/organizations)', () => {
-    cy.request('api/organizations')
+  it('Get Organisation (GET api/organisations)', () => {
+    cy.request('api/organisations')
     .then((response) =>{
       expect(response.status).to.eq(200);
       var testObject = response.body.find(x => x.id == organisation.id);

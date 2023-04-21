@@ -4,11 +4,10 @@ Cypress.Commands.add('insertTestOrganisation', () => {
 
     cy.fixture('organisation').then(organisation=>{
 
-        organisation.id = createUUID();
-
-        cy.request('POST','api/organizations', organisation)
+        cy.request('POST','api/organisations', organisation)
             .then((response) =>{ 
-              expect(response.status).to.eq(200); 
+              expect(response.status).to.eq(200);
+              organisation.id = response.body;
               return organisation;
             }) 
     })
@@ -18,23 +17,8 @@ Cypress.Commands.add('createTestServiceJson', (name, organisationId, removeOptio
 
   cy.fixture('service').then(service=>{
 
-      service.id = createUUID();
       service.organisationId = organisationId;
       service.name = name + service.id;
-      service.serviceDeliveries[0].id = createUUID();
-      service.eligibilities[0].id = createUUID();
-
-      service.costOptions[0].id = createUUID();
-      service.languages[0].id = createUUID();
-      service.serviceAreas[0].id = createUUID();
-      service.serviceAtLocations[0].id = createUUID();
-      service.serviceAtLocations[0].location.id = createUUID();
-      service.serviceAtLocations[0].location.physicalAddresses[0].id = createUUID();
-      service.serviceAtLocations[0].regularSchedules[0].id = createUUID();
-      service.serviceAtLocations[0].linkContacts[0].id = createUUID();
-      service.serviceAtLocations[0].linkContacts[0].linkId = service.serviceAtLocations[0].id;
-      service.serviceAtLocations[0].linkContacts[0].contact.id = createUUID();
-      service.serviceTaxonomies = null; // Needs to be set based on value in db
       return service;
 
   })
@@ -44,8 +28,23 @@ Cypress.Commands.add('insertTestService', (service) => {
   cy.request('POST','api/services', service)
       .then((response) =>{ 
         expect(response.status).to.eq(200); 
+        service.id = response.body;
         return service;
       }) 
+})
+
+Cypress.Commands.add('createTaxonomyJson', (parent) => {
+
+  cy.fixture('taxonomy').then(taxonomy=>{
+
+    taxonomy.name += taxonomy.id;
+    taxonomy.taxonomyType = 1;
+    if(parent != null || parent != undefined){
+      taxonomy.parent = parent;
+    }
+    
+    return taxonomy;
+  })
 })
 
 Cypress.Commands.add('getTestTaxonomy', (searchFor) => {
@@ -57,12 +56,10 @@ Cypress.Commands.add('getTestTaxonomy', (searchFor) => {
       if(response.body.items.length == 0){
 
         var parentTaxonomy = {
-          "id" : createUUID(),
           "name" : "parenttaxonomyForServicesTest",
           "taxonomyType":1
         };
         var childTaxonomy = {
-          "id" : createUUID(),
           "name" : "childTaxonomyForServicesTest",
           "taxonomyType":1,
           "parent":parentTaxonomy.id
@@ -72,11 +69,12 @@ Cypress.Commands.add('getTestTaxonomy', (searchFor) => {
         cy.request('POST','api/taxonomies', parentTaxonomy)
         .then((responseParentTaxonomy) =>{ 
           expect(responseParentTaxonomy.status).to.eq(200); 
-    
+          parentTaxonomy.id = responseParentTaxonomy.body;
           //  Create Child
           cy.request('POST','api/taxonomies', childTaxonomy)
           .then((responseChildTaxonomy) =>{ 
             expect(responseChildTaxonomy.status).to.eq(200); 
+            childTaxonomy.id = responseChildTaxonomy.body;
             return childTaxonomy;
           }) 
         }) 
@@ -112,19 +110,4 @@ Cypress.Commands.add('compareServiceAtLocationArray', (expected, actual) => {
     expect(actual[i].regular_schedule).to.deep.equal(expected[i].regular_schedule);
     expect(actual[i].holidayScheduleCollection).to.deep.equal(expected[i].holidayScheduleCollection);
   }
-})
-
-Cypress.Commands.add('createTaxonomyJson', (parent) => {
-
-  cy.fixture('taxonomy').then(taxonomy=>{
-
-    taxonomy.id = createUUID();
-    taxonomy.name += taxonomy.id;
-    taxonomy.taxonomyType = 1;
-    if(parent != null || parent != undefined){
-      taxonomy.parent = parent;
-    }
-    return taxonomy;
-
-  })
 })
