@@ -182,8 +182,8 @@ public class WhenValidatingLocationCommands
 
     [Theory]
     [InlineData("someurl")]
-    [InlineData("http://someurl")]
-    [InlineData("https://someurl")]
+    [InlineData("http:/someurl")]
+    [InlineData("https//someurl")]
     public void ThenShouldValidateLocationContactUrlWhenUpdatingLocation_ShouldReturnErrors(string url)
     {
         //Arrange
