@@ -146,7 +146,7 @@ public static class TestDataProvider
                     Title = string.Empty,
                     Telephone = "01827 65770",
                     TextPhone = "01827 65770",
-                    Url = "www.testservice1.com",
+                    Url = "https://www.testservice1.com",
                     Email = "support@testservice1.com"
                 }
             },
@@ -279,7 +279,7 @@ public static class TestDataProvider
                                 Name = "Broughton Hub",
                                 Telephone = "0161 778 0601",
                                 TextPhone = "0161 778 0601",
-                                Url = "www.gov.uk",
+                                Url = "https://www.gov.uk",
                                 Email = "help@gov.uk"
                             }
                         }
@@ -364,7 +364,7 @@ public static class TestDataProvider
                                 Name = "Kate Berry",
                                 Telephone = "01619212880",
                                 TextPhone = "01619212880",
-                                Url = "www.gov.uk",
+                                Url = "https://www.gov.uk",
                                 Email = "help@gov.uk"
                             }
                         }
@@ -449,7 +449,7 @@ public static class TestDataProvider
                                 Name = "Kate Berry",
                                 Telephone = "0161 778 0601",
                                 TextPhone = "0161 778 0601",
-                                Url = "www.gov.uk",
+                                Url = "https://www.gov.uk",
                                 Email = "help@gov.uk"
                             }
                         }
@@ -525,7 +525,7 @@ public static class TestDataProvider
                                 Name = "Kate Berry",
                                 Telephone = "0161 778 0495",
                                 TextPhone = "0161 778 0495",
-                                Url = "www.gov.uk",
+                                Url = "https://www.gov.uk",
                                 Email = "help@gov.uk"
                             }
                         }
@@ -599,7 +599,7 @@ public static class TestDataProvider
                         Description = "Review description",
                         Date = new DateTime(2023, 1, 1).ToUniversalTime(),
                         Score = "5 start",
-                        Url = "gov.uk",
+                        Url = "https://gov.uk",
                         Widget = "widget"
                     }
                 },
@@ -698,7 +698,7 @@ public static class TestDataProvider
                                 Name = "Kate Berry",
                                 Telephone = "0161 686 5260",
                                 TextPhone = "0161 686 5260",
-                                Url = "www.gov.uk",
+                                Url = "https://www.gov.uk",
                                 Email = "help@gov.uk"
                             }
                         }
@@ -721,7 +721,7 @@ public static class TestDataProvider
                         Name = "Kate Berry",
                         Telephone = "0161 686 5260",
                         TextPhone = "0161 686 5260",
-                        Url = "www.gov.uk",
+                        Url = "https://www.gov.uk",
                         Email = "help@gov.uk"
                     }
                 }
@@ -793,7 +793,7 @@ public static class TestDataProvider
                         Name = "John Smith",
                         Telephone = "01827 65778",
                         TextPhone = "01827 65778",
-                        Url = "www.gov.uk",
+                        Url = "https://www.gov.uk",
                         Email = "help@gov.uk"
                     }
                 },
@@ -890,7 +890,7 @@ public static class TestDataProvider
                         Name = "John Smith",
                         Telephone = "01827 65711",
                         TextPhone = "01827 65711",
-                        Url = "www.gov.uk",
+                        Url = "https://www.gov.uk",
                         Email = "help@gov.uk"
                     }
                 }
@@ -980,7 +980,7 @@ public static class TestDataProvider
                         Name = "John Smith",
                         Telephone = "01827 64328",
                         TextPhone = "01827 64328",
-                        Url = "www.gov.uk",
+                        Url = "https://www.gov.uk",
                         Email = "help@gov.uk"
                     }
                 }
@@ -1059,7 +1059,7 @@ public static class TestDataProvider
                                 Name = "John Smith",
                                 Telephone = "01827 64328",
                                 TextPhone = "01827 64328",
-                                Url = "www.gov.uk",
+                                Url = "https://www.gov.uk",
                                 Email = "help@gov.uk"
                             }
                         }

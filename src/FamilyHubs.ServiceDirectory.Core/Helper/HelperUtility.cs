@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
-using System.Text.RegularExpressions;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.Base;
@@ -59,11 +58,7 @@ public static class HelperUtility
 
     public static bool IsValidUrl(string url)
     {
-        if (string.IsNullOrEmpty(url))
-            return true;
-        const string Pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-        var rgx = new Regex(Pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        return rgx.IsMatch(url);
+        return string.IsNullOrEmpty(url) || Uri.IsWellFormedUriString(url, UriKind.Absolute);
     }
 
     //return distance in meters https://stackoverflow.com/questions/6366408/calculating-distance-between-two-latitude-and-longitude-geocoordinates
