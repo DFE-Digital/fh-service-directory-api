@@ -11,7 +11,7 @@ public class UpdateTaxonomyCommandValidator : AbstractValidator<UpdateTaxonomyCo
 
         RuleFor(v => v.Taxonomy.Name)
             .MinimumLength(1)
-            .MaximumLength(50)
+            .MaximumLength(255)
             .NotNull()
             .NotEmpty();
 
