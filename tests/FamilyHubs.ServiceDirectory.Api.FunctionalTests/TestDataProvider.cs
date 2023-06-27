@@ -1,11 +1,16 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
 
 public static class TestDataProvider
 {
+    public static string BearerTokenSigningKey = "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     public static OrganisationWithServicesDto GetTestCountyCouncilRecord()
     {
         var bristolCountyCouncil = new OrganisationWithServicesDto
@@ -1076,5 +1081,23 @@ public static class TestDataProvider
                 }
             }
         };
+    }
+
+    public static string CreateBearerToken(string role)
+    {
+        var claims = new List<Claim> { new Claim("role", role) };
+        var identity = new ClaimsIdentity(claims, "Test");
+        var user = new ClaimsPrincipal(identity);
+
+        var key = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(BearerTokenSigningKey));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+
+        var token = new JwtSecurityToken(
+            claims: user.Claims,
+            signingCredentials: creds,
+            expires: DateTime.UtcNow.AddMinutes(5)
+            );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

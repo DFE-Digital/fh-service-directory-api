@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -17,12 +18,7 @@ public class WhenUsingLocationApiUnitTests : BaseWhenUsingApiUnitTests
         var location = TestDataProvider.GetTestCountyCouncilRecord()
             .Services.ElementAt(0).Locations.ElementAt(0);
 
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Post,
-            RequestUri = new Uri(Client.BaseAddress + "api/locations"),
-            Content = new StringContent(JsonConvert.SerializeObject(location), Encoding.UTF8, "application/json"),
-        };
+        var request = CreatePostRequest("api/locations", location, RoleTypes.DfeAdmin);
 
         using var response = await Client.SendAsync(request);
 
@@ -57,12 +53,7 @@ public class WhenUsingLocationApiUnitTests : BaseWhenUsingApiUnitTests
 
         retVal.Name = "Updated Location Name";
 
-        var updateRequest = new HttpRequestMessage
-        {
-            Method = HttpMethod.Put,
-            RequestUri = new Uri(Client.BaseAddress + "api/locations/1"),
-            Content = new StringContent(JsonConvert.SerializeObject(retVal), Encoding.UTF8, "application/json"),
-        };
+        var updateRequest = CreatePutRequest("api/locations/1", retVal, RoleTypes.DfeAdmin);
 
         using var updateResponse = await Client.SendAsync(updateRequest);
 

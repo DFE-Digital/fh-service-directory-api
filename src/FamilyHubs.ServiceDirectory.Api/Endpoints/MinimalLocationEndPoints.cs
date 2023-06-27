@@ -5,7 +5,9 @@ using FamilyHubs.ServiceDirectory.Core.Queries.Locations.GetLocationsByOrganisat
 using FamilyHubs.ServiceDirectory.Core.Queries.Locations.GetLocationsByServiceId;
 using FamilyHubs.ServiceDirectory.Core.Queries.Locations.ListLocations;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.SharedKernel.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -81,7 +83,13 @@ public class MinimalLocationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Locations by service Id", "Get Location by Service Id") { Tags = new[] { "Locations" } });
 
-        app.MapPut("api/locations/{id}", async (long id, [FromBody] LocationDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPut("api/locations/{id}",
+            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+            (long id, 
+            [FromBody] LocationDto request, 
+            CancellationToken cancellationToken, 
+            ISender mediator, 
+            ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
@@ -97,7 +105,12 @@ public class MinimalLocationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Update a Location", "Update a Location") { Tags = new[] { "Locations" } });
 
-        app.MapPost("api/locations", async ([FromBody] LocationDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPost("api/locations",
+            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+            ([FromBody] LocationDto request, 
+            CancellationToken cancellationToken, 
+            ISender mediator, 
+            ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {

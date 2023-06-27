@@ -1,9 +1,12 @@
 ﻿using System.Net;
 using System.Text;
 using System.Text.Json;
+using Azure.Core;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using Newtonsoft.Json;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
@@ -16,12 +19,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
     {
         var command = TestDataProvider.GetTestCountyCouncilRecord();
 
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Post,
-            RequestUri = new Uri(Client.BaseAddress + "api/organisations"),
-            Content = new StringContent(JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
-        };
+        var request = CreatePostRequest("api/organisations", command, RoleTypes.DfeAdmin);
 
         using var response = await Client.SendAsync(request);
 
@@ -40,8 +38,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + "api/organisations/1"),
-
+            RequestUri = new Uri(Client.BaseAddress + "api/organisations/1")
         };
 
         using var response = await Client.SendAsync(request);
@@ -66,12 +63,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
             Url = retVal.Url,
         };
 
-        var updateRequest = new HttpRequestMessage
-        {
-            Method = HttpMethod.Put,
-            RequestUri = new Uri(Client.BaseAddress + "api/organisations/1"),
-            Content = new StringContent(JsonConvert.SerializeObject(update), Encoding.UTF8, "application/json"),
-        };
+        var updateRequest = CreatePutRequest("api/organisations/1", update, RoleTypes.DfeAdmin);
 
         using var updateResponse = await Client.SendAsync(updateRequest);
 

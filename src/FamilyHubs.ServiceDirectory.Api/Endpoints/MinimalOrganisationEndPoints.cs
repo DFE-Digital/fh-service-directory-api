@@ -70,7 +70,13 @@ public class MinimalOrganisationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Organisations", "List Organisations") { Tags = new[] { "Organisations" } });
 
-        app.MapPut("api/organisations/{id}", async (long id, [FromBody] OrganisationWithServicesDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPut("api/organisations/{id}",
+            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+            (long id, 
+            [FromBody] OrganisationWithServicesDto request, 
+            CancellationToken cancellationToken, 
+            ISender mediator, 
+            ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
