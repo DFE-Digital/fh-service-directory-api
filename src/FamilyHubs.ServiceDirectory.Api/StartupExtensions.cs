@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectory.Core;
 using FamilyHubs.ServiceDirectory.Core.Commands.Locations.CreateLocation;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
+using FamilyHubs.SharedKernel.GovLogin.AppStart;
 using FluentValidation;
 using MediatR;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -138,6 +139,8 @@ public static class StartupExtensions
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "FamilyHubs.ServiceDirectory.Api", Version = "v1" });
             c.EnableAnnotations();
         });
+
+        services.AddBearerAuthentication(configuration);
     }
 
     public static async Task ConfigureWebApplication(this WebApplication webApplication)
