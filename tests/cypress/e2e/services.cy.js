@@ -1,5 +1,4 @@
-import {compareObject} from '../support/basicFunctions';
-import {createUUID} from '../support/basicFunctions'
+import {compareObject, getBearerToken} from '../support/basicFunctions';
 
 describe('Create service with minimum data then query to return it', () => {
 
@@ -109,10 +108,19 @@ describe('Service endpoints end to end test', () => {
         service.name += 'updated';
         service.description += 'updated';
 
-        cy.request('PUT',`api/services/${service.id}`, service)
-            .then((response) =>{ 
+        var token = getBearerToken();
+
+        cy.request({
+          method: 'PUT',
+          url: `api/services/${service.id}`, 
+          body: service,
+          auth: {
+            'bearer': token
+          }
+        }).then((response) =>{ 
             expect(response.status).to.eq(200); 
         }) 
+
 
     })
 
@@ -129,11 +137,18 @@ describe('Service endpoints end to end test', () => {
 
     it('Delete Service (GET api/services/{id})', () => {
 
-        cy.request('DELETE', `api/services/${service.id}`)
-        .then((response) =>{
-        expect(response.status).to.eq(200);
+        var token = getBearerToken();
 
-        })
+        cy.request({
+          method: 'DELETE',
+          url: `api/services/${service.id}`, 
+          auth: {
+            'bearer': token
+          }
+        }).then((response) =>{ 
+            expect(response.status).to.eq(200); 
+        }) 
+
     })
 
     it('Get service and validate status changed (GET api/services/{id})', () => {

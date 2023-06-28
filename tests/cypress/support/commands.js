@@ -1,15 +1,25 @@
-import {createUUID} from './basicFunctions';
+import {createUUID, getBearerToken} from './basicFunctions';
 
 Cypress.Commands.add('insertTestOrganisation', () => {
 
     cy.fixture('organisation').then(organisation=>{
 
-        cy.request('POST','api/organisations', organisation)
-            .then((response) =>{ 
-              expect(response.status).to.eq(200);
-              organisation.id = response.body;
-              return organisation;
-            }) 
+      var token = getBearerToken();
+      organisation.name = `${organisation.name}${createUUID()}` ;
+
+      cy.request({
+        method: 'POST',
+        url: '/api/organisations', 
+        body: organisation,
+        auth: {
+          'bearer': token
+        }
+      }).then((response) =>{ 
+        expect(response.status).to.eq(200);
+        organisation.id = response.body;
+        return organisation;
+      }) 
+
     })
 })
 
@@ -25,19 +35,30 @@ Cypress.Commands.add('createTestServiceJson', (name, organisationId, removeOptio
 })
 
 Cypress.Commands.add('insertTestService', (service) => {
-  cy.request('POST','api/services', service)
-      .then((response) =>{ 
-        expect(response.status).to.eq(200); 
-        service.id = response.body;
-        return service;
-      }) 
+
+
+  var token = getBearerToken();
+
+  cy.request({
+    method: 'POST',
+    url: '/api/services', 
+    body: service,
+    auth: {
+      'bearer': token
+    }
+  }).then((response) =>{ 
+    expect(response.status).to.eq(200); 
+    service.id = response.body;
+    return service;
+  }) 
+
 })
 
 Cypress.Commands.add('createTaxonomyJson', (parent) => {
 
   cy.fixture('taxonomy').then(taxonomy=>{
 
-    taxonomy.name += taxonomy.id;
+    taxonomy.name += createUUID();
     taxonomy.taxonomyType = 1;
     if(parent != null || parent != undefined){
       taxonomy.parent = parent;
@@ -56,22 +77,37 @@ Cypress.Commands.add('getTestTaxonomy', (searchFor) => {
       if(response.body.items.length == 0){
 
         var parentTaxonomy = {
-          "name" : "parenttaxonomyForServicesTest",
+          "name" : `testparent${createUUID()}`,
           "taxonomyType":1
         };
         var childTaxonomy = {
-          "name" : "childTaxonomyForServicesTest",
+          "name" : `testChild${createUUID()}`,
           "taxonomyType":1,
           "parent":parentTaxonomy.id
         };
 
         //  Create Parent
-        cy.request('POST','api/taxonomies', parentTaxonomy)
-        .then((responseParentTaxonomy) =>{ 
+        var token = getBearerToken();
+
+        cy.request({
+          method: 'POST',
+          url: '/api/taxonomies', 
+          body: parentTaxonomy,
+          auth: {
+            'bearer': token
+          }
+        }).then((responseParentTaxonomy) =>{ 
           expect(responseParentTaxonomy.status).to.eq(200); 
           parentTaxonomy.id = responseParentTaxonomy.body;
           //  Create Child
-          cy.request('POST','api/taxonomies', childTaxonomy)
+          cy.request({
+            method: 'POST',
+            url: '/api/taxonomies', 
+            body: childTaxonomy,
+            auth: {
+              'bearer': token
+            }
+          })
           .then((responseChildTaxonomy) =>{ 
             expect(responseChildTaxonomy.status).to.eq(200); 
             childTaxonomy.id = responseChildTaxonomy.body;

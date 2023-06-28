@@ -1,4 +1,4 @@
-import {compareObject} from '../support/basicFunctions';
+import {compareObject, getBearerToken} from '../support/basicFunctions';
 
 describe('organisations endpoints e2e', () => {
   var organisation;
@@ -30,10 +30,17 @@ describe('organisations endpoints e2e', () => {
 
     organisation.name += 'Updated';
 
-    cy.request('PUT', `api/organisations/${organisation.id}`, organisation)
-    .then((response) =>{
+    cy.request({
+      method: 'PUT',
+      url: `/api/organisations/${organisation.id}`, 
+      body: organisation,
+      auth: {
+        'bearer': getBearerToken()
+      }
+    }).then((response) =>{ 
       expect(response.status).to.eq(200);
-    })
+    }) 
+
   })
 
   it('Validate Organization Updated (GET api/organisations/{id})', () => {
