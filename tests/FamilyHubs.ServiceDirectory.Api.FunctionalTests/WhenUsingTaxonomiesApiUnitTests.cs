@@ -4,6 +4,7 @@ using System.Text.Json;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
+using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -48,12 +49,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
             ParentId = null,
         };
 
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Post,
-            RequestUri = new Uri(Client.BaseAddress + "api/taxonomies"),
-            Content = new StringContent(JsonConvert.SerializeObject(commandTaxonomy), Encoding.UTF8, "application/json"),
-        };
+        var request = CreatePostRequest("api/taxonomies", commandTaxonomy, RoleTypes.DfeAdmin);
 
         using var response = await Client.SendAsync(request);
 
@@ -76,12 +72,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
             ParentId = null
         };
 
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Post,
-            RequestUri = new Uri(Client.BaseAddress + "api/taxonomies"),
-            Content = new StringContent(JsonConvert.SerializeObject(commandTaxonomy), Encoding.UTF8, "application/json"),
-        };
+        var request = CreatePostRequest("api/taxonomies", commandTaxonomy, RoleTypes.DfeAdmin);
 
         using var response = await Client.SendAsync(request);
 
@@ -100,12 +91,7 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
             ParentId = null
         };
 
-        var updateRequest = new HttpRequestMessage
-        {
-            Method = HttpMethod.Put,
-            RequestUri = new Uri(Client.BaseAddress + $"api/taxonomies/{createdTaxonomyId}"),
-            Content = new StringContent(JsonConvert.SerializeObject(updatedTaxonomy), Encoding.UTF8, "application/json"),
-        };
+        var updateRequest = CreatePutRequest($"api/taxonomies/{createdTaxonomyId}", updatedTaxonomy, RoleTypes.DfeAdmin);
 
         using var updateResponse = await Client.SendAsync(updateRequest);
 

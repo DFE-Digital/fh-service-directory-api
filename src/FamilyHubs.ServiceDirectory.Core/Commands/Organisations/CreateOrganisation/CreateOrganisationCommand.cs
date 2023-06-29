@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
@@ -6,6 +7,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Threading;
 
 namespace FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
 
@@ -37,12 +39,8 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
     {
         try
         {
-            var entity = await _context.Organisations
-                .IgnoreAutoIncludes()
-                .FirstOrDefaultAsync(x => x.Id == request.Organisation.Id, cancellationToken);
-
-            if (entity is not null)
-                throw new ArgumentException("Duplicate Id");
+            await ThrowIfOrganisationIdExists(request, cancellationToken);
+            await ThrowIfOrganisationNameExists(request, cancellationToken);
 
             if (request.Organisation.AssociatedOrganisationId is not null)
             {
@@ -71,5 +69,25 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
             _logger.LogError(ex, "An error occurred creating organisation with Name:{name}.", request.Organisation.Name);
             throw;
         }
+    }
+
+    private async Task ThrowIfOrganisationIdExists(CreateOrganisationCommand request, CancellationToken cancellationToken)
+    {
+        var entity = await _context.Organisations
+        .IgnoreAutoIncludes()
+        .FirstOrDefaultAsync(x => x.Id == request.Organisation.Id, cancellationToken);
+
+        if (entity is not null)
+            throw new ArgumentException("Duplicate Id");
+    }
+
+    private async Task ThrowIfOrganisationNameExists(CreateOrganisationCommand request, CancellationToken cancellationToken)
+    {
+        var entity = await _context.Organisations
+                .IgnoreAutoIncludes()
+                .FirstOrDefaultAsync(x => x.Name == request.Organisation.Name && x.AssociatedOrganisationId == request.Organisation.AssociatedOrganisationId, cancellationToken);
+
+        if (entity is not null)
+            throw new ArgumentException("Cannot create an organisation with a name that matches an existing organisation"); 
     }
 }

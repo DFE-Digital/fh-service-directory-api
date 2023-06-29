@@ -4,9 +4,11 @@ using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests;
 
@@ -17,6 +19,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     public IMapper Mapper { get; }
     public ApplicationDbContext TestDbContext { get; }
     public static NullLogger<T> GetLogger<T>() => new NullLogger<T>();
+    protected IHttpContextAccessor _httpContextAccessor;
 
     public DataIntegrationTestBase()
     {
@@ -29,6 +32,8 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         TestDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
         Mapper = serviceProvider.GetRequiredService<IMapper>();
+
+        _httpContextAccessor = Mock.Of<IHttpContextAccessor>();
 
         InitialiseDatabase();
     }
@@ -109,11 +114,11 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
             organisationSeedData.SeedOrganisations().GetAwaiter().GetResult();
     }
 
-    protected static ServiceProvider CreateNewServiceProvider()
+    protected ServiceProvider CreateNewServiceProvider()
     {
         var serviceDirectoryConnection = $"Data Source=sd-{Random.Shared.Next().ToString()}.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;Recursive Triggers=True;Default Timeout=30;Pooling=True";
         
-        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor();
+        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(_httpContextAccessor);
 
         return new ServiceCollection().AddEntityFrameworkSqlite()
             .AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder =>

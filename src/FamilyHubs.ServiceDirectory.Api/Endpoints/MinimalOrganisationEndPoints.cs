@@ -4,7 +4,9 @@ using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationAdmi
 using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationById;
 using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.ListOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.SharedKernel.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -68,7 +70,13 @@ public class MinimalOrganisationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Organisations", "List Organisations") { Tags = new[] { "Organisations" } });
 
-        app.MapPut("api/organisations/{id}", async (long id, [FromBody] OrganisationWithServicesDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPut("api/organisations/{id}",
+            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+            (long id, 
+            [FromBody] OrganisationWithServicesDto request, 
+            CancellationToken cancellationToken, 
+            ISender mediator, 
+            ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
@@ -83,8 +91,12 @@ public class MinimalOrganisationEndPoints
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Update Organisation", "Update Organisation By Id") { Tags = new[] { "Organisations" } });
-        
-        app.MapPost("api/organisations", async ([FromBody] OrganisationWithServicesDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+
+        app.MapPost("api/organisations", 
+            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+            ([FromBody] OrganisationWithServicesDto request, 
+            CancellationToken cancellationToken, 
+            ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {

@@ -7,7 +7,9 @@ using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganisationId;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
+using FamilyHubs.SharedKernel.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -93,7 +95,13 @@ public class MinimalServiceEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Services by Organisation Id", "Get Service by Organisation Id") { Tags = new[] { "Services" } });
 
-        app.MapPut("api/services/{id}", async (long id, [FromBody] ServiceDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPut("api/services/{id}",
+            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+            (long id, 
+            [FromBody] ServiceDto request, 
+            CancellationToken cancellationToken, 
+            ISender mediator, 
+            ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
@@ -109,7 +117,12 @@ public class MinimalServiceEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Update a Service", "Update a Service") { Tags = new[] { "Services" } });
         
-        app.MapPost("api/services", async ([FromBody] ServiceDto request, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapPost("api/services",
+            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+            ([FromBody] ServiceDto request, 
+            CancellationToken cancellationToken, 
+            ISender mediator, 
+            ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
@@ -125,7 +138,12 @@ public class MinimalServiceEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Create a Service", "Create a Service") { Tags = new[] { "Services" } });
         
-        app.MapDelete("api/services/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
+        app.MapDelete("api/services/{id}",
+            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+            (long id, 
+            CancellationToken cancellationToken, 
+            ISender mediator, 
+            ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
             {

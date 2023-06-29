@@ -1,4 +1,4 @@
-import {compareObject} from '../support/basicFunctions';
+import {compareObject, getBearerToken} from '../support/basicFunctions';
 
 describe('taxonomies endpoints e2e', () => { 
 
@@ -13,12 +13,23 @@ describe('taxonomies endpoints e2e', () => {
   
     it('Create ParentTaxonomy (POST api/taxonomies)', () => {
       cy.createTaxonomyJson(null).then(taxonomy=>{
+
         parentTaxonomy = taxonomy;
-        cy.request('POST','api/taxonomies', parentTaxonomy)
-        .then((response) =>{
+
+        var token = getBearerToken();
+
+        cy.request({
+          method: 'POST',
+          url: `api/taxonomies`, 
+          body: parentTaxonomy,
+          auth: {
+            'bearer': token
+          }
+        }).then((response) =>{ 
           parentTaxonomy.id = response.body;
           expect(response.status).to.eq(200);
-        })
+        }) 
+
       })
     })
 
@@ -35,11 +46,21 @@ describe('taxonomies endpoints e2e', () => {
     it('Create ChildTaxonomy (POST api/taxonomies)', () => {
         cy.createTaxonomyJson(parentTaxonomy.id).then(taxonomy=>{
             childTaxonomy = taxonomy;
-            cy.request('POST','api/taxonomies', childTaxonomy)
-            .then((response) =>{
-            childTaxonomy.id = response.body;
-            expect(response.status).to.eq(200);
-            })
+
+            var token = getBearerToken();
+
+            cy.request({
+              method: 'POST',
+              url: `api/taxonomies`, 
+              body: childTaxonomy,
+              auth: {
+                'bearer': token
+              }
+            }).then((response) =>{ 
+              childTaxonomy.id = response.body;
+              expect(response.status).to.eq(200);
+            }) 
+
         })
     })
 
@@ -54,10 +75,20 @@ describe('taxonomies endpoints e2e', () => {
 
     it('Update ChildTaxonomy (PUT api/taxonomies/{id})', () => {
         childTaxonomy.name += 'updated';
-        cy.request('PUT',`api/taxonomies/${childTaxonomy.id}`, childTaxonomy)
-        .then((response) =>{
-        expect(response.status).to.eq(200);
-        })
+
+        var token = getBearerToken();
+        
+        cy.request({
+          method: 'PUT',
+          url: `api/taxonomies/${childTaxonomy.id}`, 
+          body: childTaxonomy,
+          auth: {
+            'bearer': token
+          }
+        }).then((response) =>{ 
+          expect(response.status).to.eq(200);
+        }) 
+
     })
 
     it('Get updated ChildTaxonomy (GET api/taxonomies?text=name&taxonomyType=NotSet)', () => {

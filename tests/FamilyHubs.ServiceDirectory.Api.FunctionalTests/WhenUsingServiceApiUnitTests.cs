@@ -1,10 +1,14 @@
 ﻿using System.Net;
 using System.Text;
 using System.Text.Json;
+using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Models;
+using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
+using NetTopologySuite.Index.HPRtree;
 using Newtonsoft.Json;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
@@ -17,12 +21,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     {
         var service = TestDataProvider.GetTestCountyCouncilServicesCreateRecord(1);
 
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Post,
-            RequestUri = new Uri(Client.BaseAddress + "api/services"),
-            Content = new StringContent(JsonConvert.SerializeObject(service), Encoding.UTF8, "application/json"),
-        };
+        var request = CreatePostRequest("api/services", service, RoleTypes.DfeAdmin);
 
         using var response = await Client.SendAsync(request);
 
@@ -63,12 +62,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var updatedItem = item with {Name = "Updated Service Name", Description = "Updated Service Description"};
 
-        var updateRequest = new HttpRequestMessage
-        {
-            Method = HttpMethod.Put,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services/{item.Id}"),
-            Content = new StringContent(JsonConvert.SerializeObject(updatedItem), Encoding.UTF8, "application/json"),
-        };
+        var updateRequest = CreatePutRequest($"api/services/{item.Id}", updatedItem, RoleTypes.DfeAdmin);
 
         using var updateResponse = await Client.SendAsync(updateRequest);
 
@@ -84,11 +78,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServicesIsDeleted()
     {
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Delete,
-            RequestUri = new Uri(Client.BaseAddress + "api/services/1")
-        };
+        var request = CreateDeleteRequest("api/services/1", string.Empty, RoleTypes.DfeAdmin);
 
         using var response = await Client.SendAsync(request);
 
