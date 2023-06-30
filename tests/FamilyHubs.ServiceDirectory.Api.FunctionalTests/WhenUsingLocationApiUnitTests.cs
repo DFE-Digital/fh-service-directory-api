@@ -1,10 +1,8 @@
-﻿using System.Net;
-using System.Text;
-using System.Text.Json;
-using FamilyHubs.ServiceDirectory.Shared.Dto;
+﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
-using Newtonsoft.Json;
+using System.Net;
+using System.Text.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
