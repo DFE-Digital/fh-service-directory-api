@@ -2,6 +2,7 @@
 using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.UpdateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationAdminAreaById;
 using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationById;
+using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationsByAssociatedId;
 using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.ListOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.SharedKernel.Identity;
@@ -111,5 +112,26 @@ public class MinimalOrganisationEndPoints
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Organisations", "Create Organisation") { Tags = new[] { "Organisations" } });
+
+        app.MapGet("api/organisationsByAssociatedOrganisation", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        {
+            try
+            {
+                var request = new GetOrganisationsByAssociatedIdCommand(id);
+                var result = await mediator.Send(request, cancellationToken);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred listing organisation (api). {exceptionMessage}", ex.Message);
+
+                throw;
+            }
+        }).WithMetadata(
+            new SwaggerOperationAttribute(
+                "List Organisations By Parent", 
+                "Lists Organisations associated with the parent id, also returns parent organisation"
+                ) { Tags = new[] { "Organisations" } });
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AutoFixture;
+using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
@@ -20,9 +21,11 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     public ApplicationDbContext TestDbContext { get; }
     public static NullLogger<T> GetLogger<T>() => new NullLogger<T>();
     protected IHttpContextAccessor _httpContextAccessor;
+    public Fixture FixtureObjectGenerator;
 
     public DataIntegrationTestBase()
     {
+        FixtureObjectGenerator = new Fixture();
         TestOrganisation = TestDataProvider.GetTestCountyCouncilDto();
 
         TestOrganisationWithoutAnyServices = TestDataProvider.GetTestCountyCouncilWithoutAnyServices();
@@ -138,6 +141,21 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
                 cfg.ShouldMapProperty = pi => !auditProperties.Contains(pi.Name);
             }, typeof(AutoMappingProfiles))
             .BuildServiceProvider();
+    }
+
+    protected Organisation CreateChildOrganisation(Organisation parent)
+    {
+        var child = new Organisation 
+        { 
+            AdminAreaCode = parent.AdminAreaCode,
+            AssociatedOrganisationId = parent.Id,
+            Description = FixtureObjectGenerator.Create<string>(),
+            Name = FixtureObjectGenerator.Create<string>(),
+            OrganisationType = Shared.Enums.OrganisationType.VCFS,
+            Id = FixtureObjectGenerator.Create<long>()
+        };
+
+        return child;
     }
 
     public void Dispose()
