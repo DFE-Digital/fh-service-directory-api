@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.CreateService;
+using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
@@ -111,6 +112,6 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
 
         // Act 
         // Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(command, new CancellationToken()));
+        await Assert.ThrowsAsync<AlreadyExistsException>(() => handler.Handle(command, new CancellationToken()));
     }
 }
