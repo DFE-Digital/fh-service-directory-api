@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure.Core;
+using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
@@ -78,7 +79,7 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
         .FirstOrDefaultAsync(x => x.Id == request.Organisation.Id, cancellationToken);
 
         if (entity is not null)
-            throw new ArgumentException("Duplicate Id");
+            throw new AlreadyExistsException("Duplicate Id");
     }
 
     private async Task ThrowIfOrganisationNameExists(CreateOrganisationCommand request, CancellationToken cancellationToken)
@@ -88,6 +89,6 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
                 .FirstOrDefaultAsync(x => x.Name == request.Organisation.Name && x.AssociatedOrganisationId == request.Organisation.AssociatedOrganisationId, cancellationToken);
 
         if (entity is not null)
-            throw new ArgumentException("Cannot create an organisation with a name that matches an existing organisation"); 
+            throw new AlreadyExistsException("Cannot create an organisation with a name that matches an existing organisation"); 
     }
 }
