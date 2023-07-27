@@ -46,7 +46,7 @@ public class SendEventGridMessageCommandHandler : IRequestHandler<SendEventGridM
             {
                 Id = Guid.NewGuid(),
                 EventType = "OrganisationDto",
-                Subject = "Unit Test",
+                Subject = "Organisation",
                 EventTime = DateTime.UtcNow,
                 Data = request.OrganisationDto
             }
