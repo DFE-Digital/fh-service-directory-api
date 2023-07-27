@@ -1,6 +1,7 @@
 ﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -19,17 +20,19 @@ public class SendEventGridMessageCommand : IRequest<string>
 public class SendEventGridMessageCommandHandler : IRequestHandler<SendEventGridMessageCommand, string>
 {
     private readonly IConfiguration _configuration;
+    private readonly ILogger<SendEventGridMessageCommandHandler> _logger;
 
     public bool IsUnitTesting { get; set; }
-    public SendEventGridMessageCommandHandler(IConfiguration configuration)
+    public SendEventGridMessageCommandHandler(IConfiguration configuration, ILogger<SendEventGridMessageCommandHandler> logger)
     {
         _configuration = configuration;
+        _logger = logger;
     }
     public async Task<string> Handle(SendEventGridMessageCommand request, CancellationToken cancellationToken)
     {
         if (IsRunningLocallyAndNotUnitTesting())
         {
-            return "Event Grid Notifications are unavailable when running loacally";
+            return "Event Grid Notifications are unavailable when running locally";
         }
         var eventNew = await MakeRequestEvent(request);
         return eventNew.Content.ReadAsStringAsync().Result;
@@ -66,7 +69,7 @@ public class SendEventGridMessageCommandHandler : IRequestHandler<SendEventGridM
 
         string jsonContent = JsonConvert.SerializeObject(eventData);
 
-        Console.WriteLine(jsonContent);
+        _logger.LogInformation($"Sending Grid Event Payload: {jsonContent}");
 
         var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 

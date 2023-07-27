@@ -1,10 +1,9 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Commands;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
-using FamilyHubs.SharedKernel.Identity.Models;
-using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests;
@@ -19,7 +18,7 @@ public class WhenUsingSendEventGridMessageCommandHandlerTests
         configurationMock.SetupGet(x => x["EventGridUrl"]).Returns("http://example.com/eventgrid");
         configurationMock.SetupGet(x => x["aeg-sas-key"]).Returns("dummy-key");
 
-        var handler = new SendEventGridMessageCommandHandler(configurationMock.Object);
+        var handler = new SendEventGridMessageCommandHandler(configurationMock.Object,new Mock<ILogger<SendEventGridMessageCommandHandler>>().Object);
         handler.IsUnitTesting = true;
 
         var organisationDto = new OrganisationDto
@@ -50,7 +49,7 @@ public class WhenUsingSendEventGridMessageCommandHandlerTests
         configurationMock.SetupGet(x => x["EventGridUrl"]).Returns(default(string));
         configurationMock.SetupGet(x => x["aeg-sas-key"]).Returns("dummy-key");
 
-        var handler = new SendEventGridMessageCommandHandler(configurationMock.Object);
+        var handler = new SendEventGridMessageCommandHandler(configurationMock.Object, new Mock<ILogger<SendEventGridMessageCommandHandler>>().Object);
         handler.IsUnitTesting = true;
 
         var organisationDto = new OrganisationDto
@@ -78,7 +77,7 @@ public class WhenUsingSendEventGridMessageCommandHandlerTests
         configurationMock.SetupGet(x => x["EventGridUrl"]).Returns("http://example.com/eventgrid");
         configurationMock.SetupGet(x => x["aeg-sas-key"]).Returns(default(string));
 
-        var handler = new SendEventGridMessageCommandHandler(configurationMock.Object);
+        var handler = new SendEventGridMessageCommandHandler(configurationMock.Object, new Mock<ILogger<SendEventGridMessageCommandHandler>>().Object);
         handler.IsUnitTesting = true;
 
         var organisationDto = new OrganisationDto
