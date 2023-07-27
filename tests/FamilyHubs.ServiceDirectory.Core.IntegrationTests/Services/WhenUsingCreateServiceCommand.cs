@@ -1,9 +1,11 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
+﻿using FamilyHubs.ServiceDirectory.Core.Commands;
+using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.CreateService;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -108,7 +110,11 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
         await CreateOrganisation();
 
         var command = new CreateOrganisationCommand(TestOrganisation);
-        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
+        Mock<ISender> mockSender = new Mock<ISender>();
+        int sendCallBack = 0;
+        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
+            .Callback(() => sendCallBack++).ReturnsAsync("Done");
+        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, GetLogger<CreateOrganisationCommandHandler>());
 
         // Act 
         // Assert

@@ -4,6 +4,8 @@ using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests;
 
+#pragma warning disable S1125
+
 public static class TestDataProvider
 {
     public static OrganisationWithServicesDto GetTestCountyCouncilDto(bool updated = false)
@@ -1307,3 +1309,5 @@ public static class TestDataProvider
         };
     }
 }
+
+#pragma warning restore S1125
