@@ -1,16 +1,26 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.UpdateOrganisation;
+using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
+using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System.Security.Claims;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Organisations;
 
 public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 {
+    public readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
     public readonly Mock<ILogger<UpdateOrganisationCommandHandler>> UpdateLogger = new Mock<ILogger<UpdateOrganisationCommandHandler>>();
+
+    public WhenUsingUpdateLocationCommand()
+    {
+        _mockHttpContextAccessor = GetMockHttpContextAccessor(-1, RoleTypes.DfeAdmin);
+    }
 
     [Fact]
     public async Task ThenUpdateOrganisationOnly()
@@ -22,7 +32,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         TestOrganisation.Description = "Unit Test Update TestOrganisation Name";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -59,7 +69,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Eligibilities.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -94,7 +104,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.MaximumAge = 5000;
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -129,7 +139,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.ServiceAreas.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -164,7 +174,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.Extent = "Updated Extent";
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -198,7 +208,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.ServiceDeliveries.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -232,7 +242,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.Name = ServiceDeliveryType.NotSet;
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -266,7 +276,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Languages.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -300,7 +310,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.Name = "Updated Language";
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -338,7 +348,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.CostOptions.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -374,7 +384,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.AmountDescription = "Updated Amount Description";
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -409,7 +419,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Contacts.Add(contact);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -444,7 +454,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         contact.Telephone = "Updated Telephone";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -481,7 +491,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.RegularSchedules.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -516,7 +526,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.ByMonthDay = "Updated ByMonthDay";
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -550,7 +560,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.HolidaySchedules.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -585,7 +595,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.EndDate = new DateTime(2023, 1, 2).ToUniversalTime();
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -627,7 +637,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Locations.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -666,7 +676,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.Description = "Updated Description";
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -698,7 +708,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Locations.Add(expected);
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -733,7 +743,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Taxonomies.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -771,7 +781,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.Name = "Updated Name";
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -805,7 +815,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Taxonomies.Add(expected);
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -840,7 +850,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Locations.ElementAt(0).Contacts.Add(contact);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -875,7 +885,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         contact.Telephone = "Updated Telephone";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -912,7 +922,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Locations.ElementAt(0).RegularSchedules.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -947,7 +957,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.ByMonthDay = "Updated ByMonthDay";
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -981,7 +991,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Locations.ElementAt(0).HolidaySchedules.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -1016,7 +1026,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.EndDate = new DateTime(2023, 1, 2).ToUniversalTime();
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -1033,4 +1043,39 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         actualEntity.Should().NotBeNull();
         actualEntity.Should().BeEquivalentTo(expected);
     }
+
+    [Fact]
+    public async Task ThenUpdateOrganisation_ThrowsForbiddenException()
+    {
+        //Arrange
+        await CreateOrganisation();
+        var mockHttpContextAccessor = GetMockHttpContextAccessor(50, RoleTypes.LaManager);
+
+        var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
+        var updateHandler = new UpdateOrganisationCommandHandler(mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
+
+        //Act / Assert
+        await Assert.ThrowsAsync<ForbiddenException>(async ()=> await updateHandler.Handle(updateCommand, new CancellationToken()));
+
+    }
+
+    private Mock<IHttpContextAccessor> GetMockHttpContextAccessor(long organisationId, string userRole)
+    {
+        var mockUser = new Mock<ClaimsPrincipal>();
+        var claims = new List<Claim>();
+        claims.Add(new Claim(FamilyHubsClaimTypes.OrganisationId, organisationId.ToString()));
+        claims.Add(new Claim(FamilyHubsClaimTypes.Role, userRole));
+
+        mockUser.SetupGet(x => x.Claims).Returns(claims);
+
+
+        var mockHttpContext = new Mock<HttpContext>();
+        mockHttpContext.SetupGet(x => x.User).Returns(mockUser.Object);
+
+        var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+        mockHttpContextAccessor.SetupGet(x => x.HttpContext).Returns(mockHttpContext.Object);
+
+        return mockHttpContextAccessor;
+    }
+
 }
