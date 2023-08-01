@@ -1,10 +1,14 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
+using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.SharedKernel;
+using FamilyHubs.SharedKernel.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -25,13 +29,18 @@ public class UpdateOrganisationCommand : IRequest<long>
 
 public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisationCommand, long>
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ApplicationDbContext _context;
     private readonly ILogger<UpdateOrganisationCommandHandler> _logger;
     private readonly IMapper _mapper;
 
-    public UpdateOrganisationCommandHandler(ApplicationDbContext context, IMapper mapper,
+    public UpdateOrganisationCommandHandler(
+        IHttpContextAccessor httpContextAccessor,
+        ApplicationDbContext context, 
+        IMapper mapper,
         ILogger<UpdateOrganisationCommandHandler> logger)
     {
+        _httpContextAccessor = httpContextAccessor;
         _context = context;
         _logger = logger;
         _mapper = mapper;
@@ -41,12 +50,15 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
     {
         ArgumentNullException.ThrowIfNull(request);
 
+        ThrowIfForbidden(request);
+
         var entity = await _context.Organisations
-            .Include(o => o.Services)
-            .ThenInclude(s => s.Taxonomies)
-            .Include(o => o.Services)
-            .ThenInclude(s => s.Locations)
-            .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
+                .Include(o => o.Services)
+                .ThenInclude(s => s.Taxonomies)
+                .Include(o => o.Services)
+                .ThenInclude(s => s.Locations)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity is null)
             throw new NotFoundException(nameof(Organisation), request.Id.ToString());
@@ -71,5 +83,28 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         }
 
         return entity.Id;
+    }
+
+    private void ThrowIfForbidden(UpdateOrganisationCommand request)
+    {
+        var user = _httpContextAccessor?.HttpContext?.GetFamilyHubsUser();
+        if(user == null)
+        {
+            _logger.LogError("No user retrieved from HttpContext");
+            throw new ForbiddenException("No user detected"); // This should be impossible as Authorization is applied to the endpoint
+        }
+
+        if(user.Role == RoleTypes.DfeAdmin || user.Role == RoleTypes.ServiceAccount) 
+        {
+            return;
+        }
+
+        var userOrganisationId = long.Parse(user.OrganisationId);
+        if(userOrganisationId == request.Organisation.Id || userOrganisationId == request.Organisation.AssociatedOrganisationId)
+        {
+            return;
+        }
+
+        throw new ForbiddenException("This user cannot update this organisation");
     }
 }
