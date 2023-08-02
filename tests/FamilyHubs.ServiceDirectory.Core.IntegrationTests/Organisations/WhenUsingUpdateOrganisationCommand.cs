@@ -38,7 +38,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -79,7 +79,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -118,7 +118,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -157,7 +157,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -196,7 +196,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -234,7 +234,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -272,7 +272,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -310,7 +310,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -348,7 +348,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -390,7 +390,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -430,7 +430,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -469,7 +469,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -508,7 +508,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -549,7 +549,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -588,7 +588,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -615,8 +615,8 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         var existingItem = service.HolidaySchedules.ElementAt(0);
         var expected = new HolidayScheduleDto
         {
-            StartDate = new DateTime(2023, 1, 2).ToUniversalTime(),
-            EndDate = new DateTime(2023, 1, 2).ToUniversalTime(),
+            StartDate = new DateTime(2023, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+            EndDate = new DateTime(2023, 1, 2, 23, 59, 59, DateTimeKind.Utc)
         };
         service.HolidaySchedules.Clear();
         service.HolidaySchedules.Add(expected);
@@ -626,7 +626,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -657,15 +657,15 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.HolidaySchedules.ElementAt(0);
-        expected.StartDate = new DateTime(2023, 1, 2).ToUniversalTime();
-        expected.EndDate = new DateTime(2023, 1, 2).ToUniversalTime();
+        expected.StartDate = new DateTime(2023, 1, 2, 0, 0, 0, DateTimeKind.Utc);
+        expected.EndDate = new DateTime(2023, 1, 2, 0, 0, 0, DateTimeKind.Utc);
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
         Mock<ISender> mockSender = new Mock<ISender>();
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -711,7 +711,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -754,7 +754,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -790,7 +790,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -829,7 +829,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -871,7 +871,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -909,7 +909,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -948,7 +948,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -987,7 +987,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -998,7 +998,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.ElementAt(0).Contacts.Count.Should().Be(1);
+        actualService!.Locations[0].Contacts.Count.Should().Be(1);
 
         var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
         actualContact.Should().NotBeNull();
@@ -1028,7 +1028,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -1039,7 +1039,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.ElementAt(0).RegularSchedules.Count.Should().Be(1);
+        actualService!.Locations[0].RegularSchedules.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.RegularSchedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
         actualEntity.Should().NotBeNull();
@@ -1067,7 +1067,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -1078,7 +1078,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.ElementAt(0).RegularSchedules.Count.Should().Be(1);
+        actualService!.Locations[0].RegularSchedules.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.RegularSchedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
         actualEntity.Should().NotBeNull();
@@ -1094,8 +1094,8 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         var existingItem = service.Locations.ElementAt(0).HolidaySchedules.ElementAt(0);
         var expected = new HolidayScheduleDto
         {
-            StartDate = new DateTime(2023, 1, 2).ToUniversalTime(),
-            EndDate = new DateTime(2023, 1, 2).ToUniversalTime(),
+            StartDate = new DateTime(2023, 1, 20, 0, 0, 0, DateTimeKind.Utc),
+            EndDate = new DateTime(2023, 1, 20, 0, 0, 0, DateTimeKind.Utc),
         };
         service.Locations.ElementAt(0).HolidaySchedules.Clear();
         service.Locations.ElementAt(0).HolidaySchedules.Add(expected);
@@ -1105,7 +1105,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -1116,7 +1116,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.ElementAt(0).HolidaySchedules.Count.Should().Be(1);
+        actualService!.Locations[0].HolidaySchedules.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.HolidaySchedules.SingleOrDefault(s => s.StartDate == expected.StartDate);
         actualEntity.Should().NotBeNull();
@@ -1136,15 +1136,15 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Locations.ElementAt(0).HolidaySchedules.ElementAt(0);
-        expected.StartDate = new DateTime(2023, 1, 2).ToUniversalTime();
-        expected.EndDate = new DateTime(2023, 1, 2).ToUniversalTime();
+        expected.StartDate = new DateTime(2023, 1, 20, 0, 0, 0, DateTimeKind.Utc);
+        expected.EndDate = new DateTime(2023, 1, 20, 0, 0, 0, DateTimeKind.Utc);
         
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
         Mock<ISender> mockSender = new Mock<ISender>();
         int sendCallBack = 0;
         mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
             .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -1155,7 +1155,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.ElementAt(0).HolidaySchedules.Count.Should().Be(1);
+        actualService!.Locations[0].HolidaySchedules.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.HolidaySchedules.SingleOrDefault(s => s.StartDate == expected.StartDate);
         actualEntity.Should().NotBeNull();
@@ -1168,9 +1168,13 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisation();
         var mockHttpContextAccessor = GetMockHttpContextAccessor(50, RoleTypes.LaManager);
+        Mock<ISender> mockSender = new Mock<ISender>();
+        int sendCallBack = 0;
+        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
+            .Callback(() => sendCallBack++).ReturnsAsync("Done");
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
 
         //Act / Assert
         await Assert.ThrowsAsync<ForbiddenException>(async ()=> await updateHandler.Handle(updateCommand, new CancellationToken()));

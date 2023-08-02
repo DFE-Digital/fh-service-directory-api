@@ -39,6 +39,7 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         IHttpContextAccessor httpContextAccessor,
         ApplicationDbContext context, 
         IMapper mapper,
+        ISender sender,
         ILogger<UpdateOrganisationCommandHandler> logger)
     {
         _httpContextAccessor = httpContextAccessor;
