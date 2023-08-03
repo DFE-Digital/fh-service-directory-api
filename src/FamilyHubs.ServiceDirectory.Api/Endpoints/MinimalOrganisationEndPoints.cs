@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
+using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.DeleteOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.UpdateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationAdminAreaById;
 using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationById;
@@ -132,6 +133,27 @@ public class MinimalOrganisationEndPoints
                 "List Organisations By Parent", 
                 "Lists Organisations associated with the parent id, also returns parent organisation"
                 ) { Tags = new[] { "Organisations" } });
+
+        app.MapDelete("api/organisations/{id}",
+            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async
+            (long id,            
+            CancellationToken cancellationToken,
+            ISender mediator,
+            ILogger<MinimalOrganisationEndPoints> logger) =>
+            {
+                try
+                {
+                    var command = new DeleteOrganisationCommand(id);
+                    var result = await mediator.Send(command, cancellationToken);
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occurred deleting organisation (api). {exceptionMessage}", ex.Message);
+
+                    throw;
+                }
+            }).WithMetadata(new SwaggerOperationAttribute("Delete Organisation", "Delete Organisation By Id") { Tags = new[] { "Organisations" } });
 
     }
 }
