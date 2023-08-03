@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Repository;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Text;
@@ -7,26 +8,60 @@ namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
 
 public abstract class BaseWhenUsingApiUnitTests : IDisposable
 {
-    protected readonly HttpClient Client;
-    private readonly CustomWebApplicationFactory _webAppFactory;
+    protected readonly HttpClient? Client;
+    private readonly CustomWebApplicationFactory? _webAppFactory;
+    private readonly bool _initSuccessful;
+    private readonly IConfiguration? _configuration;
 
     protected BaseWhenUsingApiUnitTests()
     {
-        _webAppFactory = new CustomWebApplicationFactory();
-        _webAppFactory.SetupTestDatabaseAndSeedData();
+        try
+        {
+            var configuration = new ConfigurationBuilder()
+           .AddUserSecrets<Program>()
+           .Build();
 
-        Client = _webAppFactory.CreateDefaultClient();
-        Client.BaseAddress = new Uri("https://localhost:7128/");
+            _configuration = configuration;
+
+            _webAppFactory = new CustomWebApplicationFactory();
+            _webAppFactory.SetupTestDatabaseAndSeedData();
+
+            Client = _webAppFactory.CreateDefaultClient();
+            Client.BaseAddress = new Uri("https://localhost:7128/");
+
+            _initSuccessful = true;
+        }
+        catch
+        {
+            _initSuccessful = false;
+        }
     }
 
     public void Dispose()
     {
-        using var scope = _webAppFactory.Services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        context.Database.EnsureDeleted();
+        if (!_initSuccessful)
+        {
+            return;
+        }
 
-        Client.Dispose();
-        _webAppFactory.Dispose();
+        if (_webAppFactory != null)
+        {
+            using var scope = _webAppFactory.Services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            context.Database.EnsureDeleted();
+        }
+
+        if (Client != null)
+        {
+            Client.Dispose();
+        }
+
+        if (_webAppFactory != null)
+        {
+            _webAppFactory.Dispose();
+        }
+
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -77,7 +112,7 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
         var request = new HttpRequestMessage
         {
             Method = verb,
-            RequestUri = new Uri($"{Client.BaseAddress}{path}"),
+            RequestUri = new Uri($"{Client?.BaseAddress}{path}"),
         };
 
         if (!string.IsNullOrEmpty(role))
@@ -86,5 +121,32 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
         }
 
         return request;
+    }
+
+    protected bool IsRunningLocally()
+    {
+
+        if (!_initSuccessful || _configuration == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            string localMachineName = _configuration["LocalSettings:MachineName"] ?? string.Empty;
+
+            if (!string.IsNullOrEmpty(localMachineName))
+            {
+                return Environment.MachineName.Equals(localMachineName, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+        catch
+        {
+            return false;
+        }
+
+        // Fallback to a default check if User Secrets file or machine name is not specified
+        // For example, you can add additional checks or default behavior here
+        return false;
     }
 }

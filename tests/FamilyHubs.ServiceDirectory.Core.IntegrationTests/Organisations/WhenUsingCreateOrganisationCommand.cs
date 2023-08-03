@@ -1,9 +1,12 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
+﻿using FamilyHubs.ServiceDirectory.Core.Commands;
+using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
+using MediatR;
+using Moq;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Organisations;
 
@@ -14,7 +17,11 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     {
         //Arrange
         var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
-        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
+        Mock<ISender> mockSender = new Mock<ISender>();
+        int sendCallBack = 0;
+        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
+            .Callback(() => sendCallBack++).ReturnsAsync("Done");
+        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, GetLogger<CreateOrganisationCommandHandler>());
 
         //Act
         var result = await handler.Handle(createOrganisationCommand, new CancellationToken());
@@ -35,7 +42,11 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         TestOrganisation.Services.Clear();
         //Arrange
         var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
-        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
+        Mock<ISender> mockSender = new Mock<ISender>();
+        int sendCallBack = 0;
+        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
+            .Callback(() => sendCallBack++).ReturnsAsync("Done");
+        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, GetLogger<CreateOrganisationCommandHandler>());
 
         //Act
         var result = await handler.Handle(createOrganisationCommand, new CancellationToken());
@@ -66,7 +77,11 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         service.Locations.Add(expected);
 
         var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
-        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
+        Mock<ISender> mockSender = new Mock<ISender>();
+        int sendCallBack = 0;
+        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
+            .Callback(() => sendCallBack++).ReturnsAsync("Done");
+        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, GetLogger<CreateOrganisationCommandHandler>());
 
         //Act
         var organisationId = await handler.Handle(createOrganisationCommand, new CancellationToken());
@@ -99,7 +114,11 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         service.Taxonomies.Add(expected);
 
         var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
-        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
+        Mock<ISender> mockSender = new Mock<ISender>();
+        int sendCallBack = 0;
+        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
+            .Callback(() => sendCallBack++).ReturnsAsync("Done");
+        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, GetLogger<CreateOrganisationCommandHandler>());
 
         //Act
         var organisationId = await handler.Handle(createOrganisationCommand, new CancellationToken());
@@ -135,7 +154,11 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         };
 
         var command = new CreateOrganisationCommand(relatedOrganisation);
-        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
+        Mock<ISender> mockSender = new Mock<ISender>();
+        int sendCallBack = 0;
+        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
+            .Callback(() => sendCallBack++).ReturnsAsync("Done");
+        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, GetLogger<CreateOrganisationCommandHandler>());
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
@@ -155,7 +178,11 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         await CreateOrganisation();
 
         var command = new CreateOrganisationCommand(TestOrganisation);
-        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
+        Mock<ISender> mockSender = new Mock<ISender>();
+        int sendCallBack = 0;
+        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
+            .Callback(() => sendCallBack++).ReturnsAsync("Done");
+        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, mockSender.Object, GetLogger<CreateOrganisationCommandHandler>());
 
         // Act 
         // Assert
