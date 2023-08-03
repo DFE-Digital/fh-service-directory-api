@@ -59,12 +59,11 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
                 service.AttachExistingManyToMany(_context, _mapper);
             }
 
-            _context.Organisations.Add(organisation);
-
             await _context.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("Organisation {Name} saved to DB", request.Organisation.Name);
 
             _logger.LogInformation("Organisation {Name} sending an event grid message", request.Organisation.Name);
+            request.Organisation.Id = organisation.Id;
             SendEventGridMessageCommand sendEventGridMessageCommand = new(request.Organisation);
             _ = _sender.Send(sendEventGridMessageCommand, cancellationToken);
             _logger.LogInformation("Organisation {Name} completed the event grid message", request.Organisation.Name);
