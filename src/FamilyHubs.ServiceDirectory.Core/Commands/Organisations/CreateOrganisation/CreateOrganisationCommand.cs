@@ -59,6 +59,8 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
                 service.AttachExistingManyToMany(_context, _mapper);
             }
 
+            _context.Organisations.Add(organisation);
+
             await _context.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("Organisation {Name} saved to DB", request.Organisation.Name);
 
