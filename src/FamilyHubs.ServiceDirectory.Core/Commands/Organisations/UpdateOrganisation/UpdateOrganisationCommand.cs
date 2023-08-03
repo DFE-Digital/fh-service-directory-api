@@ -82,10 +82,10 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
 
             _logger.LogInformation("Organisation {Name} saved to DB", request.Organisation.Name);
 
-            _logger.LogInformation("Account {Name} sending an event grid message", request.Organisation.Name);
+            _logger.LogInformation("Organisation {Name} sending an event grid message", request.Organisation.Name);
             SendEventGridMessageCommand sendEventGridMessageCommand = new(request.Organisation);
             _ = _sender.Send(sendEventGridMessageCommand, cancellationToken);
-            _logger.LogInformation("Account {Name} completed the event grid message", request.Organisation.Name);
+            _logger.LogInformation("Organisation {Name} completed the event grid message", request.Organisation.Name);
         }
         catch (Exception ex)
         {

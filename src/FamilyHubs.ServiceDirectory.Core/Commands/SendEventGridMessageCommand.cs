@@ -32,6 +32,7 @@ public class SendEventGridMessageCommandHandler : IRequestHandler<SendEventGridM
     {
         if (IsRunningLocallyAndNotUnitTesting())
         {
+            _logger.LogWarning("Event Grid Notifications are unavailable when running locally");
             return "Event Grid Notifications are unavailable when running locally";
         }
         var eventNew = await MakeRequestEvent(request);
@@ -40,6 +41,7 @@ public class SendEventGridMessageCommandHandler : IRequestHandler<SendEventGridM
 
     private async Task<HttpResponseMessage> MakeRequestEvent(SendEventGridMessageCommand request)
     {
+        _logger.LogInformation("Createing Organisation Event Grid Notification");
         var eventData = new[]
         {
             new
