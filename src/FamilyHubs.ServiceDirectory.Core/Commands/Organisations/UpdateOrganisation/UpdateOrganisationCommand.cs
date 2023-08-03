@@ -11,6 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NotFoundException = Ardalis.GuardClauses.NotFoundException;
 
 namespace FamilyHubs.ServiceDirectory.Core.Commands.Organisations.UpdateOrganisation;
 

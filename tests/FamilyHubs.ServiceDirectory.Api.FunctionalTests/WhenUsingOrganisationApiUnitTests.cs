@@ -180,4 +180,20 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
         responseContent.Should().NotBeNull();
         responseContent.Should().Be("E06000023");
     }
+
+    [Fact]
+    public async Task ThenTheOrganisationIsDeleted()
+    {        
+        var deleteRequest = CreateDeleteRequest("api/organisations/1", string.Empty, RoleTypes.DfeAdmin);
+
+        using var deleteResponse = await Client.SendAsync(deleteRequest);
+
+        var deleteResponseContent = await deleteResponse.Content.ReadAsStringAsync();
+
+        if (!deleteResponse.IsSuccessStatusCode)
+            Assert.Fail(!string.IsNullOrWhiteSpace(deleteResponseContent) ? deleteResponseContent : deleteResponse.ToString());
+
+        deleteResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        bool.Parse(deleteResponseContent).Should().BeTrue();
+    }
 }
