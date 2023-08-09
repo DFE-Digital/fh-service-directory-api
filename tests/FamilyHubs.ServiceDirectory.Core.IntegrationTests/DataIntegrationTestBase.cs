@@ -13,6 +13,7 @@ using Moq;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests;
 
+#pragma warning disable S3881
 public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
 {
     public OrganisationWithServicesDto TestOrganisation { get; set; }
@@ -168,3 +169,5 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         await TestDbContext.Database.EnsureDeletedAsync();
     }
 }
+
+#pragma warning restore S3881

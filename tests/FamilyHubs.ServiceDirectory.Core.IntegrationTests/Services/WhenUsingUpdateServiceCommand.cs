@@ -573,8 +573,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var existingItem = service.HolidaySchedules.ElementAt(0);
         var expected = new HolidayScheduleDto
         {
-            StartDate = new DateTime(2023, 1, 2).ToUniversalTime(),
-            EndDate = new DateTime(2023, 1, 2).ToUniversalTime(),
+            StartDate = new DateTime(2023, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+            EndDate = new DateTime(2023, 1, 2, 0, 0, 0, DateTimeKind.Utc),
         };
         service.HolidaySchedules.Clear();
         service.HolidaySchedules.Add(expected);
@@ -613,8 +613,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.HolidaySchedules.ElementAt(0);
-        expected.StartDate = new DateTime(2023, 1, 2).ToUniversalTime();
-        expected.EndDate = new DateTime(2023, 1, 2).ToUniversalTime();
+        expected.StartDate = new DateTime(2023, 1, 2, 0, 0, 0, DateTimeKind.Utc);
+        expected.EndDate = new DateTime(2023, 1, 2, 0, 0, 0, DateTimeKind.Utc);
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
@@ -934,7 +934,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.ElementAt(0).Contacts.Count.Should().Be(1);
+        actualService!.Locations[0].Contacts.Count.Should().Be(1);
 
         var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
         actualContact.Should().NotBeNull();
@@ -973,7 +973,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.ElementAt(0).RegularSchedules.Count.Should().Be(1);
+        actualService!.Locations[0].RegularSchedules.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.RegularSchedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
         actualEntity.Should().NotBeNull();
@@ -1010,7 +1010,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.ElementAt(0).RegularSchedules.Count.Should().Be(1);
+        actualService!.Locations[0].RegularSchedules.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.RegularSchedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
         actualEntity.Should().NotBeNull();
@@ -1028,8 +1028,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var existingItem = service.Locations.ElementAt(0).HolidaySchedules.ElementAt(0);
         var expected = new HolidayScheduleDto
         {
-            StartDate = new DateTime(2023, 1, 2).ToUniversalTime(),
-            EndDate = new DateTime(2023, 1, 2).ToUniversalTime(),
+            StartDate = new DateTime(2023, 1, 2, 0, 0, 0, DateTimeKind.Utc),
+            EndDate = new DateTime(2023, 1, 2, 0, 0, 0, DateTimeKind.Utc),
         };
         service.Locations.ElementAt(0).HolidaySchedules.Clear();
         service.Locations.ElementAt(0).HolidaySchedules.Add(expected);
@@ -1046,7 +1046,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.ElementAt(0).HolidaySchedules.Count.Should().Be(1);
+        actualService!.Locations[0].HolidaySchedules.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.HolidaySchedules.SingleOrDefault(s => s.StartDate == expected.StartDate);
         actualEntity.Should().NotBeNull();
@@ -1068,8 +1068,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Locations.ElementAt(0).HolidaySchedules.ElementAt(0);
-        expected.StartDate = new DateTime(2023, 1, 2).ToUniversalTime();
-        expected.EndDate = new DateTime(2023, 1, 2).ToUniversalTime();
+        expected.StartDate = new DateTime(2023, 1, 2, 0, 0, 0, DateTimeKind.Utc);
+        expected.EndDate = new DateTime(2023, 1, 2, 0, 0, 0, DateTimeKind.Utc);
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
@@ -1083,7 +1083,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.ElementAt(0).HolidaySchedules.Count.Should().Be(1);
+        actualService!.Locations[0].HolidaySchedules.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.HolidaySchedules.SingleOrDefault(s => s.StartDate == expected.StartDate);
         actualEntity.Should().NotBeNull();
