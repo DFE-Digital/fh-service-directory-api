@@ -1,8 +1,10 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Commands.Services.UpdateService;
+﻿using FamilyHubs.ServiceDirectory.Core.Commands;
+using FamilyHubs.ServiceDirectory.Core.Commands.Services.UpdateService;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -16,13 +18,16 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceOnly()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         service.Name = "Unit Test Update Service Name";
         service.Description = "Unit Test Update Service Name";
+        
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -39,6 +44,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteEligibilities()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Eligibilities.ElementAt(0);
@@ -54,7 +61,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.Eligibilities.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -81,6 +88,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedEligibilities()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
@@ -89,7 +98,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.MaximumAge = 5000;
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -111,6 +120,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteServiceAreas()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.ServiceAreas.ElementAt(0);
@@ -124,7 +135,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.ServiceAreas.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -151,6 +162,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedServiceAreas()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
@@ -159,7 +172,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.Extent = "Updated Extent";
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -181,6 +194,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteServiceDeliveries()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.ServiceDeliveries.ElementAt(0);
@@ -193,7 +208,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.ServiceDeliveries.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -220,6 +235,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedServiceDeliveries()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
@@ -227,7 +244,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.Name = ServiceDeliveryType.NotSet;
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -249,6 +266,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteLanguages()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Languages.ElementAt(0);
@@ -261,7 +280,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.Languages.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -288,6 +307,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedLanguages()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
@@ -295,7 +316,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.Name = "Updated Language";
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -317,6 +338,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteCostOptions()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.CostOptions.ElementAt(0);
@@ -333,7 +356,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.CostOptions.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -360,6 +383,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedCostOptions()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
@@ -369,7 +394,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.AmountDescription = "Updated Amount Description";
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -391,6 +416,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteContacts()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Contacts.ElementAt(0);
@@ -404,7 +431,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.Contacts.Add(contact);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -431,6 +458,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceWithUpdatedContacts()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var contact = service.Contacts.ElementAt(0);
@@ -439,7 +468,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         contact.Telephone = "Updated Telephone";
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -461,6 +490,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteRegularSchedules()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.RegularSchedules.ElementAt(0);
@@ -476,7 +507,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.RegularSchedules.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -503,6 +534,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedRegularSchedules()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
@@ -511,7 +544,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.ByMonthDay = "Updated ByMonthDay";
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -533,6 +566,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteHolidaySchedules()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.HolidaySchedules.ElementAt(0);
@@ -545,7 +580,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.HolidaySchedules.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -572,6 +607,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedHolidaySchedules()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
@@ -580,7 +617,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.EndDate = new DateTime(2023, 1, 2).ToUniversalTime();
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -602,6 +639,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteLocations()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var location = service.Locations.ElementAt(0);
@@ -622,7 +661,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.Locations.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -653,6 +692,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedLocations()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
@@ -661,7 +702,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.Description = "Updated Description";
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -685,6 +726,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAttachExistingLocations()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var expected = TestDataProvider.GetTestCountyCouncilDto2().Services.ElementAt(0).Locations.ElementAt(0) with { Name = "Existing Location already Saved in DB" };
         expected.Id = await CreateLocation(expected);
@@ -693,7 +736,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.Locations.Add(expected);
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -717,6 +760,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteTaxonomies()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var taxonomy = service.Taxonomies.ElementAt(0);
@@ -728,7 +773,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.Taxonomies.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -759,6 +804,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedTaxonomies()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
@@ -766,7 +813,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.Name = "Updated Name";
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -788,6 +835,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAttachExistingTaxonomies()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var expected = new TaxonomyDto
         {
@@ -800,7 +849,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.Taxonomies.Add(expected);
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -822,6 +871,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceLocationsAddAndDeleteContacts()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Locations.ElementAt(0).Contacts.ElementAt(0);
@@ -835,7 +886,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.Locations.ElementAt(0).Contacts.Add(contact);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -862,6 +913,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceLocationsWithUpdatedContacts()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var contact = service.Locations.ElementAt(0).Contacts.ElementAt(0);
@@ -870,7 +923,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         contact.Telephone = "Updated Telephone";
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -892,6 +945,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceLocationsAddAndDeleteRegularSchedules()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Locations.ElementAt(0).RegularSchedules.ElementAt(0);
@@ -907,7 +962,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.Locations.ElementAt(0).RegularSchedules.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -934,6 +989,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceLocationsUpdatedRegularSchedules()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
@@ -942,7 +999,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.ByMonthDay = "Updated ByMonthDay";
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -964,6 +1021,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceLocationsAddAndDeleteHolidaySchedules()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Locations.ElementAt(0).HolidaySchedules.ElementAt(0);
@@ -976,7 +1035,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         service.Locations.ElementAt(0).HolidaySchedules.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -1003,6 +1062,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceLocationsUpdatedHolidaySchedules()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
@@ -1011,7 +1072,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.EndDate = new DateTime(2023, 1, 2).ToUniversalTime();
         
         var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, sender.Object, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());

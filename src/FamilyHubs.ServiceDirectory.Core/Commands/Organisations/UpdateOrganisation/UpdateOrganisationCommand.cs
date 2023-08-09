@@ -84,8 +84,19 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
 
             _logger.LogInformation("Organisation {Name} sending an event grid message", request.Organisation.Name);
             request.Organisation.Id = entity.Id;
-            SendEventGridMessageCommand sendEventGridMessageCommand = new(request.Organisation);
-            _ = _sender.Send(sendEventGridMessageCommand, cancellationToken);
+            var eventData = new[]
+            {
+                new
+                {
+                    Id = Guid.NewGuid(),
+                    EventType = "OrganisationDto",
+                    Subject = "Organisation",
+                    EventTime = DateTime.UtcNow,
+                    Data = request.Organisation
+                }
+            };
+            SendEventGridMessageCommand sendEventGridMessageCommand = new(eventData);
+            _ = await _sender.Send(sendEventGridMessageCommand, cancellationToken);
             _logger.LogInformation("Organisation {Name} completed the event grid message", request.Organisation.Name);
         }
         catch (Exception ex)

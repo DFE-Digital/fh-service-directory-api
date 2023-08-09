@@ -17,12 +17,14 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     public async Task ThenCreateService()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisationWithoutAnyServices();
         var newService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id);
 
         var command = new CreateServiceCommand(newService);
 
-        var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, new Mock<ILogger<CreateServiceCommandHandler>>().Object);
+        var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, sender.Object, new Mock<ILogger<CreateServiceCommandHandler>>().Object);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
@@ -41,6 +43,8 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     public async Task ThenCreateServiceAndAttachExistingLocation()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisationWithoutAnyServices();
         var newService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id);
 
@@ -51,7 +55,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
         newService.Locations.Add(expected);
 
         var command = new CreateServiceCommand(newService);
-        var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, GetLogger<CreateServiceCommandHandler>());
+        var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, sender.Object, GetLogger<CreateServiceCommandHandler>());
 
         //Act
         var serviceId = await handler.Handle(command, new CancellationToken());
@@ -74,6 +78,8 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     public async Task ThenCreateServiceAndAttachExistingTaxonomy()
     {
         //Arrange
+        Mock<ISender> sender = new Mock<ISender>();
+        sender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync("Done");
         await CreateOrganisationWithoutAnyServices();
         var newService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id);
         
@@ -86,7 +92,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
         newService.Taxonomies.Add(expected);
 
         var createServiceCommand = new CreateServiceCommand(newService);
-        var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, GetLogger<CreateServiceCommandHandler>());
+        var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, sender.Object, GetLogger<CreateServiceCommandHandler>());
 
         //Act
         var organisationId = await handler.Handle(createServiceCommand, new CancellationToken());
