@@ -186,7 +186,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
     {        
         var deleteRequest = CreateDeleteRequest("api/organisations/1", string.Empty, RoleTypes.DfeAdmin);
 
-        using var deleteResponse = await Client.SendAsync(deleteRequest);
+        using var deleteResponse = await Client!.SendAsync(deleteRequest);
 
         var deleteResponseContent = await deleteResponse.Content.ReadAsStringAsync();
 
