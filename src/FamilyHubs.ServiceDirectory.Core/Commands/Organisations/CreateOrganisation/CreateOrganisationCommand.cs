@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
@@ -7,6 +8,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Threading;
 
 namespace FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
 
@@ -62,12 +64,73 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
             _context.Organisations.Add(organisation);
 
             await _context.SaveChangesAsync(cancellationToken);
+
+            request.Organisation.Id = organisation.Id;
+
             _logger.LogInformation("Organisation {Name} saved to DB", request.Organisation.Name);
 
-            _logger.LogInformation("Organisation {Name} sending an event grid message", request.Organisation.Name);
-            request.Organisation.Id = organisation.Id;
-            var eventData = new[]
+            await SendNotifications(organisation.Id, cancellationToken);
+
+            return organisation.Id;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred creating organisation with Name:{name}.", request.Organisation.Name);
+            throw;
+        }
+    }
+
+    private async Task SendNotifications(long organisationId, CancellationToken cancellationToken)
+    {
+
+        var organisation = _context.Organisations
+                .Include(x => x.Services)
+                .SingleOrDefault(x => x.Id == organisationId);
+
+        if (organisation is null)
+            return;
+
+        if (organisation.Services != null && organisation.Services.Any())
+        {
+            foreach (var service in organisation.Services)
             {
+                var eventData = new[]
+                {
+                    new
+                    {
+                        Id = Guid.NewGuid(),
+                        EventType = "ReferralServiceDto",
+                        Subject = "Service",
+                        EventTime = DateTime.UtcNow,
+                        Data = new
+                        {
+                            service.Id,
+                            service.Name,
+                            service.Description,
+                            OrganisationDto = new
+                            {
+                                organisation.Id,
+                                ReferralServiceId = service.Id,
+                                organisation.Name,
+                                organisation.Description
+                            }
+                        }
+                    }
+                };
+
+                _logger.LogInformation("Sending Service {Name} to the event grid command", service.Name);
+                SendEventGridMessageCommand serviceSendEventGridMessageCommand = new(eventData);
+                _ = await _sender.Send(serviceSendEventGridMessageCommand, cancellationToken);
+                _logger.LogInformation("Service {Name} completed the event grid message", service.Name);
+            }
+
+            return;
+        }    
+
+        _logger.LogInformation("Organisation {Name} sending an event grid message", organisation.Name);
+
+        var organisationEventData = new[]
+        {
                 new
                 {
                     Id = Guid.NewGuid(),
@@ -77,17 +140,9 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
                     Data = organisation
                 }
             };
-            SendEventGridMessageCommand sendEventGridMessageCommand = new(eventData);
-            _ = await _sender.Send(sendEventGridMessageCommand, cancellationToken);
-            _logger.LogInformation("Organisation {Name} completed the event grid message", request.Organisation.Name);
-
-            return organisation.Id;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred creating organisation with Name:{name}.", request.Organisation.Name);
-            throw;
-        }
+        SendEventGridMessageCommand sendEventGridMessageCommand = new(organisationEventData);
+        _ = await _sender.Send(sendEventGridMessageCommand, cancellationToken);
+        _logger.LogInformation("Organisation {Name} completed the event grid message", organisation.Name);
     }
 
     private async Task ThrowIfOrganisationIdExists(CreateOrganisationCommand request, CancellationToken cancellationToken)
