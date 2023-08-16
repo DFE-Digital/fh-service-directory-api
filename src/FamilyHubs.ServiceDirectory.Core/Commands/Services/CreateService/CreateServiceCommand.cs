@@ -54,11 +54,8 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            if (entity != null) 
-            {
-                request.Service.Id = entity.Id;
-                await SendEventGridMessage(entity, cancellationToken);
-            }
+            request.Service.Id = service.Id;
+            await SendEventGridMessage(service, cancellationToken);
 
             return service.Id;
         }
