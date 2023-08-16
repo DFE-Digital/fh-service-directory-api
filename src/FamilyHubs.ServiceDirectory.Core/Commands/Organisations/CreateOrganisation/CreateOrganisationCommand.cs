@@ -131,15 +131,15 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
 
         var organisationEventData = new[]
         {
-                new
-                {
-                    Id = Guid.NewGuid(),
-                    EventType = "OrganisationDto",
-                    Subject = "Organisation",
-                    EventTime = DateTime.UtcNow,
-                    Data = organisation
-                }
-            };
+            new
+            {
+                Id = Guid.NewGuid(),
+                EventType = "OrganisationDto",
+                Subject = "Organisation",
+                EventTime = DateTime.UtcNow,
+                Data = organisation
+            }
+        };
         SendEventGridMessageCommand sendEventGridMessageCommand = new(organisationEventData);
         _ = await _sender.Send(sendEventGridMessageCommand, cancellationToken);
         _logger.LogInformation("Organisation {Name} completed the event grid message", organisation.Name);
