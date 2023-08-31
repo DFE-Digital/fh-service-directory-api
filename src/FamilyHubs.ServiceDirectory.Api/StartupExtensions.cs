@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Api.Endpoints;
 using FamilyHubs.ServiceDirectory.Api.Middleware;
 using FamilyHubs.ServiceDirectory.Core;
 using FamilyHubs.ServiceDirectory.Core.Commands.Locations.CreateLocation;
+using FamilyHubs.ServiceDirectory.Data;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
@@ -127,6 +128,7 @@ public static class StartupExtensions
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration, bool isProduction)
     {
+        services.AddSingleton<ITelemetryInitializer, ConnectTelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
 
         // Add services to the container.
