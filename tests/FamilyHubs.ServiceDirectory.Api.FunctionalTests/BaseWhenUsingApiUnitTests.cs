@@ -6,6 +6,7 @@ using System.Text;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
 
+#pragma warning disable S3881
 public abstract class BaseWhenUsingApiUnitTests : IDisposable
 {
     protected readonly HttpClient? Client;
@@ -150,3 +151,5 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
         return false;
     }
 }
+
+#pragma warning restore S3881

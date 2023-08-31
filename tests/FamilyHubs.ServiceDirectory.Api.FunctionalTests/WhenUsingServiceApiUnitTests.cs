@@ -71,7 +71,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.EnsureSuccessStatusCode();
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.FirstOrDefault(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
         ArgumentNullException.ThrowIfNull(item);
 
         var updatedItem = item with {Name = "Updated Service Name", Description = "Updated Service Description"};
@@ -142,7 +142,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.FirstOrDefault(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
@@ -181,7 +181,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.FirstOrDefault(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
@@ -220,7 +220,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.FirstOrDefault(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
@@ -258,7 +258,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.EnsureSuccessStatusCode();
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.FirstOrDefault(x => x.ServiceOwnerReferenceId == "Bristol-Service-1");
+        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-1");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
@@ -296,7 +296,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.EnsureSuccessStatusCode();
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.FirstOrDefault(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
