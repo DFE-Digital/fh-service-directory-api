@@ -38,25 +38,6 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
     {
         switch (telemetry)
         {
-            case DependencyTelemetry dependencyTelemetry:
-                if (dependencyTelemetry.Name is "GET /api/services")
-                {
-                    // command name is obsolete and has been replaced by Data, but should contain the same as Data
-#pragma warning disable CS0618
-                    dependencyTelemetry.CommandName = dependencyTelemetry.Data =
-                        Sanitize(ApiQueryStringRegex, dependencyTelemetry.Data);
-#pragma warning restore CS0618
-                }
-                else if (dependencyTelemetry.Name.StartsWith("GET /postcodes/"))
-                {
-#pragma warning disable CS0618
-                    dependencyTelemetry.CommandName =
-                        dependencyTelemetry.Data = Sanitize(PathRegex, dependencyTelemetry.Data);
-#pragma warning restore CS0618
-                    dependencyTelemetry.Name = Sanitize(PathRegex, dependencyTelemetry.Name);
-                    dependencyTelemetry.Data = Sanitize(ApiQueryStringRegex, dependencyTelemetry.Data);
-                }
-                break;
             case TraceTelemetry traceTelemetry:
                 if (traceTelemetry.Message.IndexOf("postcode") > -1 || traceTelemetry.Message.IndexOf("latitude") > -1)
                 {
