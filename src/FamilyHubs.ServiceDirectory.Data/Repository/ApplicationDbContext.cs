@@ -24,6 +24,17 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
                 .HasDatabaseName("IX_Services_OrganisationId_Id")
                 .IncludeProperties(e => new { e.ServiceType, e.Status });
 
+            modelBuilder.Entity<Contact>()
+                .HasIndex(e => e.ServiceId)
+                .IsUnique(false)
+                .HasDatabaseName("IX_Contacts_ServiceId_Id")
+                .IncludeProperties(e => new { e.Id, e.Title, e.Name, e.Telephone, e.TextPhone, e.Url, e.Email });
+
+            modelBuilder.Entity<Service>()
+                .HasIndex(e => new { e.ServiceType, e.Id, e.OrganisationId, e.Status })
+                .IsUnique(false)
+                .HasDatabaseName("IX_ServiceType_OrganisationId_Status");
+
             base.OnModelCreating(modelBuilder);
         }
 
