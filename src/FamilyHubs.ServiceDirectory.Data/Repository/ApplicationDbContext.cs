@@ -18,6 +18,12 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+            modelBuilder.Entity<Service>()
+                .HasIndex(e => new { e.OrganisationId, e.Id })
+                .IsUnique(false)
+                .HasDatabaseName("IX_Services_OrganisationId_Id")
+                .IncludeProperties(e => new { e.ServiceType, e.Status });
+
             base.OnModelCreating(modelBuilder);
         }
 

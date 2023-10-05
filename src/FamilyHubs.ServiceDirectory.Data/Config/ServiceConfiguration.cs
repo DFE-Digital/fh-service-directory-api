@@ -26,17 +26,30 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
             .HasMaxLength(255);
 
         builder.HasEnum(s => s.AttendingAccess);
+        builder.Property(t => t.AttendingAccess)
+                .HasMaxLength(50);
         builder.HasEnum(s => s.AttendingType);
+        builder.Property(t => t.AttendingType)
+                .HasMaxLength(50);
         builder.HasEnum(s => s.DeliverableType);
+        builder.Property(t => t.DeliverableType)
+                .HasMaxLength(50);
         builder.HasEnum(s => s.ServiceType);
+        builder.Property(t => t.ServiceType)
+                .HasMaxLength(50);
         builder.HasEnum(s => s.Status);
+        builder.Property(t => t.Status)
+                .HasMaxLength(50);
 
         builder.Property(t => t.Created)
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(255)
+            .HasMaxLength(320)
             .IsRequired();
+
+        builder.Property(t => t.LastModifiedBy)
+            .HasMaxLength(320);
 
         builder.HasMany(s => s.Fundings)
             .WithOne()

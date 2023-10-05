@@ -10,11 +10,17 @@ public class EligibilityConfiguration : IEntityTypeConfiguration<Eligibility>
     {
         builder.HasEnum(t => t.EligibilityType);
 
+        builder.Property(t => t.EligibilityType)
+                .HasMaxLength(50);
+
         builder.Property(t => t.Created)
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(255)
+            .HasMaxLength(320)
             .IsRequired();
+
+        builder.Property(t => t.LastModifiedBy)
+            .HasMaxLength(320);
     }
 }
