@@ -19,11 +19,11 @@ public class MinimalServiceEndPoints
 {
     public void RegisterServiceEndPoints(WebApplication app)
     {
-        app.MapGet("api/services", async (ServiceType? serviceType, ServiceStatusType? status, string ? districtCode, int ? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string ? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
+        app.MapGet("api/services", async (bool isSimple, ServiceType? serviceType, ServiceStatusType? status, string ? districtCode, int ? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string ? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
             {
-                var command = new GetServicesCommand(serviceType, status, districtCode, minimumAge,
+                var command = new GetServicesCommand(isSimple, serviceType, status, districtCode, minimumAge,
                     maximumAge, givenAge, latitude, longitude, proximity, pageNumber, pageSize, text,
                     serviceDeliveries, isPaidFor, taxonomyIds, languages, canFamilyChooseLocation, isFamilyHub,
                     maxFamilyHubs);
@@ -38,13 +38,14 @@ public class MinimalServiceEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Services", "List Services") { Tags = new[] { "Services" } });
 
-        app.MapGet("api/services/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
+        app.MapGet("api/services/{id}", async (long id, bool? isSimple, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
             {
                 var command = new GetServiceByIdCommand
                 {
-                    Id = id
+                    Id = id,
+                    IsSimple = (isSimple != null) ? isSimple.Value : false,
                 };
                 var result = await mediator.Send(command, cancellationToken);
                 return result;

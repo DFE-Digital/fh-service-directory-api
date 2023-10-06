@@ -12,8 +12,9 @@ namespace FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 
 public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
 {
-    public GetServicesCommand(ServiceType? serviceType, ServiceStatusType? status, string? districtCode, int? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs)
+    public GetServicesCommand(bool isSimple, ServiceType? serviceType, ServiceStatusType? status, string? districtCode, int? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs)
     {
+        IsSimple = isSimple;
         ServiceType = serviceType ?? ServiceType.NotSet;
         Status = status ?? ServiceStatusType.NotSet;
         DistrictCode = districtCode;
@@ -34,6 +35,8 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
         IsFamilyHub = isFamilyHub;
         MaxFamilyHubs = maxFamilyHubs;
     }
+
+    public bool IsSimple { get; }
 
     public ServiceType ServiceType { get; }
     public ServiceStatusType Status { get; set; }
@@ -87,22 +90,40 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
 
     private async Task<List<Service>> GetServices(GetServicesCommand request, CancellationToken cancellationToken)
     {
-        var services = _context.Services
-            .Include(x => x.Taxonomies)
+        IQueryable<Service> services = default!;
 
-            .Include(x => x.Locations)
-            .ThenInclude(x => x.Contacts)
+        if (request.IsSimple)
+        {
+            services = _context.Services
+           .Include(x => x.Taxonomies)
 
-            .Include(x => x.Locations)
-            .ThenInclude(x => x.HolidaySchedules)
+           .Include(x => x.Locations)
 
-            .Include(x => x.Locations)
-            .ThenInclude(x => x.RegularSchedules)
+           .AsNoTracking()
+           .AsSplitQuery()
 
-            .AsNoTracking()
-            .AsSplitQuery()
+           .Where(x => x.Status == request.Status && x.Status != ServiceStatusType.Deleted);
+        }
+        else
+        {
+            services = _context.Services
+           .Include(x => x.Taxonomies)
 
-            .Where(x => x.Status == request.Status && x.Status != ServiceStatusType.Deleted);
+           .Include(x => x.Locations)
+           .ThenInclude(x => x.Contacts)
+
+           .Include(x => x.Locations)
+           .ThenInclude(x => x.HolidaySchedules)
+
+           .Include(x => x.Locations)
+           .ThenInclude(x => x.RegularSchedules)
+
+           .AsNoTracking()
+           .AsSplitQuery()
+
+           .Where(x => x.Status == request.Status && x.Status != ServiceStatusType.Deleted);
+        }
+
 
         if (request.DistrictCode != null)
         {
@@ -144,7 +165,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
 
         if (request.IsPaidFor is not null)
         {
-            if (request.IsPaidFor == true)
+            if (request.IsPaidFor != null && request.IsPaidFor == true)
             {
                 //if only show paid for then make sure to exclude services without any cost option s.CostOptions.Count > 0 &&
                 services = services.Where(s =>
@@ -167,7 +188,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         }
 
         var dbServices = await services.ToListAsync(cancellationToken);
-        
+
         return dbServices;
     }
 
@@ -188,12 +209,12 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             {
                 services = services.Where(x => x.Distance < request.Meters).ToList();
             }
-            
+
             services = services
                 .OrderBy(x => x.Distance)
                 .ToList();
         }
-        
+
         if (request.IsFamilyHub is null && request.MaxFamilyHubs is not null)
         {
             // MaxFamilyHubs is really a flag to only include the nearest max family hubs at the start of the results set (when not filtering by IsFamilyHub)
@@ -203,7 +224,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
                 .Concat(services.Where(s => s.Locations.Any(lt => lt.LocationType == LocationType.FamilyHub) == false))
                 .ToList();
         }
-        
+
         return services;
     }
 }

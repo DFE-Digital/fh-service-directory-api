@@ -53,6 +53,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
+                    .WithServiceSimpleOrFull(false)
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithEligibility(0, 99)
@@ -112,6 +113,47 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     }
 
     [Fact]
+    public async Task ThenTheSimpleListOfServicesAreRetrieved()
+    {
+        if (!IsRunningLocally() || Client == null)
+        {
+            // Skip the test if not running locally
+            Assert.True(true, "Test skipped because it is not running locally.");
+            return;
+        }
+
+        var getServicesUrlBuilder = new GetServicesUrlBuilder();
+        var url = getServicesUrlBuilder
+                    .WithServiceSimpleOrFull(true)
+                    .WithServiceType("InformationSharing")
+                    .WithStatus("Active")
+                    .WithEligibility(0, 99)
+                    .WithProximity(52.6312, -1.66526, 1609.34)
+                    .WithPage(1, 10)
+                    .Build();
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(Client.BaseAddress + $"api/services{url}")
+        };
+
+        using var response = await Client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        retVal.Should().NotBeNull();
+        item.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(item);
+        item.ServiceOwnerReferenceId.Should().Be("Bristol-Service-2");
+    }
+
+    [Fact]
     public async Task ThenTheServicesAreRetrieved()
     {
         if (!IsRunningLocally() || Client == null)
@@ -123,6 +165,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
+                    .WithServiceSimpleOrFull(false)
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithEligibility(0,99)
@@ -163,6 +206,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
+                    .WithServiceSimpleOrFull(false)
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithEligibility(0, 99)
@@ -202,6 +246,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
+                    .WithServiceSimpleOrFull(false)
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithProximity(52.6312, -1.66526, 1609.34)
@@ -241,6 +286,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
+                    .WithServiceSimpleOrFull(false)
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithDelimitedSearchDeliveries("online")
@@ -279,6 +325,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
+                    .WithServiceSimpleOrFull(false)
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithDelimitedTaxonomies("1")
@@ -303,6 +350,34 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         item.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(item);
         item.ServiceOwnerReferenceId.Should().Be("Bristol-Service-2");
+    }
+
+    [Fact]
+    public async Task ThenTheServiceByIdSimplifiedIsRetrieved()
+    {
+        if (!IsRunningLocally() || Client == null)
+        {
+            // Skip the test if not running locally
+            Assert.True(true, "Test skipped because it is not running locally.");
+            return;
+        }
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(Client.BaseAddress + "api/services/1?isSimple=True"),
+        };
+
+        using var response = await Client.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var retVal = await JsonSerializer.DeserializeAsync<ServiceDto>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        retVal.Should().NotBeNull();
+        ArgumentNullException.ThrowIfNull(retVal);
+        retVal.ServiceOwnerReferenceId.Should().Be("Bristol-Service-1");
     }
 
     [Fact]
@@ -376,6 +451,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
+                    .WithServiceSimpleOrFull(false)
                     .WithStatus("Active")
                     .WithServiceType("FamilyExperience")
                     .WithFamilyHub(true)
@@ -416,6 +492,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
+                    .WithServiceSimpleOrFull(false)
                     .WithStatus("Active")
                     .WithServiceType("FamilyExperience")
                     .WithFamilyHub(false)
@@ -456,6 +533,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
+            .WithServiceSimpleOrFull(false)
             .WithServiceType("FamilyExperience")
             .WithStatus("Active")
             .WithMaxFamilyHubs(1)
