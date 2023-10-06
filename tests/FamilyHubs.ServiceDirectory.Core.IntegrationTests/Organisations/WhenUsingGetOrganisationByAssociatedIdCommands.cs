@@ -23,9 +23,9 @@ public class WhenUsingGetOrganisationByAssociatedIdCommands : DataIntegrationTes
 
         //Assert
         result.Should().NotBeNull();
-        Assert.True(result.Where(x => x.Id == parent.Id).Count() == 1);
-        Assert.True(result.Where(x => x.Id == child.Id).Count() == 1);
-        Assert.True(result.Count() == 2);
+        Assert.True(result.Count(x => x.Id == parent.Id) == 1);
+        Assert.True(result.Count(x => x.Id == child.Id) == 1);
+        Assert.True(result.Count == 2);
     }
 
     [Fact]
