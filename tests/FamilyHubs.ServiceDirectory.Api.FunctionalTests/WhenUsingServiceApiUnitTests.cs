@@ -1,14 +1,9 @@
-﻿using System.Net;
-using System.Text;
-using System.Text.Json;
-using FamilyHubs.ServiceDirectory.Data.Entities;
-using FamilyHubs.ServiceDirectory.Shared.Dto;
+﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
-using NetTopologySuite.Index.HPRtree;
-using Newtonsoft.Json;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Net;
+using System.Text.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
@@ -53,7 +48,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
-                    .WithServiceSimpleOrFull(false)
+                    
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithEligibility(0, 99)
@@ -124,7 +119,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
-                    .WithServiceSimpleOrFull(true)
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithEligibility(0, 99)
@@ -135,7 +129,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
         using var response = await Client.SendAsync(request);
@@ -165,7 +159,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
-                    .WithServiceSimpleOrFull(false)
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithEligibility(0,99)
@@ -206,7 +199,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
-                    .WithServiceSimpleOrFull(false)
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithEligibility(0, 99)
@@ -245,8 +237,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         }
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
-        var url = getServicesUrlBuilder
-                    .WithServiceSimpleOrFull(false)
+        var url = getServicesUrlBuilder   
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithProximity(52.6312, -1.66526, 1609.34)
@@ -286,7 +277,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
-                    .WithServiceSimpleOrFull(false)
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithDelimitedSearchDeliveries("online")
@@ -325,7 +315,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
-                    .WithServiceSimpleOrFull(false)
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithDelimitedTaxonomies("1")
@@ -365,7 +354,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + "api/services/1?isSimple=True"),
+            RequestUri = new Uri(Client.BaseAddress + "api/services-simple/1"),
         };
 
         using var response = await Client.SendAsync(request);
@@ -451,7 +440,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
-                    .WithServiceSimpleOrFull(false)
                     .WithStatus("Active")
                     .WithServiceType("FamilyExperience")
                     .WithFamilyHub(true)
@@ -492,7 +480,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
-                    .WithServiceSimpleOrFull(false)
                     .WithStatus("Active")
                     .WithServiceType("FamilyExperience")
                     .WithFamilyHub(false)
@@ -533,7 +520,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
-            .WithServiceSimpleOrFull(false)
             .WithServiceType("FamilyExperience")
             .WithStatus("Active")
             .WithMaxFamilyHubs(1)

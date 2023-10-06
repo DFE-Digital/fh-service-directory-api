@@ -3,12 +3,6 @@
 public class GetServicesUrlBuilder
 {
     private readonly List<string> _urlParameter = new List<string>();
-
-    public GetServicesUrlBuilder WithServiceSimpleOrFull(bool isSimple)
-    {
-        _urlParameter.Add($"isSimple={isSimple.ToString()}");
-        return this;
-    }
     public GetServicesUrlBuilder WithServiceType(string serviceType)
     {
         _urlParameter.Add($"serviceType={serviceType}");
