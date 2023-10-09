@@ -13,11 +13,17 @@ public class TaxonomyConfiguration : IEntityTypeConfiguration<Taxonomy>
 
         builder.HasEnum(t => t.TaxonomyType);
 
+        builder.Property(t => t.TaxonomyType)
+                .HasMaxLength(50);
+
         builder.Property(t => t.Created)
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(255)
+            .HasMaxLength(320)
             .IsRequired();
+
+        builder.Property(t => t.LastModifiedBy)
+            .HasMaxLength(320);
     }
 }

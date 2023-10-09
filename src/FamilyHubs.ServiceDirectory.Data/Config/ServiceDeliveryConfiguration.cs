@@ -17,7 +17,10 @@ public class ServiceDeliveryConfiguration : IEntityTypeConfiguration<ServiceDeli
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(255)
+            .HasMaxLength(320)
             .IsRequired();
+
+        builder.Property(t => t.LastModifiedBy)
+            .HasMaxLength(320);
     }
 }
