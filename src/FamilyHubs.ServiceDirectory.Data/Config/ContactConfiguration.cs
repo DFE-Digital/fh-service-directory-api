@@ -26,11 +26,20 @@ public class ContactConfiguration : IEntityTypeConfiguration<Contact>
         builder.Property(t => t.TextPhone)
             .HasMaxLength(50);
 
+        builder.Property(t => t.Url)
+            .HasMaxLength(320);
+
+        builder.Property(t => t.Url)
+            .HasMaxLength(2083);
+
         builder.Property(t => t.Created)
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(255)
+            .HasMaxLength(320)
             .IsRequired();
+
+        builder.Property(t => t.LastModifiedBy)
+            .HasMaxLength(320);
     }
 }

@@ -11,11 +11,17 @@ public class CostOptionConfiguration : IEntityTypeConfiguration<CostOption>
         builder.Property(t => t.AmountDescription)
             .HasMaxLength(500);
 
+        builder.Property(t => t.Option)
+            .HasMaxLength(20);
+
         builder.Property(t => t.Created)
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(255)
+            .HasMaxLength(320)
             .IsRequired();
+
+        builder.Property(t => t.LastModifiedBy)
+            .HasMaxLength(320);
     }
 }

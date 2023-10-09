@@ -18,7 +18,10 @@ public class HolidayScheduleConfiguration : IEntityTypeConfiguration<HolidaySche
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(255)
+            .HasMaxLength(320)
             .IsRequired();
+
+        builder.Property(t => t.LastModifiedBy)
+            .HasMaxLength(320);
     }
 }

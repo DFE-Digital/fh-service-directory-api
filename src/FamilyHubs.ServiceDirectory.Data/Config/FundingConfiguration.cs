@@ -8,11 +8,17 @@ public class FundingConfiguration : IEntityTypeConfiguration<Funding>
 {
     public void Configure(EntityTypeBuilder<Funding> builder)
     {
+        builder.Property(t => t.Source)
+            .HasMaxLength(255);
+
         builder.Property(t => t.Created)
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(255)
+            .HasMaxLength(320)
             .IsRequired();
+
+        builder.Property(t => t.LastModifiedBy)
+            .HasMaxLength(320);
     }
 }

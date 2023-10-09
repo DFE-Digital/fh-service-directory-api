@@ -14,13 +14,28 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         
         builder.HasEnum(t => t.LocationType);
 
+        builder.Property(t => t.LocationType)
+                .HasMaxLength(50);
+
         builder.Property(t => t.Name)
             .HasMaxLength(255);
 
         builder.Property(t => t.Description)
             .HasMaxLength(500);
 
+        builder.Property(t => t.Address1)
+            .HasMaxLength(100);
+
+        builder.Property(t => t.Address2)
+            .HasMaxLength(100);
+
         builder.Property(t => t.City)
+            .HasMaxLength(60);
+
+        builder.Property(t => t.StateProvince)
+            .HasMaxLength(60);
+
+        builder.Property(t => t.Country)
             .HasMaxLength(60);
 
         builder.Property(t => t.PostCode)
