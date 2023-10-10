@@ -3,7 +3,6 @@
 public class GetServicesUrlBuilder
 {
     private readonly List<string> _urlParameter = new List<string>();
-
     public GetServicesUrlBuilder WithServiceType(string serviceType)
     {
         _urlParameter.Add($"serviceType={serviceType}");
