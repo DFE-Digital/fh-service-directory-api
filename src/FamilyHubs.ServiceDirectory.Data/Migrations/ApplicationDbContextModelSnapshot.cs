@@ -118,7 +118,10 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("ServiceId")
+                        .HasDatabaseName("IX_Contacts_ServiceId_Id");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("ServiceId"), new[] { "Id", "Title", "Name", "Telephone", "TextPhone", "Url", "Email" });
 
                     b.ToTable("Contacts");
                 });
@@ -711,6 +714,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasDatabaseName("IX_Services_OrganisationId_Id");
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("OrganisationId", "Id"), new[] { "ServiceType", "Status" });
+
+                    b.HasIndex("ServiceType", "Id", "OrganisationId", "Status")
+                        .HasDatabaseName("IX_ServiceType_OrganisationId_Status");
 
                     b.ToTable("Services");
                 });
