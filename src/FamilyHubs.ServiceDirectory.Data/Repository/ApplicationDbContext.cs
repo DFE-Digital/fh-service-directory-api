@@ -35,6 +35,15 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
                 .IsUnique(false)
                 .HasDatabaseName("IX_ServiceType_OrganisationId_Status");
 
+            // Add a non-clustered index
+            modelBuilder.Entity<ServiceDelivery>(entity =>
+            {
+                entity.HasIndex(e => new { e.Name, e.ServiceId, e.Id })
+                    .HasDatabaseName("IX_ServiceDeliveryNoneClustered")
+                    .IsUnique(false)
+                    .IsClustered(false);
+            });
+
             base.OnModelCreating(modelBuilder);
         }
 

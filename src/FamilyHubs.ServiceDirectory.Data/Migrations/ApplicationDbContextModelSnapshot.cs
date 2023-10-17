@@ -803,6 +803,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
+                    b.HasIndex("Name", "ServiceId", "Id")
+                        .HasDatabaseName("IX_ServiceDeliveryNoneClustered");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Name", "ServiceId", "Id"), false);
+
                     b.ToTable("ServiceDeliveries");
                 });
 
