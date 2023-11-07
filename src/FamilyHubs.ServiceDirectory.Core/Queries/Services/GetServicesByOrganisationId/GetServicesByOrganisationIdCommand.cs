@@ -14,8 +14,8 @@ namespace FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganis
 //todo: move somewhere common for reuse?
 public enum SortOrder
 {
-    Ascending,
-    Descending
+    ascending,
+    descending
 }
 
 public class GetServicesByOrganisationIdCommand : IRequest<PaginatedList<ServiceDto>>
@@ -46,7 +46,7 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
         var servicesQuery = _context.Services
             .Where(s => s.Status != ServiceStatusType.Deleted && s.OrganisationId == request.Id);
 
-        servicesQuery = request.Order == SortOrder.Ascending
+        servicesQuery = request.Order == SortOrder.ascending
             ? servicesQuery.OrderBy(s => s.Name)
             : servicesQuery.OrderByDescending(s => s.Name);
 
