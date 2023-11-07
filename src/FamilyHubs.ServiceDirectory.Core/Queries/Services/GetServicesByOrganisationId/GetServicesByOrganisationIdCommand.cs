@@ -27,6 +27,7 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
         _mapper = mapper;
     }
 
+    //todo: only need to return name and id
     public async Task<List<ServiceDto>> Handle(GetServicesByOrganisationIdCommand request, CancellationToken cancellationToken)
     {
         var services = await _context.Services
