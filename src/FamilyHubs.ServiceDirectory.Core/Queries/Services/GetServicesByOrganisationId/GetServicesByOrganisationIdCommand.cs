@@ -5,18 +5,18 @@ using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
+using FamilyHubs.ServiceDirectory.Shared.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganisationId;
 
-public class GetServicesByOrganisationIdCommand : IRequest<List<ServiceDto>>
+public class GetServicesByOrganisationIdCommand : IRequest<PaginatedList<ServiceDto>>
 {
-
     public required long Id { get; set; }
 }
 
-public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServicesByOrganisationIdCommand, List<ServiceDto>>
+public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServicesByOrganisationIdCommand, PaginatedList<ServiceDto>>
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -28,7 +28,8 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
     }
 
     //todo: only need to return name and id
-    public async Task<List<ServiceDto>> Handle(GetServicesByOrganisationIdCommand request, CancellationToken cancellationToken)
+    //todo: pagination
+    public async Task<PaginatedList<ServiceDto>> Handle(GetServicesByOrganisationIdCommand request, CancellationToken cancellationToken)
     {
         var services = await _context.Services
             .Include(x => x.Taxonomies)
@@ -55,7 +56,7 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
         if (!services.Any())
             throw new NotFoundException(nameof(Service), request.Id.ToString());
 
-        return services;
+        return new PaginatedList<ServiceDto>(services, services.Count, 1, services.Count);
     }
 }
 

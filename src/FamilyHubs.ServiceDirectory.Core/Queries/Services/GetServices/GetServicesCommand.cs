@@ -75,6 +75,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         if (request.Status == ServiceStatusType.NotSet)
             request.Status = ServiceStatusType.Active;
 
+        //todo: gets all services and then sorts in the api - not going to scale!
         var dbServices = await GetServices(request, cancellationToken);
 
         var filteredServices = _mapper.Map<List<ServiceDto>>(dbServices);
