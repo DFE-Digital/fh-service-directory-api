@@ -15,12 +15,12 @@ public class ListLocationsCommand : IRequest<PaginatedList<LocationDto>>
     public bool? IsAscending { get; }
     public string OrderByColumn { get; }
 
-    public ListLocationsCommand(int? pageNumber, string orderByColumn, int? pageSize, bool? isAscending)
+    public ListLocationsCommand(int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending)
     {
         PageNumber = pageNumber ?? 1;
-        OrderByColumn = orderByColumn;
+        OrderByColumn = orderByColumn ?? "Location";
         PageSize = pageSize ?? 10;
-        IsAscending = isAscending;
+        IsAscending = isAscending ?? true;
     }
 }
 
