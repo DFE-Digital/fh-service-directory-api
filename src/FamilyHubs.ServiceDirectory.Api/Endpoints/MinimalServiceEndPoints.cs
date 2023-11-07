@@ -19,7 +19,14 @@ public class MinimalServiceEndPoints
 {
     public void RegisterServiceEndPoints(WebApplication app)
     {
-        app.MapGet("api/services", async (ServiceType? serviceType, ServiceStatusType? status, string ? districtCode, int ? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string ? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
+        app.MapGet("api/services", async (
+            ServiceType? serviceType, ServiceStatusType? status, string? districtCode,
+            int? minimumAge, int? maximumAge, int? givenAge,
+            double? latitude, double? longitude, double? proximity,
+            int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor,
+            string? taxonomyIds, string? languages, bool? canFamilyChooseLocation,
+            bool? isFamilyHub, int? maxFamilyHubs,
+            CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
             {
@@ -118,15 +125,18 @@ public class MinimalServiceEndPoints
 
         //todo: auth & roles
          //todo: can pass command in directly?
-        app.MapGet("api/organisationservices/{id}", async (long id, int pageSize, int pageNumber, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
+        app.MapGet("api/organisationservices/{id}",
+            async (long id, int pageNumber, int pageSize, SortOrder sortOrder,
+                CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
             {
                 var command = new GetServicesByOrganisationIdCommand
                 {
                     Id = id,
+                    PageNumber = pageNumber,
                     PageSize = pageSize,
-                    PageNumber = pageNumber
+                    Order = sortOrder
                 };
                 return await mediator.Send(command, cancellationToken);
             }
