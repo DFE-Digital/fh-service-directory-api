@@ -117,21 +117,22 @@ public class MinimalServiceEndPoints
         }).WithMetadata(new SwaggerOperationAttribute("Get Service by OwnerReferenceId", "Get Service by OwnerReferenceId") { Tags = new[] { "Services" } });
 
         //todo: auth & roles
-        app.MapGet("api/organisationservices/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
+         //todo: can pass command in directly?
+        app.MapGet("api/organisationservices/{id}", async (long id, int pageSize, int pageNumber, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
             {
                 var command = new GetServicesByOrganisationIdCommand
                 {
-                    Id = id
+                    Id = id,
+                    PageSize = pageSize,
+                    PageNumber = pageNumber
                 };
-                var result = await mediator.Send(command, cancellationToken);
-                return result;
+                return await mediator.Send(command, cancellationToken);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred getting open referral service by id. {exceptionMessage}", ex.Message);
-                
+                logger.LogError(ex, "An error occurred getting open referral service by id");
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Services by Organisation Id", "Get Service by Organisation Id") { Tags = new[] { "Services" } });
