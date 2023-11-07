@@ -18,7 +18,7 @@ public enum SortOrder
     descending
 }
 
-public class GetServicesByOrganisationIdCommand : IRequest<PaginatedList<ServiceDto>>
+public class GetServicesByOrganisationIdCommand : IRequest<PaginatedList<ServiceNameDto>>
 {
     public required long Id { get; set; }
     public required int PageNumber { get; set; }
@@ -26,7 +26,7 @@ public class GetServicesByOrganisationIdCommand : IRequest<PaginatedList<Service
     public required SortOrder Order { get; set; }
 }
 
-public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServicesByOrganisationIdCommand, PaginatedList<ServiceDto>>
+public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServicesByOrganisationIdCommand, PaginatedList<ServiceNameDto>>
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -39,10 +39,11 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
 
     //todo: only need to return name and id
     //todo: sort order (on name)
-    public async Task<PaginatedList<ServiceDto>> Handle(GetServicesByOrganisationIdCommand request, CancellationToken cancellationToken)
+    public async Task<PaginatedList<ServiceNameDto>> Handle(GetServicesByOrganisationIdCommand request, CancellationToken cancellationToken)
     {
         int skip = (request.PageNumber - 1) * request.PageSize;
 
+        //todo: do we need _context.ServiceNames?
         var servicesQuery = _context.Services
             .Where(s => s.Status != ServiceStatusType.Deleted && s.OrganisationId == request.Id);
 
@@ -54,7 +55,7 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
             .Skip(skip)
             .Take(request.PageSize)
 
-            .ProjectTo<ServiceDto>(_mapper.ConfigurationProvider)
+            .ProjectTo<ServiceNameDto>(_mapper.ConfigurationProvider)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
@@ -68,7 +69,7 @@ public class GetServicesByOrganisationIdCommandHandler : IRequestHandler<GetServ
             .Where(x => x.OrganisationId == request.Id)
             .CountAsync(cancellationToken);
 
-        return new PaginatedList<ServiceDto>(services, totalCount, request.PageNumber, request.PageSize);
+        return new PaginatedList<ServiceNameDto>(services, totalCount, request.PageNumber, request.PageSize);
     }
 
 }
