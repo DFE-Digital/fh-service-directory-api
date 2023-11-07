@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Models;
@@ -12,7 +13,7 @@ public class ListLocationsCommand : IRequest<PaginatedList<LocationDto>>
 {
     public int PageNumber { get; }
     public int PageSize { get; }
-    public bool? IsAscending { get; }
+    public bool IsAscending { get; }
     public string OrderByColumn { get; }
 
     public ListLocationsCommand(int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending)
@@ -37,53 +38,58 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
 
     public async Task<PaginatedList<LocationDto>> Handle(ListLocationsCommand request, CancellationToken cancellationToken)
     {
-        var locations = await _context.Locations
+        int skip = (request.PageNumber - 1) * request.PageSize;
+
+        var locationsQuery = _context.Locations;
+                    
+        locationsQuery = OrderBy(request, locationsQuery);
+
+        var locations = await locationsQuery
+            .Skip(skip)
+            .Take(request.PageSize)
             .AsNoTracking()
             .ProjectTo<LocationDto>(_mapper.ConfigurationProvider)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken);        
+        
+        int totalCount= await _context.Locations.CountAsync(cancellationToken);
 
-        locations = OrderBy(request, locations);
-
-        var pageList = locations.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToList();
-
-        return new PaginatedList<LocationDto>(pageList, locations.Count, request.PageNumber, request.PageSize);
+        return new PaginatedList<LocationDto>(locations, totalCount, request.PageNumber, request.PageSize);
     }
 
-    private static List<LocationDto> OrderBy(ListLocationsCommand request, List<LocationDto> locations)
+    private DbSet<Location> OrderBy(ListLocationsCommand request, DbSet<Location> locationsQuery)
     {
         switch (request.OrderByColumn)
         {
             case "Location":
                 {
-                    if (request.IsAscending ?? false)
+                    if (request.IsAscending)
                     {
-                        locations = locations.OrderBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
-                            .ThenBy(x => x.City).ThenBy(x => x.PostCode).ToList();
+                        locationsQuery.OrderBy(x => x.Name).ThenBy(x => x.Address1)
+                            .ThenBy(x => x.Address2).ThenBy(x => x.City).ThenBy(x => x.PostCode);
                     }
                     else
                     {
-                        locations = locations.OrderByDescending(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
-                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode).ToList();
+                        locationsQuery.OrderByDescending(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
+                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
                     }
                     break;
                 }
             case "LocationType":
                 {
-                    if (request.IsAscending ?? false)
+                    if (request.IsAscending)
                     {
-                        locations = locations.OrderBy(x => x.LocationType).ThenBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
-                            .ThenBy(x => x.City).ThenBy(x => x.PostCode).ToList();
+                        locationsQuery.OrderBy(x => x.LocationType).ThenBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
+                            .ThenBy(x => x.City).ThenBy(x => x.PostCode);
                     }
                     else
                     {
-                        locations = locations.OrderByDescending(x => x.LocationType).ThenBy(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
-                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode).ToList();
+                        locationsQuery.OrderByDescending(x => x.LocationType).ThenBy(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
+                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
                     }
                     break;
                 }
         }
 
-
-        return locations;
+        return locationsQuery;
     }
 }
