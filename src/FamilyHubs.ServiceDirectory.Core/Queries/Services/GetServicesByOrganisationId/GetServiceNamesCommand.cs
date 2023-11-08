@@ -36,17 +36,11 @@ public class GetServiceNamesCommandHandler : IRequestHandler<GetServiceNamesComm
         _mapper = mapper;
     }
 
+    //todo: throw a NotFoundException if the supplied organisation isn't in the database?
     public async Task<PaginatedList<ServiceNameDto>> Handle(GetServiceNamesCommand request, CancellationToken cancellationToken)
     {
         var services = await GetServiceNames(request, cancellationToken);
 
-        // NotFoundException is for when a queried object by a particular key is null,
-        // i.e. searching by org, but the org doesn't exists, not when there are no services
-        //todo: we could add a check to see if the organisation doesn't exist and throw NotFoundException
-        //if (request.Id.HasValue && !services.Any())
-        //    throw new NotFoundException(nameof(Service), request.Id.ToString());
-
-        // get the total count of services
         int totalCount = await GetServicesCount(request, cancellationToken);
 
         return new PaginatedList<ServiceNameDto>(services, totalCount, request.PageNumber, request.PageSize);
