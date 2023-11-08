@@ -2,6 +2,8 @@
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.DeleteService;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServiceByOwnerReferenceIdCommand;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
+using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganisationId;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -52,25 +54,35 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         results.Should().BeEquivalentTo(TestOrganisation.Services.ElementAt(0));
     }
 
-    //todo: reinstate
-    //[Fact]
-    //public async Task ThenGetServicesByOrganisationId()
-    //{
-    //    //Arrange
-    //    await CreateOrganisation();
+    [Fact]
+    public async Task ThenGetServicesByOrganisationId()
+    {
+        //Arrange
+        await CreateOrganisation();
 
-    //    var command = new GetServiceNamesCommand { Id = TestOrganisation.Id };
-    //    var handler = new GetServiceNamesCommandHandler(TestDbContext, Mapper);
+        var command = new GetServiceNamesCommand
+        {
+            OrganisationId = TestOrganisation.Id,
+            PageNumber = 1,
+            PageSize = 10,
+            Order = SortOrder.ascending
+        };
+        var handler = new GetServiceNamesCommandHandler(TestDbContext, Mapper);
 
-    //    //Act
-    //    var results = await handler.Handle(command, new CancellationToken());
+        //Act
+        var results = await handler.Handle(command, new CancellationToken());
 
-    //    //Assert
-    //    results.Should().NotBeNull();
-    //    ArgumentNullException.ThrowIfNull(TestOrganisation);
-    //    ArgumentNullException.ThrowIfNull(TestOrganisation.Services);
-    //    results[0].Should().BeEquivalentTo(TestOrganisation.Services.ElementAt(0));
-    //}
+        //Assert
+        results.Should().NotBeNull();
+
+        var expectedService = TestOrganisation.Services.ElementAt(0);
+        var expectedServiceNameDto = new ServiceNameDto
+        {
+            Id = expectedService.Id,
+            Name = expectedService.Name,
+        };
+        results.Items[0].Should().BeEquivalentTo(expectedServiceNameDto);
+    }
 
     [Fact]
     public async Task ThenGetServiceThatArePaidFor()
