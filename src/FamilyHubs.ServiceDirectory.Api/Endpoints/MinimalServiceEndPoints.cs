@@ -123,29 +123,22 @@ public class MinimalServiceEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Service by OwnerReferenceId", "Get Service by OwnerReferenceId") { Tags = new[] { "Services" } });
 
-        //todo: auth & roles
-         //todo: can pass command in directly?
-        app.MapGet("api/organisationservices/{id}",
-            async (long id, int pageNumber, int pageSize, SortOrder sortOrder,
+        //todo: provide default for all params?
+        //todo: rename if use to get all services
+        app.MapGet("api/organisationservices/{id}", 
+            [Authorize] async (long? organisationId, int pageNumber, int pageSize, SortOrder sortOrder,
                 CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
-            try
+            var command = new GetServiceNamesCommand
             {
-                var command = new GetServicesByOrganisationIdCommand
-                {
-                    Id = id,
-                    PageNumber = pageNumber,
-                    PageSize = pageSize,
-                    Order = sortOrder
-                };
-                return await mediator.Send(command, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error occurred getting open referral service by id");
-                throw;
-            }
-        }).WithMetadata(new SwaggerOperationAttribute("Get Services by Organisation Id", "Get Service by Organisation Id") { Tags = new[] { "Services" } });
+                OrganisationId = organisationId,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Order = sortOrder
+            };
+            return await mediator.Send(command, cancellationToken);
+
+        }).WithMetadata(new SwaggerOperationAttribute("Get service names", "Get service names, optionally by Organisation Id") { Tags = new[] { "Services" } });
 
         app.MapPut("api/services/{id}",
             [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 

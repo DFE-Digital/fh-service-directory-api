@@ -60,8 +60,8 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
     //    //Arrange
     //    await CreateOrganisation();
 
-    //    var command = new GetServicesByOrganisationIdCommand { Id = TestOrganisation.Id };
-    //    var handler = new GetServicesByOrganisationIdCommandHandler(TestDbContext, Mapper);
+    //    var command = new GetServiceNamesCommand { Id = TestOrganisation.Id };
+    //    var handler = new GetServiceNamesCommandHandler(TestDbContext, Mapper);
 
     //    //Act
     //    var results = await handler.Handle(command, new CancellationToken());
@@ -133,8 +133,8 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
     //public async Task ThenGetServicesByOrganisationId_ShouldThrowExceptionWhenNoOrganisations()
     //{
     //    //Arrange
-    //    var command = new GetServicesByOrganisationIdCommand { Id = TestOrganisation.Id };
-    //    var handler = new GetServicesByOrganisationIdCommandHandler(TestDbContext, Mapper);
+    //    var command = new GetServiceNamesCommand { Id = TestOrganisation.Id };
+    //    var handler = new GetServiceNamesCommandHandler(TestDbContext, Mapper);
 
     //    // Act 
     //    // Assert
