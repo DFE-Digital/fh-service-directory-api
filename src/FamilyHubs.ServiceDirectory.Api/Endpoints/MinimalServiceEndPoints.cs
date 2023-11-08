@@ -19,37 +19,12 @@ public class MinimalServiceEndPoints
 {
     public void RegisterServiceEndPoints(WebApplication app)
     {
-        app.MapGet("api/services", async (
-            ServiceType? serviceType, ServiceStatusType? status, string? districtCode,
-            int? minimumAge, int? maximumAge, int? givenAge,
-            double? latitude, double? longitude, double? proximity,
-            int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor,
-            string? taxonomyIds, string? languages, bool? canFamilyChooseLocation,
-            bool? isFamilyHub, int? maxFamilyHubs,
-            CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
-        {
-            try
-            {
-                var command = new GetServicesCommand(false, serviceType, status, districtCode, minimumAge,
-                    maximumAge, givenAge, latitude, longitude, proximity, pageNumber, pageSize, text,
-                    serviceDeliveries, isPaidFor, taxonomyIds, languages, canFamilyChooseLocation, isFamilyHub,
-                    maxFamilyHubs);
-                var result = await mediator.Send(command, cancellationToken);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error occurred listing open referral services. {exceptionMessage}", ex.Message);
-                
-                throw;
-            }
-        }).WithMetadata(new SwaggerOperationAttribute("List Services", "List Services") { Tags = new[] { "Services" } });
-
+        //todo: rename
         app.MapGet("api/services-simple", async (ServiceType? serviceType, ServiceStatusType? status, string? districtCode, int? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
             {
-                var command = new GetServicesCommand(true, serviceType, status, districtCode, minimumAge,
+                var command = new GetServicesCommand(serviceType, status, districtCode, minimumAge,
                     maximumAge, givenAge, latitude, longitude, proximity, pageNumber, pageSize, text,
                     serviceDeliveries, isPaidFor, taxonomyIds, languages, canFamilyChooseLocation, isFamilyHub,
                     maxFamilyHubs);
@@ -124,8 +99,7 @@ public class MinimalServiceEndPoints
         }).WithMetadata(new SwaggerOperationAttribute("Get Service by OwnerReferenceId", "Get Service by OwnerReferenceId") { Tags = new[] { "Services" } });
 
         //todo: provide default for all params?
-        //todo: rename if use to get all services
-        app.MapGet("api/organisationservices/{id}", 
+        app.MapGet("api/services/summary", 
             [Authorize] async (long? organisationId, int pageNumber, int pageSize, SortOrder sortOrder,
                 CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
