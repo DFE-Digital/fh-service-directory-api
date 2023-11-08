@@ -136,21 +136,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
 
         //Assert
         results.Should().Be(true);
-
     }
-
-    //todo: reinstate
-    //[Fact]
-    //public async Task ThenGetServicesByOrganisationId_ShouldThrowExceptionWhenNoOrganisations()
-    //{
-    //    //Arrange
-    //    var command = new GetServiceNamesCommand { Id = TestOrganisation.Id };
-    //    var handler = new GetServiceNamesCommandHandler(TestDbContext, Mapper);
-
-    //    // Act 
-    //    // Assert
-    //    await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, new CancellationToken()));
-    //}
 
     [Fact]
     public async Task ThenDeleteServiceThatDoesNotExist_ShouldThrowException()
@@ -162,6 +148,5 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         // Act 
         // Assert
         await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, new CancellationToken()));
-
     }
 }
