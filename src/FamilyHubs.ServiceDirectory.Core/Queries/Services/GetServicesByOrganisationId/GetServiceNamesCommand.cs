@@ -16,6 +16,7 @@ public enum SortOrder
     descending
 }
 
+//todo: rename ServiceNameDto to ServiceSummaryDto?
 public class GetServiceNamesCommand : IRequest<PaginatedList<ServiceNameDto>>
 {
     public long? OrganisationId { get; set; }
