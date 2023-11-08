@@ -40,23 +40,23 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
     {
         int skip = (request.PageNumber - 1) * request.PageSize;
 
-        var locationsQuery = _context.Locations;
-                    
+        IQueryable<Location> locationsQuery = _context.Locations;
+
         locationsQuery = OrderBy(request, locationsQuery);
 
         var locations = await locationsQuery
             .Skip(skip)
             .Take(request.PageSize)
-            .AsNoTracking()
             .ProjectTo<LocationDto>(_mapper.ConfigurationProvider)
-            .ToListAsync(cancellationToken);        
-        
-        int totalCount= await _context.Locations.CountAsync(cancellationToken);
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        int totalCount = await _context.Locations.CountAsync(cancellationToken);
 
         return new PaginatedList<LocationDto>(locations, totalCount, request.PageNumber, request.PageSize);
     }
 
-    private DbSet<Location> OrderBy(ListLocationsCommand request, DbSet<Location> locationsQuery)
+    private IQueryable<Location> OrderBy(ListLocationsCommand request, IQueryable<Location> locationsQuery)
     {
         switch (request.OrderByColumn)
         {
@@ -64,12 +64,12 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
                 {
                     if (request.IsAscending)
                     {
-                        locationsQuery.OrderBy(x => x.Name).ThenBy(x => x.Address1)
+                        locationsQuery = locationsQuery.OrderBy(x => x.Name).ThenBy(x => x.Address1)
                             .ThenBy(x => x.Address2).ThenBy(x => x.City).ThenBy(x => x.PostCode);
                     }
                     else
                     {
-                        locationsQuery.OrderByDescending(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
+                        locationsQuery = locationsQuery.OrderByDescending(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
                             .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
                     }
                     break;
@@ -78,12 +78,12 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
                 {
                     if (request.IsAscending)
                     {
-                        locationsQuery.OrderBy(x => x.LocationType).ThenBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
+                        locationsQuery = locationsQuery.OrderBy(x => x.LocationType).ThenBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
                             .ThenBy(x => x.City).ThenBy(x => x.PostCode);
                     }
                     else
                     {
-                        locationsQuery.OrderByDescending(x => x.LocationType).ThenBy(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
+                        locationsQuery = locationsQuery.OrderByDescending(x => x.LocationType).ThenBy(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
                             .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
                     }
                     break;
