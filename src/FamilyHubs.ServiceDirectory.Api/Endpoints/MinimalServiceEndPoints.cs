@@ -100,12 +100,13 @@ public class MinimalServiceEndPoints
 
         //todo: provide default for all params?
         app.MapGet("api/services/summary", 
-            [Authorize] async (long? organisationId, int pageNumber, int pageSize, SortOrder sortOrder,
+            [Authorize] async (long? organisationId, string? serviceNameSearch, int pageNumber, int pageSize, SortOrder sortOrder,
                 CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             var command = new GetServiceNamesCommand
             {
                 OrganisationId = organisationId,
+                ServiceNameSearch = serviceNameSearch,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 Order = sortOrder
