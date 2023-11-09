@@ -23,6 +23,7 @@ public class GetServiceNamesCommand : IRequest<PaginatedList<ServiceNameDto>>
     public required int PageNumber { get; set; }
     public required int PageSize { get; set; }
     public required SortOrder Order { get; set; }
+    public string? ServiceNameSearch { get; set; }
 }
 
 public class GetServiceNamesCommandHandler : IRequestHandler<GetServiceNamesCommand, PaginatedList<ServiceNameDto>>
@@ -58,6 +59,10 @@ public class GetServiceNamesCommandHandler : IRequestHandler<GetServiceNamesComm
         {
             servicesQuery = servicesQuery.Where(s => s.OrganisationId == request.OrganisationId);
         }
+        if (!string.IsNullOrEmpty(request.ServiceNameSearch))
+        {
+            servicesQuery = servicesQuery.Where(s => s.Name.Contains(request.ServiceNameSearch));
+        }
 
         servicesQuery = request.Order == SortOrder.ascending
             ? servicesQuery.OrderBy(s => s.Name)
@@ -79,6 +84,10 @@ public class GetServiceNamesCommandHandler : IRequestHandler<GetServiceNamesComm
         if (request.OrganisationId != null)
         {
             serviceCountQuery = serviceCountQuery.Where(s => s.OrganisationId == request.OrganisationId);
+        }
+        if (!string.IsNullOrEmpty(request.ServiceNameSearch))
+        {
+            serviceCountQuery = serviceCountQuery.Where(s => s.Name.Contains(request.ServiceNameSearch));
         }
 
         return await serviceCountQuery.CountAsync(cancellationToken);
