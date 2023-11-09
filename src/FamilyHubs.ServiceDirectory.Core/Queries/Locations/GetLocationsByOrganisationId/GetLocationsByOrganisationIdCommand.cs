@@ -1,9 +1,9 @@
-﻿using Ardalis.GuardClauses;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +15,7 @@ public class GetLocationsByOrganisationIdCommand : IRequest<PaginatedList<Locati
     public long OrganisationId { get; }
     public int PageNumber { get; }
     public int PageSize { get; }
-    public bool? IsAscending { get; }
+    public bool IsAscending { get; }
     public string OrderByColumn { get; }
 
     public GetLocationsByOrganisationIdCommand(long organisationId, int? pageNumber, int? pageSize, bool? isAscending, string? orderByColumn)
@@ -41,71 +41,75 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
 
     public async Task<PaginatedList<LocationDto>> Handle(GetLocationsByOrganisationIdCommand request, CancellationToken cancellationToken)
     {
-        var locations = await _context.Services
+        int skip = (request.PageNumber - 1) * request.PageSize;
 
+        var locationsQuery = _context.Services
             .Include(x => x.Locations)
-            .ThenInclude(x => x.Contacts)
+            .Where(s => s.Status != ServiceStatusType.Deleted && s.OrganisationId == request.OrganisationId)
+            .SelectMany(s => s.Locations);
 
-            .Include(x => x.Locations)
-            .ThenInclude(x => x.HolidaySchedules)
+        locationsQuery = OrderBy(request, locationsQuery);
 
-            .Include(x => x.Locations)
-            .ThenInclude(x => x.RegularSchedules)
-
-            //.Where(s => s.Status != ServiceStatusType.Deleted)
-            .Where(x => x.OrganisationId == request.OrganisationId)
-
-            .SelectMany(s => s.Locations)
-
-            .AsSplitQuery()
+        var locations = await locationsQuery
+            .Skip(skip)
+            .Take(request.PageSize)
             .AsNoTracking()
             .ProjectTo<LocationDto>(_mapper.ConfigurationProvider)
-
             .ToListAsync(cancellationToken);
 
         if (!locations.Any())
-            throw new NotFoundException(nameof(Location), request.OrganisationId.ToString());
+            return new PaginatedList<LocationDto>();
 
-        locations = OrderBy(request, locations);
-        var pageList = locations.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToList();
+        var totalCount = await GetTotalCount(request.OrganisationId, cancellationToken);
 
-        return new PaginatedList<LocationDto>(pageList, locations.Count, request.PageNumber, request.PageSize);
+        return new PaginatedList<LocationDto>(locations, totalCount, request.PageNumber, request.PageSize);
     }
 
-    private static List<LocationDto> OrderBy(GetLocationsByOrganisationIdCommand request, List<LocationDto> locations)
+    private async Task<int> GetTotalCount(long organisationId, CancellationToken cancellationToken)
+    {
+        var count = await _context.Services
+            .Include(x => x.Locations)          
+            .Where(s => s.Status != ServiceStatusType.Deleted && s.OrganisationId == organisationId)
+            .SelectMany(s => s.Locations)
+            .CountAsync(cancellationToken);
+
+        return count;
+    }
+
+    private IQueryable<Location> OrderBy(GetLocationsByOrganisationIdCommand request, IQueryable<Location> locationsQuery)
     {
         switch (request.OrderByColumn)
         {
             case "Location":
                 {
-                    if (request.IsAscending ?? false)
+                    if (request.IsAscending)
                     {
-                        locations = locations.OrderBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
-                            .ThenBy(x => x.City).ThenBy(x => x.PostCode).ToList();
+                        locationsQuery = locationsQuery.OrderBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
+                            .ThenBy(x => x.City).ThenBy(x => x.PostCode);
                     }
                     else
                     {
-                        locations = locations.OrderByDescending(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
-                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode).ToList();
+                        locationsQuery = locationsQuery.OrderByDescending(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
+                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
                     }
                     break;
                 }
             case "LocationType":
                 {
-                    if (request.IsAscending ?? false)
+                    if (request.IsAscending)
                     {
-                        locations = locations.OrderBy(x => x.LocationType).ThenBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
-                            .ThenBy(x => x.City).ThenBy(x => x.PostCode).ToList();
+                        locationsQuery = locationsQuery.OrderBy(x => x.LocationType).ThenBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
+                            .ThenBy(x => x.City).ThenBy(x => x.PostCode);
                     }
                     else
                     {
-                        locations = locations.OrderByDescending(x => x.LocationType).ThenBy(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
-                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode).ToList();
+                        locationsQuery = locationsQuery.OrderByDescending(x => x.LocationType).ThenBy(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
+                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
                     }
                     break;
                 }
         }
 
-        return locations;
+        return locationsQuery;
     }
 }
