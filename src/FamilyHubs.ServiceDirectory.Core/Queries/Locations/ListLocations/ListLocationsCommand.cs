@@ -55,12 +55,12 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-        int totalCount = await GetLocationsCount(request, cancellationToken);
+        int totalCount = await GetTotalCount(request, cancellationToken);
 
         return new PaginatedList<LocationDto>(locations, totalCount, request.PageNumber, request.PageSize);
     }
 
-    private async Task<int> GetLocationsCount(ListLocationsCommand request, CancellationToken cancellationToken)
+    private async Task<int> GetTotalCount(ListLocationsCommand request, CancellationToken cancellationToken)
     {
         IQueryable<Location> locationQuery = _context.Locations;
         locationQuery = Search(request, locationQuery);

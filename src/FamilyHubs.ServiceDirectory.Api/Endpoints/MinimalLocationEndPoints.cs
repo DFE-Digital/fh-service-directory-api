@@ -49,11 +49,11 @@ public class MinimalLocationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Location by Id", "Get Location by Id") { Tags = new[] { "Locations" } });
 
-        app.MapGet("api/organisationlocations/{id}", async (long id, int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalLocationEndPoints> logger) =>
+        app.MapGet("api/organisationlocations/{id}", async (long id, int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending, string? searchName, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalLocationEndPoints> logger) =>
         {
             try
             {
-                var command = new GetLocationsByOrganisationIdCommand(id, pageNumber, pageSize, isAscending, orderByColumn);
+                var command = new GetLocationsByOrganisationIdCommand(id, pageNumber, pageSize, isAscending, orderByColumn, searchName);
                 var result = await mediator.Send(command, cancellationToken);
                 return result;
             }
