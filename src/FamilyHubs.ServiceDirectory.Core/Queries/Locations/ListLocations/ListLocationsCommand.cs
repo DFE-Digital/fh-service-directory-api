@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FamilyHubs.ServiceDirectory.Core.Queries.Locations.ListLocations;
 
@@ -14,14 +15,16 @@ public class ListLocationsCommand : IRequest<PaginatedList<LocationDto>>
     public int PageNumber { get; }
     public int PageSize { get; }
     public bool IsAscending { get; }
+    public string? SearchName { get; }
     public string OrderByColumn { get; }
 
-    public ListLocationsCommand(int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending)
+    public ListLocationsCommand(int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending, string? searchName)
     {
         PageNumber = pageNumber ?? 1;
         OrderByColumn = orderByColumn ?? "Location";
         PageSize = pageSize ?? 10;
         IsAscending = isAscending ?? true;
+        SearchName = searchName;
     }
 }
 
@@ -42,6 +45,7 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
 
         IQueryable<Location> locationsQuery = _context.Locations;
 
+        locationsQuery = Search(request, locationsQuery);
         locationsQuery = OrderBy(request, locationsQuery);
 
         var locations = await locationsQuery
@@ -51,9 +55,31 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-        int totalCount = await _context.Locations.CountAsync(cancellationToken);
+        int totalCount = await GetLocationsCount(request, cancellationToken);
 
         return new PaginatedList<LocationDto>(locations, totalCount, request.PageNumber, request.PageSize);
+    }
+
+    private async Task<int> GetLocationsCount(ListLocationsCommand request, CancellationToken cancellationToken)
+    {
+        IQueryable<Location> locationQuery = _context.Locations;
+        locationQuery = Search(request, locationQuery);
+
+        var count = await locationQuery.CountAsync(cancellationToken);
+        return count;
+    }
+
+    private IQueryable<Location> Search(ListLocationsCommand request, IQueryable<Location> locationsQuery)
+    {
+        if (request.SearchName != null && request.SearchName != string.Empty)
+        {
+            locationsQuery = locationsQuery.Where(x => (x.Name != null && x.Name.Contains(request.SearchName))
+                || x.Address1.Contains(request.SearchName)
+                || (x.Address2 != null && x.Address2.Contains(request.SearchName))
+                || x.City.Contains(request.SearchName)
+                || x.PostCode.Contains(request.SearchName));
+        }
+        return locationsQuery;
     }
 
     private IQueryable<Location> OrderBy(ListLocationsCommand request, IQueryable<Location> locationsQuery)
