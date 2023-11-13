@@ -18,8 +18,10 @@ public class GetLocationsByOrganisationIdCommand : IRequest<PaginatedList<Locati
     public bool IsAscending { get; }
     public string OrderByColumn { get; }
     public string? SearchName { get; }
+    public bool IsFamilyHub { get; }
+    public bool IsNonFamilyHub { get; }
 
-    public GetLocationsByOrganisationIdCommand(long organisationId, int? pageNumber, int? pageSize, bool? isAscending, string? orderByColumn, string? searchName)
+    public GetLocationsByOrganisationIdCommand(long organisationId, int? pageNumber, int? pageSize, bool? isAscending, string? orderByColumn, string? searchName, bool? isFamilyHub, bool? isNonFamilyHub)
     {
         OrganisationId = organisationId;
         PageNumber = pageNumber ?? 1;
@@ -27,6 +29,8 @@ public class GetLocationsByOrganisationIdCommand : IRequest<PaginatedList<Locati
         IsAscending = isAscending ?? true;
         OrderByColumn = orderByColumn ?? "Location";
         SearchName = searchName;
+        IsFamilyHub = isFamilyHub ?? false;
+        IsNonFamilyHub = isNonFamilyHub ?? false;
     }
 }
 
@@ -79,6 +83,20 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
                 || x.City.Contains(request.SearchName)
                 || x.PostCode.Contains(request.SearchName));
         }
+
+        if (request.IsFamilyHub != request.IsNonFamilyHub)
+        {
+            if (request.IsFamilyHub)
+            {
+                locationsQuery = locationsQuery.Where(x => x.LocationType == Shared.Enums.LocationType.FamilyHub);
+            }
+
+            if (request.IsNonFamilyHub)
+            {
+                locationsQuery = locationsQuery.Where(x => x.LocationType != Shared.Enums.LocationType.FamilyHub);
+            }
+        }
+
         return locationsQuery;
     }
 

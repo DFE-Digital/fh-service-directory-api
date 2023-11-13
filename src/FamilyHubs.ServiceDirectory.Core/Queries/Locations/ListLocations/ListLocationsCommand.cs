@@ -82,14 +82,19 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
                 || x.City.Contains(request.SearchName)
                 || x.PostCode.Contains(request.SearchName));
         }
-        if (request.IsFamilyHub)
+
+        if ( request.IsFamilyHub != request.IsNonFamilyHub)
         {
-            locationsQuery = locationsQuery.Where(x => x.LocationType == Shared.Enums.LocationType.FamilyHub);
-        }
-        if (request.IsNonFamilyHub)
-        {
-            locationsQuery = locationsQuery.Where(x => x.LocationType != Shared.Enums.LocationType.FamilyHub);
-        }
+            if (request.IsFamilyHub)
+            {
+                locationsQuery = locationsQuery.Where(x => x.LocationType == Shared.Enums.LocationType.FamilyHub);
+            }
+
+            if (request.IsNonFamilyHub)
+            {
+                locationsQuery = locationsQuery.Where(x => x.LocationType != Shared.Enums.LocationType.FamilyHub);
+            }
+        }        
 
         return locationsQuery;
     }
