@@ -6,7 +6,6 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace FamilyHubs.ServiceDirectory.Core.Queries.Locations.ListLocations;
 
@@ -16,15 +15,19 @@ public class ListLocationsCommand : IRequest<PaginatedList<LocationDto>>
     public int PageSize { get; }
     public bool IsAscending { get; }
     public string? SearchName { get; }
+    public bool IsFamilyHub { get; }
+    public bool IsNonFamilyHub { get; }
     public string OrderByColumn { get; }
 
-    public ListLocationsCommand(int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending, string? searchName)
+    public ListLocationsCommand(int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending, string? searchName, bool? isFamilyHub, bool? isNonFamilyHub)
     {
         PageNumber = pageNumber ?? 1;
         OrderByColumn = orderByColumn ?? "Location";
         PageSize = pageSize ?? 10;
         IsAscending = isAscending ?? true;
         SearchName = searchName;
+        IsFamilyHub = isFamilyHub ?? false;
+        IsNonFamilyHub = isNonFamilyHub ?? false;
     }
 }
 
@@ -79,6 +82,15 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
                 || x.City.Contains(request.SearchName)
                 || x.PostCode.Contains(request.SearchName));
         }
+        if (request.IsFamilyHub)
+        {
+            locationsQuery = locationsQuery.Where(x => x.LocationType == Shared.Enums.LocationType.FamilyHub);
+        }
+        if (request.IsNonFamilyHub)
+        {
+            locationsQuery = locationsQuery.Where(x => x.LocationType != Shared.Enums.LocationType.FamilyHub);
+        }
+
         return locationsQuery;
     }
 
