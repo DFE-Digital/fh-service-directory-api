@@ -39,11 +39,11 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(255)
+            .HasMaxLength(MaxLength.Email)
             .IsRequired();
 
         builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(320);
+            .HasMaxLength(MaxLength.Email);
 
         builder.HasMany(s => s.Reviews)
             .WithOne()
