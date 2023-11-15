@@ -76,14 +76,22 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
     {
         if (request.SearchName != null && request.SearchName != string.Empty)
         {
-            locationsQuery = locationsQuery.Where(x => (x.Name != null && x.Name.Contains(request.SearchName))
+            locationsQuery = locationsQuery.Where(
+                x => (x.Name != null && x.Name.Contains(request.SearchName))
                 || x.Address1.Contains(request.SearchName)
                 || (x.Address2 != null && x.Address2.Contains(request.SearchName))
                 || x.City.Contains(request.SearchName)
-                || x.PostCode.Contains(request.SearchName));
+                || x.PostCode.Contains(request.SearchName)
+                //allow to search by the the full phrase 
+                || ((x.Name != null && x.Name != "" ? x.Name + ", " : "")
+                    + (x.Address1 != null && x.Address1 != "" ? x.Address1 + ", " : "")
+                    + (x.Address2 != null && x.Address2 != "" ? x.Address2 + ", " : "")
+                    + (x.City != null && x.City != "" ? x.City + ", " : "")
+                    + (x.PostCode != null && x.PostCode != "" ? x.PostCode : "")
+                    ).Contains(request.SearchName));
         }
 
-        if ( request.IsFamilyHub != request.IsNonFamilyHub)
+        if (request.IsFamilyHub != request.IsNonFamilyHub)
         {
             if (request.IsFamilyHub)
             {
@@ -94,7 +102,7 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
             {
                 locationsQuery = locationsQuery.Where(x => x.LocationType != Shared.Enums.LocationType.FamilyHub);
             }
-        }        
+        }
 
         return locationsQuery;
     }

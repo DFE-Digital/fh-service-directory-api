@@ -81,7 +81,14 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
                 || x.Address1.Contains(request.SearchName)
                 || (x.Address2 != null && x.Address2.Contains(request.SearchName))
                 || x.City.Contains(request.SearchName)
-                || x.PostCode.Contains(request.SearchName));
+                || x.PostCode.Contains(request.SearchName)
+                //allow to search by the the full phrase 
+                || ((x.Name != null && x.Name != "" ? x.Name + ", " : "")
+                    + (x.Address1 != null && x.Address1 != "" ? x.Address1 + ", " : "")
+                    + (x.Address2 != null && x.Address2 != "" ? x.Address2 + ", " : "")
+                    + (x.City != null && x.City != "" ? x.City + ", " : "")
+                    + (x.PostCode != null && x.PostCode != "" ? x.PostCode : "")
+                    ).Contains(request.SearchName));
         }
 
         if (request.IsFamilyHub != request.IsNonFamilyHub)
