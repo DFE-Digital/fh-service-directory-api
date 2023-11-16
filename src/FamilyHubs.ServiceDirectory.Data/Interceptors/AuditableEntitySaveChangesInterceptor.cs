@@ -36,9 +36,9 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 
         var updatedBy = "System";
         var user = _httpContextAccessor?.HttpContext?.GetFamilyHubsUser();
-        if (user != null && !string.IsNullOrEmpty(user.Email))
+        if (user != null && !string.IsNullOrEmpty(user.AccountId))
         {
-            updatedBy = user.Email;
+            updatedBy = user.AccountId;
         }
 
         foreach (var entry in context.ChangeTracker.Entries<ServiceLocationSharedEntityBase>())
