@@ -25,9 +25,9 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(testLocation, options => 
-            options.Excluding((IMemberInfo info ) => info.Name.Contains("Id"))
-                .Excluding((IMemberInfo info ) => info.Name.Contains("Distance")));
+        result.Should().BeEquivalentTo(testLocation, options =>
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
 
     [Fact]
@@ -50,16 +50,16 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
         result.Should().BeEquivalentTo(TestOrganisation.Services.ElementAt(0).Locations);
     }
 
+
+
     [Fact]
     public async Task ThenGetLocationByOrganisationId()
     {
         //Arrange
         await CreateOrganisation();
 
-        var getCommand = new GetLocationsByOrganisationIdCommand
-        {
-            OrganisationId = TestOrganisation.Id
-        };
+        var getCommand = new GetLocationsByOrganisationIdCommand(TestOrganisation.Id, null, null, null, null, null,null,null);
+
         var getHandler = new GetLocationsByOrganisationIdCommandHandler(TestDbContext, Mapper);
 
         //Act
@@ -67,7 +67,7 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(TestOrganisation.Services.SelectMany(s => s.Locations));
+        result.Items.Should().BeEquivalentTo(TestOrganisation.Services.SelectMany(s => s.Locations));
     }
 
     [Fact]
@@ -76,7 +76,7 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
         //Arrange
         var services = await CreateManyTestServicesQueryTesting();
 
-        var getCommand = new ListLocationsCommand();
+        var getCommand = new ListLocationsCommand(null, null, null, null,null, null,null);
         var getHandler = new ListLocationCommandHandler(TestDbContext, Mapper);
 
         //Act
@@ -84,13 +84,13 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().BeEquivalentTo(services.SelectMany(s => s.Locations), options => 
-            options.Excluding((IMemberInfo info ) => info.Name.Contains("Id"))
-                .Excluding((IMemberInfo info ) => info.Name.Contains("Distance"))
-                .Excluding((IMemberInfo info ) => info.Name.Contains("Created"))
-                .Excluding((IMemberInfo info ) => info.Name.Contains("CreatedBy"))
-                .Excluding((IMemberInfo info ) => info.Name.Contains("LastModified"))
-                .Excluding((IMemberInfo info ) => info.Name.Contains("LastModifiedBy")));
+        result.Items.Should().BeEquivalentTo(services.SelectMany(s => s.Locations), options =>
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("Distance"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("Created"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("CreatedBy"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("LastModified"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("LastModifiedBy")));
     }
 
     [Fact]
@@ -104,25 +104,13 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
         // Assert
         await Assert.ThrowsAsync<NotFoundException>(() => getHandler.Handle(getCommand, new CancellationToken()));
     }
-    
+
     [Fact]
     public async Task ThenGetLocationByServiceId_ShouldThrowExceptionWhenIdDoesNotExist()
     {
         //Arrange
         var getCommand = new GetLocationsByServiceIdCommand { ServiceId = Random.Shared.Next() };
         var getHandler = new GetLocationsByServiceIdCommandHandler(TestDbContext, Mapper);
-
-        // Act 
-        // Assert
-        await Assert.ThrowsAsync<NotFoundException>(() => getHandler.Handle(getCommand, new CancellationToken()));
-    }
-
-    [Fact]
-    public async Task ThenGetLocationByOrganisationId_ShouldThrowExceptionWhenIdDoesNotExist()
-    {
-        //Arrange
-        var getCommand = new GetLocationsByOrganisationIdCommand { OrganisationId = Random.Shared.Next() };
-        var getHandler = new GetLocationsByOrganisationIdCommandHandler(TestDbContext, Mapper);
 
         // Act 
         // Assert

@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Core.Commands.Services.DeleteService;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServiceByOwnerReferenceIdCommand;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganisationId;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -18,7 +19,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisation();
 
-        var command = new GetServicesCommand(false,ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null, null, null,
+        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null, null, null,
             null, null, null, 1, 10, null, null, null, null, null, null, null, null);
         var handler = new GetServicesCommandHandler(TestDbContext, Mapper);
 
@@ -59,17 +60,28 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisation();
 
-        var command = new GetServicesByOrganisationIdCommand { Id = TestOrganisation.Id };
-        var handler = new GetServicesByOrganisationIdCommandHandler(TestDbContext, Mapper);
+        var command = new GetServiceNamesCommand
+        {
+            OrganisationId = TestOrganisation.Id,
+            PageNumber = 1,
+            PageSize = 10,
+            Order = SortOrder.ascending
+        };
+        var handler = new GetServiceNamesCommandHandler(TestDbContext, Mapper);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
 
         //Assert
         results.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(TestOrganisation);
-        ArgumentNullException.ThrowIfNull(TestOrganisation.Services);
-        results[0].Should().BeEquivalentTo(TestOrganisation.Services.ElementAt(0));
+
+        var expectedService = TestOrganisation.Services.ElementAt(0);
+        var expectedServiceNameDto = new ServiceNameDto
+        {
+            Id = expectedService.Id,
+            Name = expectedService.Name,
+        };
+        results.Items[0].Should().BeEquivalentTo(expectedServiceNameDto);
     }
 
     [Fact]
@@ -78,7 +90,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisation(TestDataProvider.GetTestCountyCouncilDto2());
 
-        var command = new GetServicesCommand(false,ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null, null, null,
+        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null, null, null,
             null, null, null, 1, 10, null, null, true, null, null, null, null, null);
         var handler = new GetServicesCommandHandler(TestDbContext, Mapper);
 
@@ -96,7 +108,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisation();
 
-        var command = new GetServicesCommand(false, ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null, null, null,
+        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null, null, null,
             null, null, null, 1, 10, null, null, false, null, null, null, null, null);
         var handler = new GetServicesCommandHandler(TestDbContext, Mapper);
 
@@ -124,20 +136,6 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
 
         //Assert
         results.Should().Be(true);
-
-    }
-
-    [Fact]
-    public async Task ThenGetServicesByOrganisationId_ShouldThrowExceptionWhenNoOrganisations()
-    {
-        //Arrange
-        var command = new GetServicesByOrganisationIdCommand { Id = TestOrganisation.Id };
-        var handler = new GetServicesByOrganisationIdCommandHandler(TestDbContext, Mapper);
-
-        // Act 
-        // Assert
-        await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, new CancellationToken()));
-
     }
 
     [Fact]
@@ -150,6 +148,5 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         // Act 
         // Assert
         await Assert.ThrowsAsync<NotFoundException>(() => handler.Handle(command, new CancellationToken()));
-
     }
 }
