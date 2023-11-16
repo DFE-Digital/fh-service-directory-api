@@ -17,14 +17,20 @@ public class GetLocationsByOrganisationIdCommand : IRequest<PaginatedList<Locati
     public int PageSize { get; }
     public bool IsAscending { get; }
     public string OrderByColumn { get; }
+    public string? SearchName { get; }
+    public bool IsFamilyHub { get; }
+    public bool IsNonFamilyHub { get; }
 
-    public GetLocationsByOrganisationIdCommand(long organisationId, int? pageNumber, int? pageSize, bool? isAscending, string? orderByColumn)
+    public GetLocationsByOrganisationIdCommand(long organisationId, int? pageNumber, int? pageSize, bool? isAscending, string? orderByColumn, string? searchName, bool? isFamilyHub, bool? isNonFamilyHub)
     {
         OrganisationId = organisationId;
         PageNumber = pageNumber ?? 1;
         PageSize = pageSize ?? 10;
         IsAscending = isAscending ?? true;
         OrderByColumn = orderByColumn ?? "Location";
+        SearchName = searchName;
+        IsFamilyHub = isFamilyHub ?? false;
+        IsNonFamilyHub = isNonFamilyHub ?? false;
     }
 }
 
@@ -43,11 +49,12 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
     {
         int skip = (request.PageNumber - 1) * request.PageSize;
 
-        var locationsQuery = _context.Services
-            .Include(x => x.Locations)
+        IQueryable<Location> locationsQuery = _context.Services
             .Where(s => s.Status != ServiceStatusType.Deleted && s.OrganisationId == request.OrganisationId)
+            .Include(x => x.Locations)
             .SelectMany(s => s.Locations);
 
+        locationsQuery = Search(request, locationsQuery);
         locationsQuery = OrderBy(request, locationsQuery);
 
         var locations = await locationsQuery
@@ -60,17 +67,57 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
         if (!locations.Any())
             return new PaginatedList<LocationDto>();
 
-        var totalCount = await GetTotalCount(request.OrganisationId, cancellationToken);
+        var totalCount = await GetTotalCount(request, cancellationToken);
 
         return new PaginatedList<LocationDto>(locations, totalCount, request.PageNumber, request.PageSize);
     }
 
-    private async Task<int> GetTotalCount(long organisationId, CancellationToken cancellationToken)
+    private IQueryable<Location> Search(GetLocationsByOrganisationIdCommand request, IQueryable<Location> locationsQuery)
     {
-        var count = await _context.Services
-            .Include(x => x.Locations)          
-            .Where(s => s.Status != ServiceStatusType.Deleted && s.OrganisationId == organisationId)
-            .SelectMany(s => s.Locations)
+
+        if (request.SearchName != null && request.SearchName != string.Empty)
+        {
+            locationsQuery = locationsQuery.Where(x => (x.Name != null && x.Name.Contains(request.SearchName))
+                || x.Address1.Contains(request.SearchName)
+                || (x.Address2 != null && x.Address2.Contains(request.SearchName))
+                || x.City.Contains(request.SearchName)
+                || x.PostCode.Contains(request.SearchName)
+                //allow to search by the the full phrase 
+                || ((x.Name != null && x.Name != "" ? x.Name + ", " : "")
+                    + (x.Address1 != null && x.Address1 != "" ? x.Address1 + ", " : "")
+                    + (x.Address2 != null && x.Address2 != "" ? x.Address2 + ", " : "")
+                    + (x.City != null && x.City != "" ? x.City + ", " : "")
+                    + (x.PostCode != null && x.PostCode != "" ? x.PostCode : "")
+                    ).Contains(request.SearchName));
+        }
+
+        if (request.IsFamilyHub != request.IsNonFamilyHub)
+        {
+            if (request.IsFamilyHub)
+            {
+                locationsQuery = locationsQuery.Where(x => x.LocationType == Shared.Enums.LocationType.FamilyHub);
+            }
+
+            if (request.IsNonFamilyHub)
+            {
+                locationsQuery = locationsQuery.Where(x => x.LocationType != Shared.Enums.LocationType.FamilyHub);
+            }
+        }
+
+        return locationsQuery;
+    }
+
+
+    private async Task<int> GetTotalCount(GetLocationsByOrganisationIdCommand request, CancellationToken cancellationToken)
+    {
+        var countQuery = _context.Services
+            .Include(x => x.Locations)
+            .Where(s => s.Status != ServiceStatusType.Deleted && s.OrganisationId == request.OrganisationId)
+            .SelectMany(s => s.Locations);
+
+        countQuery = Search(request, countQuery);
+
+        var count = await countQuery
             .CountAsync(cancellationToken);
 
         return count;
