@@ -12,9 +12,8 @@ namespace FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 
 public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
 {
-    public GetServicesCommand(bool isSimple, ServiceType? serviceType, ServiceStatusType? status, string? districtCode, int? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs)
+    public GetServicesCommand(ServiceType? serviceType, ServiceStatusType? status, string? districtCode, int? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs)
     {
-        IsSimple = isSimple;
         ServiceType = serviceType ?? ServiceType.NotSet;
         Status = status ?? ServiceStatusType.NotSet;
         DistrictCode = districtCode;
@@ -35,8 +34,6 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
         IsFamilyHub = isFamilyHub;
         MaxFamilyHubs = maxFamilyHubs;
     }
-
-    public bool IsSimple { get; }
 
     public ServiceType ServiceType { get; }
     public ServiceStatusType Status { get; set; }
@@ -75,6 +72,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         if (request.Status == ServiceStatusType.NotSet)
             request.Status = ServiceStatusType.Active;
 
+        //todo: gets all services and then sorts in the api - not going to scale!
         var dbServices = await GetServices(request, cancellationToken);
 
         var filteredServices = _mapper.Map<List<ServiceDto>>(dbServices);
@@ -90,40 +88,15 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
 
     private async Task<List<Service>> GetServices(GetServicesCommand request, CancellationToken cancellationToken)
     {
-        IQueryable<Service> services = default!;
+        IQueryable<Service> services = _context.Services
 
-        if (request.IsSimple)
-        {
-            services = _context.Services
-           .Include(x => x.Taxonomies)
+       .Include(x => x.Taxonomies)
+       .Include(x => x.Locations)
 
-           .Include(x => x.Locations)
+       .AsNoTracking()
+       .AsSplitQuery()
 
-           .AsNoTracking()
-           .AsSplitQuery()
-
-           .Where(x => x.Status == request.Status && x.Status != ServiceStatusType.Deleted);
-        }
-        else
-        {
-            services = _context.Services
-           .Include(x => x.Taxonomies)
-
-           .Include(x => x.Locations)
-           .ThenInclude(x => x.Contacts)
-
-           .Include(x => x.Locations)
-           .ThenInclude(x => x.HolidaySchedules)
-
-           .Include(x => x.Locations)
-           .ThenInclude(x => x.RegularSchedules)
-
-           .AsNoTracking()
-           .AsSplitQuery()
-
-           .Where(x => x.Status == request.Status && x.Status != ServiceStatusType.Deleted);
-        }
-
+       .Where(x => x.Status == request.Status && x.Status != ServiceStatusType.Deleted);
 
         if (request.DistrictCode != null)
         {
@@ -187,9 +160,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             services = services.Where(s => s.ServiceDeliveries.Any(co => parts.Contains(co.Name)));
         }
 
-        var dbServices = await services.ToListAsync(cancellationToken);
-
-        return dbServices;
+        return await services.ToListAsync(cancellationToken);
     }
 
     private List<ServiceDto> SortServicesDto(GetServicesCommand request, List<ServiceDto> services)

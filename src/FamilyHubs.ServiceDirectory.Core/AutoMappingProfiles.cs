@@ -17,6 +17,7 @@ public class AutoMappingProfiles : Profile
         CreateMap<LanguageDto, Language>().ReverseMap();
         CreateMap<ReviewDto, Review>().ReverseMap();
         CreateMap<ServiceDto, Service>().ReverseMap();
+        CreateMap<ServiceNameDto, Service>().ReverseMap();
         CreateMap<ServiceAreaDto, ServiceArea>().ReverseMap();
         CreateMap<ServiceDeliveryDto, ServiceDelivery>().ReverseMap();
         CreateMap<OrganisationDto, Organisation>().ReverseMap();
