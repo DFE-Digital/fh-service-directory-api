@@ -1,18 +1,31 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
+using FamilyHubs.ServiceDirectory.Shared.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Core.Queries.Locations.ListLocations;
 
-public class ListLocationsCommand : IRequest<List<LocationDto>>
+public class ListLocationsCommand : IRequest<PaginatedList<LocationDto>>
 {
+    public int PageNumber { get; }
+    public int PageSize { get; }
+    public bool IsAscending { get; }
+    public string OrderByColumn { get; }
+
+    public ListLocationsCommand(int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending)
+    {
+        PageNumber = pageNumber ?? 1;
+        OrderByColumn = orderByColumn ?? "Location";
+        PageSize = pageSize ?? 10;
+        IsAscending = isAscending ?? true;
+    }
 }
 
-public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, List<LocationDto>>
+public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, PaginatedList<LocationDto>>
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -23,30 +36,60 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
         _mapper = mapper;
     }
 
-    public async Task<List<LocationDto>> Handle(ListLocationsCommand _, CancellationToken cancellationToken)
+    public async Task<PaginatedList<LocationDto>> Handle(ListLocationsCommand request, CancellationToken cancellationToken)
     {
-        var locations = await _context.Services
+        int skip = (request.PageNumber - 1) * request.PageSize;
 
-            .Include(x => x.Locations)
-            .ThenInclude(x => x.Contacts)
+        IQueryable<Location> locationsQuery = _context.Locations;
 
-            .Include(x => x.Locations)
-            .ThenInclude(x => x.HolidaySchedules)
+        locationsQuery = OrderBy(request, locationsQuery);
 
-            .Include(x => x.Locations)
-            .ThenInclude(x => x.RegularSchedules)
-
-            .Where(s => s.Status != ServiceStatusType.Deleted)
-
-            .SelectMany(s => s.Locations)
-
-            .AsSplitQuery()
-            .AsNoTracking()
-
+        var locations = await locationsQuery
+            .Skip(skip)
+            .Take(request.PageSize)
             .ProjectTo<LocationDto>(_mapper.ConfigurationProvider)
-
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-        return locations;
+        int totalCount = await _context.Locations.CountAsync(cancellationToken);
+
+        return new PaginatedList<LocationDto>(locations, totalCount, request.PageNumber, request.PageSize);
+    }
+
+    private IQueryable<Location> OrderBy(ListLocationsCommand request, IQueryable<Location> locationsQuery)
+    {
+        switch (request.OrderByColumn)
+        {
+            case "Location":
+                {
+                    if (request.IsAscending)
+                    {
+                        locationsQuery = locationsQuery.OrderBy(x => x.Name).ThenBy(x => x.Address1)
+                            .ThenBy(x => x.Address2).ThenBy(x => x.City).ThenBy(x => x.PostCode);
+                    }
+                    else
+                    {
+                        locationsQuery = locationsQuery.OrderByDescending(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
+                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
+                    }
+                    break;
+                }
+            case "LocationType":
+                {
+                    if (request.IsAscending)
+                    {
+                        locationsQuery = locationsQuery.OrderBy(x => x.LocationType).ThenBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
+                            .ThenBy(x => x.City).ThenBy(x => x.PostCode);
+                    }
+                    else
+                    {
+                        locationsQuery = locationsQuery.OrderByDescending(x => x.LocationType).ThenBy(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
+                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
+                    }
+                    break;
+                }
+        }
+
+        return locationsQuery;
     }
 }
