@@ -59,6 +59,8 @@ public class MinimalServiceEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Service by Id", "Get Service by Id") { Tags = new[] { "Services" } });
 
+        //todo: are there any other consumers? if not, change to simple (or summary)
+        //todo: this looks like old code
         app.MapGet("api/services/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
@@ -115,8 +117,10 @@ public class MinimalServiceEndPoints
 
         }).WithMetadata(new SwaggerOperationAttribute("Get service names", "Get service names, optionally by Organisation Id") { Tags = new[] { "Services" } });
 
+        //todo: use AdminRole from updated shared kernel (need to update azure.identity first)
+        //todo: check if any other consumers, as we're changing the roles here
         app.MapPut("api/services/{id}",
-            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole},{RoleTypes.VcsManager},{RoleTypes.VcsDualRole}")] async 
             (long id, 
             [FromBody] ServiceDto request, 
             CancellationToken cancellationToken, 
