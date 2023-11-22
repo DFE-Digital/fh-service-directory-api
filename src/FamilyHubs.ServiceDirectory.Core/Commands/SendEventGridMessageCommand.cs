@@ -1,5 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.Dto;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -9,12 +8,12 @@ namespace FamilyHubs.ServiceDirectory.Core.Commands;
 
 public class SendEventGridMessageCommand : IRequest<string>
 {
-    public SendEventGridMessageCommand(OrganisationDto organisationDto)
+    public SendEventGridMessageCommand(object data)
     {
-        OrganisationDto = organisationDto;
+        Data = data;
     }
 
-    public OrganisationDto OrganisationDto { get; set; }
+    public object Data { get; set; }
 }
 
 public class SendEventGridMessageCommandHandler : IRequestHandler<SendEventGridMessageCommand, string>
@@ -42,17 +41,6 @@ public class SendEventGridMessageCommandHandler : IRequestHandler<SendEventGridM
     private async Task<HttpResponseMessage> MakeRequestEvent(SendEventGridMessageCommand request)
     {
         _logger.LogInformation("Createing Organisation Event Grid Notification");
-        var eventData = new[]
-        {
-            new
-            {
-                Id = Guid.NewGuid(),
-                EventType = "OrganisationDto",
-                Subject = "Organisation",
-                EventTime = DateTime.UtcNow,
-                Data = request.OrganisationDto
-            }
-        };
 
         string? endpoint = _configuration["EventGridUrl"];
         string? aegsaskey = _configuration["aeg-sas-key"];
@@ -69,7 +57,7 @@ public class SendEventGridMessageCommandHandler : IRequestHandler<SendEventGridM
         var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Add("aeg-sas-key", aegsaskey);
 
-        string jsonContent = JsonConvert.SerializeObject(eventData);
+        string jsonContent = JsonConvert.SerializeObject(request.Data);
 
         _logger.LogInformation($"Sending Grid Event Payload: {jsonContent}");
 
