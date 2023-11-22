@@ -39,6 +39,7 @@ public class MinimalServiceEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Services", "List Services") { Tags = new[] { "Services" } });
 
+        //todo: this should be enough to get the name, but is it enough to update the service?
         app.MapGet("api/services-simple/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
@@ -119,6 +120,7 @@ public class MinimalServiceEndPoints
 
         //todo: use AdminRole from updated shared kernel (need to update azure.identity first)
         //todo: check if any other consumers, as we're changing the roles here
+        //todo: check with rider's ef core analyzer
         app.MapPut("api/services/{id}",
             [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole},{RoleTypes.VcsManager},{RoleTypes.VcsDualRole}")] async 
             (long id, 
