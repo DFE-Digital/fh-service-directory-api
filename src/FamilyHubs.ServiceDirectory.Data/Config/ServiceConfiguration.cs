@@ -45,11 +45,11 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(320)
+            .HasMaxLength(MaxLength.Email)
             .IsRequired();
 
         builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(320);
+            .HasMaxLength(MaxLength.Email);
 
         builder.HasMany(s => s.Fundings)
             .WithOne()

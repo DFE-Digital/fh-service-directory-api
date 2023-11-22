@@ -8,9 +8,6 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
 {
     public void Configure(EntityTypeBuilder<Review> builder)
     {
-        builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(255);
-
         builder.Property(t => t.Score)
             .HasMaxLength(10);
 
@@ -30,10 +27,10 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(320)
+            .HasMaxLength(MaxLength.Email)
             .IsRequired();
 
         builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(320);
+            .HasMaxLength(MaxLength.Email);
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
+
 public class AccessibilityConfiguration : IEntityTypeConfiguration<AccessibilityForDisabilities>
 {
     public void Configure(EntityTypeBuilder<AccessibilityForDisabilities> builder)
@@ -14,10 +15,10 @@ public class AccessibilityConfiguration : IEntityTypeConfiguration<Accessibility
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(320)
+            .HasMaxLength(MaxLength.Email)
             .IsRequired();
 
         builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(320);
+            .HasMaxLength(MaxLength.Email);
     }
 }
