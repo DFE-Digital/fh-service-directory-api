@@ -36,10 +36,10 @@ public class ContactConfiguration : IEntityTypeConfiguration<Contact>
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(320)
+            .HasMaxLength(MaxLength.Email)
             .IsRequired();
 
         builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(320);
+            .HasMaxLength(MaxLength.Email);
     }
 }
