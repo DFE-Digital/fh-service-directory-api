@@ -118,6 +118,49 @@ public class MinimalServiceEndPoints
 
         }).WithMetadata(new SwaggerOperationAttribute("Get service names", "Get service names, optionally by Organisation Id") { Tags = new[] { "Services" } });
 
+        //todo: it would be much more efficient to use patch, rather than update
+        // there are some hoops to jump through to get JsonPatchDocument working with minimal apis though
+        // (see https://learn.microsoft.com/en-us/answers/questions/1348193/jsonpatchdocument-problems-with-minimal-api-in-net)
+        // and it wouldn't be particularly swagger friendly (but that's a price worth paying)
+        // we could use controllers instead for the patch endpoints though
+        // requires <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="7.0.14" />
+
+        //app.MapPatch("api/services/{id}", async (HttpRequest req, ILogger log) =>
+        //{
+        //    var patchDoc = await JsonSerializer.DeserializeAsync<JsonPatchDocument<ServiceDto>>(req.Body);
+        //});
+
+        //app.MapPatch("api/services/{id}", async (string id, [FromBody] JsonElement jsonElement) =>
+        //{
+        //    var json = jsonElement.GetRawText();
+
+        //    var doc = JsonConvert.DeserializeObject<JsonPatchDocument>(json);
+        //});
+
+        //[HttpPatch("{id}")]
+        //public async Task<IActionResult> Patch(int id, [FromBody] JsonPatchDocument<Service> patchDoc)
+        //{
+        //    if (patchDoc != null)
+        //    {
+        //        var service = await _context.Services.FindAsync(id);
+
+        //        patchDoc.ApplyTo(service, ModelState);
+
+        //        if (!ModelState.IsValid)
+        //        {
+        //            return BadRequest(ModelState);
+        //        }
+
+        //        await _context.SaveChangesAsync();
+
+        //        return new ObjectResult(service);
+        //    }
+        //    else
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //}
+
         //todo: use AdminRole from updated shared kernel (need to update azure.identity first)
         //todo: check if any other consumers, as we're changing the roles here
         //todo: check with rider's ef core analyzer
