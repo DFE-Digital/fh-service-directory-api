@@ -117,7 +117,6 @@ public class MinimalServiceEndPoints
 
         }).WithMetadata(new SwaggerOperationAttribute("Get service names", "Get service names, optionally by Organisation Id") { Tags = new[] { "Services" } });
 
-        //todo: check if any other consumers, as we're changing the roles here
         //todo: check with rider's ef core analyzer
         app.MapPut("api/services/{id}", [Authorize(Roles = RoleGroups.AdminRole)] async 
             (long id, 
