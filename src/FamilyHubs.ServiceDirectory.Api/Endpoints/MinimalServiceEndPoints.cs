@@ -161,11 +161,9 @@ public class MinimalServiceEndPoints
         //    }
         //}
 
-        //todo: use AdminRole from updated shared kernel (need to update azure.identity first)
         //todo: check if any other consumers, as we're changing the roles here
         //todo: check with rider's ef core analyzer
-        app.MapPut("api/services/{id}",
-            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole},{RoleTypes.VcsManager},{RoleTypes.VcsDualRole}")] async 
+        app.MapPut("api/services/{id}", [Authorize(Roles = RoleGroups.AdminRole)] async 
             (long id, 
             [FromBody] ServiceDto request, 
             CancellationToken cancellationToken, 
