@@ -39,7 +39,6 @@ public class MinimalServiceEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("List Services", "List Services") { Tags = new[] { "Services" } });
 
-        //todo: this should be enough to get the name, but is it enough to update the service?
         app.MapGet("api/services-simple/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
