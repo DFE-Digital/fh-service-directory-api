@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Entities;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,10 +9,9 @@ public class EligibilityConfiguration : IEntityTypeConfiguration<Eligibility>
 {
     public void Configure(EntityTypeBuilder<Eligibility> builder)
     {
-        builder.HasEnum(t => t.EligibilityType);
-
         builder.Property(t => t.EligibilityType)
-                .HasMaxLength(50);
+            .HasMaxLength(50)
+            .HasConversion<string>();
 
         builder.Property(t => t.Created)
             .IsRequired();
