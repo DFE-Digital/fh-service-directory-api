@@ -68,7 +68,7 @@ public static class TestDataProvider
             {
                 new EligibilityDto
                 {
-                    EligibilityType = EligibilityType.NotSet,
+                    EligibilityType = null,
                     MinimumAge = updated == false ? 0 : 1,
                     MaximumAge = updated == false ? 13 : 14,
                 }
@@ -247,7 +247,7 @@ public static class TestDataProvider
             {
                 new EligibilityDto
                 {
-                    EligibilityType = EligibilityType.NotSet,
+                    EligibilityType = null,
                     MinimumAge = 0,
                     MaximumAge = 13,
                 }
@@ -446,7 +446,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 1,
                         MinimumAge = 0,
                         ServiceId = 0
@@ -550,7 +550,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 10,
                         MinimumAge = 4,
                         ServiceId = 0
@@ -635,7 +635,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 25,
                         MinimumAge = 0,
                         ServiceId = 0,
@@ -711,7 +711,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 25,
                         MinimumAge = 0,
                         ServiceId = 0
@@ -787,7 +787,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 25,
                         MinimumAge = 0,
                         ServiceId = 0,
@@ -987,7 +987,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 13,
                         MinimumAge = 0,
                     }
@@ -1068,7 +1068,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 15,
                         MinimumAge = 10,
                     }
@@ -1149,7 +1149,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 13,
                         MinimumAge = 0,
                     }
@@ -1239,7 +1239,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 20,
                         MinimumAge = 15,
                     }
