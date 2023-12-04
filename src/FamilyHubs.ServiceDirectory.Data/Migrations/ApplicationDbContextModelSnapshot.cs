@@ -17,7 +17,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -40,15 +40,15 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<long>("LocationId")
                         .HasColumnType("bigint");
@@ -57,7 +57,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("AccessibilityForDisabilities");
+                    b.ToTable("AccessibilityForDisabilities", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Contact", b =>
@@ -74,8 +74,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -84,8 +84,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<long?>("LocationId")
                         .HasColumnType("bigint");
@@ -123,7 +123,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("ServiceId"), new[] { "Id", "Title", "Name", "Telephone", "TextPhone", "Url", "Email" });
 
-                    b.ToTable("Contacts");
+                    b.ToTable("Contacts", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.CostOption", b =>
@@ -147,15 +147,15 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("Option")
                         .HasMaxLength(20)
@@ -174,7 +174,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("CostOptions");
+                    b.ToTable("CostOptions", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Eligibility", b =>
@@ -191,10 +191,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("EligibilityType")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -202,8 +203,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<int>("MaximumAge")
                         .HasColumnType("int");
@@ -218,7 +219,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Eligibilities");
+                    b.ToTable("Eligibilities", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Funding", b =>
@@ -235,15 +236,15 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<long>("ServiceId")
                         .HasColumnType("bigint");
@@ -256,7 +257,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Fundings");
+                    b.ToTable("Fundings", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.HolidaySchedule", b =>
@@ -279,8 +280,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -289,8 +290,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<long?>("LocationId")
                         .HasColumnType("bigint");
@@ -310,7 +311,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("HolidaySchedules");
+                    b.ToTable("HolidaySchedules", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Language", b =>
@@ -327,15 +328,15 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -349,7 +350,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Languages");
+                    b.ToTable("Languages", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Location", b =>
@@ -385,8 +386,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
@@ -396,8 +397,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
@@ -426,7 +426,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Organisation", b =>
@@ -451,8 +451,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -463,8 +463,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("Logo")
                         .HasMaxLength(2083)
@@ -490,7 +490,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organisations");
+                    b.ToTable("Organisations", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.RegularSchedule", b =>
@@ -518,8 +518,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -541,8 +541,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<long?>("LocationId")
                         .HasColumnType("bigint");
@@ -568,7 +568,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("RegularSchedules");
+                    b.ToTable("RegularSchedules", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Review", b =>
@@ -585,8 +585,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -598,8 +598,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<long?>("OrganisationId")
                         .HasColumnType("bigint");
@@ -629,7 +629,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Service", b =>
@@ -665,8 +665,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("DeliverableType")
                         .IsRequired()
@@ -683,8 +683,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -718,7 +718,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasIndex("ServiceType", "Id", "OrganisationId", "Status")
                         .HasDatabaseName("IX_ServiceType_OrganisationId_Status");
 
-                    b.ToTable("Services");
+                    b.ToTable("Services", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.ServiceArea", b =>
@@ -735,8 +735,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("Extent")
                         .HasMaxLength(255)
@@ -746,8 +746,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("ServiceAreaName")
                         .HasMaxLength(255)
@@ -764,7 +764,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceAreas");
+                    b.ToTable("ServiceAreas", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.ServiceDelivery", b =>
@@ -781,15 +781,15 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -803,7 +803,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceDeliveries");
+                    b.ToTable("ServiceDeliveries", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Taxonomy", b =>
@@ -820,15 +820,15 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -845,7 +845,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Taxonomies");
+                    b.ToTable("Taxonomies", (string)null);
                 });
 
             modelBuilder.Entity("ServiceAtLocations", b =>
@@ -860,7 +860,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceAtLocations");
+                    b.ToTable("ServiceAtLocations", (string)null);
                 });
 
             modelBuilder.Entity("ServiceTaxonomies", b =>
@@ -875,7 +875,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("TaxonomyId");
 
-                    b.ToTable("ServiceTaxonomies");
+                    b.ToTable("ServiceTaxonomies", (string)null);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.AccessibilityForDisabilities", b =>
