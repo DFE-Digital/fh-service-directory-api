@@ -63,6 +63,8 @@ public class MinimalServiceEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Service by Id", "Get Service by Id") { Tags = new[] { "Services" } });
 
+        //todo: are there any other consumers? if not, change to simple (or summary)
+        //todo: this looks like old code
         app.MapGet("api/services/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
@@ -119,8 +121,8 @@ public class MinimalServiceEndPoints
 
         }).WithMetadata(new SwaggerOperationAttribute("Get service names", "Get service names, optionally by Organisation Id") { Tags = new[] { "Services" } });
 
-        app.MapPut("api/services/{id}",
-            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+        //todo: check with rider's ef core analyzer
+        app.MapPut("api/services/{id}", [Authorize(Roles = RoleGroups.AdminRole)] async 
             (long id, 
             [FromBody] ServiceDto request, 
             CancellationToken cancellationToken, 
