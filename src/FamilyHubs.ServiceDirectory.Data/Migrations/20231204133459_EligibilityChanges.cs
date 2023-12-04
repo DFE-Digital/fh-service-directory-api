@@ -19,6 +19,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(50)",
                 oldMaxLength: 50);
+
+            migrationBuilder.Sql("delete from Eligibilities where MinimumAge = 0 and MaximumAge = 127");
+            migrationBuilder.Sql("update Eligibilities set EligibilityType = null");
         }
 
         /// <inheritdoc />
