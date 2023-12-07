@@ -16,10 +16,9 @@ public class ListLocationsCommand : IRequest<PaginatedList<LocationDto>>
     public bool IsAscending { get; }
     public string? SearchName { get; }
     public bool IsFamilyHub { get; }
-    public bool IsNonFamilyHub { get; }
     public string OrderByColumn { get; }
 
-    public ListLocationsCommand(int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending, string? searchName, bool? isFamilyHub, bool? isNonFamilyHub)
+    public ListLocationsCommand(int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending, string? searchName, bool? isFamilyHub)
     {
         PageNumber = pageNumber ?? 1;
         OrderByColumn = orderByColumn ?? "Location";
@@ -27,7 +26,6 @@ public class ListLocationsCommand : IRequest<PaginatedList<LocationDto>>
         IsAscending = isAscending ?? true;
         SearchName = searchName;
         IsFamilyHub = isFamilyHub ?? false;
-        IsNonFamilyHub = isNonFamilyHub ?? false;
     }
 }
 
@@ -91,17 +89,9 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
                     ).Contains(request.SearchName));
         }
 
-        if (request.IsFamilyHub != request.IsNonFamilyHub)
+        if (request.IsFamilyHub)
         {
-            if (request.IsFamilyHub)
-            {
-                locationsQuery = locationsQuery.Where(x => x.LocationType == Shared.Enums.LocationType.FamilyHub);
-            }
-
-            if (request.IsNonFamilyHub)
-            {
-                locationsQuery = locationsQuery.Where(x => x.LocationType != Shared.Enums.LocationType.FamilyHub);
-            }
+            locationsQuery = locationsQuery.Where(x => x.LocationType == Shared.Enums.LocationType.FamilyHub);
         }
 
         return locationsQuery;
@@ -121,20 +111,6 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
                     else
                     {
                         locationsQuery = locationsQuery.OrderByDescending(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
-                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
-                    }
-                    break;
-                }
-            case "LocationType":
-                {
-                    if (request.IsAscending)
-                    {
-                        locationsQuery = locationsQuery.OrderBy(x => x.LocationType).ThenBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
-                            .ThenBy(x => x.City).ThenBy(x => x.PostCode);
-                    }
-                    else
-                    {
-                        locationsQuery = locationsQuery.OrderByDescending(x => x.LocationType).ThenBy(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
                             .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
                     }
                     break;
