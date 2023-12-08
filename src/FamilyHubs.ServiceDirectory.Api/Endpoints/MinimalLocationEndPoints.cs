@@ -17,11 +17,11 @@ public class MinimalLocationEndPoints
 {
     public void RegisterLocationEndPoints(WebApplication app)
     {
-        app.MapGet("api/locations", async (int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending, string? searchName, bool? isFamilyHub, bool? isNonFamilyHub, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalLocationEndPoints> logger) =>
+        app.MapGet("api/locations", async (int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending, string? searchName, bool? isFamilyHub, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalLocationEndPoints> logger) =>
         {
             try
             {
-                var command = new ListLocationsCommand(pageNumber, orderByColumn, pageSize, isAscending, searchName, isFamilyHub, isNonFamilyHub);
+                var command = new ListLocationsCommand(pageNumber, orderByColumn, pageSize, isAscending, searchName, isFamilyHub);
                 var result = await mediator.Send(command, cancellationToken);
                 return result;
             }
@@ -49,11 +49,11 @@ public class MinimalLocationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Location by Id", "Get Location by Id") { Tags = new[] { "Locations" } });
 
-        app.MapGet("api/organisationlocations/{id}", async (long id, int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending, string? searchName, bool? isFamilyHub, bool? isNonFamilyHub, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalLocationEndPoints> logger) =>
+        app.MapGet("api/organisationlocations/{id}", async (long id, int? pageNumber, string? orderByColumn, int? pageSize, bool? isAscending, string? searchName, bool? isFamilyHub, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalLocationEndPoints> logger) =>
         {
             try
             {
-                var command = new GetLocationsByOrganisationIdCommand(id, pageNumber, pageSize, isAscending, orderByColumn, searchName, isFamilyHub, isNonFamilyHub);
+                var command = new GetLocationsByOrganisationIdCommand(id, pageNumber, pageSize, isAscending, orderByColumn, searchName, isFamilyHub);
                 var result = await mediator.Send(command, cancellationToken);
                 return result;
             }
