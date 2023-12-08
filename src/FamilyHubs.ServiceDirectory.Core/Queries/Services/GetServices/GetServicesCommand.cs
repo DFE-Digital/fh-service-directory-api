@@ -12,13 +12,25 @@ namespace FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 
 public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
 {
-    public GetServicesCommand(ServiceType? serviceType, ServiceStatusType? status, string? districtCode, int? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs)
+    public GetServicesCommand(
+        ServiceType? serviceType, ServiceStatusType? status,
+        string? districtCode,
+        bool? allChildrenYoungPeople,
+        int? givenAge,
+        double? latitude, double? longitude, double? proximity,
+        int? pageNumber, int? pageSize,
+        string? text,
+        string? serviceDeliveries,
+        bool? isPaidFor,
+        string? taxonomyIds,
+        string? languages,
+        bool? canFamilyChooseLocation,
+        bool? isFamilyHub, int? maxFamilyHubs)
     {
         ServiceType = serviceType ?? ServiceType.NotSet;
         Status = status ?? ServiceStatusType.NotSet;
         DistrictCode = districtCode;
-        MaximumAge = maximumAge;
-        MinimumAge = minimumAge;
+        AllChildrenYoungPeople = allChildrenYoungPeople;
         GivenAge = givenAge;
         Latitude = latitude;
         Longitude = longitude;
@@ -38,8 +50,7 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
     public ServiceType ServiceType { get; }
     public ServiceStatusType Status { get; set; }
     public string? DistrictCode { get; }
-    public int? MaximumAge { get; }
-    public int? MinimumAge { get; }
+    public bool? AllChildrenYoungPeople { get; }
     public int? GivenAge { get; }
     public double? Latitude { get; }
     public double? Longitude { get; }
@@ -121,14 +132,18 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             services = services.Where(x => x.Languages.Count == 0 || x.Languages.Any(language => language.Name == string.Empty || parts.Any(languageName => languageName == language.Name)));
         }
 
-        if (request.MaximumAge is not null)
-            services = services.Where(x => x.Eligibilities.Any(eligibility => eligibility.MaximumAge <= request.MaximumAge.Value));
-
-        if (request.MinimumAge is not null)
-            services = services.Where(x => x.Eligibilities.Any(eligibility => eligibility.MinimumAge >= request.MinimumAge.Value));
-
-        if (request.GivenAge is not null)
-            services = services.Where(x => x.Eligibilities.Any(eligibility => eligibility.MinimumAge <= request.GivenAge.Value && eligibility.MaximumAge >= request.GivenAge.Value));
+        // if 'all children and young people' (for children ticked & all ages),
+        // check has any eligibility record, ignoring the given age
+        // (can worry about other eligibilities later)
+        if (request.AllChildrenYoungPeople is true)
+        {
+            services = services.Where(x => x.Eligibilities.Any());
+        }
+        else if (request.GivenAge is not null)
+        {
+            services = services.Where(x => x.Eligibilities.Any(eligibility =>
+                eligibility.MinimumAge <= request.GivenAge.Value && eligibility.MaximumAge >= request.GivenAge.Value));
+        }
 
         if (!string.IsNullOrEmpty(request.Text))
             services = services.Where(x => x.Name.Contains(request.Text) || x.Description != null && x.Description.Contains(request.Text));

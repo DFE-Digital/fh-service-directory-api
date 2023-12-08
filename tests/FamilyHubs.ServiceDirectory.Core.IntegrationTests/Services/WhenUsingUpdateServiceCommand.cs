@@ -48,7 +48,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
             //ServiceId = service.Id,
             MaximumAge = 2,
             MinimumAge = 0,
-            EligibilityType = EligibilityType.Adult
+            EligibilityType = null
         };
         service.Eligibilities.Clear();
         service.Eligibilities.Add(expected);
