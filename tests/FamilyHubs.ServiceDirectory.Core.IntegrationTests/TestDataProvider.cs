@@ -100,7 +100,8 @@ public static class TestDataProvider
             {
                 new LanguageDto
                 {
-                    Name = updated == false ? "English"  : "French",
+                    Name = updated ? "French"  : "English",
+                    Code = updated ? "fr" : "en"
                 }
             },
             ServiceAreas = new List<ServiceAreaDto>
@@ -278,6 +279,7 @@ public static class TestDataProvider
                 new LanguageDto
                 {
                     Name = "English",
+                    Code = "en"
                 }
             },
             ServiceAreas = new List<ServiceAreaDto>

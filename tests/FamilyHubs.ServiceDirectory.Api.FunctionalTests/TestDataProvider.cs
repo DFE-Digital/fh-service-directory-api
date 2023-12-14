@@ -60,7 +60,8 @@ public static class TestDataProvider
                     {
                         new LanguageDto
                         {
-                            Name = "English"
+                            Name = "English",
+                            Code = "en"
                         }
                     },
                     ServiceAreas = new List<ServiceAreaDto>
@@ -159,7 +160,8 @@ public static class TestDataProvider
             {
                 new LanguageDto
                 {
-                    Name = "English"
+                    Name = "English",
+                    Code = "en"
                 }
             },
             ServiceAreas = new List<ServiceAreaDto>
