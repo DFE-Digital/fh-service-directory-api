@@ -241,6 +241,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0
                     }
                 },
@@ -335,6 +336,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0
                     }
                 },
@@ -420,7 +422,8 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
-                        ServiceId = 0,
+                        Code = "en",
+                        ServiceId = 0
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
@@ -496,6 +499,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0
                     }
                 },
@@ -592,6 +596,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0
                     }
                 },
@@ -771,6 +776,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en"
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
@@ -852,6 +858,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en"
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
@@ -942,6 +949,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en"
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
@@ -1032,6 +1040,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "Afrikaans",
+                        Code = "af"
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
