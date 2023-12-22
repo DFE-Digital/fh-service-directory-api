@@ -321,6 +321,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
                     b.Property<DateTime?>("Created")
                         .IsRequired()
                         .HasColumnType("datetime2");
@@ -341,6 +346,10 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<long>("ServiceId")
                         .HasColumnType("bigint");
@@ -678,6 +687,10 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("Fees")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InterpretationServices")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");

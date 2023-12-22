@@ -100,7 +100,8 @@ public static class TestDataProvider
             {
                 new LanguageDto
                 {
-                    Name = updated == false ? "English"  : "French",
+                    Name = updated ? "French"  : "English",
+                    Code = updated ? "fr" : "en"
                 }
             },
             ServiceAreas = new List<ServiceAreaDto>
@@ -278,6 +279,7 @@ public static class TestDataProvider
                 new LanguageDto
                 {
                     Name = "English",
+                    Code = "en"
                 }
             },
             ServiceAreas = new List<ServiceAreaDto>
@@ -467,6 +469,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0
                     }
                 },
@@ -561,6 +564,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0
                     }
                 },
@@ -646,6 +650,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0,
                     }
                 },
@@ -722,6 +727,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0
                     }
                 },
@@ -818,6 +824,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0
                     }
                 },
@@ -985,7 +992,7 @@ public static class TestDataProvider
                 },
                 Eligibilities = new List<Eligibility>
                 {
-                    new Eligibility
+                    new()
                     {
                         EligibilityType = null,
                         MaximumAge = 13,
@@ -994,14 +1001,15 @@ public static class TestDataProvider
                 },
                 Languages = new List<Language>
                 {
-                    new Language
+                    new()
                     {
                         Name = "English",
+                        Code = "en"
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
                 {
-                    new ServiceArea
+                    new()
                     {
                         ServiceAreaName = "National",
                         Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
@@ -1066,7 +1074,7 @@ public static class TestDataProvider
                 },
                 Eligibilities = new List<Eligibility>
                 {
-                    new Eligibility
+                    new()
                     {
                         EligibilityType = null,
                         MaximumAge = 15,
@@ -1075,14 +1083,15 @@ public static class TestDataProvider
                 },
                 Languages = new List<Language>
                 {
-                    new Language
+                    new()
                     {
                         Name = "English",
+                        Code = "en"
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
                 {
-                    new ServiceArea
+                    new()
                     {
                         ServiceAreaName = "National",
                         Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
@@ -1156,7 +1165,7 @@ public static class TestDataProvider
                 },
                 CostOptions = new List<CostOption>
                 {
-                    new CostOption
+                    new()
                     {
                         Option = "Session",
                         Amount = 45.0m,
@@ -1165,14 +1174,15 @@ public static class TestDataProvider
                 },
                 Languages = new List<Language>
                 {
-                    new Language
+                    new()
                     {
                         Name = "English",
+                        Code = "en"
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
                 {
-                    new ServiceArea
+                    new()
                     {
                         ServiceAreaName = "National",
                         Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
@@ -1246,7 +1256,7 @@ public static class TestDataProvider
                 },
                 CostOptions = new List<CostOption>
                 {
-                    new CostOption
+                    new()
                     {
                         Option = "Hour",
                         Amount = 25.0m,
@@ -1255,14 +1265,15 @@ public static class TestDataProvider
                 },
                 Languages = new List<Language>
                 {
-                    new Language
+                    new()
                     {
                         Name = "Afrikaans",
+                        Code = "af"
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
                 {
-                    new ServiceArea
+                    new()
                     {
                         ServiceAreaName = "National",
                         Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",

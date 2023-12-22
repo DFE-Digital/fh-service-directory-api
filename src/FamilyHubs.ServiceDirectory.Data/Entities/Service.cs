@@ -10,6 +10,7 @@ public class Service : OrganisationEntityBase<long>
     public required string Name { get; set; }
     public string? Description { get; set; }
     public ServiceStatusType Status { get; set; }
+    public string? InterpretationServices { get; set; }
     public string? Fees { get; set; }
     public string? Accreditations { get; set; }
     public DeliverableType DeliverableType { get; set; }

@@ -41,6 +41,9 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Property(t => t.Status)
                 .HasMaxLength(50);
 
+        builder.Property(t => t.InterpretationServices)
+            .HasMaxLength(512);
+
         builder.Property(t => t.Created)
             .IsRequired();
 

@@ -254,7 +254,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var existingItem = service.Languages.ElementAt(0);
         var expected = new LanguageDto()
         {
-            Name = "New Language"
+            Name = "New Language",
+            Code = "xx"
         };
 
         service.Languages.Clear();
