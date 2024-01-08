@@ -128,8 +128,8 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
 
         if (!string.IsNullOrEmpty(request.Languages))
         {
-            var parts = request.Languages.Split(',');
-            services = services.Where(x => x.Languages.Count == 0 || x.Languages.Any(language => language.Name == string.Empty || parts.Any(languageName => languageName == language.Name)));
+            var codes = request.Languages.Split(',');
+            services = services.Where(s => s.Languages.Any(l => codes.Contains(l.Code)));
         }
 
         // if 'all children and young people' (for children ticked & all ages),
