@@ -155,17 +155,13 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         {
             if (request.IsPaidFor.Value)
             {
-                //if only show paid for then make sure to exclude services without any cost option s.CostOptions.Count > 0 &&
-                services = services.Where(s =>
-                    s.CostOptions.Count > 0 &&
-                    !s.CostOptions.Any(co => co.Amount == null || co.Amount == decimal.Zero || co.Option == null || co.Option.ToLower() == "free".ToLower()));
+                //only paid for services will have a CostOptions record
+                services = services.Where(s => s.CostOptions.Count > 0);
             }
             else
             {
-                //if only show Free then make sure to include services without any cost option s.CostOptions.Count == 0 ||
-                services = services.Where(s =>
-                    s.CostOptions.Count == 0 ||
-                    s.CostOptions.Any(co => co.Amount == null || co.Amount == decimal.Zero || co.Option == null || co.Option.ToLower() == "free".ToLower()));
+                //Free services will have no CostOptions record
+                services = services.Where(s => s.CostOptions.Count == 0);
             }
         }
 
