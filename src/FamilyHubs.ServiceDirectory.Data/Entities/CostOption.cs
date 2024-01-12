@@ -9,4 +9,5 @@ public class CostOption : ServiceEntityBase<long>
     public string? Option { get; set; }
     public decimal? Amount { get; set; }
     public string? AmountDescription { get; set; }
+    public string? Currency {  get; set; }
 }
