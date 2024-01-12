@@ -150,6 +150,10 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
+                    b.Property<string>("Currency")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 

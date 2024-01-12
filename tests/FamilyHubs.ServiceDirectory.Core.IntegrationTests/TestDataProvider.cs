@@ -27,6 +27,25 @@ public static class TestDataProvider
         return testCountyCouncil;
     }
 
+    public static OrganisationWithServicesDto GetTestCountyCouncilWithFreeServiceDto(bool updated = false)
+    {
+        var testCountyCouncil = new OrganisationWithServicesDto
+        {
+            OrganisationType = OrganisationType.LA,
+            Name = updated == false ? "Unit Test County Council" : "Unit Test County Council Updated",
+            Description = updated == false ? "Unit Test County Council" : "Unit Test County Council Updated",
+            Uri = new Uri("https://www.unittest.gov.uk/").ToString(),
+            Url = "https://www.unittest.gov.uk/",
+            AdminAreaCode = "XTEST",
+            Services = new List<ServiceDto>
+            {
+                GetTestCountyCouncilServicesDto(0, updated, true)
+            },
+        };
+
+        return testCountyCouncil;
+    }
+
     public static OrganisationWithServicesDto GetTestCountyCouncilDto2()
     {
         var testCountyCouncil = new OrganisationWithServicesDto
@@ -46,7 +65,7 @@ public static class TestDataProvider
         return testCountyCouncil;
     }
 
-    public static ServiceDto GetTestCountyCouncilServicesDto(long organisationId, bool updated = false)
+    public static ServiceDto GetTestCountyCouncilServicesDto(long organisationId, bool updated = false, bool isServiceFree = false)
     {
         var serviceId = "3010521b-6e0a-41b0-b610-200edbbeeb14";
 
@@ -85,15 +104,15 @@ public static class TestDataProvider
                     Email = "support@unittestservice.com"
                 }
             },
-            CostOptions = new List<CostOptionDto>
+            CostOptions = isServiceFree ? new List<CostOptionDto>() : new List<CostOptionDto>
             {
                 new CostOptionDto
                 {
                     AmountDescription = updated == false ? "amount_description1" : "amount_description2",
-                    Amount = decimal.Zero,
-                    Option = "free",
-                    ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    ValidTo = new DateTime(2023, 1, 1).ToUniversalTime().AddHours(8),
+                    //Amount = decimal.Zero,
+                    //Option = "free",
+                    //ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
+                    //ValidTo = new DateTime(2023, 1, 1).ToUniversalTime().AddHours(8),
                 }
             },
             Languages = new List<LanguageDto>
@@ -269,8 +288,8 @@ public static class TestDataProvider
             {
                 new CostOptionDto
                 {
-                    Amount = 1,
-                    Option = "paid",
+                    //Amount = 1,
+                    //Option = "paid",
                     AmountDescription = "£1 a session",
                 }
             },
@@ -458,8 +477,8 @@ public static class TestDataProvider
                 {
                     new CostOption
                     {
-                        Option = "Session",
-                        Amount = 2.5m,
+                        //Option = "Session",
+                        //Amount = 2.5m,
                         AmountDescription = "AmountDescription",
                         ServiceId = 0
                     }
@@ -812,10 +831,10 @@ public static class TestDataProvider
                     new CostOption
                     {
                         AmountDescription = "Amount Description",
-                        Amount = 100000000,
-                        Option = "options",
-                        ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
+                        //Amount = 100000000,
+                        //Option = "options",
+                        //ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
+                        //ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ServiceId = 0
                     }
                 },
@@ -1167,8 +1186,8 @@ public static class TestDataProvider
                 {
                     new()
                     {
-                        Option = "Session",
-                        Amount = 45.0m,
+                        //Option = "Session",
+                        //Amount = 45.0m,
                         AmountDescription = "AmountDescription"
                     }
                 },
@@ -1258,8 +1277,8 @@ public static class TestDataProvider
                 {
                     new()
                     {
-                        Option = "Hour",
-                        Amount = 25.0m,
+                        //Option = "Hour",
+                        //Amount = 25.0m,
                         AmountDescription = "AmountDescription"
                     }
                 },
