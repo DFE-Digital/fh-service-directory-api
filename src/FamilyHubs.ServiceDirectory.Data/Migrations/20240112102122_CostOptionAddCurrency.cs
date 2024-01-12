@@ -13,7 +13,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "Currency",
                 table: "CostOptions",
-                type: "nvarchar(3)",
+                type: "nchar(3)",
                 maxLength: 3,
                 nullable: true);
         }
