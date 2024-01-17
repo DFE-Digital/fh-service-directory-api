@@ -561,15 +561,15 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.RegularSchedules.Count.Should().Be(1);
+        actualService!.Schedules.Count.Should().Be(1);
 
-        var actualEntity = TestDbContext.RegularSchedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
+        var actualEntity = TestDbContext.Schedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
         actualEntity.Should().NotBeNull();
         actualEntity.Should().BeEquivalentTo(expected, options => 
             options.Excluding(info => info.Name.Contains("Id"))
                 .Excluding(info => info.Name.Contains("Distance")));
 
-        var unexpectedEntity = TestDbContext.RegularSchedules.Where(lc => lc.Id == existingItem.Id).ToList();
+        var unexpectedEntity = TestDbContext.Schedules.Where(lc => lc.Id == existingItem.Id).ToList();
         unexpectedEntity.Should().HaveCount(0);
     }
 
@@ -600,9 +600,9 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.RegularSchedules.Count.Should().Be(1);
+        actualService!.Schedules.Count.Should().Be(1);
 
-        var actualEntity = TestDbContext.RegularSchedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
+        var actualEntity = TestDbContext.Schedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
         actualEntity.Should().NotBeNull();
         actualEntity.Should().BeEquivalentTo(expected);
     }
@@ -1040,15 +1040,15 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations[0].RegularSchedules.Count.Should().Be(1);
+        actualService!.Locations[0].Schedules.Count.Should().Be(1);
 
-        var actualEntity = TestDbContext.RegularSchedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
+        var actualEntity = TestDbContext.Schedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
         actualEntity.Should().NotBeNull();
         actualEntity.Should().BeEquivalentTo(expected, options => 
             options.Excluding(info => info.Name.Contains("Id"))
                 .Excluding(info => info.Name.Contains("Distance")));
 
-        var unexpectedEntity = TestDbContext.RegularSchedules.Where(lc => lc.Id == existingItem.Id).ToList();
+        var unexpectedEntity = TestDbContext.Schedules.Where(lc => lc.Id == existingItem.Id).ToList();
         unexpectedEntity.Should().HaveCount(0);
     }
 
@@ -1079,9 +1079,9 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations[0].RegularSchedules.Count.Should().Be(1);
+        actualService!.Locations[0].Schedules.Count.Should().Be(1);
 
-        var actualEntity = TestDbContext.RegularSchedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
+        var actualEntity = TestDbContext.Schedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
         actualEntity.Should().NotBeNull();
         actualEntity.Should().BeEquivalentTo(expected);
     }

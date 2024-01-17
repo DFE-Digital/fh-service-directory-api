@@ -54,7 +54,7 @@ public class GetServiceByIdCommandHandler : IRequestHandler<GetServiceByIdComman
            .ThenInclude(x => x.HolidaySchedules)
 
            .Include(x => x.Locations)
-           .ThenInclude(x => x.RegularSchedules)
+           .ThenInclude(x => x.Schedules)
 
            .AsSplitQuery()
            .AsNoTracking()

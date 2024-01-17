@@ -17,7 +17,7 @@ public class Location : EntityBase<long>
     public required string       StateProvince { get; set; }
     public required string       Country       { get; set; }
     public IList<AccessibilityForDisabilities> AccessibilityForDisabilities { get; set; } = new List<AccessibilityForDisabilities>();
-    public IList<RegularSchedule> RegularSchedules { get; set; } = new List<RegularSchedule>();
+    public IList<Schedule> Schedules { get; set; } = new List<Schedule>();
     public IList<HolidaySchedule> HolidaySchedules { get; set; } = new List<HolidaySchedule>();
     public IList<Contact> Contacts { get; set; } = new List<Contact>();
 }

@@ -3,7 +3,7 @@ using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
-public class RegularSchedule : ServiceLocationSharedEntityBase
+public class Schedule : ServiceLocationSharedEntityBase
 {
     public DayOfWeek? Weekday { get; set; }
     public DateTime? OpensAt { get; set; }

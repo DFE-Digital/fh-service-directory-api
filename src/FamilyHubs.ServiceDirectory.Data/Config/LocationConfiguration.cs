@@ -10,7 +10,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
     {
         builder.Navigation(e => e.Contacts).AutoInclude();
         builder.Navigation(e => e.HolidaySchedules).AutoInclude();
-        builder.Navigation(e => e.RegularSchedules).AutoInclude();
+        builder.Navigation(e => e.Schedules).AutoInclude();
         
         builder.HasEnum(t => t.LocationType);
 
@@ -65,7 +65,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .OnDelete(DeleteBehavior.Cascade)
             ;
 
-        builder.HasMany(s => s.RegularSchedules)
+        builder.HasMany(s => s.Schedules)
             .WithOne()
             .IsRequired(false)
             .HasForeignKey(lc => lc.LocationId)

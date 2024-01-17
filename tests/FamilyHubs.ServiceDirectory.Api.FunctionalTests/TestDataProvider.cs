@@ -270,9 +270,9 @@ public static class TestDataProvider
                         PostCode = "M5 3LT",
                         Country = "United Kingdom",
                         StateProvince = "Salford",
-                        RegularSchedules = new List<RegularSchedule>
+                        Schedules = new List<Schedule>
                         {
-                            new RegularSchedule
+                            new Schedule
                             {
                                 Description = "Friday 1.30pm - 2.30pm",
                                 ByDay = "1.30pm - 2.30pm",
@@ -636,11 +636,11 @@ public static class TestDataProvider
                         ServiceId = 0
                     }
                 },
-                RegularSchedules = new List<RegularSchedule>
+                Schedules = new List<Schedule>
                 {
-                    new RegularSchedule
+                    new Schedule
                     {
-                        Description = "RegularSchedule",
+                        Description = "Schedule",
                         OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ByDay = "byDay",
@@ -675,11 +675,11 @@ public static class TestDataProvider
                                 LocationId = 0
                             }
                         },
-                        RegularSchedules = new List<RegularSchedule>
+                        Schedules = new List<Schedule>
                         {
-                            new RegularSchedule
+                            new Schedule
                             {
-                                Description = "RegularSchedule",
+                                Description = "Schedule",
                                 OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                                 ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                                 ByDay = "byDay",

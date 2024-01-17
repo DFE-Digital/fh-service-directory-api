@@ -48,7 +48,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         actualLocation.Should().NotBeNull();
         actualLocation!.Contacts.Count.Should().Be(0);
         actualLocation.HolidaySchedules.Count.Should().Be(0);
-        actualLocation.RegularSchedules.Count.Should().Be(0);
+        actualLocation.Schedules.Count.Should().Be(0);
         actualLocation.AccessibilityForDisabilities.Count.Should().Be(0);
 
         actualLocation.Should().BeEquivalentTo(testLocation, options => 

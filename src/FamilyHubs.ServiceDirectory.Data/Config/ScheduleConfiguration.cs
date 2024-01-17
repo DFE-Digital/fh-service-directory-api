@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
-public class RegularScheduleConfiguration : IEntityTypeConfiguration<RegularSchedule>
+public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
 {
-    public void Configure(EntityTypeBuilder<RegularSchedule> builder)
+    public void Configure(EntityTypeBuilder<Schedule> builder)
     {
         builder.HasEnum(t => t.Freq);
 
