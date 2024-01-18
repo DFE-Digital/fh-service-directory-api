@@ -464,8 +464,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
-        var existingItem = service.RegularSchedules.ElementAt(0);
-        var expected = new RegularScheduleDto
+        var existingItem = service.Schedules.ElementAt(0);
+        var expected = new ScheduleDto
         {
             ValidFrom = DateTime.UtcNow,
             ValidTo = DateTime.UtcNow,
@@ -473,8 +473,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
             ByMonthDay = "New ByMonthDay"
         };
 
-        service.RegularSchedules.Clear();
-        service.RegularSchedules.Add(expected);
+        service.Schedules.Clear();
+        service.Schedules.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
@@ -507,7 +507,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
-        var expected = service.RegularSchedules.ElementAt(0);
+        var expected = service.Schedules.ElementAt(0);
         expected.ByDay = "Updated ByDay";
         expected.ByMonthDay = "Updated ByMonthDay";
         
@@ -895,8 +895,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
-        var existingItem = service.Locations.ElementAt(0).RegularSchedules.ElementAt(0);
-        var expected = new RegularScheduleDto
+        var existingItem = service.Locations.ElementAt(0).Schedules.ElementAt(0);
+        var expected = new ScheduleDto
         {
             ValidFrom = DateTime.UtcNow,
             ValidTo = DateTime.UtcNow,
@@ -904,8 +904,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
             ByMonthDay = "New ByMonthDay"
         };
 
-        service.Locations.ElementAt(0).RegularSchedules.Clear();
-        service.Locations.ElementAt(0).RegularSchedules.Add(expected);
+        service.Locations.ElementAt(0).Schedules.Clear();
+        service.Locations.ElementAt(0).Schedules.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
@@ -938,7 +938,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
 
-        var expected = service.Locations.ElementAt(0).RegularSchedules.ElementAt(0);
+        var expected = service.Locations.ElementAt(0).Schedules.ElementAt(0);
         expected.ByDay = "Updated ByDay";
         expected.ByMonthDay = "Updated ByMonthDay";
         

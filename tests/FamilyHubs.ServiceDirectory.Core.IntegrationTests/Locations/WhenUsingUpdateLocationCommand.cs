@@ -112,8 +112,8 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         //Arrange
         var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
         testLocation.Id = await CreateLocation(testLocation);
-        var existingItem = testLocation.RegularSchedules.ElementAt(0);
-        var expected = new RegularScheduleDto
+        var existingItem = testLocation.Schedules.ElementAt(0);
+        var expected = new ScheduleDto
         {
             ValidFrom = DateTime.UtcNow,
             ValidTo = DateTime.UtcNow,
@@ -121,8 +121,8 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
             ByMonthDay = "New ByMonthDay"
         };
 
-        testLocation.RegularSchedules.Clear();
-        testLocation.RegularSchedules.Add(expected);
+        testLocation.Schedules.Clear();
+        testLocation.Schedules.Add(expected);
 
         var updateCommand = new UpdateLocationCommand(testLocation.Id, testLocation);
         var updateHandler = new UpdateLocationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
@@ -155,7 +155,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
         testLocation.Id = await CreateLocation(testLocation);
 
-        var expected = testLocation.RegularSchedules.ElementAt(0);
+        var expected = testLocation.Schedules.ElementAt(0);
         expected.ByDay = "Updated ByDay";
         expected.ByMonthDay = "Updated ByMonthDay";
         

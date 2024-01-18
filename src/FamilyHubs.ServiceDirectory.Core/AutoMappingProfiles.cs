@@ -35,7 +35,7 @@ public class AutoMappingProfiles : Profile
         CreateMap<HolidayScheduleDto, HolidaySchedule>().ReverseMap();
         CreateMap<HolidaySchedule, HolidaySchedule>();
 
-        CreateMap<RegularScheduleDto, Schedule>().ReverseMap();
+        CreateMap<ScheduleDto, Schedule>().ReverseMap();
         CreateMap<Schedule, Schedule>();
     }
 }

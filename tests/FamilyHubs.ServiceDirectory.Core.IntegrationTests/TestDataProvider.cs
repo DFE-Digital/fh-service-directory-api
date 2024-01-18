@@ -158,9 +158,9 @@ public static class TestDataProvider
                             Email = "support@unittestservice.com"
                         }
                     },
-                    RegularSchedules = new List<RegularScheduleDto>
+                    Schedules = new List<ScheduleDto>
                     {
-                        new RegularScheduleDto
+                        new ScheduleDto
                         {
                             Description = "Location Level Description",
                             ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -214,9 +214,9 @@ public static class TestDataProvider
                     ParentId = null
                 }
             },
-            RegularSchedules = new List<RegularScheduleDto>
+            Schedules = new List<ScheduleDto>
             {
-                new RegularScheduleDto
+                new ScheduleDto
                 {
                     Description = "Service Level Description",
                     OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -336,9 +336,9 @@ public static class TestDataProvider
                             Email = "support@unittestservice.com"
                         }
                     },
-                    RegularSchedules = new List<RegularScheduleDto>
+                    Schedules = new List<ScheduleDto>
                     {
-                        new RegularScheduleDto
+                        new ScheduleDto
                         {
                             Description = "Description",
                             ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -392,9 +392,9 @@ public static class TestDataProvider
                     ParentId = null
                 }
             },
-            RegularSchedules = new List<RegularScheduleDto>
+            Schedules = new List<ScheduleDto>
             {
-                new RegularScheduleDto
+                new ScheduleDto
                 {
                     Description = "Description",
                     OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),

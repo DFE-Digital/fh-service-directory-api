@@ -33,7 +33,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         testLocation.Contacts.Clear();
         testLocation.AccessibilityForDisabilities.Clear();
         testLocation.HolidaySchedules.Clear();
-        testLocation.RegularSchedules.Clear();
+        testLocation.Schedules.Clear();
         //Arrange
         var createLocationCommand = new CreateLocationCommand(testLocation);
         var handler = new CreateLocationCommandHandler(TestDbContext, Mapper, GetLogger<CreateLocationCommandHandler>());
