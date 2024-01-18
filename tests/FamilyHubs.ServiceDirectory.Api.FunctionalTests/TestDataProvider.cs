@@ -624,18 +624,6 @@ public static class TestDataProvider
                         ServiceId = 0
                     }
                 },
-                HolidaySchedules = new List<HolidaySchedule>
-                {
-                    new HolidaySchedule
-                    {
-                        Closed = true,
-                        OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        StartDate = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        EndDate = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        ServiceId = 0
-                    }
-                },
                 Schedules = new List<Schedule>
                 {
                     new Schedule
@@ -689,17 +677,6 @@ public static class TestDataProvider
                                 Interval = "Interval",
                                 ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                                 ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
-                            }
-                        },
-                        HolidaySchedules = new List<HolidaySchedule>
-                        {
-                            new HolidaySchedule
-                            {
-                                Closed = true,
-                                OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                StartDate = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                EndDate = new DateTime(2023, 1, 1).ToUniversalTime(),
                             }
                         },
                         Contacts = new List<Contact>

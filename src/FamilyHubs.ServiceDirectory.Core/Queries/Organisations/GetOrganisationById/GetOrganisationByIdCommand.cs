@@ -37,11 +37,6 @@ public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCom
 
             .Include(x => x.Services)
             .ThenInclude(x => x.Locations)
-            .ThenInclude(x => x.HolidaySchedules)
-
-
-            .Include(x => x.Services)
-            .ThenInclude(x => x.Locations)
             .ThenInclude(x => x.Schedules)
 
             .AsSplitQuery()

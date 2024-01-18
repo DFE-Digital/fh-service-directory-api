@@ -34,9 +34,6 @@ public class GetServiceByOwnerReferenceIdCommandHandler : IRequestHandler<GetSer
             .ThenInclude(x => x.Contacts)
 
             .Include(x => x.Locations)
-            .ThenInclude(x => x.HolidaySchedules)
-
-            .Include(x => x.Locations)
             .ThenInclude(x => x.Schedules)
 
             .AsSplitQuery()

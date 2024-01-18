@@ -29,7 +29,6 @@ public class GetLocationByIdCommandHandler : IRequestHandler<GetLocationByIdComm
     {
         var location = await _context.Locations
             .Include(x => x.Contacts)
-            .Include(x => x.HolidaySchedules)
             .Include(x => x.Schedules)
 
             .AsSplitQuery()

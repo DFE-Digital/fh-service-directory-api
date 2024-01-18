@@ -29,7 +29,7 @@ public class GetServiceByIdCommandHandler : IRequestHandler<GetServiceByIdComman
     public async Task<ServiceDto> Handle(GetServiceByIdCommand request, CancellationToken cancellationToken)
     {
         ServiceDto? entity = default!;
-        if (request.IsSimple) 
+        if (request.IsSimple)
         {
             entity = await _context.Services
            .Include(x => x.Taxonomies)
@@ -51,9 +51,6 @@ public class GetServiceByIdCommandHandler : IRequestHandler<GetServiceByIdComman
            .ThenInclude(x => x.Contacts)
 
            .Include(x => x.Locations)
-           .ThenInclude(x => x.HolidaySchedules)
-
-           .Include(x => x.Locations)
            .ThenInclude(x => x.Schedules)
 
            .AsSplitQuery()
@@ -64,7 +61,7 @@ public class GetServiceByIdCommandHandler : IRequestHandler<GetServiceByIdComman
            .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         }
-       
+
 
         if (entity is null)
             throw new NotFoundException(nameof(Service), request.Id.ToString());

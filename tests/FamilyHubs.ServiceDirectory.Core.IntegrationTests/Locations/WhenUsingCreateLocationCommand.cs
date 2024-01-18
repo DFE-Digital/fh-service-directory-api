@@ -21,7 +21,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         result.Should().NotBe(0);
         var actualLocation = TestDbContext.Locations.SingleOrDefault(o => o.Id == result);
         actualLocation.Should().NotBeNull();
-        actualLocation.Should().BeEquivalentTo(testLocation, options => 
+        actualLocation.Should().BeEquivalentTo(testLocation, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
@@ -32,7 +32,6 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
         testLocation.Contacts.Clear();
         testLocation.AccessibilityForDisabilities.Clear();
-        testLocation.HolidaySchedules.Clear();
         testLocation.Schedules.Clear();
         //Arrange
         var createLocationCommand = new CreateLocationCommand(testLocation);
@@ -47,11 +46,10 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         var actualLocation = TestDbContext.Locations.SingleOrDefault(o => o.Id == result);
         actualLocation.Should().NotBeNull();
         actualLocation!.Contacts.Count.Should().Be(0);
-        actualLocation.HolidaySchedules.Count.Should().Be(0);
         actualLocation.Schedules.Count.Should().Be(0);
         actualLocation.AccessibilityForDisabilities.Count.Should().Be(0);
 
-        actualLocation.Should().BeEquivalentTo(testLocation, options => 
+        actualLocation.Should().BeEquivalentTo(testLocation, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }

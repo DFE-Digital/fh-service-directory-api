@@ -19,7 +19,6 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Navigation(e => e.Taxonomies).AutoInclude();
         builder.Navigation(e => e.Locations).AutoInclude();
         builder.Navigation(e => e.Contacts).AutoInclude();
-        builder.Navigation(e => e.HolidaySchedules).AutoInclude();
         builder.Navigation(e => e.Schedules).AutoInclude();
 
         builder.Property(t => t.Name)
@@ -99,13 +98,6 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
             .WithOne()
             .HasForeignKey(lc => lc.ServiceId)
             .IsRequired(false)
-            .OnDelete(DeleteBehavior.Cascade)
-            ;
-
-        builder.HasMany(s => s.HolidaySchedules)
-            .WithOne()
-            .IsRequired(false)
-            .HasForeignKey(lc => lc.ServiceId)
             .OnDelete(DeleteBehavior.Cascade)
             ;
 

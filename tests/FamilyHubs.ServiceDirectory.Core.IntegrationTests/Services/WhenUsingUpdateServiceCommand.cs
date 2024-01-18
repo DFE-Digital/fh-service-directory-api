@@ -69,7 +69,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.Eligibilities.SingleOrDefault(s => s.EligibilityType == expected.EligibilityType);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding(info => info.Name.Contains("Id"))
                 .Excluding(info => info.Name.Contains("Distance")));
 
@@ -139,7 +139,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.ServiceAreas.SingleOrDefault(s => s.ServiceAreaName == expected.ServiceAreaName);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding(info => info.Name.Contains("Id"))
                 .Excluding(info => info.Name.Contains("Distance")));
 
@@ -157,7 +157,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var expected = service.ServiceAreas.ElementAt(0);
         expected.ServiceAreaName = "Updated ServiceAreaName";
         expected.Extent = "Updated Extent";
-        
+
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
@@ -208,7 +208,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.ServiceDeliveries.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding(info => info.Name.Contains("Id"))
                 .Excluding(info => info.Name.Contains("Distance")));
 
@@ -225,7 +225,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var expected = service.ServiceDeliveries.ElementAt(0);
         expected.Name = ServiceDeliveryType.NotSet;
-        
+
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
@@ -277,7 +277,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.Languages.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
 
@@ -294,7 +294,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var expected = service.Languages.ElementAt(0);
         expected.Name = "Updated Language";
-        
+
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
@@ -349,7 +349,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.CostOptions.SingleOrDefault(s => s.Option == expected.Option);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding(info => info.Name.Contains("Id"))
                 .Excluding(info => info.Name.Contains("Distance")));
 
@@ -368,7 +368,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.Amount = 987;
         expected.Option = "Updated Option";
         expected.AmountDescription = "Updated Amount Description";
-        
+
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
@@ -420,7 +420,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
         actualContact.Should().NotBeNull();
-        actualContact.Should().BeEquivalentTo(contact, options => 
+        actualContact.Should().BeEquivalentTo(contact, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
 
@@ -459,7 +459,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     }
 
     [Fact]
-    public async Task ThenUpdateServiceAddAndDeleteRegularSchedules()
+    public async Task ThenUpdateServiceAddAndDeleteSchedules()
     {
         //Arrange
         await CreateOrganisation();
@@ -492,7 +492,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.Schedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding(info => info.Name.Contains("Id"))
                 .Excluding(info => info.Name.Contains("Distance")));
 
@@ -501,7 +501,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     }
 
     [Fact]
-    public async Task ThenUpdateServiceUpdatedRegularSchedules()
+    public async Task ThenUpdateServiceUpdatedSchedules()
     {
         //Arrange
         await CreateOrganisation();
@@ -510,7 +510,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var expected = service.Schedules.ElementAt(0);
         expected.ByDay = "Updated ByDay";
         expected.ByMonthDay = "Updated ByMonthDay";
-        
+
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
@@ -526,75 +526,6 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         actualService!.Schedules.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.Schedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
-        actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected);
-    }
-
-    [Fact]
-    public async Task ThenUpdateServiceAddAndDeleteHolidaySchedules()
-    {
-        //Arrange
-        await CreateOrganisation();
-        var service = TestOrganisation.Services.ElementAt(0);
-        var existingItem = service.HolidaySchedules.ElementAt(0);
-        var expected = new HolidayScheduleDto
-        {
-            StartDate = new DateTime(2023, 1, 2).ToUniversalTime(),
-            EndDate = new DateTime(2023, 1, 2).ToUniversalTime(),
-        };
-        service.HolidaySchedules.Clear();
-        service.HolidaySchedules.Add(expected);
-
-        var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-        //Act
-        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBe(0);
-        result.Should().Be(service.Id);
-
-        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-        actualService.Should().NotBeNull();
-        actualService!.HolidaySchedules.Count.Should().Be(1);
-
-        var actualEntity = TestDbContext.HolidaySchedules.SingleOrDefault(s => s.ServiceId == service.Id);
-        actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
-            options.Excluding(info => info.Name.Contains("Id"))
-                .Excluding(info => info.Name.Contains("Distance")));
-
-        var unexpectedEntity = TestDbContext.HolidaySchedules.Where(lc => lc.Id == existingItem.Id).ToList();
-        unexpectedEntity.Should().HaveCount(0);
-    }
-
-    [Fact]
-    public async Task ThenUpdateServiceUpdatedHolidaySchedules()
-    {
-        //Arrange
-        await CreateOrganisation();
-        var service = TestOrganisation.Services.ElementAt(0);
-
-        var expected = service.HolidaySchedules.ElementAt(0);
-        expected.StartDate = new DateTime(2023, 1, 2).ToUniversalTime();
-        expected.EndDate = new DateTime(2023, 1, 2).ToUniversalTime();
-        
-        var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-        //Act
-        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBe(0);
-        result.Should().Be(service.Id);
-
-        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-        actualService.Should().NotBeNull();
-        actualService!.HolidaySchedules.Count.Should().Be(1);
-
-        var actualEntity = TestDbContext.HolidaySchedules.SingleOrDefault(s => s.ServiceId == service.Id);
         actualEntity.Should().NotBeNull();
         actualEntity.Should().BeEquivalentTo(expected);
     }
@@ -638,14 +569,14 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
 
         //Delete wont cascade delete Locations, so existing will be left behind
         var detachedEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == location.Name);
         detachedEntity.Should().NotBeNull();
-        detachedEntity.Should().BeEquivalentTo(location, options => 
+        detachedEntity.Should().BeEquivalentTo(location, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
@@ -660,7 +591,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var expected = service.Locations.ElementAt(0);
         expected.Name = "Updated Name";
         expected.Description = "Updated Description";
-        
+
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
@@ -677,7 +608,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
@@ -692,7 +623,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var service = TestOrganisation.Services.ElementAt(0);
         service.Locations.Add(expected);
-        
+
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
@@ -709,7 +640,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
@@ -744,14 +675,14 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.Taxonomies.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
 
         //Delete wont cascade delete Taxonomies, so existing will be left behind
         var detachedEntity = TestDbContext.Taxonomies.SingleOrDefault(s => s.Name == taxonomy.Name);
         detachedEntity.Should().NotBeNull();
-        detachedEntity.Should().BeEquivalentTo(taxonomy, options => 
+        detachedEntity.Should().BeEquivalentTo(taxonomy, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
@@ -765,7 +696,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var expected = service.Taxonomies.ElementAt(0);
         expected.Name = "Updated Name";
-        
+
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
@@ -799,7 +730,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var service = TestOrganisation.Services.ElementAt(0);
         service.Taxonomies.Add(expected);
-        
+
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
@@ -851,7 +782,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
         actualContact.Should().NotBeNull();
-        actualContact.Should().BeEquivalentTo(contact, options => 
+        actualContact.Should().BeEquivalentTo(contact, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
 
@@ -890,7 +821,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     }
 
     [Fact]
-    public async Task ThenUpdateServiceLocationsAddAndDeleteRegularSchedules()
+    public async Task ThenUpdateServiceLocationsAddAndDeleteSchedules()
     {
         //Arrange
         await CreateOrganisation();
@@ -923,7 +854,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.Schedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding(info => info.Name.Contains("Id"))
                 .Excluding(info => info.Name.Contains("Distance")));
 
@@ -932,7 +863,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     }
 
     [Fact]
-    public async Task ThenUpdateServiceLocationsUpdatedRegularSchedules()
+    public async Task ThenUpdateServiceLocationsUpdatedSchedules()
     {
         //Arrange
         await CreateOrganisation();
@@ -941,7 +872,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var expected = service.Locations.ElementAt(0).Schedules.ElementAt(0);
         expected.ByDay = "Updated ByDay";
         expected.ByMonthDay = "Updated ByMonthDay";
-        
+
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
@@ -957,75 +888,6 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         actualService!.Locations.ElementAt(0).Schedules.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.Schedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
-        actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected);
-    }
-
-    [Fact]
-    public async Task ThenUpdateServiceLocationsAddAndDeleteHolidaySchedules()
-    {
-        //Arrange
-        await CreateOrganisation();
-        var service = TestOrganisation.Services.ElementAt(0);
-        var existingItem = service.Locations.ElementAt(0).HolidaySchedules.ElementAt(0);
-        var expected = new HolidayScheduleDto
-        {
-            StartDate = new DateTime(2023, 1, 2).ToUniversalTime(),
-            EndDate = new DateTime(2023, 1, 2).ToUniversalTime(),
-        };
-        service.Locations.ElementAt(0).HolidaySchedules.Clear();
-        service.Locations.ElementAt(0).HolidaySchedules.Add(expected);
-
-        var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-        //Act
-        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBe(0);
-        result.Should().Be(service.Id);
-
-        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-        actualService.Should().NotBeNull();
-        actualService!.Locations.ElementAt(0).HolidaySchedules.Count.Should().Be(1);
-
-        var actualEntity = TestDbContext.HolidaySchedules.SingleOrDefault(s => s.StartDate == expected.StartDate);
-        actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
-            options.Excluding(info => info.Name.Contains("Id"))
-                .Excluding(info => info.Name.Contains("Distance")));
-
-        var unexpectedEntity = TestDbContext.HolidaySchedules.Where(lc => lc.Id == existingItem.Id).ToList();
-        unexpectedEntity.Should().HaveCount(0);
-    }
-
-    [Fact]
-    public async Task ThenUpdateServiceLocationsUpdatedHolidaySchedules()
-    {
-        //Arrange
-        await CreateOrganisation();
-        var service = TestOrganisation.Services.ElementAt(0);
-
-        var expected = service.Locations.ElementAt(0).HolidaySchedules.ElementAt(0);
-        expected.StartDate = new DateTime(2023, 1, 2).ToUniversalTime();
-        expected.EndDate = new DateTime(2023, 1, 2).ToUniversalTime();
-        
-        var updateCommand = new UpdateServiceCommand(service.Id, service);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-        //Act
-        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBe(0);
-        result.Should().Be(service.Id);
-
-        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-        actualService.Should().NotBeNull();
-        actualService!.Locations.ElementAt(0).HolidaySchedules.Count.Should().Be(1);
-
-        var actualEntity = TestDbContext.HolidaySchedules.SingleOrDefault(s => s.StartDate == expected.StartDate);
         actualEntity.Should().NotBeNull();
         actualEntity.Should().BeEquivalentTo(expected);
     }
