@@ -25,9 +25,6 @@ public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
         builder.Property(t => t.ByMonthDay)
             .HasMaxLength(15);
 
-        builder.Property(t => t.Weekday)
-            .IsRequired(false);
-
         builder.Property(t => t.ServiceId)
             .IsRequired(false);
 
@@ -43,5 +40,20 @@ public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
 
         builder.Property(t => t.LastModifiedBy)
             .HasMaxLength(MaxLength.Email);
+
+        builder.Property(t => t.Until)
+            .HasMaxLength(300);
+
+        builder.Property(t => t.WkSt)
+            .HasMaxLength(300);
+
+        builder.Property(t => t.ByWeekNo)
+            .HasMaxLength(300);
+
+        builder.Property(t => t.ByYearDay)
+            .HasMaxLength(300);
+
+        builder.Property(t => t.ScheduleLink)
+            .HasMaxLength(600);
     }
 }

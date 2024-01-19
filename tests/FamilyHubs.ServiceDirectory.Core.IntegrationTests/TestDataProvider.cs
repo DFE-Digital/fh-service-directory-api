@@ -169,7 +169,6 @@ public static class TestDataProvider
                             ByMonthDay = "byMonth",
                             DtStart = "dtStart",
                             Freq = FrequencyType.NotSet,
-                            Interval = "interval",
                             OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                             ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
                         }
@@ -214,7 +213,6 @@ public static class TestDataProvider
                     ByMonthDay = "byMonth",
                     DtStart = "dtStart",
                     Freq = FrequencyType.NotSet,
-                    Interval = "interval",
                     ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                     ValidTo = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
                 }
@@ -325,7 +323,6 @@ public static class TestDataProvider
                             ByMonthDay = "byMonth",
                             DtStart = "dtStart",
                             Freq = FrequencyType.NotSet,
-                            Interval = "interval",
                             OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                             ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
                         }
@@ -370,7 +367,6 @@ public static class TestDataProvider
                     ByMonthDay = "byMonth",
                     DtStart = "dtStart",
                     Freq = FrequencyType.NotSet,
-                    Interval = "interval",
                     ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                     ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
                 }
@@ -476,8 +472,7 @@ public static class TestDataProvider
                             new Schedule
                             {
                                 Description = "Friday 1.30pm - 2.30pm",
-                                ByDay = "1.30pm - 2.30pm",
-                                Interval = "Every Friday",
+                                ByDay = "1.30pm - 2.30pm"
                             }
                         },
                         Contacts = new List<Contact>
@@ -836,7 +831,6 @@ public static class TestDataProvider
                         ByMonthDay = "byMonth",
                         DtStart = "dtStart",
                         Freq = FrequencyType.NotSet,
-                        Interval = "Interval",
                         ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ServiceId = 0
@@ -875,7 +869,6 @@ public static class TestDataProvider
                                 ByMonthDay = "byMonth",
                                 DtStart = "dtStart",
                                 Freq = FrequencyType.NotSet,
-                                Interval = "Interval",
                                 ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                                 ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                             }

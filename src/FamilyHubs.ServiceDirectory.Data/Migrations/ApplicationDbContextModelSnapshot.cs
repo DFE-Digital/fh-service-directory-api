@@ -521,6 +521,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("AttendingType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ByDay")
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
@@ -529,8 +532,19 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
+                    b.Property<string>("ByWeekNo")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("ByYearDay")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
                     b.Property<DateTime?>("ClosesAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("Count")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Created")
                         .IsRequired()
@@ -553,9 +567,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Interval")
+                    b.Property<int?>("Interval")
                         .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -567,11 +581,25 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<long?>("LocationId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("OpensAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ScheduleLink")
+                        .HasMaxLength(600)
+                        .HasColumnType("nvarchar(600)");
+
                     b.Property<long?>("ServiceId")
                         .HasColumnType("bigint");
+
+                    b.Property<int?>("Timezone")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Until")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<DateTime?>("ValidFrom")
                         .HasColumnType("datetime2");
@@ -579,8 +607,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<DateTime?>("ValidTo")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Weekday")
-                        .HasColumnType("int");
+                    b.Property<string>("WkSt")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.HasKey("Id");
 
