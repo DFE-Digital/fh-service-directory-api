@@ -158,9 +158,9 @@ public static class TestDataProvider
                             Email = "support@unittestservice.com"
                         }
                     },
-                    RegularSchedules = new List<RegularScheduleDto>
+                    Schedules = new List<ScheduleDto>
                     {
-                        new RegularScheduleDto
+                        new ScheduleDto
                         {
                             Description = "Location Level Description",
                             ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -169,20 +169,8 @@ public static class TestDataProvider
                             ByMonthDay = "byMonth",
                             DtStart = "dtStart",
                             Freq = FrequencyType.NotSet,
-                            Interval = "interval",
                             OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                             ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
-                        }
-                    },
-                    HolidaySchedules = new List<HolidayScheduleDto>
-                    {
-                        new HolidayScheduleDto
-                        {
-                            Closed = updated,
-                            ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(1),
-                            OpensAt = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(1),
-                            StartDate = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(1),
-                            EndDate = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(1)
                         }
                     }
                 }
@@ -214,9 +202,9 @@ public static class TestDataProvider
                     ParentId = null
                 }
             },
-            RegularSchedules = new List<RegularScheduleDto>
+            Schedules = new List<ScheduleDto>
             {
-                new RegularScheduleDto
+                new ScheduleDto
                 {
                     Description = "Service Level Description",
                     OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -225,20 +213,8 @@ public static class TestDataProvider
                     ByMonthDay = "byMonth",
                     DtStart = "dtStart",
                     Freq = FrequencyType.NotSet,
-                    Interval = "interval",
                     ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                     ValidTo = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
-                }
-            },
-            HolidaySchedules = new List<HolidayScheduleDto>
-            {
-                new HolidayScheduleDto
-                {
-                    Closed = !updated,
-                    ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    StartDate = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    EndDate = new DateTime(2023, 1, 1).ToUniversalTime()
                 }
             }
         };
@@ -336,9 +312,9 @@ public static class TestDataProvider
                             Email = "support@unittestservice.com"
                         }
                     },
-                    RegularSchedules = new List<RegularScheduleDto>
+                    Schedules = new List<ScheduleDto>
                     {
-                        new RegularScheduleDto
+                        new ScheduleDto
                         {
                             Description = "Description",
                             ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -347,20 +323,8 @@ public static class TestDataProvider
                             ByMonthDay = "byMonth",
                             DtStart = "dtStart",
                             Freq = FrequencyType.NotSet,
-                            Interval = "interval",
                             OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                             ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
-                        }
-                    },
-                    HolidaySchedules = new List<HolidayScheduleDto>
-                    {
-                        new HolidayScheduleDto
-                        {
-                            Closed = false,
-                            ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                            OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                            StartDate = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(5) ,
-                            EndDate = new DateTime(2023, 1, 1).ToUniversalTime()
                         }
                     }
                 }
@@ -392,9 +356,9 @@ public static class TestDataProvider
                     ParentId = null
                 }
             },
-            RegularSchedules = new List<RegularScheduleDto>
+            Schedules = new List<ScheduleDto>
             {
-                new RegularScheduleDto
+                new ScheduleDto
                 {
                     Description = "Description",
                     OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -403,20 +367,8 @@ public static class TestDataProvider
                     ByMonthDay = "byMonth",
                     DtStart = "dtStart",
                     Freq = FrequencyType.NotSet,
-                    Interval = "interval",
                     ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                     ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
-                }
-            },
-            HolidaySchedules = new List<HolidayScheduleDto>
-            {
-                new HolidayScheduleDto
-                {
-                    Closed = true,
-                    ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    StartDate = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(5),
-                    EndDate = new DateTime(2023, 1, 1).ToUniversalTime()
                 }
             }
         };
@@ -515,13 +467,12 @@ public static class TestDataProvider
                         PostCode = "M5 3LT",
                         Country = "United Kingdom",
                         StateProvince = "Salford",
-                        RegularSchedules = new List<RegularSchedule>
+                        Schedules = new List<Schedule>
                         {
-                            new RegularSchedule
+                            new Schedule
                             {
                                 Description = "Friday 1.30pm - 2.30pm",
-                                ByDay = "1.30pm - 2.30pm",
-                                Interval = "Every Friday",
+                                ByDay = "1.30pm - 2.30pm"
                             }
                         },
                         Contacts = new List<Contact>
@@ -869,30 +820,17 @@ public static class TestDataProvider
                         ServiceId = 0
                     }
                 },
-                HolidaySchedules = new List<HolidaySchedule>
+                Schedules = new List<Schedule>
                 {
-                    new HolidaySchedule
+                    new Schedule
                     {
-                        Closed = true,
-                        OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        StartDate = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        EndDate = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        ServiceId = 0
-                    }
-                },
-                RegularSchedules = new List<RegularSchedule>
-                {
-                    new RegularSchedule
-                    {
-                        Description = "RegularSchedule",
+                        Description = "Schedule",
                         OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ByDay = "byDay",
                         ByMonthDay = "byMonth",
                         DtStart = "dtStart",
                         Freq = FrequencyType.NotSet,
-                        Interval = "Interval",
                         ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ServiceId = 0
@@ -920,31 +858,19 @@ public static class TestDataProvider
                                 LocationId = 0
                             }
                         },
-                        RegularSchedules = new List<RegularSchedule>
+                        Schedules = new List<Schedule>
                         {
-                            new RegularSchedule
+                            new Schedule
                             {
-                                Description = "RegularSchedule",
+                                Description = "Schedule",
                                 OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                                 ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                                 ByDay = "byDay",
                                 ByMonthDay = "byMonth",
                                 DtStart = "dtStart",
                                 Freq = FrequencyType.NotSet,
-                                Interval = "Interval",
                                 ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                                 ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
-                            }
-                        },
-                        HolidaySchedules = new List<HolidaySchedule>
-                        {
-                            new HolidaySchedule
-                            {
-                                Closed = true,
-                                OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                StartDate = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                EndDate = new DateTime(2023, 1, 1).ToUniversalTime(),
                             }
                         },
                         Contacts = new List<Contact>

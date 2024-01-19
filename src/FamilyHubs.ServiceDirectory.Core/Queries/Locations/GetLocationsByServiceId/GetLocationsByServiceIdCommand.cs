@@ -34,10 +34,7 @@ public class GetLocationsByServiceIdCommandHandler : IRequestHandler<GetLocation
             .ThenInclude(x => x.Contacts)
 
             .Include(x => x.Locations)
-            .ThenInclude(x => x.HolidaySchedules)
-
-            .Include(x => x.Locations)
-            .ThenInclude(x => x.RegularSchedules)
+            .ThenInclude(x => x.Schedules)
 
             .Where(s => s.Status != ServiceStatusType.Deleted)
             .Where(x => x.Id == request.ServiceId)

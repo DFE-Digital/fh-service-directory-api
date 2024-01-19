@@ -263,60 +263,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.ToTable("Fundings");
                 });
 
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.HolidaySchedule", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<bool>("Closed")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ClosesAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Created")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
-
-                    b.Property<long?>("LocationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("OpensAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("ServiceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.ToTable("HolidaySchedules");
-                });
-
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Language", b =>
                 {
                     b.Property<long>("Id")
@@ -506,84 +452,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.ToTable("Organisations");
                 });
 
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.RegularSchedule", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("ByDay")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("ByMonthDay")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<DateTime?>("ClosesAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Created")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DtStart")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("Freq")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Interval")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
-
-                    b.Property<long?>("LocationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("OpensAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("ServiceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("ValidFrom")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ValidTo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("Weekday")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.ToTable("RegularSchedules");
-                });
-
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Review", b =>
                 {
                     b.Property<long>("Id")
@@ -643,6 +511,113 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Schedule", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AttendingType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ByDay")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("ByMonthDay")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("ByWeekNo")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("ByYearDay")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime?>("ClosesAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Created")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DtStart")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Freq")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("Interval")
+                        .HasMaxLength(30)
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<long?>("LocationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("OpensAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ScheduleLink")
+                        .HasMaxLength(600)
+                        .HasColumnType("nvarchar(600)");
+
+                    b.Property<long?>("ServiceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("Timezone")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Until")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime?>("ValidFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ValidTo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("WkSt")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Service", b =>
@@ -944,19 +919,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.HolidaySchedule", b =>
-                {
-                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Location", null)
-                        .WithMany("HolidaySchedules")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
-                        .WithMany("HolidaySchedules")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Language", b =>
                 {
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
@@ -964,19 +926,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.RegularSchedule", b =>
-                {
-                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Location", null)
-                        .WithMany("RegularSchedules")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
-                        .WithMany("RegularSchedules")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Review", b =>
@@ -988,6 +937,19 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
                         .WithMany("Reviews")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Schedule", b =>
+                {
+                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Location", null)
+                        .WithMany("Schedules")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
+                        .WithMany("Schedules")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -1054,9 +1016,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Navigation("Contacts");
 
-                    b.Navigation("HolidaySchedules");
-
-                    b.Navigation("RegularSchedules");
+                    b.Navigation("Schedules");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Organisation", b =>
@@ -1076,13 +1036,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Navigation("Fundings");
 
-                    b.Navigation("HolidaySchedules");
-
                     b.Navigation("Languages");
 
-                    b.Navigation("RegularSchedules");
-
                     b.Navigation("Reviews");
+
+                    b.Navigation("Schedules");
 
                     b.Navigation("ServiceAreas");
 

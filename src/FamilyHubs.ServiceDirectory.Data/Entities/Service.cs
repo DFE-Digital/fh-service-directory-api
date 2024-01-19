@@ -26,8 +26,7 @@ public class Service : OrganisationEntityBase<long>
     public IList<ServiceArea> ServiceAreas { get; set; } = new List<ServiceArea>();
     public IList<Location> Locations { get; set; } = new List<Location>();
     public IList<Taxonomy> Taxonomies { get; set; } = new List<Taxonomy>();
-    public IList<RegularSchedule> RegularSchedules { get; set; } = new List<RegularSchedule>();
-    public IList<HolidaySchedule> HolidaySchedules { get; set; } = new List<HolidaySchedule>();
+    public IList<Schedule> Schedules { get; set; } = new List<Schedule>();
     public IList<Review> Reviews { get; set; } = new List<Review>();
     public IList<Contact> Contacts { get; set; } = new List<Contact>();
 }

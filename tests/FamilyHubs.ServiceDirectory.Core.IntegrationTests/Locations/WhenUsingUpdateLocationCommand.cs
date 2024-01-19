@@ -67,7 +67,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
         actualContact.Should().NotBeNull();
-        actualContact.Should().BeEquivalentTo(contact , options => 
+        actualContact.Should().BeEquivalentTo(contact, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
 
@@ -102,18 +102,18 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
         actualContact.Should().NotBeNull();
-        actualContact.Should().BeEquivalentTo(contact, options => 
-            options.Excluding((IMemberInfo info ) => info.Name.Contains("Id")));
+        actualContact.Should().BeEquivalentTo(contact, options =>
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Id")));
     }
 
     [Fact]
-    public async Task ThenUpdateLocationAddAndDeleteRegularSchedules()
+    public async Task ThenUpdateLocationAddAndDeleteSchedules()
     {
         //Arrange
         var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
         testLocation.Id = await CreateLocation(testLocation);
-        var existingItem = testLocation.RegularSchedules.ElementAt(0);
-        var expected = new RegularScheduleDto
+        var existingItem = testLocation.Schedules.ElementAt(0);
+        var expected = new ScheduleDto
         {
             ValidFrom = DateTime.UtcNow,
             ValidTo = DateTime.UtcNow,
@@ -121,8 +121,8 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
             ByMonthDay = "New ByMonthDay"
         };
 
-        testLocation.RegularSchedules.Clear();
-        testLocation.RegularSchedules.Add(expected);
+        testLocation.Schedules.Clear();
+        testLocation.Schedules.Add(expected);
 
         var updateCommand = new UpdateLocationCommand(testLocation.Id, testLocation);
         var updateHandler = new UpdateLocationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
@@ -136,64 +136,28 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Locations.SingleOrDefault(s => s.Name == testLocation.Name);
         actualService.Should().NotBeNull();
-        actualService!.RegularSchedules.Count.Should().Be(1);
+        actualService!.Schedules.Count.Should().Be(1);
 
-        var actualEntity = TestDbContext.RegularSchedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
+        var actualEntity = TestDbContext.Schedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding(info => info.Name.Contains("Id"))
                 .Excluding(info => info.Name.Contains("Distance")));
 
-        var unexpectedEntity = TestDbContext.RegularSchedules.Where(lc => lc.Id == existingItem.Id).ToList();
+        var unexpectedEntity = TestDbContext.Schedules.Where(lc => lc.Id == existingItem.Id).ToList();
         unexpectedEntity.Should().HaveCount(0);
     }
 
     [Fact]
-    public async Task ThenUpdateLocationUpdatedRegularSchedules()
+    public async Task ThenUpdateLocationUpdatedSchedules()
     {
         //Arrange
         var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
         testLocation.Id = await CreateLocation(testLocation);
 
-        var expected = testLocation.RegularSchedules.ElementAt(0);
+        var expected = testLocation.Schedules.ElementAt(0);
         expected.ByDay = "Updated ByDay";
         expected.ByMonthDay = "Updated ByMonthDay";
-        
-        var updateCommand = new UpdateLocationCommand(testLocation.Id, testLocation);
-        var updateHandler = new UpdateLocationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-        //Act
-        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBe(0);
-        result.Should().Be(testLocation.Id);
-
-        var actualService = TestDbContext.Locations.SingleOrDefault(s => s.Name == testLocation.Name);
-        actualService.Should().NotBeNull();
-        actualService!.RegularSchedules.Count.Should().Be(1);
-
-        var actualEntity = TestDbContext.RegularSchedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
-        actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
-            options.Excluding((IMemberInfo info ) => info.Name.Contains("Id")));
-    }
-
-    [Fact]
-    public async Task ThenUpdateLocationAddAndDeleteHolidaySchedules()
-    {
-        //Arrange
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
-        testLocation.Id = await CreateLocation(testLocation);
-
-        var existingItem = testLocation.HolidaySchedules.ElementAt(0);
-        var expected = new HolidayScheduleDto
-        {
-            StartDate = new DateTime(2023, 1, 2).ToUniversalTime(),
-            EndDate = new DateTime(2023, 1, 2).ToUniversalTime(),
-        };
-        testLocation.HolidaySchedules.Clear();
-        testLocation.HolidaySchedules.Add(expected);
 
         var updateCommand = new UpdateLocationCommand(testLocation.Id, testLocation);
         var updateHandler = new UpdateLocationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
@@ -207,46 +171,11 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Locations.SingleOrDefault(s => s.Name == testLocation.Name);
         actualService.Should().NotBeNull();
-        actualService!.HolidaySchedules.Count.Should().Be(1);
+        actualService!.Schedules.Count.Should().Be(1);
 
-        var actualEntity = TestDbContext.HolidaySchedules.SingleOrDefault(s => s.LocationId == testLocation.Id);
+        var actualEntity = TestDbContext.Schedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
-            options.Excluding(info => info.Name.Contains("Id"))
-                .Excluding(info => info.Name.Contains("Distance")));
-
-        var unexpectedEntity = TestDbContext.HolidaySchedules.Where(lc => lc.Id == existingItem.Id).ToList();
-        unexpectedEntity.Should().HaveCount(0);
-    }
-
-    [Fact]
-    public async Task ThenUpdateLocationUpdatedHolidaySchedules()
-    {
-        //Arrange
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
-        testLocation.Id = await CreateLocation(testLocation);
-
-        var expected = testLocation.HolidaySchedules.ElementAt(0);
-        expected.StartDate = new DateTime(2023, 1, 2).ToUniversalTime();
-        expected.EndDate = new DateTime(2023, 1, 2).ToUniversalTime();
-        
-        var updateCommand = new UpdateLocationCommand(testLocation.Id, testLocation);
-        var updateHandler = new UpdateLocationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-        //Act
-        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBe(0);
-        result.Should().Be(testLocation.Id);
-
-        var actualService = TestDbContext.Locations.SingleOrDefault(s => s.Name == testLocation.Name);
-        actualService.Should().NotBeNull();
-        actualService!.HolidaySchedules.Count.Should().Be(1);
-
-        var actualEntity = TestDbContext.HolidaySchedules.SingleOrDefault(s => s.LocationId == testLocation.Id);
-        actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
-            options.Excluding((IMemberInfo info ) => info.Name.Contains("Id")));
+        actualEntity.Should().BeEquivalentTo(expected, options =>
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Id")));
     }
 }
