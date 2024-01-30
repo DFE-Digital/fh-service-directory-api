@@ -13,6 +13,9 @@ public class CreateLocationCommandValidator : AbstractValidator<CreateLocationCo
         RuleFor(v => v.Location.Id)
             .Equal(0);
 
+        RuleFor(v => v.Location.Name)
+          .MaximumLength(255);
+          
         RuleFor(v => v.Location.PostCode)
             .MinimumLength(5)
             .MaximumLength(15)
