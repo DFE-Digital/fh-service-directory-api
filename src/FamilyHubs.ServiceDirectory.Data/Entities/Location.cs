@@ -6,7 +6,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Entities;
 public class Location : EntityBase<long>
 {
     public required LocationType LocationType { get; set; }
-    public required string? Name { get; set; }
+    public string? Name { get; set; }
     public string? Description { get; set; }
     public required double Latitude { get; set; }
     public required double Longitude { get; set; }
