@@ -106,7 +106,7 @@ public class MinimalLocationEndPoints
         }).WithMetadata(new SwaggerOperationAttribute("Update a Location", "Update a Location") { Tags = new[] { "Locations" } });
 
         app.MapPost("api/locations",
-            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+            [Authorize(Roles = RoleGroups.AdminRole)] async 
             ([FromBody] LocationDto request, 
             CancellationToken cancellationToken, 
             ISender mediator, 
