@@ -78,6 +78,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                 type: "nvarchar(2083)",
                 maxLength: 2083,
                 nullable: true);
+
+            migrationBuilder.Sql(@"UPDATE dbo.Locations SET LocationType = 'Postal'");
         }
 
         /// <inheritdoc />
