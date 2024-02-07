@@ -91,7 +91,7 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
 
         if (request.IsFamilyHub)
         {
-            locationsQuery = locationsQuery.Where(x => x.LocationType == Shared.Enums.LocationType.FamilyHub);
+            locationsQuery = locationsQuery.Where(x => x.LocationTypeCategory == Shared.Enums.LocationTypeCategory.FamilyHub);
         }
 
         return locationsQuery;

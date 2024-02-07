@@ -5,7 +5,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
 public class Location : EntityBase<long>
 {
-    public required LocationType LocationType { get; set; }
+    public required LocationTypeCategory LocationTypeCategory { get; set; }
     public string? Name { get; set; }
     public string? Description { get; set; }
     public required double Latitude { get; set; }
@@ -16,6 +16,16 @@ public class Location : EntityBase<long>
     public required string PostCode { get; set; }
     public required string StateProvince { get; set; }
     public required string Country { get; set; }
+    public required LocationType LocationType { get; set; }
+    public string? AddressType { get; set; }
+    public string? AlternateName { get; set; }
+    public string? Attention { get; set; }
+    public string? Region { get; set; }
+    public string? Transportation { get; set; }
+    public string? Url { get; set; }
+    public string? ExternalIdentifier { get; set; }
+    public string? ExternalIdentifierType { get; set; }
+
     public IList<AccessibilityForDisabilities> AccessibilityForDisabilities { get; set; } = new List<AccessibilityForDisabilities>();
     public IList<Schedule> Schedules { get; set; } = new List<Schedule>();
     public IList<Contact> Contacts { get; set; } = new List<Contact>();

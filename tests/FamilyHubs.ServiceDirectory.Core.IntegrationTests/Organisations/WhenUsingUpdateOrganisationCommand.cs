@@ -623,9 +623,10 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
             Country = "Country",
             PostCode = "PostCode",
             StateProvince = "StateProvince",
-            LocationType = LocationType.NotSet,
+            LocationTypeCategory = LocationTypeCategory.NotSet,
             Latitude = 0,
-            Longitude = 0
+            Longitude = 0,
+            LocationType= LocationType.Postal
         };
         service.Locations.Clear();
         service.Locations.Add(expected);

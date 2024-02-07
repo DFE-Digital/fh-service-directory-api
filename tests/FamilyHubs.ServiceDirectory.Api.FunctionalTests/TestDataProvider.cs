@@ -77,7 +77,7 @@ public static class TestDataProvider
                     {
                         new LocationDto
                         {
-                            LocationType = LocationType.FamilyHub,
+                            LocationTypeCategory = LocationTypeCategory.FamilyHub,
                             Name = "Test Location Name",
                             Latitude = 52.6312,
                             Longitude = -1.66526,
@@ -86,6 +86,7 @@ public static class TestDataProvider
                             PostCode = "B77 3JN",
                             StateProvince = "",
                             Country = "England",
+                            LocationType= LocationType.Postal
                         }
                     },
                     Taxonomies = new List<TaxonomyDto>
@@ -186,7 +187,8 @@ public static class TestDataProvider
                     PostCode = "B77 3JN",
                     Country = "England",
                     StateProvince = "null",
-                    LocationType = LocationType.FamilyHub
+                    LocationTypeCategory = LocationTypeCategory.FamilyHub,
+                    LocationType= LocationType.Postal
                 }
             }
         };
@@ -260,7 +262,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.NotSet,
+                        LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Ordsall Neighbourhood Centre",
                         Description = "2, Robert Hall Street M5 3LT",
                         Longitude = 53.474103227856105D,
@@ -270,6 +272,7 @@ public static class TestDataProvider
                         PostCode = "M5 3LT",
                         Country = "United Kingdom",
                         StateProvince = "Salford",
+                        LocationType= LocationType.Postal,
                         Schedules = new List<Schedule>
                         {
                             new Schedule
@@ -354,7 +357,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.NotSet,
+                        LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Oakwood Academy",
                         Description = "",
                         Longitude = 53.493505779578605D,
@@ -364,6 +367,7 @@ public static class TestDataProvider
                         PostCode = "M30 9DY",
                         Country = "United Kingdom",
                         StateProvince = "Manchester",
+                        LocationType= LocationType.Postal,
                         Contacts = new List<Contact>
                         {
                             new Contact
@@ -440,7 +444,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.FamilyHub,
+                        LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "Central Family Hub",
                         Description = "Broughton Hub",
                         Longitude = .507025D,
@@ -450,6 +454,7 @@ public static class TestDataProvider
                         PostCode = "M7 4BQ",
                         Country = "United Kingdom",
                         StateProvince = "Salford",
+                        LocationType= LocationType.Postal,
                         Contacts = new List<Contact>
                         {
                             new Contact
@@ -517,7 +522,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.FamilyHub,
+                        LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "North Family Hub",
                         Description = "Swinton Gateway",
                         Longitude = .5124278D,
@@ -527,6 +532,7 @@ public static class TestDataProvider
                         PostCode = "M27 6BP",
                         Country = "United Kingdom",
                         StateProvince = "Salford",
+                        LocationType= LocationType.Postal,
                         Contacts = new List<Contact>
                         {
                             new Contact
@@ -643,7 +649,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.FamilyHub,
+                        LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "South Family Hub",
                         Description = "Winton Children’s Centre",
                         Longitude = .48801070060149D,
@@ -653,6 +659,7 @@ public static class TestDataProvider
                         PostCode = "M30 8AB",
                         Country = "United Kingdom",
                         StateProvince = "Salford",
+                        LocationType= LocationType.Postal,
                         AccessibilityForDisabilities = new List<AccessibilityForDisabilities>
                         {
                             new AccessibilityForDisabilities
@@ -788,7 +795,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.NotSet,
+                        LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Bristol-Service-1-Location",
                         Description = "",
                         Longitude = .48801070060149D,
@@ -798,6 +805,7 @@ public static class TestDataProvider
                         PostCode = "BS8 4AA",
                         Country = "England",
                         StateProvince = "Bristol",
+                        LocationType= LocationType.Postal
                     },
                 }
             },
@@ -858,7 +866,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.NotSet,
+                        LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Bristol-Service-2-Location",
                         Description = "",
                         Longitude = .6312,
@@ -868,6 +876,7 @@ public static class TestDataProvider
                         PostCode = "BS8 4AA",
                         Country = "England",
                         StateProvince = "Bristol",
+                        LocationType= LocationType.Postal
                     }
                 },
                 Contacts = new List<Contact>
@@ -940,7 +949,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.NotSet,
+                        LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Bristol-Service-3-Location",
                         Description = "",
                         Longitude = .63123,
@@ -950,6 +959,7 @@ public static class TestDataProvider
                         PostCode = "BS8 4AA",
                         Country = "England",
                         StateProvince = "Bristol",
+                        LocationType= LocationType.Postal
                     },
                 },
                 Taxonomies = new List<Taxonomy>
@@ -1031,7 +1041,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.NotSet,
+                        LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Bristol-Service-4-Location",
                         Description = "",
                         Longitude = .63123,
@@ -1041,6 +1051,7 @@ public static class TestDataProvider
                         PostCode = "BS8 4AA",
                         Country = "England",
                         StateProvince = "",
+                        LocationType= LocationType.Postal,
                         Contacts = new List<Contact>
                         {
                             new Contact
