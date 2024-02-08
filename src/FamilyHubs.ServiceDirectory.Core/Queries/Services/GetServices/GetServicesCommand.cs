@@ -149,7 +149,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             services = services.Where(x => x.Name.Contains(request.Text) || x.Description != null && x.Description.Contains(request.Text));
 
         if (request.IsFamilyHub is not null)
-            services = services.Where(s => s.Locations.Any(lt => lt.LocationType == LocationType.FamilyHub) == request.IsFamilyHub);
+            services = services.Where(s => s.Locations.Any(lt => lt.LocationTypeCategory == LocationTypeCategory.FamilyHub) == request.IsFamilyHub);
 
         if (request.IsPaidFor is not null)
         {
@@ -201,9 +201,9 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         {
             // MaxFamilyHubs is really a flag to only include the nearest max family hubs at the start of the results set (when not filtering by IsFamilyHub)
             services = services
-                .Where(s => s.Locations.Any(lt => lt.LocationType == LocationType.FamilyHub))
+                .Where(s => s.Locations.Any(lt => lt.LocationTypeCategory == LocationTypeCategory.FamilyHub))
                 .Take(request.MaxFamilyHubs.Value)
-                .Concat(services.Where(s => !s.Locations.Any(lt => lt.LocationType == LocationType.FamilyHub)))
+                .Concat(services.Where(s => !s.Locations.Any(lt => lt.LocationTypeCategory == LocationTypeCategory.FamilyHub)))
                 .ToList();
         }
 

@@ -11,9 +11,9 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Navigation(e => e.Contacts).AutoInclude();
         builder.Navigation(e => e.Schedules).AutoInclude();
 
-        builder.HasEnum(t => t.LocationType);
+        builder.HasEnum(t => t.LocationTypeCategory);
 
-        builder.Property(t => t.LocationType)
+        builder.Property(t => t.LocationTypeCategory)
                 .HasMaxLength(50);
 
         builder.Property(t => t.Name)
@@ -40,7 +40,35 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(t => t.PostCode)
             .HasMaxLength(15);
 
-        builder.Property(t => t.Created)
+        builder.HasEnum(t => t.LocationType);
+        builder.Property(t => t.LocationType)
+            .HasMaxLength(50);
+
+        builder.Property(t => t.AddressType)
+            .HasMaxLength(10);
+
+        builder.Property(t => t.AlternateName)
+            .HasMaxLength(255);
+
+        builder.Property(t => t.Attention)
+            .HasMaxLength(255);
+
+        builder.Property(t => t.Region)
+            .HasMaxLength(255);
+
+        builder.Property(t => t.Transportation)
+            .HasMaxLength(500);
+
+        builder.Property(t => t.Url)
+            .HasMaxLength(2083);
+
+        builder.Property(t => t.ExternalIdentifier)
+            .HasMaxLength(500);
+
+        builder.Property(t => t.ExternalIdentifierType)
+            .HasMaxLength(500);
+
+    builder.Property(t => t.Created)
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
