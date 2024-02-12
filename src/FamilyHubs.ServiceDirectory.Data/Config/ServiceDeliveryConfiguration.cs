@@ -8,7 +8,7 @@ public class ServiceDeliveryConfiguration : IEntityTypeConfiguration<ServiceDeli
 {
     public void Configure(EntityTypeBuilder<ServiceDelivery> builder)
     {
-        builder.HasEnum(t => t.Name);
+        builder.HasEnumProperty(t => t.Name);
 
         builder.Property(t => t.Name)
             .HasMaxLength(50);

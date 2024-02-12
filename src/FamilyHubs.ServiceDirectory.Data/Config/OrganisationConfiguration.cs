@@ -12,7 +12,7 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
         builder.Navigation(e => e.Reviews).AutoInclude();
         builder.Navigation(e => e.Services).AutoInclude();
         
-        builder.HasEnum(t => t.OrganisationType);
+        builder.HasEnumProperty(t => t.OrganisationType);
 
         builder.Property(t => t.OrganisationType)
                 .HasMaxLength(50);

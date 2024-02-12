@@ -2,6 +2,6 @@
 
 public class ServiceLocationSharedEntityBase : EntityBase<long>
 {
-    public long? ServiceId { get; set; } = default!;
-    public long? LocationId { get; set; } = default!;
+    public long? ServiceId { get; set; }
+    public long? LocationId { get; set; }
 }
