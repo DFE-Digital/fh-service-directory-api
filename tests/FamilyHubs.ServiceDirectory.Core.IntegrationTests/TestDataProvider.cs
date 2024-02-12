@@ -169,7 +169,7 @@ public static class TestDataProvider
                             ByDay = updated == false ?  "byDay1" : "byDay2",
                             ByMonthDay = "byMonth",
                             DtStart = "dtStart",
-                            Freq = FrequencyType.NotSet,
+                            Freq = null,
                             OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                             ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
                         }
@@ -213,7 +213,7 @@ public static class TestDataProvider
                     ByDay = "byDay1",
                     ByMonthDay = "byMonth",
                     DtStart = "dtStart",
-                    Freq = FrequencyType.NotSet,
+                    Freq = null,
                     ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                     ValidTo = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
                 }
@@ -324,7 +324,7 @@ public static class TestDataProvider
                             ByDay = "byDay",
                             ByMonthDay = "byMonth",
                             DtStart = "dtStart",
-                            Freq = FrequencyType.NotSet,
+                            Freq = null,
                             OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                             ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
                         }
@@ -368,7 +368,7 @@ public static class TestDataProvider
                     ByDay = "byDay1",
                     ByMonthDay = "byMonth",
                     DtStart = "dtStart",
-                    Freq = FrequencyType.NotSet,
+                    Freq = null,
                     ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                     ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
                 }
@@ -836,7 +836,7 @@ public static class TestDataProvider
                         ByDay = "byDay",
                         ByMonthDay = "byMonth",
                         DtStart = "dtStart",
-                        Freq = FrequencyType.NotSet,
+                        Freq = null,
                         ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ServiceId = 0
@@ -875,7 +875,7 @@ public static class TestDataProvider
                                 ByDay = "byDay",
                                 ByMonthDay = "byMonth",
                                 DtStart = "dtStart",
-                                Freq = FrequencyType.NotSet,
+                                Freq = null,
                                 ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                                 ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                             }
