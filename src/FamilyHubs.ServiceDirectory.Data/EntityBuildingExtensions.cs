@@ -23,7 +23,8 @@ public static class EntityBuilderExtensions
                 v => v.ToString(),
                 v => (TProperty)Enum.Parse(typeof(TProperty), v)
             )
-            .HasMaxLength(actualMaxLength);
+            .HasMaxLength(actualMaxLength)
+            .IsUnicode(false);
     }
 
     public static PropertyBuilder<TProperty?> HasEnumProperty<TEntity, TProperty>(
@@ -44,6 +45,7 @@ public static class EntityBuilderExtensions
                 // a null value will never be passed to a value converter, so we can safely forgive null
                 v => (TProperty)Enum.Parse(typeof(TProperty), v!)
             )
-            .HasMaxLength(actualMaxLength);
+            .HasMaxLength(actualMaxLength)
+            .IsUnicode(false);
     }
 }
