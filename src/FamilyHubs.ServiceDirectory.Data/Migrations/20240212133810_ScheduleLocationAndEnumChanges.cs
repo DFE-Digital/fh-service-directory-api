@@ -226,6 +226,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(50)",
                 oldMaxLength: 50);
+
+            migrationBuilder.Sql("UPDATE dbo.Schedules SET Freq = NULL WHERE Freq = 'NotSet'");
         }
 
         /// <inheritdoc />
