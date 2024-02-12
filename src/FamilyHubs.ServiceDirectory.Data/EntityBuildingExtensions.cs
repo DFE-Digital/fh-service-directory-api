@@ -5,7 +5,7 @@ namespace FamilyHubs.ServiceDirectory.Data;
 
 public static class EntityBuilderExtensions
 {
-    //todo: if works, call common private static method
+    //todo: call common private static method(s)?
     public static PropertyBuilder<TProperty> HasEnumProperty<TEntity, TProperty>(
         this EntityTypeBuilder<TEntity> entityBuilder,
         Expression<Func<TEntity, TProperty>> propertyExpression,
