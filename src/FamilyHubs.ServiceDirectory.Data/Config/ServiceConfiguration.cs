@@ -24,21 +24,11 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Property(t => t.Name)
             .HasMaxLength(255);
 
-        builder.HasEnumProperty(s => s.AttendingAccess);
-        builder.Property(t => t.AttendingAccess)
-                .HasMaxLength(50);
-        builder.HasEnumProperty(s => s.AttendingType);
-        builder.Property(t => t.AttendingType)
-                .HasMaxLength(50);
-        builder.HasEnumProperty(s => s.DeliverableType);
-        builder.Property(t => t.DeliverableType)
-                .HasMaxLength(50);
+        builder.HasEnumProperty(s => s.AttendingAccess, 50);
+        builder.HasEnumProperty(s => s.AttendingType, 50);
+        builder.HasEnumProperty(s => s.DeliverableType, 50);
         builder.HasEnumProperty(s => s.ServiceType);
-        builder.Property(t => t.ServiceType)
-                .HasMaxLength(50);
-        builder.HasEnumProperty(s => s.Status);
-        builder.Property(t => t.Status)
-                .HasMaxLength(50);
+        builder.HasEnumProperty(s => s.Status, 50);
 
         builder.Property(t => t.InterpretationServices)
             .HasMaxLength(512);
