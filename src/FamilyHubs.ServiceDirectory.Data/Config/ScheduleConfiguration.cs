@@ -9,23 +9,23 @@ public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
     public void Configure(EntityTypeBuilder<Schedule> builder)
     {
         builder.HasEnumProperty(t => t.Freq)
-            .IsUnicode(false)
-            .IsRequired(false);
+            .IsUnicode(false);
+            //.IsRequired(false);
 
         builder.Property(t => t.DtStart)
             .HasMaxLength(30)
-            .IsUnicode(false)
-            .IsRequired(false);
+            .IsUnicode(false);
+            //.IsRequired(false);
 
         builder.Property(t => t.ByDay)
             .HasMaxLength(34)
-            .IsUnicode(false)
-            .IsRequired(false);
+            .IsUnicode(false);
+            //.IsRequired(false);
 
         builder.Property(t => t.ByMonthDay)
             .HasMaxLength(15)
-            .IsUnicode(false)
-            .IsRequired(false);
+            .IsUnicode(false);
+            //.IsRequired(false);
 
         //builder.Property(t => t.ServiceId)
         //    .IsRequired(false);
@@ -35,28 +35,28 @@ public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
 
         builder.Property(t => t.Until)
             .HasMaxLength(300)
-            .IsUnicode(false)
-            .IsRequired(false);
+            .IsUnicode(false);
+            //.IsRequired(false);
 
         builder.Property(t => t.WkSt)
             .HasMaxLength(300)
-            .IsUnicode(false)
-            .IsRequired(false);
+            .IsUnicode(false);
+            //.IsRequired(false);
 
         builder.Property(t => t.ByWeekNo)
             .HasMaxLength(300)
-            .IsUnicode(false)
-            .IsRequired(false);
+            .IsUnicode(false);
+            //.IsRequired(false);
 
         builder.Property(t => t.ByYearDay)
             .HasMaxLength(300)
-            .IsUnicode(false)
-            .IsRequired(false);
+            .IsUnicode(false);
+            //.IsRequired(false);
 
         builder.Property(t => t.ScheduleLink)
             .HasMaxLength(600)
-            .IsUnicode(false)
-            .IsRequired(false);
+            .IsUnicode(false);
+            //.IsRequired(false);
 
         builder.Property(t => t.Created)
             .IsRequired();

@@ -41,7 +41,8 @@ public static class EntityBuilderExtensions
             .HasConversion
             (
                 v => v.ToString(),
-                v => (TProperty)Enum.Parse(typeof(TProperty), v)
+                // a null value will never be passed to a value converter, so we can safely forgive null
+                v => (TProperty)Enum.Parse(typeof(TProperty), v!)
             )
             .HasMaxLength(actualMaxLength);
     }

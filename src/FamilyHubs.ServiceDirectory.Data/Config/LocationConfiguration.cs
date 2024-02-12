@@ -13,8 +13,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
 
         builder.HasEnumProperty(t => t.LocationTypeCategory);
 
-        builder.Property(t => t.LocationTypeCategory)
-                .HasMaxLength(50);
+        //builder.Property(t => t.LocationTypeCategory)
+        //        .HasMaxLength(50);
 
         builder.Property(t => t.Name)
             .HasMaxLength(255);
@@ -41,8 +41,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .HasMaxLength(15);
 
         builder.HasEnumProperty(t => t.LocationType);
-        builder.Property(t => t.LocationType)
-            .HasMaxLength(50);
+        //builder.Property(t => t.LocationType)
+        //    .HasMaxLength(50);
 
         builder.Property(t => t.AddressType)
             .HasMaxLength(10);
