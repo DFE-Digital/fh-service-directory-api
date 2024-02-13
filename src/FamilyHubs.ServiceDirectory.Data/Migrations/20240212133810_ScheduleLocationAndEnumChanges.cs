@@ -228,6 +228,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                 oldMaxLength: 50);
 
             migrationBuilder.Sql("UPDATE dbo.Schedules SET Freq = NULL WHERE Freq = 'NotSet'");
+            migrationBuilder.Sql("UPDATE dbo.Locations SET Country = 'GB' WHERE Country = 'England'");
         }
 
         /// <inheritdoc />
