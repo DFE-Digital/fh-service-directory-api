@@ -383,13 +383,15 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("LocationType")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(8)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(8)");
 
                     b.Property<string>("LocationTypeCategory")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(9)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(9)");
 
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
@@ -474,7 +476,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<string>("OrganisationType")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Uri")
                         .HasMaxLength(2083)
@@ -562,20 +565,24 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ByDay")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasMaxLength(34)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(34)");
 
                     b.Property<string>("ByMonthDay")
                         .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(15)");
 
                     b.Property<string>("ByWeekNo")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("ByYearDay")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(300)");
 
                     b.Property<DateTime?>("ClosesAt")
                         .HasColumnType("datetime2");
@@ -597,15 +604,15 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("DtStart")
                         .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(30)");
 
                     b.Property<string>("Freq")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(8)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(8)");
 
                     b.Property<int?>("Interval")
-                        .HasMaxLength(30)
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("LastModified")
@@ -626,7 +633,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("ScheduleLink")
                         .HasMaxLength(600)
-                        .HasColumnType("nvarchar(600)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(600)");
 
                     b.Property<long?>("ServiceId")
                         .HasColumnType("bigint");
@@ -636,7 +644,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("Until")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(300)");
 
                     b.Property<DateTime?>("ValidFrom")
                         .HasColumnType("datetime2");
@@ -646,7 +655,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("WkSt")
                         .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(300)");
 
                     b.HasKey("Id");
 
@@ -674,12 +684,14 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<string>("AttendingAccess")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("AttendingType")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<bool>("CanFamilyChooseDeliveryLocation")
                         .HasColumnType("bit");
@@ -696,7 +708,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<string>("DeliverableType")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -729,13 +742,15 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("ServiceType")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(18)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(18)");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -823,7 +838,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<long>("ServiceId")
                         .HasColumnType("bigint");
@@ -870,7 +886,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<string>("TaxonomyType")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 

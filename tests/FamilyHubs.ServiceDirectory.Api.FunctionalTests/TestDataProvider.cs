@@ -639,7 +639,7 @@ public static class TestDataProvider
                         ByDay = "byDay",
                         ByMonthDay = "byMonth",
                         DtStart = "dtStart",
-                        Freq = FrequencyType.NotSet,
+                        Freq = null,
                         ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ServiceId = 0
@@ -678,7 +678,7 @@ public static class TestDataProvider
                                 ByDay = "byDay",
                                 ByMonthDay = "byMonth",
                                 DtStart = "dtStart",
-                                Freq = FrequencyType.NotSet,
+                                Freq = null,
                                 ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                                 ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                             }

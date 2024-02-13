@@ -11,10 +11,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Navigation(e => e.Contacts).AutoInclude();
         builder.Navigation(e => e.Schedules).AutoInclude();
 
-        builder.HasEnum(t => t.LocationTypeCategory);
-
-        builder.Property(t => t.LocationTypeCategory)
-                .HasMaxLength(50);
+        builder.HasEnumProperty(t => t.LocationTypeCategory);
 
         builder.Property(t => t.Name)
             .HasMaxLength(255);
@@ -40,9 +37,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(t => t.PostCode)
             .HasMaxLength(15);
 
-        builder.HasEnum(t => t.LocationType);
-        builder.Property(t => t.LocationType)
-            .HasMaxLength(50);
+        builder.HasEnumProperty(t => t.LocationType);
 
         builder.Property(t => t.AddressType)
             .HasMaxLength(10);
