@@ -23,21 +23,20 @@ Starting the API will then show the swagger definition with the available operat
 
 To Add Migration
 
-<br />
- dotnet ef migrations add CreateIntialSchema --project ..\FamilyHubs.ServiceDirectory.data
-<br />
+```
+dotnet ef migrations add CreateIntialSchema --project ..\FamilyHubs.ServiceDirectory.data
+```
 
 To Apply Latest Schema Manually
 
-<br />
+```
  dotnet ef database update --project ..\FamilyHubs.ServiceDirectory.data
-<br />
+```
 
 ## cypress tests
 Run the API (debug or non debug both fine)
 open powershell at ..\fh-service-directory-api\tests\cypress
 
-<br />
+```
  npx cypress open 
-<br />
-
+```
