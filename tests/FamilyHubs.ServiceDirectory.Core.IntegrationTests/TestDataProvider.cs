@@ -27,6 +27,25 @@ public static class TestDataProvider
         return testCountyCouncil;
     }
 
+    public static OrganisationWithServicesDto GetTestCountyCouncilWithFreeServiceDto(bool updated = false)
+    {
+        var testCountyCouncil = new OrganisationWithServicesDto
+        {
+            OrganisationType = OrganisationType.LA,
+            Name = updated == false ? "Unit Test County Council" : "Unit Test County Council Updated",
+            Description = updated == false ? "Unit Test County Council" : "Unit Test County Council Updated",
+            Uri = new Uri("https://www.unittest.gov.uk/").ToString(),
+            Url = "https://www.unittest.gov.uk/",
+            AdminAreaCode = "XTEST",
+            Services = new List<ServiceDto>
+            {
+                GetTestCountyCouncilServicesDto(0, updated, true)
+            },
+        };
+
+        return testCountyCouncil;
+    }
+
     public static OrganisationWithServicesDto GetTestCountyCouncilDto2()
     {
         var testCountyCouncil = new OrganisationWithServicesDto
@@ -46,7 +65,7 @@ public static class TestDataProvider
         return testCountyCouncil;
     }
 
-    public static ServiceDto GetTestCountyCouncilServicesDto(long organisationId, bool updated = false)
+    public static ServiceDto GetTestCountyCouncilServicesDto(long organisationId, bool updated = false, bool isServiceFree = false)
     {
         var serviceId = "3010521b-6e0a-41b0-b610-200edbbeeb14";
 
@@ -68,7 +87,7 @@ public static class TestDataProvider
             {
                 new EligibilityDto
                 {
-                    EligibilityType = EligibilityType.NotSet,
+                    EligibilityType = null,
                     MinimumAge = updated == false ? 0 : 1,
                     MaximumAge = updated == false ? 13 : 14,
                 }
@@ -85,22 +104,23 @@ public static class TestDataProvider
                     Email = "support@unittestservice.com"
                 }
             },
-            CostOptions = new List<CostOptionDto>
+            CostOptions = isServiceFree ? new List<CostOptionDto>() : new List<CostOptionDto>
             {
                 new CostOptionDto
                 {
                     AmountDescription = updated == false ? "amount_description1" : "amount_description2",
-                    Amount = decimal.Zero,
-                    Option = "free",
-                    ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    ValidTo = new DateTime(2023, 1, 1).ToUniversalTime().AddHours(8),
+                    //Amount = decimal.Zero,
+                    //Option = "free",
+                    //ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
+                    //ValidTo = new DateTime(2023, 1, 1).ToUniversalTime().AddHours(8),
                 }
             },
             Languages = new List<LanguageDto>
             {
                 new LanguageDto
                 {
-                    Name = updated == false ? "English"  : "French",
+                    Name = updated ? "French"  : "English",
+                    Code = updated ? "fr" : "en"
                 }
             },
             ServiceAreas = new List<ServiceAreaDto>
@@ -125,7 +145,8 @@ public static class TestDataProvider
                     PostCode = "B77 3JN",
                     Country = "England",
                     StateProvince = "null",
-                    LocationType = updated == false ? LocationType.FamilyHub : LocationType.NotSet,
+                    LocationTypeCategory = updated == false ? LocationTypeCategory.FamilyHub : LocationTypeCategory.NotSet,
+                    LocationType= LocationType.Postal,
                     Contacts = new List<ContactDto>
                     {
                         new ContactDto
@@ -138,9 +159,9 @@ public static class TestDataProvider
                             Email = "support@unittestservice.com"
                         }
                     },
-                    RegularSchedules = new List<RegularScheduleDto>
+                    Schedules = new List<ScheduleDto>
                     {
-                        new RegularScheduleDto
+                        new ScheduleDto
                         {
                             Description = "Location Level Description",
                             ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -148,21 +169,9 @@ public static class TestDataProvider
                             ByDay = updated == false ?  "byDay1" : "byDay2",
                             ByMonthDay = "byMonth",
                             DtStart = "dtStart",
-                            Freq = FrequencyType.NotSet,
-                            Interval = "interval",
+                            Freq = null,
                             OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                             ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
-                        }
-                    },
-                    HolidaySchedules = new List<HolidayScheduleDto>
-                    {
-                        new HolidayScheduleDto
-                        {
-                            Closed = updated,
-                            ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(1),
-                            OpensAt = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(1),
-                            StartDate = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(1),
-                            EndDate = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(1)
                         }
                     }
                 }
@@ -194,9 +203,9 @@ public static class TestDataProvider
                     ParentId = null
                 }
             },
-            RegularSchedules = new List<RegularScheduleDto>
+            Schedules = new List<ScheduleDto>
             {
-                new RegularScheduleDto
+                new ScheduleDto
                 {
                     Description = "Service Level Description",
                     OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -204,21 +213,9 @@ public static class TestDataProvider
                     ByDay = "byDay1",
                     ByMonthDay = "byMonth",
                     DtStart = "dtStart",
-                    Freq = FrequencyType.NotSet,
-                    Interval = "interval",
+                    Freq = null,
                     ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                     ValidTo = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
-                }
-            },
-            HolidaySchedules = new List<HolidayScheduleDto>
-            {
-                new HolidayScheduleDto
-                {
-                    Closed = !updated,
-                    ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    StartDate = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    EndDate = new DateTime(2023, 1, 1).ToUniversalTime()
                 }
             }
         };
@@ -247,7 +244,7 @@ public static class TestDataProvider
             {
                 new EligibilityDto
                 {
-                    EligibilityType = EligibilityType.NotSet,
+                    EligibilityType = null,
                     MinimumAge = 0,
                     MaximumAge = 13,
                 }
@@ -268,8 +265,8 @@ public static class TestDataProvider
             {
                 new CostOptionDto
                 {
-                    Amount = 1,
-                    Option = "paid",
+                    //Amount = 1,
+                    //Option = "paid",
                     AmountDescription = "£1 a session",
                 }
             },
@@ -278,6 +275,7 @@ public static class TestDataProvider
                 new LanguageDto
                 {
                     Name = "English",
+                    Code = "en"
                 }
             },
             ServiceAreas = new List<ServiceAreaDto>
@@ -302,7 +300,8 @@ public static class TestDataProvider
                     PostCode = "B77 3JN",
                     Country = "England",
                     StateProvince = "null",
-                    LocationType = LocationType.FamilyHub,
+                    LocationTypeCategory = LocationTypeCategory.FamilyHub,
+                    LocationType= LocationType.Postal,
                     Contacts = new List<ContactDto>
                     {
                         new ContactDto
@@ -315,9 +314,9 @@ public static class TestDataProvider
                             Email = "support@unittestservice.com"
                         }
                     },
-                    RegularSchedules = new List<RegularScheduleDto>
+                    Schedules = new List<ScheduleDto>
                     {
-                        new RegularScheduleDto
+                        new ScheduleDto
                         {
                             Description = "Description",
                             ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -325,21 +324,9 @@ public static class TestDataProvider
                             ByDay = "byDay",
                             ByMonthDay = "byMonth",
                             DtStart = "dtStart",
-                            Freq = FrequencyType.NotSet,
-                            Interval = "interval",
+                            Freq = null,
                             OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                             ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
-                        }
-                    },
-                    HolidaySchedules = new List<HolidayScheduleDto>
-                    {
-                        new HolidayScheduleDto
-                        {
-                            Closed = false,
-                            ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                            OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                            StartDate = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(5) ,
-                            EndDate = new DateTime(2023, 1, 1).ToUniversalTime()
                         }
                     }
                 }
@@ -371,9 +358,9 @@ public static class TestDataProvider
                     ParentId = null
                 }
             },
-            RegularSchedules = new List<RegularScheduleDto>
+            Schedules = new List<ScheduleDto>
             {
-                new RegularScheduleDto
+                new ScheduleDto
                 {
                     Description = "Description",
                     OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
@@ -381,21 +368,9 @@ public static class TestDataProvider
                     ByDay = "byDay1",
                     ByMonthDay = "byMonth",
                     DtStart = "dtStart",
-                    Freq = FrequencyType.NotSet,
-                    Interval = "interval",
+                    Freq = null,
                     ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                     ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime().AddMonths(6)
-                }
-            },
-            HolidaySchedules = new List<HolidayScheduleDto>
-            {
-                new HolidayScheduleDto
-                {
-                    Closed = true,
-                    ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                    StartDate = new DateTime(2023, 1, 1).ToUniversalTime().AddDays(5),
-                    EndDate = new DateTime(2023, 1, 1).ToUniversalTime()
                 }
             }
         };
@@ -446,7 +421,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 1,
                         MinimumAge = 0,
                         ServiceId = 0
@@ -456,8 +431,8 @@ public static class TestDataProvider
                 {
                     new CostOption
                     {
-                        Option = "Session",
-                        Amount = 2.5m,
+                        //Option = "Session",
+                        //Amount = 2.5m,
                         AmountDescription = "AmountDescription",
                         ServiceId = 0
                     }
@@ -467,6 +442,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0
                     }
                 },
@@ -483,7 +459,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.NotSet,
+                        LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Ordsall Neighbourhood Centre",
                         Description = "2, Robert Hall Street M5 3LT",
                         Longitude = 53.474103227856105D,
@@ -493,13 +469,13 @@ public static class TestDataProvider
                         PostCode = "M5 3LT",
                         Country = "United Kingdom",
                         StateProvince = "Salford",
-                        RegularSchedules = new List<RegularSchedule>
+                        LocationType= LocationType.Postal,
+                        Schedules = new List<Schedule>
                         {
-                            new RegularSchedule
+                            new Schedule
                             {
                                 Description = "Friday 1.30pm - 2.30pm",
-                                ByDay = "1.30pm - 2.30pm",
-                                Interval = "Every Friday",
+                                ByDay = "1.30pm - 2.30pm"
                             }
                         },
                         Contacts = new List<Contact>
@@ -550,7 +526,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 10,
                         MinimumAge = 4,
                         ServiceId = 0
@@ -561,6 +537,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0
                     }
                 },
@@ -577,7 +554,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.NotSet,
+                        LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Oakwood Academy",
                         Description = "",
                         Longitude = 53.493505779578605D,
@@ -587,6 +564,7 @@ public static class TestDataProvider
                         PostCode = "M30 9DY",
                         Country = "United Kingdom",
                         StateProvince = "Manchester",
+                        LocationType= LocationType.Postal,
                         Contacts = new List<Contact>
                         {
                             new Contact
@@ -635,7 +613,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 25,
                         MinimumAge = 0,
                         ServiceId = 0,
@@ -646,6 +624,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0,
                     }
                 },
@@ -662,7 +641,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.FamilyHub,
+                        LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "Central Family Hub",
                         Description = "Broughton Hub",
                         Longitude = .507025D,
@@ -672,6 +651,7 @@ public static class TestDataProvider
                         PostCode = "M7 4BQ",
                         Country = "United Kingdom",
                         StateProvince = "Salford",
+                        LocationType= LocationType.Postal,
                         Contacts = new List<Contact>
                         {
                             new Contact
@@ -711,7 +691,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 25,
                         MinimumAge = 0,
                         ServiceId = 0
@@ -722,6 +702,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0
                     }
                 },
@@ -738,7 +719,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.FamilyHub,
+                        LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "North Family Hub",
                         Description = "Swinton Gateway",
                         Longitude = .5124278D,
@@ -748,6 +729,7 @@ public static class TestDataProvider
                         PostCode = "M27 6BP",
                         Country = "United Kingdom",
                         StateProvince = "Salford",
+                        LocationType= LocationType.Postal,
                         Contacts = new List<Contact>
                         {
                             new Contact
@@ -787,7 +769,7 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 25,
                         MinimumAge = 0,
                         ServiceId = 0,
@@ -806,10 +788,10 @@ public static class TestDataProvider
                     new CostOption
                     {
                         AmountDescription = "Amount Description",
-                        Amount = 100000000,
-                        Option = "options",
-                        ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
+                        //Amount = 100000000,
+                        //Option = "options",
+                        //ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
+                        //ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ServiceId = 0
                     }
                 },
@@ -818,6 +800,7 @@ public static class TestDataProvider
                     new Language
                     {
                         Name = "English",
+                        Code = "en",
                         ServiceId = 0
                     }
                 },
@@ -843,30 +826,17 @@ public static class TestDataProvider
                         ServiceId = 0
                     }
                 },
-                HolidaySchedules = new List<HolidaySchedule>
+                Schedules = new List<Schedule>
                 {
-                    new HolidaySchedule
+                    new Schedule
                     {
-                        Closed = true,
-                        OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        StartDate = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        EndDate = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        ServiceId = 0
-                    }
-                },
-                RegularSchedules = new List<RegularSchedule>
-                {
-                    new RegularSchedule
-                    {
-                        Description = "RegularSchedule",
+                        Description = "Schedule",
                         OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ByDay = "byDay",
                         ByMonthDay = "byMonth",
                         DtStart = "dtStart",
-                        Freq = FrequencyType.NotSet,
-                        Interval = "Interval",
+                        Freq = null,
                         ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ServiceId = 0
@@ -876,7 +846,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.FamilyHub,
+                        LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "South Family Hub",
                         Description = "Winton Children’s Centre",
                         Longitude = .48801070060149D,
@@ -886,6 +856,7 @@ public static class TestDataProvider
                         PostCode = "M30 8AB",
                         Country = "United Kingdom",
                         StateProvince = "Salford",
+                        LocationType= LocationType.Postal,
                         AccessibilityForDisabilities = new List<AccessibilityForDisabilities>
                         {
                             new AccessibilityForDisabilities
@@ -894,31 +865,19 @@ public static class TestDataProvider
                                 LocationId = 0
                             }
                         },
-                        RegularSchedules = new List<RegularSchedule>
+                        Schedules = new List<Schedule>
                         {
-                            new RegularSchedule
+                            new Schedule
                             {
-                                Description = "RegularSchedule",
+                                Description = "Schedule",
                                 OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                                 ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                                 ByDay = "byDay",
                                 ByMonthDay = "byMonth",
                                 DtStart = "dtStart",
-                                Freq = FrequencyType.NotSet,
-                                Interval = "Interval",
+                                Freq = null,
                                 ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
                                 ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
-                            }
-                        },
-                        HolidaySchedules = new List<HolidaySchedule>
-                        {
-                            new HolidaySchedule
-                            {
-                                Closed = true,
-                                OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                StartDate = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                EndDate = new DateTime(2023, 1, 1).ToUniversalTime(),
                             }
                         },
                         Contacts = new List<Contact>
@@ -985,23 +944,24 @@ public static class TestDataProvider
                 },
                 Eligibilities = new List<Eligibility>
                 {
-                    new Eligibility
+                    new()
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 13,
                         MinimumAge = 0,
                     }
                 },
                 Languages = new List<Language>
                 {
-                    new Language
+                    new()
                     {
                         Name = "English",
+                        Code = "en"
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
                 {
-                    new ServiceArea
+                    new()
                     {
                         ServiceAreaName = "National",
                         Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
@@ -1032,7 +992,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.NotSet,
+                        LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "test",
                         Description = "",
                         Longitude = .48801070060149D,
@@ -1042,6 +1002,7 @@ public static class TestDataProvider
                         PostCode = "BS8 4AA",
                         Country = "England",
                         StateProvince = "Bristol",
+                        LocationType= LocationType.Postal
                     },
                 }
             },
@@ -1066,23 +1027,24 @@ public static class TestDataProvider
                 },
                 Eligibilities = new List<Eligibility>
                 {
-                    new Eligibility
+                    new()
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 15,
                         MinimumAge = 10,
                     }
                 },
                 Languages = new List<Language>
                 {
-                    new Language
+                    new()
                     {
                         Name = "English",
+                        Code = "en"
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
                 {
-                    new ServiceArea
+                    new()
                     {
                         ServiceAreaName = "National",
                         Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
@@ -1101,7 +1063,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.NotSet,
+                        LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "",
                         Description = "",
                         Longitude = .6312,
@@ -1111,6 +1073,7 @@ public static class TestDataProvider
                         PostCode = "BS8 4AA",
                         Country = "England",
                         StateProvince = "Bristol",
+                        LocationType= LocationType.Postal
                     }
                 },
                 Contacts = new List<Contact>
@@ -1149,30 +1112,31 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 13,
                         MinimumAge = 0,
                     }
                 },
                 CostOptions = new List<CostOption>
                 {
-                    new CostOption
+                    new()
                     {
-                        Option = "Session",
-                        Amount = 45.0m,
+                        //Option = "Session",
+                        //Amount = 45.0m,
                         AmountDescription = "AmountDescription"
                     }
                 },
                 Languages = new List<Language>
                 {
-                    new Language
+                    new()
                     {
                         Name = "English",
+                        Code = "en"
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
                 {
-                    new ServiceArea
+                    new()
                     {
                         ServiceAreaName = "National",
                         Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
@@ -1182,7 +1146,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.NotSet,
+                        LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "",
                         Description = "",
                         Longitude = .63123,
@@ -1192,6 +1156,7 @@ public static class TestDataProvider
                         PostCode = "BS8 4AA",
                         Country = "England",
                         StateProvince = "Bristol",
+                        LocationType= LocationType.Postal
                     },
                 },
                 Taxonomies = new List<Taxonomy>
@@ -1239,30 +1204,31 @@ public static class TestDataProvider
                 {
                     new Eligibility
                     {
-                        EligibilityType = EligibilityType.Child,
+                        EligibilityType = null,
                         MaximumAge = 20,
                         MinimumAge = 15,
                     }
                 },
                 CostOptions = new List<CostOption>
                 {
-                    new CostOption
+                    new()
                     {
-                        Option = "Hour",
-                        Amount = 25.0m,
+                        //Option = "Hour",
+                        //Amount = 25.0m,
                         AmountDescription = "AmountDescription"
                     }
                 },
                 Languages = new List<Language>
                 {
-                    new Language
+                    new()
                     {
                         Name = "Afrikaans",
+                        Code = "af"
                     }
                 },
                 ServiceAreas = new List<ServiceArea>
                 {
-                    new ServiceArea
+                    new()
                     {
                         ServiceAreaName = "National",
                         Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
@@ -1272,7 +1238,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
-                        LocationType = LocationType.NotSet,
+                        LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "",
                         Description = "",
                         Longitude = .63123,
@@ -1282,6 +1248,7 @@ public static class TestDataProvider
                         PostCode = "BS8 4AA",
                         Country = "England",
                         StateProvince = "",
+                        LocationType= LocationType.Postal,
                         Contacts = new List<Contact>
                         {
                             new Contact

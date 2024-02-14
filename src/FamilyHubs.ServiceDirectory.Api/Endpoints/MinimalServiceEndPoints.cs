@@ -20,23 +20,27 @@ public class MinimalServiceEndPoints
     public void RegisterServiceEndPoints(WebApplication app)
     {
         //todo: rename
-        app.MapGet("api/services-simple", async (ServiceType? serviceType, ServiceStatusType? status, string? districtCode, int? minimumAge, int? maximumAge, int? givenAge, double? latitude, double? longitude, double? proximity, int? pageNumber, int? pageSize, string? text, string? serviceDeliveries, bool? isPaidFor, string? taxonomyIds, string? languages, bool? canFamilyChooseLocation, bool? isFamilyHub, int? maxFamilyHubs, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
+        app.MapGet("api/services-simple", (
+            ServiceType? serviceType, ServiceStatusType? status,
+            string? districtCode,
+            bool? allChildrenYoungPeople, int? givenAge,
+            double? latitude, double? longitude, double? proximity,
+            int? pageNumber, int? pageSize,
+            string? text,
+            string? serviceDeliveries,
+            bool? isPaidFor,
+            string? taxonomyIds,
+            string? languages,
+            bool? canFamilyChooseLocation,
+            bool? isFamilyHub, int? maxFamilyHubs,
+            CancellationToken cancellationToken, ISender mediator) =>
         {
-            try
-            {
-                var command = new GetServicesCommand(serviceType, status, districtCode, minimumAge,
-                    maximumAge, givenAge, latitude, longitude, proximity, pageNumber, pageSize, text,
-                    serviceDeliveries, isPaidFor, taxonomyIds, languages, canFamilyChooseLocation, isFamilyHub,
-                    maxFamilyHubs);
-                var result = await mediator.Send(command, cancellationToken);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error occurred listing open referral services. {exceptionMessage}", ex.Message);
+            var command = new GetServicesCommand(serviceType, status, districtCode,
+                allChildrenYoungPeople, givenAge, latitude, longitude, proximity, pageNumber, pageSize, text,
+                serviceDeliveries, isPaidFor, taxonomyIds, languages, canFamilyChooseLocation, isFamilyHub,
+                maxFamilyHubs);
+            return mediator.Send(command, cancellationToken);
 
-                throw;
-            }
         }).WithMetadata(new SwaggerOperationAttribute("List Services", "List Services") { Tags = new[] { "Services" } });
 
         app.MapGet("api/services-simple/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
@@ -59,6 +63,8 @@ public class MinimalServiceEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Service by Id", "Get Service by Id") { Tags = new[] { "Services" } });
 
+        //todo: are there any other consumers? if not, change to simple (or summary)
+        //todo: this looks like old code
         app.MapGet("api/services/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
             try
@@ -115,8 +121,8 @@ public class MinimalServiceEndPoints
 
         }).WithMetadata(new SwaggerOperationAttribute("Get service names", "Get service names, optionally by Organisation Id") { Tags = new[] { "Services" } });
 
-        app.MapPut("api/services/{id}",
-            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+        //todo: check with rider's ef core analyzer
+        app.MapPut("api/services/{id}", [Authorize(Roles = RoleGroups.AdminRole)] async 
             (long id, 
             [FromBody] ServiceDto request, 
             CancellationToken cancellationToken, 

@@ -5,7 +5,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
 public class Eligibility : ServiceEntityBase<long>
 { 
-    public EligibilityType EligibilityType { get; set; }
+    public EligibilityType? EligibilityType { get; set; }
     public required int MaximumAge { get; set; }
     public required int MinimumAge { get; set; }
 }

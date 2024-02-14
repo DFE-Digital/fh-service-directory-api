@@ -11,10 +11,7 @@ public class TaxonomyConfiguration : IEntityTypeConfiguration<Taxonomy>
         builder.Property(t => t.Name)
             .HasMaxLength(255);
 
-        builder.HasEnum(t => t.TaxonomyType);
-
-        builder.Property(t => t.TaxonomyType)
-                .HasMaxLength(50);
+        builder.HasEnumProperty(t => t.TaxonomyType, 50);
 
         builder.Property(t => t.Created)
             .IsRequired();

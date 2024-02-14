@@ -19,27 +19,19 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Navigation(e => e.Taxonomies).AutoInclude();
         builder.Navigation(e => e.Locations).AutoInclude();
         builder.Navigation(e => e.Contacts).AutoInclude();
-        builder.Navigation(e => e.HolidaySchedules).AutoInclude();
-        builder.Navigation(e => e.RegularSchedules).AutoInclude();
+        builder.Navigation(e => e.Schedules).AutoInclude();
 
         builder.Property(t => t.Name)
             .HasMaxLength(255);
 
-        builder.HasEnum(s => s.AttendingAccess);
-        builder.Property(t => t.AttendingAccess)
-                .HasMaxLength(50);
-        builder.HasEnum(s => s.AttendingType);
-        builder.Property(t => t.AttendingType)
-                .HasMaxLength(50);
-        builder.HasEnum(s => s.DeliverableType);
-        builder.Property(t => t.DeliverableType)
-                .HasMaxLength(50);
-        builder.HasEnum(s => s.ServiceType);
-        builder.Property(t => t.ServiceType)
-                .HasMaxLength(50);
-        builder.HasEnum(s => s.Status);
-        builder.Property(t => t.Status)
-                .HasMaxLength(50);
+        builder.HasEnumProperty(s => s.AttendingAccess, 50);
+        builder.HasEnumProperty(s => s.AttendingType, 50);
+        builder.HasEnumProperty(s => s.DeliverableType, 50);
+        builder.HasEnumProperty(s => s.ServiceType);
+        builder.HasEnumProperty(s => s.Status, 50);
+
+        builder.Property(t => t.InterpretationServices)
+            .HasMaxLength(512);
 
         builder.Property(t => t.Created)
             .IsRequired();
@@ -99,14 +91,7 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
             .OnDelete(DeleteBehavior.Cascade)
             ;
 
-        builder.HasMany(s => s.HolidaySchedules)
-            .WithOne()
-            .IsRequired(false)
-            .HasForeignKey(lc => lc.ServiceId)
-            .OnDelete(DeleteBehavior.Cascade)
-            ;
-
-        builder.HasMany(s => s.RegularSchedules)
+        builder.HasMany(s => s.Schedules)
             .WithOne()
             .IsRequired(false)
             .HasForeignKey(lc => lc.ServiceId)

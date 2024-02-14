@@ -19,9 +19,8 @@ public class GetLocationsByOrganisationIdCommand : IRequest<PaginatedList<Locati
     public string OrderByColumn { get; }
     public string? SearchName { get; }
     public bool IsFamilyHub { get; }
-    public bool IsNonFamilyHub { get; }
 
-    public GetLocationsByOrganisationIdCommand(long organisationId, int? pageNumber, int? pageSize, bool? isAscending, string? orderByColumn, string? searchName, bool? isFamilyHub, bool? isNonFamilyHub)
+    public GetLocationsByOrganisationIdCommand(long organisationId, int? pageNumber, int? pageSize, bool? isAscending, string? orderByColumn, string? searchName, bool? isFamilyHub)
     {
         OrganisationId = organisationId;
         PageNumber = pageNumber ?? 1;
@@ -30,7 +29,6 @@ public class GetLocationsByOrganisationIdCommand : IRequest<PaginatedList<Locati
         OrderByColumn = orderByColumn ?? "Location";
         SearchName = searchName;
         IsFamilyHub = isFamilyHub ?? false;
-        IsNonFamilyHub = isNonFamilyHub ?? false;
     }
 }
 
@@ -91,17 +89,9 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
                     ).Contains(request.SearchName));
         }
 
-        if (request.IsFamilyHub != request.IsNonFamilyHub)
+        if (request.IsFamilyHub)
         {
-            if (request.IsFamilyHub)
-            {
-                locationsQuery = locationsQuery.Where(x => x.LocationType == Shared.Enums.LocationType.FamilyHub);
-            }
-
-            if (request.IsNonFamilyHub)
-            {
-                locationsQuery = locationsQuery.Where(x => x.LocationType != Shared.Enums.LocationType.FamilyHub);
-            }
+            locationsQuery = locationsQuery.Where(x => x.LocationTypeCategory == Shared.Enums.LocationTypeCategory.FamilyHub);
         }
 
         return locationsQuery;
@@ -140,21 +130,7 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
                             .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
                     }
                     break;
-                }
-            case "LocationType":
-                {
-                    if (request.IsAscending)
-                    {
-                        locationsQuery = locationsQuery.OrderBy(x => x.LocationType).ThenBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
-                            .ThenBy(x => x.City).ThenBy(x => x.PostCode);
-                    }
-                    else
-                    {
-                        locationsQuery = locationsQuery.OrderByDescending(x => x.LocationType).ThenBy(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
-                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
-                    }
-                    break;
-                }
+                }           
         }
 
         return locationsQuery;

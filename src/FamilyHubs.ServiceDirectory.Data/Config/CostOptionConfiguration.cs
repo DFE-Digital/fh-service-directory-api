@@ -23,5 +23,8 @@ public class CostOptionConfiguration : IEntityTypeConfiguration<CostOption>
 
         builder.Property(t => t.LastModifiedBy)
             .HasMaxLength(MaxLength.Email);
+
+        builder.Property(t => t.Currency)
+            .HasMaxLength(3);
     }
 }

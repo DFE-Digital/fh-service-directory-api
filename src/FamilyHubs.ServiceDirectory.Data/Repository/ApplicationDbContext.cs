@@ -49,11 +49,10 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
         public DbSet<CostOption> CostOptions => Set<CostOption>();
         public DbSet<Eligibility> Eligibilities => Set<Eligibility>();
         public DbSet<Funding> Fundings => Set<Funding>();
-        public DbSet<HolidaySchedule> HolidaySchedules => Set<HolidaySchedule>();
         public DbSet<Language> Languages => Set<Language>();
         public DbSet<Location> Locations => Set<Location>();
         public DbSet<Organisation> Organisations => Set<Organisation>();
-        public DbSet<RegularSchedule> RegularSchedules => Set<RegularSchedule>();
+        public DbSet<Schedule> Schedules => Set<Schedule>();
         public DbSet<Review> Reviews => Set<Review>();
         public DbSet<Service> Services => Set<Service>();
         public DbSet<ServiceArea> ServiceAreas => Set<ServiceArea>();

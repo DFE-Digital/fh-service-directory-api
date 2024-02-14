@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Core.Commands.Services.DeleteService;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServiceByOwnerReferenceIdCommand;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganisationId;
+using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
@@ -19,8 +20,8 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisation();
 
-        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null, null, null,
-            null, null, null, 1, 10, null, null, null, null, null, null, null, null);
+        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
+            null, null, null, null, 1, 10, null, null, null, null, null, null, null, null);
         var handler = new GetServicesCommandHandler(TestDbContext, Mapper);
 
         //Act
@@ -90,8 +91,8 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisation(TestDataProvider.GetTestCountyCouncilDto2());
 
-        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null, null, null,
-            null, null, null, 1, 10, null, null, true, null, null, null, null, null);
+        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
+            null, null, null, null, 1, 10, null, null, true, null, null, null, null, null);
         var handler = new GetServicesCommandHandler(TestDbContext, Mapper);
 
         //Act
@@ -106,10 +107,10 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
     public async Task ThenGetServiceThatAreFree()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationWithFreeService();        
 
-        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null, null, null,
-            null, null, null, 1, 10, null, null, false, null, null, null, null, null);
+        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
+            null, null, null, null, 1, 10, null, null, false, null, null, null, null, null);
         var handler = new GetServicesCommandHandler(TestDbContext, Mapper);
 
         //Act
@@ -117,9 +118,9 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
 
         //Assert
         results.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(TestOrganisation);
-        ArgumentNullException.ThrowIfNull(TestOrganisation.Services);
-        results.Items[0].Should().BeEquivalentTo(TestOrganisation.Services.ElementAt(0));
+        ArgumentNullException.ThrowIfNull(TestOrganisationFreeService);
+        ArgumentNullException.ThrowIfNull(TestOrganisationFreeService.Services);
+        results.Items[0].Should().BeEquivalentTo(TestOrganisationFreeService.Services.ElementAt(0));
     }
 
     [Fact]
