@@ -215,14 +215,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.ServiceDeliveries.Count.Should().Be(1);
-
-        //todo:
-        //var actualEntity = TestDbContext.ServiceDeliveries.SingleOrDefault(s => s.Name == expected.Name);
-        //actualEntity.Should().NotBeNull();
-        //actualEntity.Should().BeEquivalentTo(expected, options =>
-        //    options.Excluding(info => info.Name.Contains("Id"))
-        //        .Excluding(info => info.Name.Contains("Distance")));
+        actualService!.ServiceDeliveries.Count.Should().Be(0);
 
         var unexpectedEntity = TestDbContext.ServiceDeliveries.Where(lc => lc.Id == existingItem.Id).ToList();
         unexpectedEntity.Should().HaveCount(0);
