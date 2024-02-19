@@ -1082,8 +1082,6 @@ public static class TestDataProvider
                 ServiceType = ServiceType.InformationSharing,
                 Name = "Test Service - Paid - 0 to 13yrs",
                 Description = @"This is a paid test service.",
-                AttendingAccess = AttendingAccessType.NotSet,
-                AttendingType = AttendingType.NotSet,
                 DeliverableType = DeliverableType.NotSet,
                 Status = ServiceStatusType.Active,
                 CanFamilyChooseDeliveryLocation = false,
@@ -1091,7 +1089,7 @@ public static class TestDataProvider
                 {
                     new ServiceDelivery
                     {
-                        Name = ServiceDeliveryType.Telephone,
+                        Name = AttendingType.Telephone,
                     }
                 },
                 Eligibilities = new List<Eligibility>

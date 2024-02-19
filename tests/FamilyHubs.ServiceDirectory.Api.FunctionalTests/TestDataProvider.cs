@@ -134,7 +134,7 @@ public static class TestDataProvider
             {
                 new ServiceDeliveryDto
                 {
-                    Name = ServiceDeliveryType.Online,
+                    Name = AttendingType.Online,
                 }
             },
             Eligibilities = new List<EligibilityDto>
@@ -804,8 +804,6 @@ public static class TestDataProvider
                 ServiceType = ServiceType.InformationSharing,
                 Name = "Test Service - Free - 10 to 15 yrs",
                 Description = @"This is a test service.",
-                AttendingAccess = AttendingAccessType.NotSet,
-                AttendingType = AttendingType.NotSet,
                 DeliverableType = DeliverableType.NotSet,
                 Status = ServiceStatusType.Active,
                 CanFamilyChooseDeliveryLocation = false,
@@ -813,7 +811,7 @@ public static class TestDataProvider
                 {
                     new ServiceDelivery
                     {
-                        Name = ServiceDeliveryType.InPerson,
+                        Name = AttendingType.InPerson,
                     }
                 },
                 Eligibilities = new List<Eligibility>
@@ -977,8 +975,6 @@ public static class TestDataProvider
                 ServiceType = ServiceType.InformationSharing,
                 Name = "Test Service - Paid - 15 to 20yrs - Afrikaans",
                 Description = @"This is an Afrikaans test service.",
-                AttendingAccess = AttendingAccessType.NotSet,
-                AttendingType = AttendingType.NotSet,
                 DeliverableType = DeliverableType.NotSet,
                 Status = ServiceStatusType.Active,
                 CanFamilyChooseDeliveryLocation = true,
@@ -986,7 +982,7 @@ public static class TestDataProvider
                 {
                     new ServiceDelivery
                     {
-                        Name = ServiceDeliveryType.InPerson,
+                        Name = AttendingType.InPerson,
                     }
                 },
                 Eligibilities = new List<Eligibility>
