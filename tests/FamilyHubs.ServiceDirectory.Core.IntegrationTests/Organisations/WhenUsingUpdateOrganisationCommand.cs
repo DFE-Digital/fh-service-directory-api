@@ -1,5 +1,4 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Commands;
-using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.UpdateOrganisation;
+﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.UpdateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
@@ -17,7 +16,7 @@ namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Organisations;
 public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 {
     public readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
-    public readonly Mock<ILogger<UpdateOrganisationCommandHandler>> UpdateLogger = new Mock<ILogger<UpdateOrganisationCommandHandler>>();
+    public readonly Mock<ILogger<UpdateOrganisationCommandHandler>> UpdateLogger = new();
 
     public WhenUsingUpdateLocationCommand()
     {
@@ -34,11 +33,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         TestOrganisation.Description = "Unit Test Update TestOrganisation Name";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -75,11 +70,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Eligibilities.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -114,11 +105,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.MaximumAge = 5000;
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -153,11 +140,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.ServiceAreas.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -192,11 +175,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.Extent = "Updated Extent";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -221,20 +200,11 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.ServiceDeliveries.ElementAt(0);
-        var expected = new ServiceDeliveryDto
-        {
-            Name = ServiceDeliveryType.NotSet
-        };
 
         service.ServiceDeliveries.Clear();
-        service.ServiceDeliveries.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -268,11 +238,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.Name = ServiceDeliveryType.NotSet;
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -307,11 +273,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Languages.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -345,11 +307,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.Name = "Updated Language";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -387,11 +345,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.CostOptions.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -427,11 +381,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.AmountDescription = "Updated Amount Description";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -466,11 +416,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Contacts.Add(contact);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -505,11 +451,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         contact.Telephone = "Updated Telephone";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -546,11 +488,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Schedules.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -585,11 +523,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.ByMonthDay = "Updated ByMonthDay";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -632,11 +566,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Locations.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -675,11 +605,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.Description = "Updated Description";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -711,11 +637,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Locations.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -750,11 +672,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Taxonomies.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -792,11 +710,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.Name = "Updated Name";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -830,11 +744,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Taxonomies.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -869,11 +779,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Locations.ElementAt(0).Contacts.Add(contact);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -908,11 +814,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         contact.Telephone = "Updated Telephone";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -949,11 +851,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         service.Locations.ElementAt(0).Schedules.Add(expected);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -988,11 +886,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.ByMonthDay = "Updated ByMonthDay";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -1016,17 +910,12 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisation();
         var mockHttpContextAccessor = GetMockHttpContextAccessor(50, RoleTypes.LaManager);
-        Mock<ISender> mockSender = new Mock<ISender>();
-        int sendCallBack = 0;
-        mockSender.Setup(x => x.Send(It.IsAny<SendEventGridMessageCommand>(), It.IsAny<CancellationToken>()))
-            .Callback(() => sendCallBack++).ReturnsAsync("Done");
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(mockHttpContextAccessor.Object, TestDbContext, Mapper, mockSender.Object, UpdateLogger.Object);
+        var updateHandler = new UpdateOrganisationCommandHandler(mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act / Assert
         await Assert.ThrowsAsync<ForbiddenException>(async () => await updateHandler.Handle(updateCommand, new CancellationToken()));
-
     }
 
     private Mock<IHttpContextAccessor> GetMockHttpContextAccessor(long organisationId, string userRole)
@@ -1047,5 +936,4 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         return mockHttpContextAccessor;
     }
-
 }

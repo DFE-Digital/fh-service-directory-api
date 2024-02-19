@@ -184,13 +184,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.ServiceDeliveries.ElementAt(0);
-        var expected = new ServiceDeliveryDto
-        {
-            Name = ServiceDeliveryType.NotSet
-        };
 
         service.ServiceDeliveries.Clear();
-        service.ServiceDeliveries.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);

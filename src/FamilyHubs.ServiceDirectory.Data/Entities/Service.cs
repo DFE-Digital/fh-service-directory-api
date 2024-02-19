@@ -15,8 +15,6 @@ public class Service : OrganisationEntityBase<long>
     public string? Accreditations { get; set; }
     public DeliverableType DeliverableType { get; set; }
     public DateTime? AssuredDate { get; set; }
-    public AttendingType AttendingType { get; set; }
-    public AttendingAccessType AttendingAccess { get; set; }
     public bool CanFamilyChooseDeliveryLocation { get; set; }
     public IList<ServiceDelivery> ServiceDeliveries { get; set; } = new List<ServiceDelivery>();
     public IList<Eligibility> Eligibilities { get; set; } = new List<Eligibility>();

@@ -24,15 +24,15 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
-    private readonly ISender _sender;
     private readonly ILogger<CreateOrganisationCommandHandler> _logger;
 
-    public CreateOrganisationCommandHandler(ApplicationDbContext context, IMapper mapper, ISender sender,
+    public CreateOrganisationCommandHandler(
+        ApplicationDbContext context,
+        IMapper mapper,
         ILogger<CreateOrganisationCommandHandler> logger)
     {
         _context = context;
         _mapper = mapper;
-        _sender = sender;
         _logger = logger;
     }
 
@@ -63,12 +63,6 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
 
             await _context.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("Organisation {Name} saved to DB", request.Organisation.Name);
-
-            _logger.LogInformation("Organisation {Name} sending an event grid message", request.Organisation.Name);
-            request.Organisation.Id = organisation.Id;
-            SendEventGridMessageCommand sendEventGridMessageCommand = new(request.Organisation);
-            _ = _sender.Send(sendEventGridMessageCommand, cancellationToken);
-            _logger.LogInformation("Organisation {Name} completed the event grid message", request.Organisation.Name);
 
             return organisation.Id;
         }

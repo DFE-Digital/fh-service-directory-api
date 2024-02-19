@@ -167,7 +167,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
 
         if (!string.IsNullOrEmpty(request.ServiceDeliveries))
         {
-            var parts = request.ServiceDeliveries.Split(',').Select(sd => Enum.Parse<ServiceDeliveryType>(sd, true)).ToList();
+            var parts = request.ServiceDeliveries.Split(',').Select(sd => Enum.Parse<AttendingType>(sd, true)).ToList();
             services = services.Where(s => s.ServiceDeliveries.Any(co => parts.Contains(co.Name)));
         }
 
