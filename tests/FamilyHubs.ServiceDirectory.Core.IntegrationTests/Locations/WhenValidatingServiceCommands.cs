@@ -103,12 +103,12 @@ public class WhenValidatingLocationCommands
     }
 
     [Theory]
-    [InlineData(default!)]
+    [InlineData(default)]
     [InlineData("")]
     [InlineData("http://wwww.google.co.uk")]
     [InlineData("http://wwww.google.com")]
     [InlineData("https://wwww.google.com")]
-    public void ThenShouldValidateLocationContactUrlWhenCreatingLocation_ShouldReturnNoErrors(string url)
+    public void ThenShouldValidateLocationContactUrlWhenCreatingLocation_ShouldReturnNoErrors(string? url)
     {
         //Arrange
         var testLocation = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next()).Locations.ElementAt(0);
@@ -154,12 +154,12 @@ public class WhenValidatingLocationCommands
     }
 
     [Theory]
-    [InlineData(default!)]
+    [InlineData(default)]
     [InlineData("")]
     [InlineData("http://wwww.google.co.uk")]
     [InlineData("http://wwww.google.com")]
     [InlineData("https://wwww.google.com")]
-    public void ThenShouldValidateLocationContactUrlWhenUpdatingLocation_ShouldReturnNoErrors(string url)
+    public void ThenShouldValidateLocationContactUrlWhenUpdatingLocation_ShouldReturnNoErrors(string? url)
     {
         //Arrange
         var testLocation = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next()).Locations.ElementAt(0);

@@ -80,7 +80,7 @@ public static class TestDataProvider
             {
                 new ServiceDeliveryDto
                 {
-                    Name = updated == false ? ServiceDeliveryType.Online : ServiceDeliveryType.Telephone,
+                    Name = updated == false ? AttendingType.Online : AttendingType.Telephone,
                 }
             },
             Eligibilities = new List<EligibilityDto>
@@ -237,7 +237,7 @@ public static class TestDataProvider
             {
                 new ServiceDeliveryDto
                 {
-                    Name = ServiceDeliveryType.Online,
+                    Name = AttendingType.Online,
                 }
             },
             Eligibilities = new List<EligibilityDto>
@@ -404,8 +404,6 @@ public static class TestDataProvider
                 ServiceType = ServiceType.FamilyExperience,
                 Name = "Baby Social at Ordsall Neighbourhood Centre",
                 Description = "This session is for babies non mobile aged from birth to twelve months. Each week we will introduce you to one of our five to thrive key messages and a fun activity you can do at home with your baby. It will also give you the opportunity to connect with other parents and share your experiences.",
-                AttendingAccess = AttendingAccessType.NotSet,
-                AttendingType = AttendingType.NotSet,
                 DeliverableType = DeliverableType.NotSet,
                 Status = ServiceStatusType.Active,
                 CanFamilyChooseDeliveryLocation = false,
@@ -413,7 +411,7 @@ public static class TestDataProvider
                 {
                     new ServiceDelivery
                     {
-                        Name = ServiceDeliveryType.InPerson,
+                        Name = AttendingType.InPerson,
                         ServiceId = 0
                     }
                 },
@@ -509,8 +507,6 @@ public static class TestDataProvider
                 ServiceType = ServiceType.FamilyExperience,
                 Name = "Oakwood Academy",
                 Description = "Oakwood Academy is a special school for pupils aged 9-18 years who have a range of moderate and/or complex learning difficulties. The school has Visual Arts, Technology and Sports Specialist status. \r\n\r\nAdmissions to Oakwood Academy are controlled by Salford Local Authority. We are unable to accept direct requests for placement from parents or carers or other local authorities. Pupils who attend Oakwood Academy have an Educational, Health and Care Plan which outlines the area of need and what provision and resources are needed to support the pupil. \r\n\r\nIn rare cases, a child may be admitted on an assessment placement to determine what the pupil's needs are and whether their needs can be met at Oakwood Academy. ",
-                AttendingAccess = AttendingAccessType.NotSet,
-                AttendingType = AttendingType.NotSet,
                 DeliverableType = DeliverableType.NotSet,
                 Status = ServiceStatusType.Active,
                 CanFamilyChooseDeliveryLocation = false,
@@ -518,7 +514,7 @@ public static class TestDataProvider
                 {
                     new ServiceDelivery
                     {
-                        Name = ServiceDeliveryType.InPerson,
+                        Name = AttendingType.InPerson,
                         ServiceId = 0
                     }
                 },
@@ -596,8 +592,6 @@ public static class TestDataProvider
                 ServiceType = ServiceType.FamilyExperience,
                 Name = "Central Family Hub",
                 Description = "Family Hub",
-                AttendingAccess = AttendingAccessType.NotSet,
-                AttendingType = AttendingType.NotSet,
                 DeliverableType = DeliverableType.NotSet,
                 Status = ServiceStatusType.Active,
                 CanFamilyChooseDeliveryLocation = false,
@@ -605,7 +599,7 @@ public static class TestDataProvider
                 {
                     new ServiceDelivery
                     {
-                        Name = ServiceDeliveryType.InPerson,
+                        Name = AttendingType.InPerson,
                         ServiceId = 0,
                     }
                 },
@@ -674,8 +668,6 @@ public static class TestDataProvider
                 ServiceType = ServiceType.FamilyExperience,
                 Name = "North Family Hub",
                 Description = "Family Hub",
-                AttendingAccess = AttendingAccessType.NotSet,
-                AttendingType = AttendingType.NotSet,
                 DeliverableType = DeliverableType.NotSet,
                 Status = ServiceStatusType.Active,
                 CanFamilyChooseDeliveryLocation = false,
@@ -683,7 +675,7 @@ public static class TestDataProvider
                 {
                     new ServiceDelivery
                     {
-                        Name = ServiceDeliveryType.InPerson,
+                        Name = AttendingType.InPerson,
                         ServiceId = 0
                     }
                 },
@@ -752,8 +744,6 @@ public static class TestDataProvider
                 ServiceType = ServiceType.FamilyExperience,
                 Name = "South Family Hub",
                 Description = "Family Hub",
-                AttendingAccess = AttendingAccessType.NotSet,
-                AttendingType = AttendingType.NotSet,
                 DeliverableType = DeliverableType.NotSet,
                 Status = ServiceStatusType.Active,
                 CanFamilyChooseDeliveryLocation = false,
@@ -761,7 +751,7 @@ public static class TestDataProvider
                 {
                     new ServiceDelivery
                     {
-                        Name = ServiceDeliveryType.InPerson,
+                        Name = AttendingType.InPerson,
                         ServiceId = 0,
                     }
                 },
@@ -930,8 +920,6 @@ public static class TestDataProvider
                 ServiceType = ServiceType.InformationSharing,
                 Name = "Aid for Children with Tracheostomies",
                 Description = @"Aid for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
-                AttendingAccess = AttendingAccessType.NotSet,
-                AttendingType = AttendingType.NotSet,
                 DeliverableType = DeliverableType.NotSet,
                 Status = ServiceStatusType.Active,
                 CanFamilyChooseDeliveryLocation = false,
@@ -939,7 +927,7 @@ public static class TestDataProvider
                 {
                     new ServiceDelivery
                     {
-                        Name = ServiceDeliveryType.Online,
+                        Name = AttendingType.Online,
                     }
                 },
                 Eligibilities = new List<Eligibility>
@@ -1013,8 +1001,6 @@ public static class TestDataProvider
                 ServiceType = ServiceType.InformationSharing,
                 Name = "Test Service - Free - 10 to 15 yrs",
                 Description = @"This is a test service.",
-                AttendingAccess = AttendingAccessType.NotSet,
-                AttendingType = AttendingType.NotSet,
                 DeliverableType = DeliverableType.NotSet,
                 Status = ServiceStatusType.Active,
                 CanFamilyChooseDeliveryLocation = false,
@@ -1022,7 +1008,7 @@ public static class TestDataProvider
                 {
                     new ServiceDelivery
                     {
-                        Name = ServiceDeliveryType.InPerson,
+                        Name = AttendingType.InPerson,
                     }
                 },
                 Eligibilities = new List<Eligibility>
@@ -1096,8 +1082,6 @@ public static class TestDataProvider
                 ServiceType = ServiceType.InformationSharing,
                 Name = "Test Service - Paid - 0 to 13yrs",
                 Description = @"This is a paid test service.",
-                AttendingAccess = AttendingAccessType.NotSet,
-                AttendingType = AttendingType.NotSet,
                 DeliverableType = DeliverableType.NotSet,
                 Status = ServiceStatusType.Active,
                 CanFamilyChooseDeliveryLocation = false,
@@ -1105,7 +1089,7 @@ public static class TestDataProvider
                 {
                     new ServiceDelivery
                     {
-                        Name = ServiceDeliveryType.Telephone,
+                        Name = AttendingType.Telephone,
                     }
                 },
                 Eligibilities = new List<Eligibility>
@@ -1188,8 +1172,6 @@ public static class TestDataProvider
                 ServiceType = ServiceType.InformationSharing,
                 Name = "Test Service - Paid - 15 to 20yrs - Afrikaans",
                 Description = @"This is an Afrikaans test service.",
-                AttendingAccess = AttendingAccessType.NotSet,
-                AttendingType = AttendingType.NotSet,
                 DeliverableType = DeliverableType.NotSet,
                 Status = ServiceStatusType.Active,
                 CanFamilyChooseDeliveryLocation = true,
@@ -1197,7 +1179,7 @@ public static class TestDataProvider
                 {
                     new ServiceDelivery
                     {
-                        Name = ServiceDeliveryType.InPerson,
+                        Name = AttendingType.InPerson,
                     }
                 },
                 Eligibilities = new List<Eligibility>

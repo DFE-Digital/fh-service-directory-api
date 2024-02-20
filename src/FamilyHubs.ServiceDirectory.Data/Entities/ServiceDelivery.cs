@@ -5,5 +5,5 @@ namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
 public class ServiceDelivery : ServiceEntityBase<long>
 {
-    public required ServiceDeliveryType Name { get; set; }
+    public required AttendingType Name { get; set; }
 }

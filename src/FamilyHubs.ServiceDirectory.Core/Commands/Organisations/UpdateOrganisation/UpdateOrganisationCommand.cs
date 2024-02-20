@@ -1,11 +1,9 @@
-﻿using Ardalis.GuardClauses;
-using AutoMapper;
+﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
-using FamilyHubs.SharedKernel;
 using FamilyHubs.SharedKernel.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -33,21 +31,18 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ApplicationDbContext _context;
     private readonly ILogger<UpdateOrganisationCommandHandler> _logger;
-    private readonly ISender _sender;
     private readonly IMapper _mapper;
 
     public UpdateOrganisationCommandHandler(
         IHttpContextAccessor httpContextAccessor,
         ApplicationDbContext context, 
         IMapper mapper,
-        ISender sender,
         ILogger<UpdateOrganisationCommandHandler> logger)
     {
         _httpContextAccessor = httpContextAccessor;
         _context = context;
         _logger = logger;
         _mapper = mapper;
-        _sender = sender;
     }
 
     public async Task<long> Handle(UpdateOrganisationCommand request, CancellationToken cancellationToken)
@@ -81,12 +76,6 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
             await _context.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation("Organisation {Name} saved to DB", request.Organisation.Name);
-
-            _logger.LogInformation("Organisation {Name} sending an event grid message", request.Organisation.Name);
-            request.Organisation.Id = entity.Id;
-            SendEventGridMessageCommand sendEventGridMessageCommand = new(request.Organisation);
-            _ = _sender.Send(sendEventGridMessageCommand, cancellationToken);
-            _logger.LogInformation("Organisation {Name} completed the event grid message", request.Organisation.Name);
         }
         catch (Exception ex)
         {

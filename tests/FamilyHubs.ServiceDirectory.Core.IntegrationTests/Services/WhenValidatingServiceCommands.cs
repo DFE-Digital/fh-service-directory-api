@@ -118,12 +118,12 @@ public class WhenValidatingServiceCommands
     }
 
     [Theory]
-    [InlineData(default!)]
+    [InlineData(default)]
     [InlineData("")]
     [InlineData("http://wwww.google.co.uk")]
     [InlineData("http://wwww.google.com")]
     [InlineData("https://wwww.google.com")]
-    public void ThenShouldValidateServiceAtLocationContactUrlWhenCreatingService_ShouldReturnNoErrors(string url)
+    public void ThenShouldValidateServiceAtLocationContactUrlWhenCreatingService_ShouldReturnNoErrors(string? url)
     {
         //Arrange
         var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());
@@ -176,12 +176,12 @@ public class WhenValidatingServiceCommands
     }
 
     [Theory]
-    [InlineData(default!)]
+    [InlineData(default)]
     [InlineData("")]
     [InlineData("http://wwww.google.co.uk")]
     [InlineData("http://wwww.google.com")]
     [InlineData("https://wwww.google.com")]
-    public void ThenShouldValidateServiceAtLocationContactUrlWhenUpdatingService_ShouldReturnNoErrors(string url)
+    public void ThenShouldValidateServiceAtLocationContactUrlWhenUpdatingService_ShouldReturnNoErrors(string? url)
     {
         //Arrange
         var testService = TestDataProvider.GetTestCountyCouncilServicesDto2(Random.Shared.Next());

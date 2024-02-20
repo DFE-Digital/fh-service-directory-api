@@ -24,8 +24,6 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Property(t => t.Name)
             .HasMaxLength(255);
 
-        builder.HasEnumProperty(s => s.AttendingAccess, 50);
-        builder.HasEnumProperty(s => s.AttendingType, 50);
         builder.HasEnumProperty(s => s.DeliverableType, 50);
         builder.HasEnumProperty(s => s.ServiceType);
         builder.HasEnumProperty(s => s.Status, 50);
