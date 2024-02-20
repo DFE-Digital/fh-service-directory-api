@@ -681,18 +681,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<DateTime?>("AssuredDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("AttendingAccess")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("AttendingType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
                     b.Property<bool>("CanFamilyChooseDeliveryLocation")
                         .HasColumnType("bit");
 
