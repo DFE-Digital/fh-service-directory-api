@@ -9,6 +9,9 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
 {
     public void Configure(EntityTypeBuilder<Organisation> builder)
     {
+        builder.Navigation(e => e.Location);
+
+        //todo: probably don't want to AutoInclude, but would require some refactoring
         builder.Navigation(e => e.Services).AutoInclude();
         
         builder.HasEnumProperty(t => t.OrganisationType, 50);

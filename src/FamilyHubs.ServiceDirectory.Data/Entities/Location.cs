@@ -5,6 +5,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
 public class Location : EntityBase<long>
 {
+    // spec doesn't have it as required
+    public required long OrganisationId { get; set; }
     //todo: nullable, rather than notset
     public required LocationTypeCategory LocationTypeCategory { get; set; }
     public string? Name { get; set; }

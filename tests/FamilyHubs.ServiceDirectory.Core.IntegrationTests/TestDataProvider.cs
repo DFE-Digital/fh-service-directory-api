@@ -457,6 +457,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Ordsall Neighbourhood Centre",
                         Description = "2, Robert Hall Street M5 3LT",
@@ -550,6 +551,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Oakwood Academy",
                         Description = "",
@@ -635,6 +637,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "Central Family Hub",
                         Description = "Broughton Hub",
@@ -711,6 +714,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "North Family Hub",
                         Description = "Swinton Gateway",
@@ -823,6 +827,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "South Family Hub",
                         Description = "Winton Children’s Centre",
@@ -967,6 +972,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "test",
                         Description = "",
@@ -1036,6 +1042,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "",
                         Description = "",
@@ -1117,6 +1124,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "",
                         Description = "",
@@ -1207,6 +1215,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "",
                         Description = "",
