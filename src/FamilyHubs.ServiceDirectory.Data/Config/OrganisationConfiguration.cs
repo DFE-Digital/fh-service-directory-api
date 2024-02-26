@@ -12,7 +12,8 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
         builder.Navigation(e => e.Location);
 
         //todo: probably don't want to AutoInclude, but would require some refactoring
-        builder.Navigation(e => e.Services).AutoInclude();
+        //org dto doesn't have a services collection, so think ok without AutoInclude() : check
+        builder.Navigation(e => e.Services);
         
         builder.HasEnumProperty(t => t.OrganisationType, 50);
 
