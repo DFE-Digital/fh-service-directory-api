@@ -9,7 +9,6 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
 {
     public void Configure(EntityTypeBuilder<Organisation> builder)
     {
-        builder.Navigation(e => e.Reviews).AutoInclude();
         builder.Navigation(e => e.Services).AutoInclude();
         
         builder.HasEnumProperty(t => t.OrganisationType, 50);
@@ -41,12 +40,5 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
 
         builder.Property(t => t.LastModifiedBy)
             .HasMaxLength(MaxLength.Email);
-
-        builder.HasMany(s => s.Reviews)
-            .WithOne()
-            .HasForeignKey(lc => lc.OrganisationId)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.NoAction)
-            ;
     }
 }

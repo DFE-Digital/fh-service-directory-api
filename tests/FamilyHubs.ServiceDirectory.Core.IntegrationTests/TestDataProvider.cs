@@ -794,19 +794,6 @@ public static class TestDataProvider
                         ServiceId = 0
                     }
                 },
-                Reviews = new List<Review>
-                {
-                    new Review
-                    {
-                        ServiceId = 0,
-                        Title = "Test Review",
-                        Description = "Review description",
-                        Date = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        Score = "5 start",
-                        Url = "https://gov.uk",
-                        Widget = "widget"
-                    }
-                },
                 ServiceAreas = new List<ServiceArea>
                 {
                     new ServiceArea

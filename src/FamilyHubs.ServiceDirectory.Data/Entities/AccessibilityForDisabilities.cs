@@ -2,7 +2,8 @@
 
 namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
-public class AccessibilityForDisabilities : LocationEntityBase<long>
+public class AccessibilityForDisabilities : EntityBase<long>
 {
+    public long? LocationId { get; set; }
     public string? Accessibility { get; set; }
 }

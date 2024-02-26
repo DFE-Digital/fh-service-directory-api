@@ -15,7 +15,6 @@ public class AutoMappingProfiles : Profile
         CreateMap<EligibilityDto, Eligibility>().ReverseMap();
         CreateMap<FundingDto, Funding>().ReverseMap();
         CreateMap<LanguageDto, Language>().ReverseMap();
-        CreateMap<ReviewDto, Review>().ReverseMap();
         CreateMap<ServiceDto, Service>().ReverseMap();
         CreateMap<ServiceNameDto, Service>().ReverseMap();
         CreateMap<ServiceAreaDto, ServiceArea>().ReverseMap();

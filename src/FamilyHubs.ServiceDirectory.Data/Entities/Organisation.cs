@@ -13,6 +13,5 @@ public class Organisation : EntityBase<long>
     public string? Logo { get; set; }
     public string? Uri { get; set; }
     public string? Url { get; set; }
-    public IList<Review> Reviews { get; set; } = new List<Review>();
     public IList<Service> Services { get; set; } = new List<Service>();
 }
