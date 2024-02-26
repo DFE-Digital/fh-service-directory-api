@@ -5,7 +5,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
 public class Service : EntityBase<long>
 {
-    public required long OrganisationId { get; set; }
+    public long OrganisationId { get; set; }
     public required string ServiceOwnerReferenceId { get; set; }
     public required ServiceType ServiceType { get; set; }
     public required string Name { get; set; }

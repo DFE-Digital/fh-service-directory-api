@@ -50,7 +50,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
-                    b.Property<long>("LocationId")
+                    b.Property<long?>("LocationId")
+                        .IsRequired()
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -400,6 +401,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<long>("OrganisationId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("PostCode")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -423,6 +427,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("nvarchar(2083)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrganisationId");
 
                     b.ToTable("Locations");
                 });
@@ -490,67 +496,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Organisations");
-                });
-
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Review", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime?>("Created")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
-
-                    b.Property<long?>("OrganisationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Score")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<long?>("ServiceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Url")
-                        .HasMaxLength(2083)
-                        .HasColumnType("nvarchar(2083)");
-
-                    b.Property<string>("Widget")
-                        .HasMaxLength(2083)
-                        .HasColumnType("nvarchar(2083)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganisationId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Schedule", b =>
@@ -970,17 +915,12 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Review", b =>
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Location", b =>
                 {
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Organisation", null)
-                        .WithMany("Reviews")
+                        .WithMany("Location")
                         .HasForeignKey("OrganisationId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.ClientNoAction);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Schedule", b =>
@@ -1063,7 +1003,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Organisation", b =>
                 {
-                    b.Navigation("Reviews");
+                    b.Navigation("Location");
 
                     b.Navigation("Services");
                 });
@@ -1079,8 +1019,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Navigation("Fundings");
 
                     b.Navigation("Languages");
-
-                    b.Navigation("Reviews");
 
                     b.Navigation("Schedules");
 
