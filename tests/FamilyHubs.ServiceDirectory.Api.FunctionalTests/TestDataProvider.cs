@@ -25,6 +25,7 @@ public static class TestDataProvider
             {
                 new ServiceDto
                 {
+                    OrganisationId = 0,
                     ServiceOwnerReferenceId = "c1b5dd80-7506-4424-9711-fe175fa13eb8",
                     ServiceType = ServiceType.InformationSharing,
                     Name = "Test Organisation for Children with Tracheostomies",
@@ -77,6 +78,7 @@ public static class TestDataProvider
                     {
                         new LocationDto
                         {
+                            OrganisationId = 0,
                             LocationTypeCategory = LocationTypeCategory.FamilyHub,
                             Name = "Test Location Name",
                             Latitude = 52.6312,
@@ -178,6 +180,7 @@ public static class TestDataProvider
             {
                 new LocationDto
                 {
+                    OrganisationId = 1,
                     Name = "Test",
                     Description = "",
                     Latitude = 52.6312,

@@ -136,6 +136,7 @@ public static class TestDataProvider
             {
                 new LocationDto
                 {
+                    OrganisationId = organisationId,
                     Name = updated == false ? "Test Location" : "Test New Location",
                     Description = "",
                     Latitude = 52.6312,
@@ -291,6 +292,7 @@ public static class TestDataProvider
             {
                 new LocationDto
                 {
+                    OrganisationId = organisationId,
                     Name = "Test Location",
                     Description = "",
                     Latitude = 52.6312,

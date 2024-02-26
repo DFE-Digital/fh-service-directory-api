@@ -526,6 +526,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var location = service.Locations.ElementAt(0);
         var expected = new LocationDto
         {
+            OrganisationId = TestOrganisation.Id,
             Name = "New Location",
             Description = "new Description",
             Address1 = "Address1",
