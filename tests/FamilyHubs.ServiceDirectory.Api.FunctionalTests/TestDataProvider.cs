@@ -13,8 +13,11 @@ public static class TestDataProvider
 
     public static OrganisationWithServicesDto GetTestCountyCouncilRecord()
     {
+        const long organisationId = 3;
+
         var bristolCountyCouncil = new OrganisationWithServicesDto
         {
+            Id = organisationId,
             AdminAreaCode = "E06000023",
             OrganisationType = OrganisationType.LA,
             Name = "Test County Council",
@@ -25,7 +28,7 @@ public static class TestDataProvider
             {
                 new ServiceDto
                 {
-                    OrganisationId = 0,
+                    OrganisationId = organisationId,
                     ServiceOwnerReferenceId = "c1b5dd80-7506-4424-9711-fe175fa13eb8",
                     ServiceType = ServiceType.InformationSharing,
                     Name = "Test Organisation for Children with Tracheostomies",
@@ -78,7 +81,7 @@ public static class TestDataProvider
                     {
                         new LocationDto
                         {
-                            OrganisationId = 0,
+                            OrganisationId = organisationId,
                             LocationTypeCategory = LocationTypeCategory.FamilyHub,
                             Name = "Test Location Name",
                             Latitude = 52.6312,
@@ -125,9 +128,11 @@ public static class TestDataProvider
     {
         var serviceId = "9066bccb-79cb-401f-818f-86ad23b022cf";
 
+        const long organisationId = 5;
+
         var service = new ServiceDto
         {
-            OrganisationId = 1,
+            OrganisationId = organisationId,
             ServiceOwnerReferenceId = serviceId,
             ServiceType = ServiceType.InformationSharing,
             Name = "Test Organisation for Children with Tracheostomies",
@@ -180,7 +185,7 @@ public static class TestDataProvider
             {
                 new LocationDto
                 {
-                    OrganisationId = 1,
+                    OrganisationId = organisationId,
                     Name = "Test",
                     Description = "",
                     Latitude = 52.6312,
