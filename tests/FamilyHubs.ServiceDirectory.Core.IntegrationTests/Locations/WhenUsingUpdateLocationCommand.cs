@@ -16,13 +16,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateLocationOnly()
     {
         //Arrange
-        //var organisation = Mapper.Map<Organisation>(TestOrganisation);
-
-        //TestDbContext.Organisations.Add(organisation);
-
         var testLocationDto = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
-
-        //organisation.Location.Add(testLocation);
 
         var location = await CreateLocation(testLocationDto, TestDbContext.Organisations.First().Id);
         testLocationDto.Id = location.Id;
