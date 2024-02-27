@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Commands.Locations.UpdateLocation;
+using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
@@ -9,18 +10,27 @@ namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Locations;
 
 public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 {
-    public readonly Mock<ILogger<UpdateLocationCommandHandler>> UpdateLogger = new Mock<ILogger<UpdateLocationCommandHandler>>();
+    public readonly Mock<ILogger<UpdateLocationCommandHandler>> UpdateLogger = new();
 
     [Fact]
     public async Task ThenUpdateLocationOnly()
     {
         //Arrange
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
-        testLocation.Id = await CreateLocation(testLocation);
-        testLocation.Name = "Unit Test Update Service Name";
-        testLocation.Description = "Unit Test Update Service Name";
+        //var organisation = Mapper.Map<Organisation>(TestOrganisation);
 
-        var updateCommand = new UpdateLocationCommand(testLocation.Id, testLocation);
+        //TestDbContext.Organisations.Add(organisation);
+
+        var testLocationDto = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+
+        //organisation.Location.Add(testLocation);
+
+        var location = await CreateLocation(testLocationDto, TestDbContext.Organisations.First().Id);
+        testLocationDto.Id = location.Id;
+        testLocationDto.OrganisationId = location.OrganisationId;
+        testLocationDto.Name = "Unit Test Update Service Name";
+        testLocationDto.Description = "Unit Test Update Service Name";
+
+        var updateCommand = new UpdateLocationCommand(testLocationDto.Id, testLocationDto);
         var updateHandler = new UpdateLocationCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
         //Act
@@ -28,11 +38,11 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
 
         //Assert
         result.Should().NotBe(0);
-        result.Should().Be(testLocation.Id);
+        result.Should().Be(testLocationDto.Id);
 
-        var actualService = TestDbContext.Locations.SingleOrDefault(s => s.Name == testLocation.Name);
+        var actualService = TestDbContext.Locations.SingleOrDefault(s => s.Name == testLocationDto.Name);
         actualService.Should().NotBeNull();
-        actualService!.Description.Should().Be(testLocation.Description);
+        actualService!.Description.Should().Be(testLocationDto.Description);
     }
 
     [Fact]

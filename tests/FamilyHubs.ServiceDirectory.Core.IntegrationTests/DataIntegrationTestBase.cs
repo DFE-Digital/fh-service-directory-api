@@ -85,11 +85,27 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     {
         var existingLocation = Mapper.Map<Location>(locationDto);
 
+        existingLocation.OrganisationId = 1;
+
         TestDbContext.Locations.Add(existingLocation);
 
         await TestDbContext.SaveChangesAsync();
 
         return existingLocation.Id;
+    }
+
+    public async Task<Location> CreateLocation(LocationDto locationDto, long organisationId)
+    {
+        var existingLocation = Mapper.Map<Location>(locationDto);
+
+        //organisation.Location.Add(existingLocation);
+        existingLocation.OrganisationId = organisationId;
+
+        TestDbContext.Locations.Add(existingLocation);
+
+        await TestDbContext.SaveChangesAsync();
+
+        return existingLocation;
     }
 
     public async Task<long> CreateTaxonomy(TaxonomyDto taxonomyDto)
