@@ -8,6 +8,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
@@ -23,6 +24,9 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     public static NullLogger<T> GetLogger<T>() => new NullLogger<T>();
     protected IHttpContextAccessor _httpContextAccessor;
     public Fixture FixtureObjectGenerator;
+
+    public static readonly ILoggerFactory MyLoggerFactory
+        = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
     public DataIntegrationTestBase()
     {
@@ -138,6 +142,8 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         return new ServiceCollection().AddEntityFrameworkSqlite()
             .AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder =>
             {
+                dbContextOptionsBuilder.UseLoggerFactory(MyLoggerFactory); // MyLoggerFactory is your ILoggerFactory instance
+
                 dbContextOptionsBuilder.UseSqlite(serviceDirectoryConnection, opt =>
                 {
                     opt.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());
