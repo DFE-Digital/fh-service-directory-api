@@ -31,6 +31,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     public async Task ThenCreateLocationWithoutAnyChildEntities()
     {
         var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        testLocation.OrganisationId = TestDbContext.Organisations.First().Id;
         testLocation.Contacts.Clear();
         testLocation.AccessibilityForDisabilities.Clear();
         testLocation.Schedules.Clear();
