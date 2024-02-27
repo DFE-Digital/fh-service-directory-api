@@ -11,6 +11,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     {
         //Arrange
         var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        testLocation.OrganisationId = TestDbContext.Organisations.First().Id;
         var createLocationCommand = new CreateLocationCommand(testLocation);
         var handler = new CreateLocationCommandHandler(TestDbContext, Mapper, GetLogger<CreateLocationCommandHandler>());
 

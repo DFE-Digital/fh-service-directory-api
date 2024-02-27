@@ -24,6 +24,8 @@ public static class TestDataProvider
             },
         };
 
+        testCountyCouncil.Location.Add(testCountyCouncil.Services.First().Locations.First());
+
         return testCountyCouncil;
     }
 
