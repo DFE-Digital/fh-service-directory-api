@@ -15,6 +15,7 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
     {
         //Arrange
         var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        testLocation.OrganisationId = TestDbContext.Organisations.First().Id;
         testLocation.Id = await CreateLocation(testLocation);
 
         var getCommand = new GetLocationByIdCommand { Id = testLocation.Id };
@@ -97,6 +98,7 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
     public async Task ThenGetLocationById_ShouldThrowExceptionWhenIdDoesNotExist()
     {
         //Arrange
+        //todo: using a random number here is not a good idea, as it may exist in the database
         var getCommand = new GetLocationByIdCommand { Id = Random.Shared.Next() };
         var getHandler = new GetLocationByIdCommandHandler(TestDbContext, Mapper);
 
