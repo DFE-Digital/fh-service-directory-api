@@ -16,8 +16,8 @@ namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests;
 
 public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
 {
-    public OrganisationWithServicesDto TestOrganisation { get; set; }
-    public OrganisationWithServicesDto TestOrganisationFreeService { get; set; }
+    public OrganisationDetailsDto TestOrganisation { get; set; }
+    public OrganisationDetailsDto TestOrganisationFreeService { get; set; }
     public OrganisationDto TestOrganisationWithoutAnyServices { get; set; }
     public IMapper Mapper { get; }
     public ApplicationDbContext TestDbContext { get; }
@@ -46,7 +46,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         InitialiseDatabase();
     }
 
-    public async Task<OrganisationWithServicesDto> CreateOrganisation(OrganisationWithServicesDto? organisationDto = null)
+    public async Task<OrganisationDetailsDto> CreateOrganisation(OrganisationDetailsDto? organisationDto = null)
     {
         var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisation);
 
@@ -59,7 +59,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         return Mapper.Map(organisationWithServices, organisationDto ?? TestOrganisation);
     }
 
-    public async Task<OrganisationWithServicesDto> CreateOrganisationWithFreeService(OrganisationWithServicesDto? organisationDto = null)
+    public async Task<OrganisationDetailsDto> CreateOrganisationWithFreeService(OrganisationDetailsDto? organisationDto = null)
     {
         var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisationFreeService);
 

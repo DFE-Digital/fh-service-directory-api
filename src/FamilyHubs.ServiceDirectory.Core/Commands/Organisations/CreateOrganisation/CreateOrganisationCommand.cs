@@ -12,12 +12,12 @@ namespace FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisa
 
 public class CreateOrganisationCommand : IRequest<long>
 {
-    public CreateOrganisationCommand(OrganisationWithServicesDto organisation)
+    public CreateOrganisationCommand(OrganisationDetailsDto organisation)
     {
         Organisation = organisation;
     }
 
-    public OrganisationWithServicesDto Organisation { get; }
+    public OrganisationDetailsDto Organisation { get; }
 }
 
 public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisationCommand, long>

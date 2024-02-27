@@ -11,11 +11,11 @@ public static class TestDataProvider
 {
     public static string BearerTokenSigningKey = "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    public static OrganisationWithServicesDto GetTestCountyCouncilRecord()
+    public static OrganisationDetailsDto GetTestCountyCouncilRecord()
     {
         const long organisationId = 3;
 
-        var bristolCountyCouncil = new OrganisationWithServicesDto
+        var bristolCountyCouncil = new OrganisationDetailsDto
         {
             Id = organisationId,
             AdminAreaCode = "E06000023",
