@@ -47,10 +47,12 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
     {
         int skip = (request.PageNumber - 1) * request.PageSize;
 
-        IQueryable<Location> locationsQuery = _context.Services
-            .Where(s => s.Status != ServiceStatusType.Deleted && s.OrganisationId == request.OrganisationId)
-            .Include(x => x.Locations)
-            .SelectMany(s => s.Locations);
+        IQueryable<Location> locationsQuery = _context.Locations;
+
+        //IQueryable<Location> locationsQuery = _context.Services
+        //    .Where(s => s.Status != ServiceStatusType.Deleted && s.OrganisationId == request.OrganisationId)
+        //    .Include(x => x.Locations)
+        //    .SelectMany(s => s.Locations);
 
         locationsQuery = Search(request, locationsQuery);
         locationsQuery = OrderBy(request, locationsQuery);
@@ -72,15 +74,16 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
 
     private IQueryable<Location> Search(GetLocationsByOrganisationIdCommand request, IQueryable<Location> locationsQuery)
     {
+        locationsQuery = locationsQuery.Where(x => x.OrganisationId == request.OrganisationId);
 
-        if (request.SearchName != null && request.SearchName != string.Empty)
+        if (!string.IsNullOrEmpty(request.SearchName))
         {
             locationsQuery = locationsQuery.Where(x => (x.Name != null && x.Name.Contains(request.SearchName))
                 || x.Address1.Contains(request.SearchName)
                 || (x.Address2 != null && x.Address2.Contains(request.SearchName))
                 || x.City.Contains(request.SearchName)
                 || x.PostCode.Contains(request.SearchName)
-                //allow to search by the the full phrase 
+                //allow to search by the full phrase 
                 || ((x.Name != null && x.Name != "" ? x.Name + ", " : "")
                     + (x.Address1 != null && x.Address1 != "" ? x.Address1 + ", " : "")
                     + (x.Address2 != null && x.Address2 != "" ? x.Address2 + ", " : "")
@@ -91,7 +94,7 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
 
         if (request.IsFamilyHub)
         {
-            locationsQuery = locationsQuery.Where(x => x.LocationTypeCategory == Shared.Enums.LocationTypeCategory.FamilyHub);
+            locationsQuery = locationsQuery.Where(x => x.LocationTypeCategory == LocationTypeCategory.FamilyHub);
         }
 
         return locationsQuery;
