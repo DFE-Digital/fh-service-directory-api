@@ -10,8 +10,20 @@ namespace FamilyHubs.ServiceDirectory.Core.Helper;
 
 public static class HelperUtility
 {
+    //todo: needed?
+    //public static void AttachExistingManyToMany(this Organisation organisation, ApplicationDbContext context, IMapper mapper)
+    //{
+    //    //todo: match on name, address1 & postcode?
+    //    var existingLocations = organisation.Location.Select(s => $"{s.Name}{s.PostCode}").ToList();
+    //    organisation.Location = organisation.Location.AddOrAttachExisting(context, mapper,
+    //        l => existingLocations.Contains(l.Name + l.PostCode),
+    //        (s, d) => $"{s.Name}{s.PostCode}" == $"{d.Name}{d.PostCode}");
+    //}
+
     public static void AttachExistingManyToMany(this Service service, ApplicationDbContext context, IMapper mapper)
     {
+        //todo: match on name, address1 & postcode?
+        // or use contains? (i.e. check everything??)
         var existingLocations = service.Locations.Select(s => $"{s.Name}{s.PostCode}").ToList();
         service.Locations = service.Locations.AddOrAttachExisting(context, mapper,
             l => existingLocations.Contains(l.Name + l.PostCode),

@@ -14,5 +14,6 @@ public class Organisation : EntityBase<long>
     public string? Uri { get; set; }
     public string? Url { get; set; }
     public IList<Service> Services { get; set; } = new List<Service>();
+    //todo: rename to Locations
     public IList<Location> Location { get; set; } = new List<Location>();
 }

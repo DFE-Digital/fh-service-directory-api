@@ -54,6 +54,22 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
 
             var organisation = _mapper.Map<Organisation>(request.Organisation);
 
+            // ensure that all locations associated with the services are also associated with the organisation
+
+            var serviceLocations = organisation.Services
+                .SelectMany(service => service.Locations)
+                .Distinct();
+
+            foreach (var location in serviceLocations)
+            {
+                if (!organisation.Location.Contains(location))
+                {
+                    organisation.Location.Add(location);
+                }
+            }
+
+            //organisation.AttachExistingManyToMany(_context, _mapper);
+
             foreach (var service in organisation.Services)
             {
                 service.AttachExistingManyToMany(_context, _mapper);
