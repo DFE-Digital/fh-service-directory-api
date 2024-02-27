@@ -86,7 +86,9 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     {
         //Arrange
         var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
-        testLocation.Id = await CreateLocation(testLocation);
+        var location = await CreateLocation(testLocation, TestDbContext.Organisations.First().Id);
+        testLocation.Id = location.Id;
+        testLocation.OrganisationId = location.OrganisationId;
         var contact = testLocation.Contacts.ElementAt(0);
         contact.Name = "Updated Name";
         contact.Email = "Updated Email";
