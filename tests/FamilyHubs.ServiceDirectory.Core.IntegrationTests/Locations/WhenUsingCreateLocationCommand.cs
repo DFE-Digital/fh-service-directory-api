@@ -60,6 +60,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     {
         //Arrange
         var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        testLocation.OrganisationId = TestDbContext.Organisations.First().Id;
 
         testLocation.Id = await CreateLocation(testLocation);
 
