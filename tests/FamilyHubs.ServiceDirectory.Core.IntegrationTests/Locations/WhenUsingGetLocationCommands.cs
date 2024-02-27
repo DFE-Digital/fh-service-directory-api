@@ -15,8 +15,7 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
     {
         //Arrange
         var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
-        testLocation.OrganisationId = TestDbContext.Organisations.First().Id;
-        testLocation.Id = await CreateLocation(testLocation);
+        testLocation.Id = (await CreateLocation(testLocation, TestDbContext.Organisations.First().Id)).Id;
 
         var getCommand = new GetLocationByIdCommand { Id = testLocation.Id };
         var getHandler = new GetLocationByIdCommandHandler(TestDbContext, Mapper);

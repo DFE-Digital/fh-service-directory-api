@@ -98,7 +98,6 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     {
         var existingLocation = Mapper.Map<Location>(locationDto);
 
-        //organisation.Location.Add(existingLocation);
         existingLocation.OrganisationId = organisationId;
 
         TestDbContext.Locations.Add(existingLocation);
