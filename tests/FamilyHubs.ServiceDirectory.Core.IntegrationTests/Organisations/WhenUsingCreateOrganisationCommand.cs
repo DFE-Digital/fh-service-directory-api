@@ -9,6 +9,8 @@ namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Organisations;
 
 public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
 {
+    //todo: need an unit test to create an organisation with a location but no services
+
     [Fact]
     public async Task ThenCreateOrganisation()
     {
