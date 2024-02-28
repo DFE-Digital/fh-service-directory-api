@@ -15,6 +15,7 @@ namespace FamilyHubs.ServiceDirectory.Core.Commands.Organisations.UpdateOrganisa
 
 public class UpdateOrganisationCommand : IRequest<long>
 {
+    //todo: no need to pass the id in the request, it's already in the OrganisationDetailsDto
     public UpdateOrganisationCommand(long id, OrganisationDetailsDto organisation)
     {
         Id = id;
