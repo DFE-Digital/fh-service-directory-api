@@ -77,14 +77,14 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
                 .Select(g => g.First()) // todo: throw if more than one and they aren't the same
                 .ToArray();
 
-            foreach (var service in entity.Services)
-            {
-                service.AttachExistingManyToMany(_context, _mapper);
-            }
-
             foreach (var location in distinctExistingLocations)
             {
                 location.AttachExisting(_context, _mapper);
+            }
+
+            foreach (var service in entity.Services)
+            {
+                service.AttachExistingManyToMany(_context, _mapper);
             }
 
             _context.Organisations.Update(entity);

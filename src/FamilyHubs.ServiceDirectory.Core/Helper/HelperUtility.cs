@@ -22,6 +22,7 @@ public static class HelperUtility
     //        (s, d) => $"{s.Name}{s.PostCode}" == $"{d.Name}{d.PostCode}");
     //}
 
+    //todo: this can be generic on type, and can we use it for taxonomy too?
     public static void AttachExisting(this Location location, ApplicationDbContext context, IMapper mapper)
     {
         if (location.Id != 0)
