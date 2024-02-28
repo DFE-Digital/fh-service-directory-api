@@ -53,13 +53,24 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         ThrowIfForbidden(request);
 
         var entity = await _context.Organisations
-                .Include(o => o.Services)
-                .ThenInclude(s => s.Taxonomies)
-                .Include(o => o.Services)
-                .ThenInclude(s => s.Locations)
-                .Include(o => o.Location)
-                .AsSplitQuery()
-                .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
+            .Include(o => o.Services)
+            .ThenInclude(s => s.Taxonomies)
+            .Include(o => o.Services)
+            .ThenInclude(s => s.Locations)
+            .Include(o => o.Location)
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
+
+        //var entity = await _context.Organisations
+        //        .Include(o => o.Services)
+        //        .ThenInclude(s => s.Taxonomies)
+        //        .Include(o => o.Services)
+        //        .ThenInclude(s => s.Locations)
+        //        .ThenInclude(l => l.Contacts)
+        //        .Include(o => o.Location)
+        //        .ThenInclude(l => l.Contacts)
+        //        .AsSplitQuery()
+        //        .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (entity is null)
             throw new NotFoundException(nameof(Organisation), request.Id.ToString());
@@ -73,34 +84,34 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
             // note that if locations with the same id are passed to this command (at the organisation and service level)
             // then they should all be the same object. if they are not, then one of the locations will be used and different properties on the other ignored/lost
             //todo: we could catch and throw?
-            var distinctExistingLocations = entity.Location
-                .Concat(entity.Services.SelectMany(s => s.Locations))
-                .Where(l => l.Id != 0)
-                .GroupBy(l => l.Id)
-                .Select(g => g.First()) // todo: throw if more than one and they aren't the same
-                .ToArray();
-
-            foreach (var location in distinctExistingLocations)
-            {
-                location.AttachExisting(_context.Locations, _mapper);
-            }
-
-            // when attaching existing entities, we have to ensure that only one entity instance with a given key value is attached.
-            //var distinctExistingContacts = entity.Services
-            //    .SelectMany(s => s.Contacts)
-            //    .Concat(entity.Services
-            //        .SelectMany(s => s.Locations)
-            //        .SelectMany(l => l.Contacts))
-            //    .Concat(entity.Location.SelectMany(l => l.Contacts))
-            //    .Where(c => c.Id != 0)
-            //    .GroupBy(c => c.Id)
+            //var distinctExistingLocations = entity.Location
+            //    .Concat(entity.Services.SelectMany(s => s.Locations))
+            //    .Where(l => l.Id != 0)
+            //    .GroupBy(l => l.Id)
             //    .Select(g => g.First()) // todo: throw if more than one and they aren't the same
             //    .ToArray();
 
-            //foreach (var contact in distinctExistingContacts)
+            //foreach (var location in distinctExistingLocations)
             //{
-            //    contact.AttachExisting(_context.Contacts, _mapper);
+            //    location.AttachExisting(_context.Locations, _mapper);
             //}
+
+            // when attaching existing entities, we have to ensure that only one entity instance with a given key value is attached.
+            var distinctExistingContacts = entity.Services
+                .SelectMany(s => s.Contacts)
+                .Concat(entity.Services
+                    .SelectMany(s => s.Locations)
+                    .SelectMany(l => l.Contacts))
+                .Concat(entity.Location.SelectMany(l => l.Contacts))
+                .Where(c => c.Id != 0)
+                .GroupBy(c => c.Id)
+                .Select(g => g.First()) // todo: throw if more than one and they aren't the same
+                .ToArray();
+
+            foreach (var contact in distinctExistingContacts)
+            {
+                contact.AttachExisting(_context.Contacts, _mapper);
+            }
 
             foreach (var service in entity.Services)
             {

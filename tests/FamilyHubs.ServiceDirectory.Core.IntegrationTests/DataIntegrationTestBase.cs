@@ -59,9 +59,12 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         return Mapper.Map(organisationWithServices, organisationDto ?? TestOrganisation);
     }
 
+    //todo: same as above, but pass TestOrganisationFreeService?
     public async Task<OrganisationDetailsDto> CreateOrganisationWithFreeService(OrganisationDetailsDto? organisationDto = null)
     {
         var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisationFreeService);
+
+        organisationWithServices.Location.Add(organisationWithServices.Services.First().Locations.First());
 
         TestDbContext.Organisations.Add(organisationWithServices);
 
@@ -157,7 +160,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         return new ServiceCollection().AddEntityFrameworkSqlite()
             .AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder =>
             {
-                dbContextOptionsBuilder.UseLoggerFactory(MyLoggerFactory); // MyLoggerFactory is your ILoggerFactory instance
+                dbContextOptionsBuilder.UseLoggerFactory(MyLoggerFactory);
 
                 dbContextOptionsBuilder.UseSqlite(serviceDirectoryConnection, opt =>
                 {
