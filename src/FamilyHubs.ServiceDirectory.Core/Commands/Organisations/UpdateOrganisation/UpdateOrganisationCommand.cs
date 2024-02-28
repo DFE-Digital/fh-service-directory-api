@@ -97,21 +97,21 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
             //}
 
             // when attaching existing entities, we have to ensure that only one entity instance with a given key value is attached.
-            var distinctExistingContacts = entity.Services
-                .SelectMany(s => s.Contacts)
-                .Concat(entity.Services
-                    .SelectMany(s => s.Locations)
-                    .SelectMany(l => l.Contacts))
-                .Concat(entity.Location.SelectMany(l => l.Contacts))
-                .Where(c => c.Id != 0)
-                .GroupBy(c => c.Id)
-                .Select(g => g.First()) // todo: throw if more than one and they aren't the same
-                .ToArray();
+            //var distinctExistingContacts = entity.Services
+            //    .SelectMany(s => s.Contacts)
+            //    .Concat(entity.Services
+            //        .SelectMany(s => s.Locations)
+            //        .SelectMany(l => l.Contacts))
+            //    .Concat(entity.Location.SelectMany(l => l.Contacts))
+            //    .Where(c => c.Id != 0)
+            //    .GroupBy(c => c.Id)
+            //    .Select(g => g.First()) // todo: throw if more than one and they aren't the same
+            //    .ToArray();
 
-            foreach (var contact in distinctExistingContacts)
-            {
-                contact.AttachExisting(_context.Contacts, _mapper);
-            }
+            //foreach (var contact in distinctExistingContacts)
+            //{
+            //    contact.AttachExisting(_context.Contacts, _mapper);
+            //}
 
             foreach (var service in entity.Services)
             {
