@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -607,10 +608,10 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     {
         //Arrange
         await CreateOrganisation();
-        var expected = TestDataProvider.GetTestCountyCouncilDto2().Services.ElementAt(0).Locations.ElementAt(0) with { Name = "Existing Location already Saved in DB" };
-        expected.Id = await CreateLocation(expected);
 
         var service = TestOrganisation.Services.ElementAt(0);
+        var expected = service.Locations.ElementAt(0) with { Name = "Existing Location already Saved in DB" };
+        service.Locations.Clear();
         service.Locations.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
@@ -625,7 +626,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.Count.Should().Be(2);
+        actualService!.Locations.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
