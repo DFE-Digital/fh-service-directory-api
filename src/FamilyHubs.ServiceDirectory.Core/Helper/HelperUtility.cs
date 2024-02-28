@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
+using Ardalis.GuardClauses;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.Base;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using GeoCoordinatePortable;
+using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Core.Helper;
 
@@ -20,14 +22,36 @@ public static class HelperUtility
     //        (s, d) => $"{s.Name}{s.PostCode}" == $"{d.Name}{d.PostCode}");
     //}
 
+    public static void AttachExisting(this Location location, ApplicationDbContext context, IMapper mapper)
+    {
+        if (location.Id != 0)
+        {
+            var existingLocation = context.Locations.Find(location.Id);
+            if (existingLocation != null)
+            {
+                mapper.Map(location, existingLocation);
+                context.Entry(existingLocation).State = EntityState.Modified;
+            }
+            else
+            {
+                throw new NotFoundException(nameof(Location), location.Id.ToString());
+            }
+        }
+        else
+        {
+            context.Locations.Add(location);
+        }
+    }
+
+    //todo: should this be attaching by id instead? will have to check assumptions of the existing consumers
     public static void AttachExistingManyToMany(this Service service, ApplicationDbContext context, IMapper mapper)
     {
         //todo: match on name, address1 & postcode?
         // or use contains? (i.e. check everything??)
-        var existingLocations = service.Locations.Select(s => $"{s.Name}{s.PostCode}").ToList();
-        service.Locations = service.Locations.AddOrAttachExisting(context, mapper,
-            l => existingLocations.Contains(l.Name + l.PostCode),
-            (s, d) => $"{s.Name}{s.PostCode}" == $"{d.Name}{d.PostCode}");
+        //var existingLocations = service.Locations.Select(s => $"{s.Name}{s.PostCode}").ToList();
+        //service.Locations = service.Locations.AddOrAttachExisting(context, mapper,
+        //    l => existingLocations.Contains(l.Name + l.PostCode),
+        //    (s, d) => $"{s.Name}{s.PostCode}" == $"{d.Name}{d.PostCode}");
 
         var existingTaxonomies = service.Taxonomies.Select(s => s.Name).ToList();
         service.Taxonomies = service.Taxonomies.AddOrAttachExisting(context, mapper,

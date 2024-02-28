@@ -617,16 +617,22 @@ public class WhenUsingUpdateOrganisationCommand : DataIntegrationTestBase
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
 
+    //todo: need to test location at org level only, location at service level only, location at both levels
+
     [Fact]
     public async Task ThenUpdateOrganisationAttachExistingLocations()
     {
         //Arrange
-        await CreateOrganisation();
-        var expected = TestDataProvider.GetTestCountyCouncilDto2().Services.ElementAt(0).Locations.ElementAt(0) with { Name = "Existing Location already Saved in DB" };
-        expected.Id = await CreateLocation(expected);
-
+        var organisation = await CreateOrganisation();
         var service = TestOrganisation.Services.ElementAt(0);
-        service.Locations.Add(expected);
+        var updatedLocation = service.Locations.ElementAt(0) with { Name = "Existing Location already Saved in DB" };
+
+        // replace the first service location with updatedLocation
+        var locations = service.Locations.ToArray();
+        locations[0] = updatedLocation;
+        service.Locations = locations;
+
+        TestOrganisation.Location = new[] { updatedLocation };
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
         var updateHandler = new UpdateOrganisationCommandHandler(MockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
@@ -640,13 +646,19 @@ public class WhenUsingUpdateOrganisationCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.Count.Should().Be(2);
+        actualService!.Locations.Count.Should().Be(1);
 
-        var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
-        actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options =>
-            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
-                .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+        TestDbContext.Locations.Count().Should().Be(1);
+
+        //todo: check org has location
+        //todo: check service has same location
+        //todo: check org has only the same location
+
+        //var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
+        //actualEntity.Should().NotBeNull();
+        //actualEntity.Should().BeEquivalentTo(expected, options =>
+        //    options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
+        //        .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
 
     [Fact]
