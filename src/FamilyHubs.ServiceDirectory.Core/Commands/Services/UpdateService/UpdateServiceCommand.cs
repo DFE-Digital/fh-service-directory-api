@@ -54,6 +54,9 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         {
             entity = _mapper.Map(request.Service, entity);
 
+            //todo: need to do the same here as per update organisation, i.e. attach all existing entities
+            // can probably share common code
+
             entity.AttachExistingManyToMany(_context, _mapper);
 
             _context.Services.Update(entity);

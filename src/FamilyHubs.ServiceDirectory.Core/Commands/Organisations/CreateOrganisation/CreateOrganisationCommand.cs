@@ -70,6 +70,9 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
 
             //organisation.AttachExistingManyToMany(_context, _mapper);
 
+            //todo: need to do the same here as per update, i.e. attach all existing entities
+            // can probably share common code
+
             foreach (var service in organisation.Services)
             {
                 service.AttachExistingManyToMany(_context, _mapper);

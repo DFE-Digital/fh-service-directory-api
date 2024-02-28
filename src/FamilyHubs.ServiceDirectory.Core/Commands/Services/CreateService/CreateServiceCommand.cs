@@ -46,6 +46,9 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
 
             var service = _mapper.Map<Service>(request.Service);
 
+            //todo: need to do the same here as per update organisation, i.e. attach all existing entities
+            // can probably share common code
+
             service.AttachExistingManyToMany(_context, _mapper);
 
             _context.Services.Add(service);

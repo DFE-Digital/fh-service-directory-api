@@ -13,27 +13,30 @@ namespace FamilyHubs.ServiceDirectory.Core.Helper;
 public static class HelperUtility
 {
     //todo: this can be generic on type, and can we use it for taxonomy too?
-    public static void AttachExisting(this Location location, ApplicationDbContext context, IMapper mapper)
+    public static void AttachExisting<T>(this T entity, DbSet<T> dbSet, IMapper mapper)
+        where T : EntityBase<long>
     {
-        if (location.Id != 0)
+        if (entity.Id != 0)
         {
-            var existingLocation = context.Locations.Find(location.Id);
-            if (existingLocation != null)
+            var existingEntity = dbSet.Find(entity.Id);
+            if (existingEntity != null)
             {
-                mapper.Map(location, existingLocation);
-                context.Entry(existingLocation).State = EntityState.Modified;
+                mapper.Map(entity, existingEntity);
+                //context.Entry(existingEntity).State = EntityState.Modified;
+                dbSet.Update(existingEntity);
             }
             else
             {
-                throw new NotFoundException(nameof(Location), location.Id.ToString());
+                throw new NotFoundException(nameof(T), entity.Id.ToString());
             }
         }
         else
         {
-            context.Locations.Add(location);
+            dbSet.Add(entity);
         }
     }
 
+    //todo: all consumers of this will have to be changed to work correctly, then we can either leave it for taxonomy, or treat taxonomies the same and remove this
     //todo: should this be attaching by id instead? will have to check assumptions of the existing consumers
     public static void AttachExistingManyToMany(this Service service, ApplicationDbContext context, IMapper mapper)
     {

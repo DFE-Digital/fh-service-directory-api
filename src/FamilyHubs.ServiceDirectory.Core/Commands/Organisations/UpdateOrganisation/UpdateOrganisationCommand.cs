@@ -68,6 +68,8 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         {
             entity = _mapper.Map(request.Organisation, entity);
 
+            //todo: do we need to do this, now we're doing the default mapping on id?
+
             // note that if locations with the same id are passed to this command (at the organisation and service level)
             // then they should all be the same object. if they are not, then one of the locations will be used and different properties on the other ignored/lost
             //todo: we could catch and throw?
@@ -80,8 +82,25 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
 
             foreach (var location in distinctExistingLocations)
             {
-                location.AttachExisting(_context, _mapper);
+                location.AttachExisting(_context.Locations, _mapper);
             }
+
+            // when attaching existing entities, we have to ensure that only one entity instance with a given key value is attached.
+            //var distinctExistingContacts = entity.Services
+            //    .SelectMany(s => s.Contacts)
+            //    .Concat(entity.Services
+            //        .SelectMany(s => s.Locations)
+            //        .SelectMany(l => l.Contacts))
+            //    .Concat(entity.Location.SelectMany(l => l.Contacts))
+            //    .Where(c => c.Id != 0)
+            //    .GroupBy(c => c.Id)
+            //    .Select(g => g.First()) // todo: throw if more than one and they aren't the same
+            //    .ToArray();
+
+            //foreach (var contact in distinctExistingContacts)
+            //{
+            //    contact.AttachExisting(_context.Contacts, _mapper);
+            //}
 
             foreach (var service in entity.Services)
             {
