@@ -46,6 +46,8 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     {
         var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisation);
 
+        organisationWithServices.Locations.Add(organisationWithServices.Services.First().Locations.First());
+
         TestDbContext.Organisations.Add(organisationWithServices);
 
         await TestDbContext.SaveChangesAsync();
