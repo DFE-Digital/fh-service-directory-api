@@ -10,6 +10,7 @@ public class AutoMappingProfiles : Profile
 {
     public AutoMappingProfiles()
     {
+        //todo: is entity and dto's are identical, why bother having dto's?
         CreateMap<AccessibilityForDisabilitiesDto, AccessibilityForDisabilities>().ReverseMap();
         CreateMap<CostOptionDto, CostOption>().ReverseMap();
         CreateMap<EligibilityDto, Eligibility>().ReverseMap();
