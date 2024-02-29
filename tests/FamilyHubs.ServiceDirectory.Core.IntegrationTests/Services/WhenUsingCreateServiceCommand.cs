@@ -43,10 +43,10 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
         var newService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id);
 
         var expected = newService.Locations.ElementAt(0);
-        
-        expected.Name = "Existing Location already Saved in DB";
+
         expected.Id = await CreateLocation(expected);
-        newService.Locations.Add(expected);
+        expected.Name = "Existing Location already Saved in DB";
+        //newService.Locations.Add(expected);
 
         var command = new CreateServiceCommand(newService);
         var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, GetLogger<CreateServiceCommandHandler>());

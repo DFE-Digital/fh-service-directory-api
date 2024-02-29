@@ -12,6 +12,31 @@ namespace FamilyHubs.ServiceDirectory.Core.Helper;
 
 public static class HelperUtility
 {
+    public static void AttachExisting<T>(this T entity, DbContext context, DbSet<T> dbSet, IMapper mapper)
+        where T : EntityBase<long>
+    {
+        if (entity.Id != 0)
+        {
+            var existingEntity = dbSet.Find(entity.Id);
+            if (existingEntity != null)
+            {
+                mapper.Map(entity, existingEntity);
+                //todo: try passing context again
+                context.Entry(existingEntity).State = EntityState.Modified;
+                //dbSet.Update(existingEntity);
+            }
+            else
+            {
+                throw new NotFoundException(nameof(T), entity.Id.ToString());
+            }
+        }
+        else
+        {
+            dbSet.Add(entity);
+        }
+    }
+
+
     //todo: this can be generic on type, and can we use it for taxonomy too?
     public static void AttachExisting<T>(this T entity, DbSet<T> dbSet, IMapper mapper)
         where T : EntityBase<long>
@@ -22,6 +47,7 @@ public static class HelperUtility
             if (existingEntity != null)
             {
                 mapper.Map(entity, existingEntity);
+                //todo: try passing context again
                 //context.Entry(existingEntity).State = EntityState.Modified;
                 dbSet.Update(existingEntity);
             }

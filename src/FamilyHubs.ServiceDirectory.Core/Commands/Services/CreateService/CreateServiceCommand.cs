@@ -49,6 +49,35 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             //todo: need to do the same here as per update organisation, i.e. attach all existing entities
             // can probably share common code
 
+            //foreach (var location in service.Locations)
+            //{
+            //    var existingLocation = _context.Locations.Local
+            //        .FirstOrDefault(entry => entry.Id.Equals(location.Id));
+
+            //    if (existingLocation != null)
+            //    {
+            //        // The entity is already being tracked
+            //        //todo: if this works, need up update the existing with the new values
+            //        _context.Entry(existingLocation).State = EntityState.Unchanged;
+            //    }
+            //    else
+            //    {
+            //        // The entity is not being tracked, so attach it
+            //        _context.Locations.Attach(location);
+            //    }
+            //}
+
+            //var distinctExistingLocations = service.Locations
+            //    .Where(l => l.Id != 0)
+            //    .GroupBy(l => l.Id)
+            //    .Select(g => g.First()) // todo: throw if more than one and they aren't the same
+            //    .ToArray();
+
+            //foreach (var location in distinctExistingLocations)
+            //{
+            //    location.AttachExisting(_context, _context.Locations, _mapper);
+            //}
+
             service.AttachExistingManyToMany(_context, _mapper);
 
             _context.Services.Add(service);
