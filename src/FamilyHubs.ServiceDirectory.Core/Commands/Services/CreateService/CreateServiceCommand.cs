@@ -49,6 +49,23 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             //todo: need to do the same here as per update organisation, i.e. attach all existing entities
             // can probably share common code
 
+            List<Location> newLocs = new();
+            foreach (var location in service.Locations)
+            {
+                //or IsKeySet
+                if (location.Id != 0)
+                {
+                    var existingLocation = _context.Locations.Find(location.Id);
+                    _mapper.Map(location, existingLocation);
+                    newLocs.Add(existingLocation);
+                }
+                else
+                {
+                    newLocs.Add(location);
+                }
+            }
+            service.Locations = newLocs;
+
             //foreach (var location in service.Locations)
             //{
             //    var existingLocation = _context.Locations.Local

@@ -59,7 +59,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == newService.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.Count.Should().Be(2);
+        actualService!.Locations.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
