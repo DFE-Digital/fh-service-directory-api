@@ -24,6 +24,14 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                 type: "bigint",
                 nullable: true);
 
+            migrationBuilder.Sql(
+                @"UPDATE Locations
+            SET OrganisationId = Services.OrganisationId
+            FROM Locations
+            INNER JOIN ServiceAtLocations ON Locations.Id = ServiceAtLocations.LocationId
+            INNER JOIN Services ON ServiceAtLocations.ServiceId = Services.Id
+            WHERE Locations.OrganisationId = 6;");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Locations_OrganisationId",
                 table: "Locations",
