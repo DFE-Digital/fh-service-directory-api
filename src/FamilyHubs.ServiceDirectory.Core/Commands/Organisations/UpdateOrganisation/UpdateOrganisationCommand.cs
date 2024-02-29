@@ -15,13 +15,13 @@ namespace FamilyHubs.ServiceDirectory.Core.Commands.Organisations.UpdateOrganisa
 
 public class UpdateOrganisationCommand : IRequest<long>
 {
-    public UpdateOrganisationCommand(long id, OrganisationWithServicesDto organisation)
+    public UpdateOrganisationCommand(long id, OrganisationDetailsDto organisation)
     {
         Id = id;
         Organisation = organisation;
     }
 
-    public OrganisationWithServicesDto Organisation { get; }
+    public OrganisationDetailsDto Organisation { get; }
 
     public long Id { get; }
 }

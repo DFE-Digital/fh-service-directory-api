@@ -11,9 +11,9 @@ public static class TestDataProvider
 {
     public static string BearerTokenSigningKey = "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    public static OrganisationWithServicesDto GetTestCountyCouncilRecord()
+    public static OrganisationDetailsDto GetTestCountyCouncilRecord()
     {
-        var bristolCountyCouncil = new OrganisationWithServicesDto
+        var bristolCountyCouncil = new OrganisationDetailsDto
         {
             AdminAreaCode = "E06000023",
             OrganisationType = OrganisationType.LA,

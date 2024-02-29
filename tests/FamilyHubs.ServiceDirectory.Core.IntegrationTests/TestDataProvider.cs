@@ -8,9 +8,9 @@ namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests;
 
 public static class TestDataProvider
 {
-    public static OrganisationWithServicesDto GetTestCountyCouncilDto(bool updated = false)
+    public static OrganisationDetailsDto GetTestCountyCouncilDto(bool updated = false)
     {
-        var testCountyCouncil = new OrganisationWithServicesDto
+        var testCountyCouncil = new OrganisationDetailsDto
         {
             OrganisationType = OrganisationType.LA,
             Name = updated == false ? "Unit Test County Council" : "Unit Test County Council Updated",
@@ -27,9 +27,9 @@ public static class TestDataProvider
         return testCountyCouncil;
     }
 
-    public static OrganisationWithServicesDto GetTestCountyCouncilWithFreeServiceDto(bool updated = false)
+    public static OrganisationDetailsDto GetTestCountyCouncilWithFreeServiceDto(bool updated = false)
     {
-        var testCountyCouncil = new OrganisationWithServicesDto
+        var testCountyCouncil = new OrganisationDetailsDto
         {
             OrganisationType = OrganisationType.LA,
             Name = updated == false ? "Unit Test County Council" : "Unit Test County Council Updated",
@@ -46,9 +46,9 @@ public static class TestDataProvider
         return testCountyCouncil;
     }
 
-    public static OrganisationWithServicesDto GetTestCountyCouncilDto2()
+    public static OrganisationDetailsDto GetTestCountyCouncilDto2()
     {
-        var testCountyCouncil = new OrganisationWithServicesDto
+        var testCountyCouncil = new OrganisationDetailsDto
         {
             OrganisationType = OrganisationType.LA,
             Name = "Unit Test County Council 2",

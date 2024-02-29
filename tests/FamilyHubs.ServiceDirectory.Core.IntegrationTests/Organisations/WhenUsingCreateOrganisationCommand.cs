@@ -125,7 +125,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisation();
 
-        var relatedOrganisation = new OrganisationWithServicesDto
+        var relatedOrganisation = new OrganisationDetailsDto
         {
             OrganisationType = OrganisationType.VCFS,
             Name = "Related VCS",
