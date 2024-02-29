@@ -41,6 +41,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
             updatedBy = user.Email;
         }
 
+        //todo: what's going on here?
         foreach (var entry in context.ChangeTracker.Entries<ServiceLocationSharedEntityBase>())
         {
             if (entry is { State: EntityState.Modified, Entity: { ServiceId: null, LocationId: null } })
