@@ -41,5 +41,17 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
 
         builder.Property(t => t.LastModifiedBy)
             .HasMaxLength(MaxLength.Email);
+
+        builder.HasMany(s => s.Services)
+            .WithOne()
+            .HasForeignKey(s => s.OrganisationId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(s => s.Locations)
+            .WithOne()
+            .HasForeignKey(l => l.OrganisationId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
