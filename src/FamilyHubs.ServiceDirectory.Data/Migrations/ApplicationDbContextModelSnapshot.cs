@@ -400,6 +400,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<long?>("OrganisationId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("PostCode")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -423,6 +426,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("nvarchar(2083)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrganisationId");
 
                     b.ToTable("Locations");
                 });
@@ -545,8 +550,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("nvarchar(2083)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrganisationId");
 
                     b.HasIndex("ServiceId");
 
@@ -970,13 +973,15 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Review", b =>
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Location", b =>
                 {
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Organisation", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("OrganisationId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .WithMany("Locations")
+                        .HasForeignKey("OrganisationId");
+                });
 
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Review", b =>
+                {
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
                         .WithMany("Reviews")
                         .HasForeignKey("ServiceId")
@@ -1063,7 +1068,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Organisation", b =>
                 {
-                    b.Navigation("Reviews");
+                    b.Navigation("Locations");
 
                     b.Navigation("Services");
                 });
