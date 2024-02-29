@@ -48,10 +48,11 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
+        //todo: we'll have to revisit all the OnDelete behaviours
         builder.HasMany(s => s.Locations)
             .WithOne()
             .HasForeignKey(l => l.OrganisationId)
             .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -919,7 +919,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Organisation", null)
                         .WithMany("Locations")
                         .HasForeignKey("OrganisationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

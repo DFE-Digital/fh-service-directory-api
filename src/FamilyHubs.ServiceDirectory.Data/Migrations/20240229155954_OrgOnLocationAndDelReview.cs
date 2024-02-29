@@ -36,7 +36,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
             INNER JOIN Services ON ServiceAtLocations.ServiceId = Services.Id
             WHERE Locations.OrganisationId = 6;");
 
-
             migrationBuilder.CreateIndex(
                 name: "IX_Locations_OrganisationId",
                 table: "Locations",
@@ -48,7 +47,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                 column: "OrganisationId",
                 principalTable: "Organisations",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
