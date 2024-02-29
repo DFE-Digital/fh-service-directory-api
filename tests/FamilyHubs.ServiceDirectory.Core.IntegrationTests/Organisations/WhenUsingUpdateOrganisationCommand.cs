@@ -596,6 +596,11 @@ public class WhenUsingUpdateOrganisationCommand : DataIntegrationTestBase
         expected.Name = "Updated Name";
         expected.Description = "Updated Description";
 
+        // if the same existing entity is referenced in the object graph multiple times, they all have to be the same, otherwise there will be undefined behaviour
+        //todo: should we introduce checks in the api?
+        TestOrganisation.Location.Clear();
+        TestOrganisation.Location.Add(expected);
+
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
         var updateHandler = new UpdateOrganisationCommandHandler(MockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
