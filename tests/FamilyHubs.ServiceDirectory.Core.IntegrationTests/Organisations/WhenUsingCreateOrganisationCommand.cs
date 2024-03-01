@@ -7,7 +7,7 @@ using FluentAssertions.Equivalency;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Organisations;
 
-public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
+public class WhenUsingCreateOrganisationCommand : DataIntegrationTestBase
 {
     [Fact]
     public async Task ThenCreateOrganisation()
