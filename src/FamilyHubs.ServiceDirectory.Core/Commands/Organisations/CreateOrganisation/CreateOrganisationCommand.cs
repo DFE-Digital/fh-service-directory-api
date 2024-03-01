@@ -54,6 +54,8 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
 
             var organisation = _mapper.Map<Organisation>(request.Organisation);
 
+            //todo: do we need to get distinct locations, add them first, then replace all locations with the existing?
+
             foreach (var service in organisation.Services)
             {
                 service.AttachExistingManyToMany(_context, _mapper);

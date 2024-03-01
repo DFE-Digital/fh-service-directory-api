@@ -21,8 +21,10 @@ public static class TestDataProvider
             Services = new List<ServiceDto>
             {
                 GetTestCountyCouncilServicesDto(0, updated)
-            },
+            }
         };
+
+        //testCountyCouncil.Location.Add(testCountyCouncil.Services.First().Locations.First());
 
         return testCountyCouncil;
     }
