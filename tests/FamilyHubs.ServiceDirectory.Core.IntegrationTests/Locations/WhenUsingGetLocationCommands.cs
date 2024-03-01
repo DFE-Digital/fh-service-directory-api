@@ -34,7 +34,7 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
     public async Task ThenGetLocationByServiceId()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var getCommand = new GetLocationsByServiceIdCommand
         {
@@ -56,7 +56,7 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
     public async Task ThenGetLocationByOrganisationId()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var getCommand = new GetLocationsByOrganisationIdCommand(TestOrganisation.Id, null, null, null, null, null,null);
 

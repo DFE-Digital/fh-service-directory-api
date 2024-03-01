@@ -42,7 +42,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         InitialiseDatabase();
     }
 
-    public async Task<OrganisationDetailsDto> CreateOrganisation(OrganisationDetailsDto? organisationDto = null)
+    public async Task<OrganisationDetailsDto> CreateOrganisationDetails(OrganisationDetailsDto? organisationDto = null)
     {
         var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisation);
 

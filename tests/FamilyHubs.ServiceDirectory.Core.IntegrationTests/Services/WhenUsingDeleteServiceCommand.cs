@@ -12,7 +12,7 @@ public class WhenUsingDeleteServiceCommand : DataIntegrationTestBase
     public async Task ThenDeleteService()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var command = new DeleteServiceByIdCommand(1);
         var handler = new DeleteServiceByIdCommandHandler(TestDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);

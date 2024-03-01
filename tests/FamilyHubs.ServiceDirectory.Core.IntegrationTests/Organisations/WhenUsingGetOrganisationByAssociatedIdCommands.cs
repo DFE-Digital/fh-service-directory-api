@@ -9,7 +9,7 @@ public class WhenUsingGetOrganisationByAssociatedIdCommands : DataIntegrationTes
     public async Task ThenGetOrganisationById()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var parent = TestDbContext.Organisations.First();
         var child = CreateChildOrganisation(parent);
         TestDbContext.Organisations.Add(child);
@@ -32,7 +32,7 @@ public class WhenUsingGetOrganisationByAssociatedIdCommands : DataIntegrationTes
     public async Task ThenGetOrganisationById_ShouldReturnEmptyListIfNotFound()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var getCommand = new GetOrganisationsByAssociatedIdCommand(-1);
         var getHandler = new GetOrganisationsByAssociatedIdCommandHandler(TestDbContext, Mapper);

@@ -16,7 +16,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceOnly()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         service.Name = "Unit Test Update Service Name";
         service.Description = "Unit Test Update Service Name";
@@ -39,7 +39,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteEligibilities()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Eligibilities.ElementAt(0);
 
@@ -81,7 +81,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedEligibilities()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Eligibilities.ElementAt(0);
@@ -111,7 +111,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteServiceAreas()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.ServiceAreas.ElementAt(0);
         var expected = new ServiceAreaDto
@@ -151,7 +151,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedServiceAreas()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.ServiceAreas.ElementAt(0);
@@ -181,7 +181,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteServiceDeliveries()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.ServiceDeliveries.ElementAt(0);
 
@@ -209,7 +209,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedServiceDeliveries()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
@@ -236,7 +236,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteLanguages()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Languages.ElementAt(0);
         var expected = new LanguageDto()
@@ -276,7 +276,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedLanguages()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Languages.ElementAt(0);
@@ -305,7 +305,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteCostOptions()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.CostOptions.ElementAt(0);
         var expected = new CostOptionDto
@@ -348,7 +348,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedCostOptions()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.CostOptions.ElementAt(0);
@@ -379,7 +379,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteContacts()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Contacts.ElementAt(0);
         var contact = new ContactDto
@@ -419,7 +419,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceWithUpdatedContacts()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var contact = service.Contacts.ElementAt(0);
         contact.Name = "Updated Name";
@@ -449,7 +449,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteSchedules()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Schedules.ElementAt(0);
         var expected = new ScheduleDto
@@ -491,7 +491,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedSchedules()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Schedules.ElementAt(0);
@@ -521,7 +521,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteLocations()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var location = service.Locations.ElementAt(0);
         var expected = new LocationDto
@@ -573,7 +573,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedLocations()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Locations.ElementAt(0);
@@ -605,7 +605,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAttachExistingLocations()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var expected = TestDataProvider.GetTestCountyCouncilDto2().Services.ElementAt(0).Locations.ElementAt(0) with { Name = "Existing Location already Saved in DB" };
         expected.Id = await CreateLocation(expected);
 
@@ -637,7 +637,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAddAndDeleteTaxonomies()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var taxonomy = service.Taxonomies.ElementAt(0);
         var expected = new TaxonomyDto
@@ -679,7 +679,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceUpdatedTaxonomies()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Taxonomies.ElementAt(0);
@@ -708,7 +708,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceAttachExistingTaxonomies()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var expected = new TaxonomyDto
         {
             Name = "New Taxonomy Name",
@@ -742,7 +742,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceLocationsAddAndDeleteContacts()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Locations.ElementAt(0).Contacts.ElementAt(0);
         var contact = new ContactDto
@@ -782,7 +782,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceLocationsWithUpdatedContacts()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var contact = service.Locations.ElementAt(0).Contacts.ElementAt(0);
         contact.Name = "Updated Name";
@@ -812,7 +812,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceLocationsAddAndDeleteSchedules()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Locations.ElementAt(0).Schedules.ElementAt(0);
         var expected = new ScheduleDto
@@ -854,7 +854,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     public async Task ThenUpdateServiceLocationsUpdatedSchedules()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Locations.ElementAt(0).Schedules.ElementAt(0);

@@ -105,7 +105,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     public async Task ThenCreateDuplicateService_ShouldThrowException()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var command = new CreateOrganisationCommand(TestOrganisation);
         var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());

@@ -123,7 +123,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     public async Task ThenCreateRelatedOrganisationWithCorrectAdminAreaCode()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var relatedOrganisation = new OrganisationDetailsDto
         {
@@ -155,7 +155,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     public async Task ThenCreateDuplicateOrganisation_ShouldThrowException()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var command = new CreateOrganisationCommand(TestOrganisation);
         var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());

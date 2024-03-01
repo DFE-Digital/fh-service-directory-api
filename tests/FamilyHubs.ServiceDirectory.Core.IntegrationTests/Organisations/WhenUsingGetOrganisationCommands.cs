@@ -13,7 +13,7 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
     public async Task ThenGetOrganisationById()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var getCommand = new GetOrganisationByIdCommand { Id = TestOrganisation.Id };
         var getHandler = new GetOrganisationByIdHandler(TestDbContext, Mapper);
@@ -42,7 +42,7 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
     public async Task ThenListOrganisations()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var getCommand = new ListOrganisationsCommand();
         var getHandler = new ListOrganisationCommandHandler(TestDbContext, Mapper);
@@ -59,7 +59,7 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
     public async Task ThenGetAdminByOrganisationId()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var getCommand = new GetOrganisationAdminAreaByIdCommand { OrganisationId = TestOrganisation.Id };
         var getHandler = new GetOrganisationAdminAreaByIdCommandHandler(TestDbContext);
