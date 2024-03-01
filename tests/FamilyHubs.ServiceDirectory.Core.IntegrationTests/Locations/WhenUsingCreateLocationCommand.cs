@@ -10,7 +10,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     public async Task ThenCreateLocation()
     {
         //Arrange
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        var testLocation = GetTestLocation();
         var createLocationCommand = new CreateLocationCommand(testLocation);
         var handler = new CreateLocationCommandHandler(TestDbContext, Mapper, GetLogger<CreateLocationCommandHandler>());
 

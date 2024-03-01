@@ -42,6 +42,13 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         InitialiseDatabase();
     }
 
+    public LocationDto GetTestLocation()
+    {
+        var locationDto = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        locationDto.OrganisationId = TestDbContext.Organisations.First().Id;
+        return locationDto;
+    }
+
     public async Task<OrganisationDetailsDto> CreateOrganisationDetails(OrganisationDetailsDto? organisationDto = null)
     {
         var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisation);
