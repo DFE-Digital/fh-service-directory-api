@@ -57,7 +57,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("AccessibilityForDisabilities", (string)null);
+                    b.ToTable("AccessibilityForDisabilities");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Contact", b =>
@@ -123,7 +123,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("ServiceId"), new[] { "Id", "Title", "Name", "Telephone", "TextPhone", "Url", "Email" });
 
-                    b.ToTable("Contacts", (string)null);
+                    b.ToTable("Contacts");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.CostOption", b =>
@@ -178,7 +178,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("CostOptions", (string)null);
+                    b.ToTable("CostOptions");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Eligibility", b =>
@@ -222,7 +222,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Eligibilities", (string)null);
+                    b.ToTable("Eligibilities");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Funding", b =>
@@ -260,7 +260,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Fundings", (string)null);
+                    b.ToTable("Fundings");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Language", b =>
@@ -308,7 +308,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Languages", (string)null);
+                    b.ToTable("Languages");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Location", b =>
@@ -400,6 +400,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<long?>("OrganisationId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("PostCode")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -424,7 +427,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations", (string)null);
+                    b.HasIndex("OrganisationId");
+
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Organisation", b =>
@@ -489,68 +494,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organisations", (string)null);
-                });
-
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Review", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime?>("Created")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
-
-                    b.Property<long?>("OrganisationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Score")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<long?>("ServiceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Url")
-                        .HasMaxLength(2083)
-                        .HasColumnType("nvarchar(2083)");
-
-                    b.Property<string>("Widget")
-                        .HasMaxLength(2083)
-                        .HasColumnType("nvarchar(2083)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganisationId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Organisations");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Schedule", b =>
@@ -664,7 +608,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Schedules", (string)null);
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Service", b =>
@@ -750,7 +694,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasIndex("ServiceType", "Id", "OrganisationId", "Status")
                         .HasDatabaseName("IX_ServiceType_OrganisationId_Status");
 
-                    b.ToTable("Services", (string)null);
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.ServiceArea", b =>
@@ -796,7 +740,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceAreas", (string)null);
+                    b.ToTable("ServiceAreas");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.ServiceDelivery", b =>
@@ -836,7 +780,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceDeliveries", (string)null);
+                    b.ToTable("ServiceDeliveries");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Taxonomy", b =>
@@ -879,7 +823,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Taxonomies", (string)null);
+                    b.ToTable("Taxonomies");
                 });
 
             modelBuilder.Entity("ServiceAtLocations", b =>
@@ -894,7 +838,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceAtLocations", (string)null);
+                    b.ToTable("ServiceAtLocations");
                 });
 
             modelBuilder.Entity("ServiceTaxonomies", b =>
@@ -909,7 +853,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("TaxonomyId");
 
-                    b.ToTable("ServiceTaxonomies", (string)null);
+                    b.ToTable("ServiceTaxonomies");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.AccessibilityForDisabilities", b =>
@@ -970,17 +914,12 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Review", b =>
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Location", b =>
                 {
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Organisation", null)
-                        .WithMany("Reviews")
+                        .WithMany("Locations")
                         .HasForeignKey("OrganisationId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Schedule", b =>
@@ -1063,7 +1002,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Organisation", b =>
                 {
-                    b.Navigation("Reviews");
+                    b.Navigation("Locations");
 
                     b.Navigation("Services");
                 });
@@ -1079,8 +1018,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Navigation("Fundings");
 
                     b.Navigation("Languages");
-
-                    b.Navigation("Reviews");
 
                     b.Navigation("Schedules");
 

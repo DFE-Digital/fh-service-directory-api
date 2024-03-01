@@ -3,8 +3,9 @@ using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
-public class Location : OrganisationEntityBase<long>
+public class Location : EntityBase<long>
 {
+    public long? OrganisationId { get; set; }
     //todo: nullable, rather than notset
     public required LocationTypeCategory LocationTypeCategory { get; set; }
     public string? Name { get; set; }

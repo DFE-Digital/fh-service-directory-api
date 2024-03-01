@@ -3,8 +3,9 @@ using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
-public class Service : OrganisationEntityBase<long>
+public class Service : EntityBase<long>
 {
+    public required long OrganisationId { get; set; }
     public required string ServiceOwnerReferenceId { get; set; }
     public required ServiceType ServiceType { get; set; }
     public required string Name { get; set; }
