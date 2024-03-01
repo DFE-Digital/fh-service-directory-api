@@ -15,7 +15,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     public async Task ThenCreateService()
     {
         //Arrange
-        await CreateOrganisationWithoutAnyServices();
+        await CreateOrganisation();
         var newService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id);
 
         var command = new CreateServiceCommand(newService);
@@ -39,7 +39,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     public async Task ThenCreateServiceAndAttachExistingLocation()
     {
         //Arrange
-        await CreateOrganisationWithoutAnyServices();
+        await CreateOrganisation();
         var newService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id);
 
         var expected = newService.Locations.ElementAt(0);
@@ -72,7 +72,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     public async Task ThenCreateServiceAndAttachExistingTaxonomy()
     {
         //Arrange
-        await CreateOrganisationWithoutAnyServices();
+        await CreateOrganisation();
         var newService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id);
         
         var expected = new TaxonomyDto
