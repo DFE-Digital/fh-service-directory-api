@@ -58,7 +58,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     public async Task ThenCreateDuplicateLocation_ShouldThrowException()
     {
         //Arrange
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        var testLocation = GetTestLocation();
 
         testLocation.Id = await CreateLocation(testLocation);
 
