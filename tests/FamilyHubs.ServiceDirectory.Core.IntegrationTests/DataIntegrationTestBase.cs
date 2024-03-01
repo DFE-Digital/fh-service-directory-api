@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
-using Castle.Core.Logging;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
