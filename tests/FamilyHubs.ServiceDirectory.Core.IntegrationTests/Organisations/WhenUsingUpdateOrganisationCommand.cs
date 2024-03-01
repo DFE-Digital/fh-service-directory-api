@@ -596,6 +596,10 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         expected.Name = "Updated Name";
         expected.Description = "Updated Description";
 
+        var expectedOtherInstance = TestOrganisation.Locations.First();
+        expectedOtherInstance.Name = "Updated Name";
+        expectedOtherInstance.Description = "Updated Description";
+
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
         var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
 
