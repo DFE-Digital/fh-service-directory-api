@@ -107,7 +107,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
     public async Task ThenGetServiceThatAreFree()
     {
         //Arrange
-        await CreateOrganisationWithFreeService();        
+        await CreateOrganisation(TestOrganisationFreeService);        
 
         var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
             null, null, null, null, 1, 10, null, null, false, null, null, null, null, null);

@@ -55,17 +55,6 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         return Mapper.Map(organisationWithServices, organisationDto ?? TestOrganisation);
     }
 
-    public async Task<OrganisationDetailsDto> CreateOrganisationWithFreeService(OrganisationDetailsDto? organisationDto = null)
-    {
-        var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisationFreeService);
-
-        TestDbContext.Organisations.Add(organisationWithServices);
-
-        await TestDbContext.SaveChangesAsync();
-
-        return Mapper.Map(organisationWithServices, organisationDto ?? TestOrganisationFreeService);
-    }
-
     public async Task<OrganisationDto> CreateOrganisationWithoutAnyServices(OrganisationDto? organisationDto = null)
     {
         var organisationWithoutAnyServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisationWithoutAnyServices);
