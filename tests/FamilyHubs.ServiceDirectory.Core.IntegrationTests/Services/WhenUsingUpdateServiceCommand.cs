@@ -601,16 +601,17 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
 
+    //todo: this is now basically the same as ThenUpdateServiceUpdatedLocations
+    // what was it trying to do, having 2 locations on the service with the same id, but different properties? didn't make sense
     [Fact]
     public async Task ThenUpdateServiceAttachExistingLocations()
     {
         //Arrange
         await CreateOrganisationDetails();
-        var expected = TestDataProvider.GetTestCountyCouncilDto2().Services.ElementAt(0).Locations.ElementAt(0) with { Name = "Existing Location already Saved in DB" };
-        expected.Id = await CreateLocation(expected);
 
-        var service = TestOrganisation.Services.ElementAt(0);
-        service.Locations.Add(expected);
+        var service = TestOrganisation.Services.First();
+        var expected = service.Locations.First();
+        expected.Name = "Existing Location already Saved in DB";
 
         var updateCommand = new UpdateServiceCommand(service.Id, service);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
@@ -624,7 +625,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.Count.Should().Be(2);
+        actualService!.Locations.Count.Should().Be(1);
 
         var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();

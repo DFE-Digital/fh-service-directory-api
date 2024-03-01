@@ -65,6 +65,28 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         return Mapper.Map(organisationWithServices, organisationDto ?? TestOrganisation);
     }
 
+
+    //public async Task<OrganisationDetailsDto> CreateOrganisationDetails(OrganisationDetailsDto? optionalOrganisationDetailsDto = null)
+    //{
+    //    var organisationdetailsDto = optionalOrganisationDetailsDto ?? TestOrganisation;
+
+    //    var organisationWithServices = Mapper.Map<Organisation>(organisationdetailsDto);
+
+    //    var location = organisationWithServices.Services.First().Locations.First();
+    //    organisationWithServices.Locations.Add(location);
+
+    //    TestDbContext.Organisations.Add(organisationWithServices);
+
+    //    await TestDbContext.SaveChangesAsync();
+
+    //    organisationdetailsDto.Location = new List<LocationDto>
+    //    {
+    //        Mapper.Map<LocationDto>(location)
+    //    };
+
+    //    return Mapper.Map(organisationWithServices, organisationdetailsDto);
+    //}
+
     public async Task<OrganisationDto> CreateOrganisation(OrganisationDto? organisationDto = null)
     {
         var organisationWithoutAnyServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisationWithoutAnyServices);
