@@ -55,6 +55,8 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
             var organisation = _mapper.Map<Organisation>(request.Organisation);
 
             //todo: do we need to get distinct locations, add them first, then replace all locations with the existing?
+            //todo: do we require the consumer to use temporary ids...
+            // https://learn.microsoft.com/en-us/ef/core/change-tracking/miscellaneous#temporary-values
 
             foreach (var service in organisation.Services)
             {
