@@ -12,6 +12,7 @@ public static class HelperUtility
 {
     public static void AttachExistingManyToMany(this Service service, ApplicationDbContext context, IMapper mapper)
     {
+        //todo: this needs to go
         var existingLocations = service.Locations.Select(s => $"{s.Name}{s.PostCode}").ToList();
         service.Locations = service.Locations.AddOrAttachExisting(context, mapper,
             l => existingLocations.Contains(l.Name + l.PostCode),
