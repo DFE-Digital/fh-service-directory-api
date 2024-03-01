@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
+using Castle.Core.Logging;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
@@ -8,6 +9,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
@@ -23,6 +25,8 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     public static NullLogger<T> GetLogger<T>() => new NullLogger<T>();
     protected IHttpContextAccessor _httpContextAccessor;
     public Fixture FixtureObjectGenerator;
+    public static readonly ILoggerFactory TestLoggerFactory
+        = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
     public DataIntegrationTestBase()
     {
@@ -138,6 +142,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         return new ServiceCollection().AddEntityFrameworkSqlite()
             .AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder =>
             {
+                dbContextOptionsBuilder.UseLoggerFactory(TestLoggerFactory);
                 dbContextOptionsBuilder.UseSqlite(serviceDirectoryConnection, opt =>
                 {
                     opt.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());

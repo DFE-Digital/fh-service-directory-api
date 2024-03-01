@@ -1,12 +1,9 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Commands;
-using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
+﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using MediatR;
-using Moq;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Organisations;
 
