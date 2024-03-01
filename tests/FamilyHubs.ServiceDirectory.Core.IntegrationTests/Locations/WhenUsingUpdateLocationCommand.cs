@@ -15,7 +15,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateLocationOnly()
     {
         //Arrange
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        var testLocation = GetTestLocation();
         testLocation.Id = await CreateLocation(testLocation);
         testLocation.Name = "Unit Test Update Service Name";
         testLocation.Description = "Unit Test Update Service Name";
@@ -39,7 +39,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateLocationAddAndDeleteContacts()
     {
         //Arrange
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        var testLocation = GetTestLocation();
         testLocation.Id = await CreateLocation(testLocation);
         var existingItem = testLocation.Contacts.ElementAt(0);
         var contact = new ContactDto
@@ -79,7 +79,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateLocationWithUpdatedContacts()
     {
         //Arrange
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        var testLocation = GetTestLocation();
         testLocation.Id = await CreateLocation(testLocation);
         var contact = testLocation.Contacts.ElementAt(0);
         contact.Name = "Updated Name";
@@ -110,7 +110,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateLocationAddAndDeleteSchedules()
     {
         //Arrange
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        var testLocation = GetTestLocation();
         testLocation.Id = await CreateLocation(testLocation);
         var existingItem = testLocation.Schedules.ElementAt(0);
         var expected = new ScheduleDto
@@ -152,7 +152,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateLocationUpdatedSchedules()
     {
         //Arrange
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        var testLocation = GetTestLocation();
         testLocation.Id = await CreateLocation(testLocation);
 
         var expected = testLocation.Schedules.ElementAt(0);
