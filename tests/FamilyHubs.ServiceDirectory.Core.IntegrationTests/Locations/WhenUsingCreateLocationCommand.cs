@@ -29,7 +29,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     [Fact]
     public async Task ThenCreateLocationWithoutAnyChildEntities()
     {
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        var testLocation = GetTestLocation();
         testLocation.Contacts.Clear();
         testLocation.AccessibilityForDisabilities.Clear();
         testLocation.Schedules.Clear();
