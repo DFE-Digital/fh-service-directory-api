@@ -293,6 +293,7 @@ public static class TestDataProvider
             {
                 new LocationDto
                 {
+                    OrganisationId = organisationId,
                     Name = "Test Location",
                     Description = "",
                     Latitude = 52.6312,

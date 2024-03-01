@@ -69,7 +69,9 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     {
         var organisationWithoutAnyServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisationWithoutAnyServices);
 
-        organisationWithoutAnyServices.Locations.Add(organisationWithoutAnyServices.Services.First().Locations.First());
+        var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisation);
+
+        organisationWithoutAnyServices.Locations.Add(organisationWithServices.Services.First().Locations.First());
 
         TestDbContext.Organisations.Add(organisationWithoutAnyServices);
 
