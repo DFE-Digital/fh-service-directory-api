@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FamilyHubs.ServiceDirectory.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240229155954_OrgOnLocationAndDelReview")]
+    [Migration("20240301135147_OrgOnLocationAndDelReview")]
     partial class OrgOnLocationAndDelReview
     {
         /// <inheritdoc />
@@ -922,8 +922,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Organisation", null)
                         .WithMany("Locations")
                         .HasForeignKey("OrganisationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Schedule", b =>

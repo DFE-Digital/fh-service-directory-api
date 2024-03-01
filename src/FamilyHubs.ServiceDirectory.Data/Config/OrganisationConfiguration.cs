@@ -52,7 +52,7 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
         builder.HasMany(s => s.Locations)
             .WithOne()
             .HasForeignKey(l => l.OrganisationId)
-            .IsRequired()
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

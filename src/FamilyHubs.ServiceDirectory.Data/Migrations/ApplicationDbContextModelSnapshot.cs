@@ -919,8 +919,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Organisation", null)
                         .WithMany("Locations")
                         .HasForeignKey("OrganisationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.Schedule", b =>
