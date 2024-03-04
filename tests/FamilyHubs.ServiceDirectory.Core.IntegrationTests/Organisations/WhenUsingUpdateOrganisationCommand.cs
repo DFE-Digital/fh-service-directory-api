@@ -843,6 +843,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     {
         //Arrange
         await CreateOrganisationDetails();
+        var location = TestOrganisation.Locations.ElementAt(0);
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Locations.ElementAt(0).Schedules.ElementAt(0);
         var expected = new ScheduleDto
@@ -852,6 +853,9 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
             ByDay = "New ByDay",
             ByMonthDay = "New ByMonthDay"
         };
+
+        location.Schedules.Clear();
+        location.Schedules.Add(expected);
 
         service.Locations.ElementAt(0).Schedules.Clear();
         service.Locations.ElementAt(0).Schedules.Add(expected);
