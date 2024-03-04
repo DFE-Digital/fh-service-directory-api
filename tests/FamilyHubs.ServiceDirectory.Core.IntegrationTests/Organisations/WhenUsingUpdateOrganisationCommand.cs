@@ -765,13 +765,22 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
-        var existingItem = service.Locations.ElementAt(0).Contacts.ElementAt(0);
+        var location = TestOrganisation.Locations.ElementAt(0);
+        var existingItem = location.Contacts.ElementAt(0);
         var contact = new ContactDto
         {
             Id = 0,
             Name = "New Contact",
             Telephone = "New Telephone"
         };
+
+        location.Contacts.Clear();
+        location.Contacts.Add(contact);
+
+        service.Locations.ElementAt(0).Contacts.Clear();
+        service.Locations.ElementAt(0).Contacts.Add(contact);
+
+        existingItem = service.Locations.ElementAt(0).Contacts.ElementAt(0);
         service.Locations.ElementAt(0).Contacts.Clear();
         service.Locations.ElementAt(0).Contacts.Add(contact);
 
