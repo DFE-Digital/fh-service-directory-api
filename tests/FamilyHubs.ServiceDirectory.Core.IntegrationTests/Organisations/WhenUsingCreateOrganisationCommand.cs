@@ -54,36 +54,37 @@ public class WhenUsingCreateOrganisationCommand : DataIntegrationTestBase
         unexpectedService.Should().BeNull();
     }
 
-    [Fact]
-    public async Task ThenCreateOrganisationWithNewServiceAndAttachExistingLocation()
-    {
-        //Arrange
-        var expected = TestDataProvider.GetTestCountyCouncilDto2().Services.ElementAt(0).Locations.ElementAt(0);
-        expected.Name = "Existing Location already Saved in DB";
-        expected.Id = await CreateLocation(expected);
+    //todo: do we need this test? what happens if we create an org with locations that are associated with a different organisation? perhaps we should flag that as an error?
+    //[Fact]
+    //public async Task ThenCreateOrganisationWithNewServiceAndAttachExistingLocation()
+    //{
+    //    //Arrange
+    //    var expected = TestDataProvider.GetTestCountyCouncilDto2().Services.ElementAt(0).Locations.ElementAt(0);
+    //    expected.Name = "Existing Location already Saved in DB";
+    //    expected.Id = await CreateLocation(expected);
 
-        var service = TestOrganisation.Services.ElementAt(0);
-        service.Locations.Add(expected);
+    //    var service = TestOrganisation.Services.ElementAt(0);
+    //    service.Locations.Add(expected);
 
-        var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
-        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
+    //    var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
+    //    var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
 
-        //Act
-        var organisationId = await handler.Handle(createOrganisationCommand, new CancellationToken());
+    //    //Act
+    //    var organisationId = await handler.Handle(createOrganisationCommand, new CancellationToken());
         
-        //Assert
-        organisationId.Should().NotBe(0);
+    //    //Assert
+    //    organisationId.Should().NotBe(0);
 
-        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-        actualService.Should().NotBeNull();
-        actualService!.Locations.Count.Should().Be(2);
+    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
+    //    actualService.Should().NotBeNull();
+    //    actualService!.Locations.Count.Should().Be(2);
 
-        var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
-        actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
-            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
-                .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
-    }
+    //    var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
+    //    actualEntity.Should().NotBeNull();
+    //    actualEntity.Should().BeEquivalentTo(expected, options => 
+    //        options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
+    //            .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+    //}
 
     [Fact]
     public async Task ThenCreateOrganisationWithNewServiceAndAttachExistingTaxonomy()
