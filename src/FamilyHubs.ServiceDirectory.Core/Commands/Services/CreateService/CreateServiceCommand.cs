@@ -47,29 +47,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
 
             var service = _mapper.Map<Service>(request.Service);
 
-            //todo: poc, what we really want, is to do this generically
-            // do we need to do this for all entities? need tests to check
-            // e.g. what happens if e.g. existing location has new contacts?
-            // if so, we'll probably 
-            // could we use context.ChangeTracker.TrackGraph, or write our own generic object graph walker?
-            List<Location> newLocs = new();
-            foreach (var location in service.Locations)
-            {
-                //or IsKeySet
-                if (location.Id != 0)
-                {
-                    var existingLocation = await _context.Locations.FindAsync(location.Id);
-                    _mapper.Map(location, existingLocation);
-                    newLocs.Add(existingLocation);
-                }
-                else
-                {
-                    newLocs.Add(location);
-                }
-            }
-
-            service.Locations = newLocs;
-
+            service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper);
             service.AttachExistingManyToMany(_context, _mapper);
 
             _context.Services.Add(service);
