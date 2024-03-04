@@ -60,6 +60,27 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
 
             foreach (var service in organisation.Services)
             {
+                List<Location> newLocs = new();
+                foreach (var location in service.Locations)
+                {
+                    //or IsKeySet
+                    if (location.Id != 0)
+                    {
+                        var existingLocation = await _context.Locations.FindAsync(location.Id);
+                        _mapper.Map(location, existingLocation);
+                        newLocs.Add(existingLocation);
+                    }
+                    else
+                    {
+                        newLocs.Add(location);
+                    }
+                }
+
+                service.Locations = newLocs;
+            }
+
+            foreach (var service in organisation.Services)
+            {
                 service.AttachExistingManyToMany(_context, _mapper);
             }
 
