@@ -42,30 +42,31 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         ArgumentNullException.ThrowIfNull(request);
 
         //Many to Many needs to be included otherwise EF core does not know how to perform merge on navigation tables
-        var entity = await _context.Services
+        var service = await _context.Services
             .Include(s => s.Taxonomies)
             .Include(s => s.Locations)
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
-        if (entity is null)
+        if (service is null)
             throw new NotFoundException(nameof(Service), request.Id.ToString());
 
         try
         {
-            entity = _mapper.Map(request.Service, entity);
+            service = _mapper.Map(request.Service, service);
 
-            entity.AttachExistingManyToMany(_context, _mapper);
+            service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper);
+            service.AttachExistingManyToMany(_context, _mapper);
 
-            _context.Services.Update(entity);
+            _context.Services.Update(service);
 
             await _context.SaveChangesAsync(cancellationToken);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred updating Service with Id:{ServiceRef}.", entity.ServiceOwnerReferenceId);
+            _logger.LogError(ex, "An error occurred updating Service with Id:{ServiceRef}.", service.ServiceOwnerReferenceId);
             throw;
         }
 
-        return entity.Id;
+        return service.Id;
     }
 }
