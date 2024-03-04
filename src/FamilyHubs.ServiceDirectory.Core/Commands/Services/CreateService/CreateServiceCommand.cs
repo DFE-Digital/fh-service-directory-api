@@ -37,6 +37,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
     {
         try
         {
+            //todo: can we just check if id is null or not
             var entity = await _context.Services
                 .IgnoreAutoIncludes()
                 .FirstOrDefaultAsync(x => x.Id == request.Service.Id, cancellationToken);
