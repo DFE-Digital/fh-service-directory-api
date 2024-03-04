@@ -65,7 +65,91 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         try
         {
             entity = _mapper.Map(request.Organisation, entity);
-            
+
+            List<Location> newOrgLocs = new();
+            foreach (var orgLocation in entity.Locations)
+            {
+                Location newLoc;
+                //or IsKeySet
+                if (orgLocation.Id != 0)
+                {
+                    var existingLocation = await _context.Locations.FindAsync(orgLocation.Id);
+                    _mapper.Map(orgLocation, existingLocation);
+                    newLoc = existingLocation;
+                    //newOrgLocs.Add(existingLocation);
+                }
+                else
+                {
+                    //newOrgLocs.Add(location);
+                    newLoc = orgLocation;
+                }
+
+                newOrgLocs.Add(newLoc);
+            }
+            //    List<Contact> newContacts = new();
+            //    foreach (var contact in newLoc.Contacts)
+            //    {
+            //        Contact newContact;
+            //        //or IsKeySet
+            //        if (contact.Id != 0)
+            //        {
+            //            var existingContact = _context.Contacts.Find(contact.Id);
+            //            _mapper.Map(contact, existingContact);
+            //            newContact = existingContact;
+            //        }
+            //        else
+            //        {
+            //            newContact = contact;
+            //        }
+            //        newContacts.Add(newContact);
+            //    }
+            //    newLoc.Contacts = newContacts;
+            //}
+
+            entity.Locations = newOrgLocs;
+
+            //var isTracked = _context.Contacts.Local.Any(e => e.Id == newOrgLocs.First().Contacts.First().Id);
+
+
+            //todo: what happens if e.g. existing location has new contacts?
+            foreach (var service in entity.Services)
+            {
+                List<Location> newLocs = new();
+                foreach (var location in service.Locations)
+                {
+                    //or IsKeySet
+                    if (location.Id != 0)
+                    {
+                        var existingLocation = await _context.Locations.FindAsync(location.Id);
+                        _mapper.Map(location, existingLocation);
+                        newLocs.Add(existingLocation);
+                    }
+                    else
+                    {
+                        newLocs.Add(location);
+                    }
+                }
+
+                service.Locations = newLocs;
+            }
+            //    List<Contact> newContacts = new();
+            //    foreach (var contact in service.Contacts)
+            //    {
+            //        //or IsKeySet
+            //        if (contact.Id != 0)
+            //        {
+            //            var existingContact = _context.Contacts.Find(contact.Id);
+            //            _mapper.Map(contact, existingContact);
+            //            newContacts.Add(existingContact);
+            //        }
+            //        else
+            //        {
+            //            newContacts.Add(contact);
+            //        }
+            //    }
+            //    service.Contacts = newContacts;
+            //}
+
             foreach (var service in entity.Services)
             {
                 service.AttachExistingManyToMany(_context, _mapper);
