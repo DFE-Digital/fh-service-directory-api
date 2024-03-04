@@ -6,19 +6,18 @@ using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.AspNetCore.Http;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Security.Claims;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Organisations;
 
-public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
+public class WhenUsingUpdateOrganisationCommand : DataIntegrationTestBase
 {
     public readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
     public readonly Mock<ILogger<UpdateOrganisationCommandHandler>> UpdateLogger = new();
 
-    public WhenUsingUpdateLocationCommand()
+    public WhenUsingUpdateOrganisationCommand()
     {
         _mockHttpContextAccessor = GetMockHttpContextAccessor(-1, RoleTypes.DfeAdmin);
     }
