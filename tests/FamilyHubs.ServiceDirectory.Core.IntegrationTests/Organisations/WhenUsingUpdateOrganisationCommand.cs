@@ -813,11 +813,16 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     {
         //Arrange
         await CreateOrganisationDetails();
+        var locationContact = TestOrganisation.Locations.ElementAt(0).Contacts.ElementAt(0);
         var service = TestOrganisation.Services.ElementAt(0);
         var contact = service.Locations.ElementAt(0).Contacts.ElementAt(0);
         contact.Name = "Updated Name";
         contact.Email = "Updated Email";
         contact.Telephone = "Updated Telephone";
+
+        locationContact.Name = "Updated Name";
+        locationContact.Email = "Updated Email";
+        locationContact.Telephone = "Updated Telephone";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
         var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
