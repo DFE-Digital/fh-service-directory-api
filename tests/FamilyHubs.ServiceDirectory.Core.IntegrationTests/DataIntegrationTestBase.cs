@@ -113,6 +113,17 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         return existingLocation.Id;
     }
 
+    public async Task<long> CreateContact(ContactDto contactDto)
+    {
+        var existingContact = Mapper.Map<Contact>(contactDto);
+
+        TestDbContext.Contacts.Add(existingContact);
+
+        await TestDbContext.SaveChangesAsync();
+
+        return existingContact.Id;
+    }
+
     public async Task<long> CreateTaxonomy(TaxonomyDto taxonomyDto)
     {
         var existingLocation = Mapper.Map<Taxonomy>(taxonomyDto);
