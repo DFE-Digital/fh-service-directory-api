@@ -68,52 +68,9 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
 
             entity.Locations = await entity.Locations.LinkExistingLocations(_context.Locations, _mapper);
 
-            //List<Location> newOrgLocs = new();
-            //foreach (var orgLocation in entity.Locations)
-            //{
-            //    Location newLoc;
-            //    //or IsKeySet
-            //    if (orgLocation.Id != 0)
-            //    {
-            //        var existingLocation = await _context.Locations.FindAsync(orgLocation.Id);
-            //        _mapper.Map(orgLocation, existingLocation);
-            //        newLoc = existingLocation;
-            //    }
-            //    else
-            //    {
-            //        newLoc = orgLocation;
-            //    }
-
-            //    newOrgLocs.Add(newLoc);
-            //}
-
-            //entity.Locations = newOrgLocs;
-
             foreach (var service in entity.Services)
             {
                 service.Locations = await service.Locations.LinkExistingLocations(_context.Locations, _mapper);
-
-                //List<Location> newLocs = new();
-                //foreach (var location in service.Locations)
-                //{
-                //    //or IsKeySet
-                //    if (location.Id != 0)
-                //    {
-                //        var existingLocation = await _context.Locations.FindAsync(location.Id);
-                //        _mapper.Map(location, existingLocation);
-                //        newLocs.Add(existingLocation);
-                //    }
-                //    else
-                //    {
-                //        newLocs.Add(location);
-                //    }
-                //}
-
-                //service.Locations = newLocs;
-            }
-
-            foreach (var service in entity.Services)
-            {
                 service.AttachExistingManyToMany(_context, _mapper);
             }
 
