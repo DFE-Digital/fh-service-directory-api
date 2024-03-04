@@ -13,30 +13,35 @@ namespace FamilyHubs.ServiceDirectory.Core.Helper;
 public static class HelperUtility
 {
     //todo: generic for entity
-    public static async Task<List<Location>> LinkExistingLocations(this IList<Location> locations, DbSet<Location> existingLocations, IMapper mapper)
-    {
-        List<Location> linkedLocations = new();
-        foreach (var location in locations)
-        {
-            Location newLoc;
-            //or IsKeySet
-            if (location.Id != 0)
-            {
-                var existingLocation = await existingLocations.FindAsync(location.Id)
-                    ?? throw new NotFoundException(nameof(Location), location.Id.ToString());
+    public static async Task<List<TEntity>> LinkExistingEntities<TEntity>(
+        this IList<TEntity> entities,
+        DbSet<TEntity> existingEntities,
+        IMapper mapper)
 
-                mapper.Map(location, existingLocation);
-                newLoc = existingLocation;
+        where TEntity : EntityBase<long>
+    {
+        List<TEntity> linkedEntities = new();
+        foreach (TEntity entity in entities)
+        {
+            TEntity newEntity;
+            //or IsKeySet
+            if (entity.Id != 0)
+            {
+                TEntity existingLocation = await existingEntities.FindAsync(entity.Id)
+                    ?? throw new NotFoundException(nameof(TEntity), entity.Id.ToString());
+
+                mapper.Map(entity, existingLocation);
+                newEntity = existingLocation;
             }
             else
             {
-                newLoc = location;
+                newEntity = entity;
             }
 
-            linkedLocations.Add(newLoc);
+            linkedEntities.Add(newEntity);
         }
 
-        return linkedLocations;
+        return linkedEntities;
     }
 
     public static void AttachExistingManyToMany(this Service service, ApplicationDbContext context, IMapper mapper)

@@ -66,11 +66,11 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         {
             entity = _mapper.Map(request.Organisation, entity);
 
-            entity.Locations = await entity.Locations.LinkExistingLocations(_context.Locations, _mapper);
+            entity.Locations = await entity.Locations.LinkExistingEntities(_context.Locations, _mapper);
 
             foreach (var service in entity.Services)
             {
-                service.Locations = await service.Locations.LinkExistingLocations(_context.Locations, _mapper);
+                service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper);
                 service.AttachExistingManyToMany(_context, _mapper);
             }
 
