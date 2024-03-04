@@ -878,7 +878,12 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
         await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
-        var expected = service.Locations.ElementAt(0).Schedules.ElementAt(0);
+        // we have to ensure that each instance of the same schedule is updated
+        var expected = TestOrganisation.Locations.First().Schedules.First();
+        expected.ByDay = "Updated ByDay";
+        expected.ByMonthDay = "Updated ByMonthDay";
+
+        expected = service.Locations.ElementAt(0).Schedules.ElementAt(0);
         expected.ByDay = "Updated ByDay";
         expected.ByMonthDay = "Updated ByMonthDay";
 
