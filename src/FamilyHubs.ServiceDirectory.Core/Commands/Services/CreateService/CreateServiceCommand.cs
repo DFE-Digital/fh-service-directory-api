@@ -51,7 +51,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             // do we need to do this for all entities? need tests to check
             // e.g. what happens if e.g. existing location has new contacts?
             // if so, we'll probably 
-            // could we use context.ChangeTracker.TrackGraph, temporary id's, or write our own generic object graph walker?
+            // could we use context.ChangeTracker.TrackGraph, or write our own generic object graph walker?
             List<Location> newLocs = new();
             foreach (var location in service.Locations)
             {

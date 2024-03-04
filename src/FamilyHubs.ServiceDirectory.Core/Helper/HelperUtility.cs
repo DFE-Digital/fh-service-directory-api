@@ -1,15 +1,44 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
+using Ardalis.GuardClauses;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.Base;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using GeoCoordinatePortable;
+using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Core.Helper;
 
 public static class HelperUtility
 {
+    //todo: generic for entity
+    public static async Task<List<Location>> LinkExistingLocations(this IList<Location> locations, DbSet<Location> existingLocations, IMapper mapper)
+    {
+        List<Location> linkedLocations = new();
+        foreach (var location in locations)
+        {
+            Location newLoc;
+            //or IsKeySet
+            if (location.Id != 0)
+            {
+                var existingLocation = await existingLocations.FindAsync(location.Id)
+                    ?? throw new NotFoundException(nameof(Location), location.Id.ToString());
+
+                mapper.Map(location, existingLocation);
+                newLoc = existingLocation;
+            }
+            else
+            {
+                newLoc = location;
+            }
+
+            linkedLocations.Add(newLoc);
+        }
+
+        return linkedLocations;
+    }
+
     public static void AttachExistingManyToMany(this Service service, ApplicationDbContext context, IMapper mapper)
     {
         var existingTaxonomies = service.Taxonomies.Select(s => s.Name).ToList();
