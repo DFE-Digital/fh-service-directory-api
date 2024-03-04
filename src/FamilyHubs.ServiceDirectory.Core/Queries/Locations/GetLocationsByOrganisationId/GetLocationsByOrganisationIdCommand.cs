@@ -47,10 +47,8 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
     {
         int skip = (request.PageNumber - 1) * request.PageSize;
 
-        IQueryable<Location> locationsQuery = _context.Services
-            .Where(s => s.Status != ServiceStatusType.Deleted && s.OrganisationId == request.OrganisationId)
-            .Include(x => x.Locations)
-            .SelectMany(s => s.Locations);
+        IQueryable<Location> locationsQuery = _context.Locations
+            .Where(l => l.OrganisationId == request.OrganisationId);
 
         locationsQuery = Search(request, locationsQuery);
         locationsQuery = OrderBy(request, locationsQuery);
@@ -91,7 +89,7 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
 
         if (request.IsFamilyHub)
         {
-            locationsQuery = locationsQuery.Where(x => x.LocationTypeCategory == Shared.Enums.LocationTypeCategory.FamilyHub);
+            locationsQuery = locationsQuery.Where(x => x.LocationTypeCategory == LocationTypeCategory.FamilyHub);
         }
 
         return locationsQuery;
