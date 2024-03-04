@@ -14,27 +14,29 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
             migrationBuilder.DropTable(
                 name: "Reviews");
 
-            // we create the columnc with a default value of 6, which is the org id of tower hamlets
-            // we then update the column with the correct org id
-            // where the location isn't associated with a service, the location will be associated with tower hamlets
-            // in prod, all locations are associated with a service, so this is a non-issue
-            // in test, we have some test locations that haven't been associated with a service.
-            // it is those locations that will be set to be associated with tower hamlets
-
             migrationBuilder.AddColumn<long>(
                 name: "OrganisationId",
                 table: "Locations",
                 type: "bigint",
-                nullable: true,
-                defaultValue: 6L);
+                nullable: true);
+
+            // where an organisation has services, set the org's location to one of the service's locations
+            // where a location isn't associated with any services, the location will be associated with tower hamlets
+            // in prod, all locations are associated with a service, so this is a non-issue
+            // in test, we have some test locations that haven't been associated with a service.
+            // it is those locations that will be set to be associated with tower hamlets
 
             migrationBuilder.Sql(
                 @"UPDATE Locations
             SET OrganisationId = Services.OrganisationId
             FROM Locations
             INNER JOIN ServiceAtLocations ON Locations.Id = ServiceAtLocations.LocationId
-            INNER JOIN Services ON ServiceAtLocations.ServiceId = Services.Id
-            WHERE Locations.OrganisationId = 6;");
+            INNER JOIN Services ON ServiceAtLocations.ServiceId = Services.Id;");
+
+            migrationBuilder.Sql(
+                @"UPDATE Locations
+            SET OrganisationId = 6
+            WHERE OrganisationId IS NULL;");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Locations_OrganisationId",
