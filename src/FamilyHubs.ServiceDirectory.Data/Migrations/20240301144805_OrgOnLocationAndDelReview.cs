@@ -20,18 +20,24 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                 type: "bigint",
                 nullable: true);
 
-            // where an organisation has services, set the org's location to one of the service's locations
-            // where a location isn't associated with any services, the location will be associated with tower hamlets
-            // in prod, all locations are associated with a service, so this is a non-issue
-            // in test, we have some test locations that haven't been associated with a service.
-            // it is those locations that will be set to be associated with tower hamlets
+            // Where a location isn't currently associated with an organisation, and the organisation has services:
+            //    set the org's location to one of the service's locations.
+            // If a location isn't currently associated with an organisation, and the organisation has no services:
+            //    don't associate an organisation with the location.
+            // In prod, all locations are associated with a service.
+            // In test, we have some test locations that haven't been associated with a service.
+            // If a location is already associated with an organisation, we don't change it.
+            // That's so that if this migration is removed and then reapplied post release,
+            // where new locations have been added (and associated with an organisation),
+            // we don't overwrite the existing organisation association.
 
             migrationBuilder.Sql(
                 @"UPDATE Locations
             SET OrganisationId = Services.OrganisationId
             FROM Locations
             INNER JOIN ServiceAtLocations ON Locations.Id = ServiceAtLocations.LocationId
-            INNER JOIN Services ON ServiceAtLocations.ServiceId = Services.Id;");
+            INNER JOIN Services ON ServiceAtLocations.ServiceId = Services.Id
+            WHERE Locations.OrganisationId IS NULL;");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Locations_OrganisationId",
