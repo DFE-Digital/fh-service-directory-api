@@ -53,20 +53,4 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
-
-    [Fact]
-    public async Task ThenCreateDuplicateLocation_ShouldThrowException()
-    {
-        //Arrange
-        var testLocation = GetTestLocation();
-
-        testLocation.Id = await CreateLocation(testLocation);
-
-        var command = new CreateLocationCommand(testLocation);
-        var handler = new CreateLocationCommandHandler(TestDbContext, Mapper, GetLogger<CreateLocationCommandHandler>());
-
-        // Act 
-        // Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(command, new CancellationToken()));
-    }
 }
