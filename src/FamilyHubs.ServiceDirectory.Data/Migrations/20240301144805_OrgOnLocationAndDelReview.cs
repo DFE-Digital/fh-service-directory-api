@@ -33,12 +33,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
             INNER JOIN ServiceAtLocations ON Locations.Id = ServiceAtLocations.LocationId
             INNER JOIN Services ON ServiceAtLocations.ServiceId = Services.Id;");
 
-            //todo: remove this - ok to have locations without an org
-            migrationBuilder.Sql(
-                @"UPDATE Locations
-            SET OrganisationId = 6
-            WHERE OrganisationId IS NULL;");
-
             migrationBuilder.CreateIndex(
                 name: "IX_Locations_OrganisationId",
                 table: "Locations",
