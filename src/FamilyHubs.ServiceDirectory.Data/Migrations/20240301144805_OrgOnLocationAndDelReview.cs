@@ -26,18 +26,16 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
             //    don't associate an organisation with the location.
             // In prod, all locations are associated with a service.
             // In test, we have some test locations that haven't been associated with a service.
-            // If a location is already associated with an organisation, we don't change it.
-            // That's so that if this migration is removed and then reapplied post release,
+            // If this migration is removed and then reapplied post release,
             // where new locations have been added (and associated with an organisation),
-            // we don't overwrite the existing organisation association.
+            // the association will be lost (as the organisationId column with the info will have been removed).
 
             migrationBuilder.Sql(
                 @"UPDATE Locations
             SET OrganisationId = Services.OrganisationId
             FROM Locations
             INNER JOIN ServiceAtLocations ON Locations.Id = ServiceAtLocations.LocationId
-            INNER JOIN Services ON ServiceAtLocations.ServiceId = Services.Id
-            WHERE Locations.OrganisationId IS NULL;");
+            INNER JOIN Services ON ServiceAtLocations.ServiceId = Services.Id;");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Locations_OrganisationId",
