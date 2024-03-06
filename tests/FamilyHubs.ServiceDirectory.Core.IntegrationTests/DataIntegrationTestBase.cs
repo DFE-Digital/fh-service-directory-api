@@ -8,6 +8,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
@@ -15,14 +16,16 @@ namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests;
 
 public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
 {
-    public OrganisationWithServicesDto TestOrganisation { get; set; }
-    public OrganisationWithServicesDto TestOrganisationFreeService { get; set; }
+    public OrganisationDetailsDto TestOrganisation { get; set; }
+    public OrganisationDetailsDto TestOrganisationFreeService { get; set; }
     public OrganisationDto TestOrganisationWithoutAnyServices { get; set; }
     public IMapper Mapper { get; }
     public ApplicationDbContext TestDbContext { get; }
     public static NullLogger<T> GetLogger<T>() => new NullLogger<T>();
     protected IHttpContextAccessor _httpContextAccessor;
     public Fixture FixtureObjectGenerator;
+    public static readonly ILoggerFactory TestLoggerFactory
+        = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
     public DataIntegrationTestBase()
     {
@@ -42,9 +45,18 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         InitialiseDatabase();
     }
 
-    public async Task<OrganisationWithServicesDto> CreateOrganisation(OrganisationWithServicesDto? organisationDto = null)
+    public LocationDto GetTestLocation()
+    {
+        var locationDto = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        locationDto.OrganisationId = TestDbContext.Organisations.First().Id;
+        return locationDto;
+    }
+
+    public async Task<OrganisationDetailsDto> CreateOrganisationDetails(OrganisationDetailsDto? organisationDto = null)
     {
         var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisation);
+
+        organisationWithServices.Locations.Add(organisationWithServices.Services.First().Locations.First());
 
         TestDbContext.Organisations.Add(organisationWithServices);
 
@@ -53,20 +65,13 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         return Mapper.Map(organisationWithServices, organisationDto ?? TestOrganisation);
     }
 
-    public async Task<OrganisationWithServicesDto> CreateOrganisationWithFreeService(OrganisationWithServicesDto? organisationDto = null)
-    {
-        var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisationFreeService);
-
-        TestDbContext.Organisations.Add(organisationWithServices);
-
-        await TestDbContext.SaveChangesAsync();
-
-        return Mapper.Map(organisationWithServices, organisationDto ?? TestOrganisationFreeService);
-    }
-
-    public async Task<OrganisationDto> CreateOrganisationWithoutAnyServices(OrganisationDto? organisationDto = null)
+    public async Task<OrganisationDto> CreateOrganisation(OrganisationDto? organisationDto = null)
     {
         var organisationWithoutAnyServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisationWithoutAnyServices);
+
+        var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisation);
+
+        organisationWithoutAnyServices.Locations.Add(organisationWithServices.Services.First().Locations.First());
 
         TestDbContext.Organisations.Add(organisationWithoutAnyServices);
 
@@ -84,6 +89,17 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         await TestDbContext.SaveChangesAsync();
 
         return existingLocation.Id;
+    }
+
+    public async Task<long> CreateContact(ContactDto contactDto)
+    {
+        var existingContact = Mapper.Map<Contact>(contactDto);
+
+        TestDbContext.Contacts.Add(existingContact);
+
+        await TestDbContext.SaveChangesAsync();
+
+        return existingContact.Id;
     }
 
     public async Task<long> CreateTaxonomy(TaxonomyDto taxonomyDto)
@@ -138,6 +154,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         return new ServiceCollection().AddEntityFrameworkSqlite()
             .AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder =>
             {
+                dbContextOptionsBuilder.UseLoggerFactory(TestLoggerFactory);
                 dbContextOptionsBuilder.UseSqlite(serviceDirectoryConnection, opt =>
                 {
                     opt.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());

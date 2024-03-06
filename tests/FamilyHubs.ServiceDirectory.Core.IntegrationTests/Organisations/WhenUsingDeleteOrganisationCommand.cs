@@ -24,7 +24,7 @@ public class WhenUsingDeleteOrganisationCommand : DataIntegrationTestBase
     public async Task ThenDeleteOrganisation()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var command = new DeleteOrganisationCommand(1);
         var handler = new DeleteOrganisationCommandHandler(TestDbContext, _mockHttpContextAccessor.Object, DeleteLogger.Object);

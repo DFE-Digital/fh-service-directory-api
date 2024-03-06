@@ -18,7 +18,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
     public async Task ThenGetService()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
             null, null, null, null, 1, 10, null, null, null, null, null, null, null, null);
@@ -38,7 +38,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
     public async Task ThenGetServiceByOwnerReferenceId()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         const string serviceId = "3010521b-6e0a-41b0-b610-200edbbeeb14";
 
         var command = new GetServiceByOwnerReferenceIdCommand
@@ -59,7 +59,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
     public async Task ThenGetServicesByOrganisationId()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var command = new GetServiceNamesCommand
         {
@@ -89,7 +89,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
     public async Task ThenGetServiceThatArePaidFor()
     {
         //Arrange
-        await CreateOrganisation(TestDataProvider.GetTestCountyCouncilDto2());
+        await CreateOrganisationDetails(TestDataProvider.GetTestCountyCouncilDto2());
 
         var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
             null, null, null, null, 1, 10, null, null, true, null, null, null, null, null);
@@ -107,7 +107,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
     public async Task ThenGetServiceThatAreFree()
     {
         //Arrange
-        await CreateOrganisationWithFreeService();        
+        await CreateOrganisationDetails(TestOrganisationFreeService);        
 
         var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
             null, null, null, null, 1, 10, null, null, false, null, null, null, null, null);
@@ -127,7 +127,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
     public async Task ThenDeleteService()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var command = new DeleteServiceByIdCommand(1);
         var handler = new DeleteServiceByIdCommandHandler(TestDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);

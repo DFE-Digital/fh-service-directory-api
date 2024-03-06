@@ -14,7 +14,6 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Navigation(e => e.Eligibilities).AutoInclude();
         builder.Navigation(e => e.Fundings).AutoInclude();
         builder.Navigation(e => e.Languages).AutoInclude();
-        builder.Navigation(e => e.Reviews).AutoInclude();
         builder.Navigation(e => e.ServiceAreas).AutoInclude();
         builder.Navigation(e => e.Taxonomies).AutoInclude();
         builder.Navigation(e => e.Locations).AutoInclude();
@@ -93,13 +92,6 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
             .WithOne()
             .IsRequired(false)
             .HasForeignKey(lc => lc.ServiceId)
-            .OnDelete(DeleteBehavior.Cascade)
-            ;
-
-        builder.HasMany(s => s.Reviews)
-            .WithOne()
-            .HasForeignKey(lc => lc.ServiceId)
-            .IsRequired(false)
             .OnDelete(DeleteBehavior.Cascade)
             ;
 

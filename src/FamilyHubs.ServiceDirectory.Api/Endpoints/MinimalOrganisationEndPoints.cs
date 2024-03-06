@@ -75,7 +75,7 @@ public class MinimalOrganisationEndPoints
         app.MapPut("api/organisations/{id}",
             [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
             (long id, 
-            [FromBody] OrganisationWithServicesDto request, 
+            [FromBody] OrganisationDetailsDto request, 
             CancellationToken cancellationToken, 
             ISender mediator, 
             ILogger<MinimalOrganisationEndPoints> logger) =>
@@ -96,7 +96,7 @@ public class MinimalOrganisationEndPoints
 
         app.MapPost("api/organisations", 
             [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
-            ([FromBody] OrganisationWithServicesDto request, 
+            ([FromBody] OrganisationDetailsDto request, 
             CancellationToken cancellationToken, 
             ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {

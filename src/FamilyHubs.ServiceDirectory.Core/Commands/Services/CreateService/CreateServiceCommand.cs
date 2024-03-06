@@ -37,15 +37,12 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
     {
         try
         {
-            var entity = await _context.Services
-                .IgnoreAutoIncludes()
-                .FirstOrDefaultAsync(x => x.Id == request.Service.Id, cancellationToken);
-
-            if (entity is not null)
-                throw new ArgumentException("Duplicate Id");
+            if (request.Service.Id != 0)
+                throw new ArgumentException("Service ID should be 0 when creating a service");
 
             var service = _mapper.Map<Service>(request.Service);
 
+            service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper);
             service.AttachExistingManyToMany(_context, _mapper);
 
             _context.Services.Add(service);

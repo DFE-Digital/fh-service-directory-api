@@ -122,7 +122,6 @@ public static class StartupExtensions
 
         services.AddValidatorsFromAssemblyContaining<CreateLocationCommandValidator>();
 
-        services.AddTransient<CorrelationMiddleware>();
         services.AddTransient<ExceptionHandlingMiddleware>();
     }
 
@@ -149,7 +148,6 @@ public static class StartupExtensions
     {
         webApplication.UseSerilogRequestLogging();
 
-        webApplication.UseMiddleware<CorrelationMiddleware>();
         webApplication.UseMiddleware<ExceptionHandlingMiddleware>();
 
         // Configure the HTTP request pipeline.

@@ -6,19 +6,18 @@ using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.AspNetCore.Http;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Security.Claims;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Organisations;
 
-public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
+public class WhenUsingUpdateOrganisationCommand : DataIntegrationTestBase
 {
     public readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
     public readonly Mock<ILogger<UpdateOrganisationCommandHandler>> UpdateLogger = new();
 
-    public WhenUsingUpdateLocationCommand()
+    public WhenUsingUpdateOrganisationCommand()
     {
         _mockHttpContextAccessor = GetMockHttpContextAccessor(-1, RoleTypes.DfeAdmin);
     }
@@ -27,7 +26,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationOnly()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         TestOrganisation.Name = "Unit Test Update TestOrganisation Name";
         TestOrganisation.Description = "Unit Test Update TestOrganisation Name";
@@ -55,7 +54,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationAddAndDeleteEligibilities()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Eligibilities.ElementAt(0);
 
@@ -97,7 +96,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationUpdatedEligibilities()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Eligibilities.ElementAt(0);
@@ -127,7 +126,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationAddAndDeleteServiceAreas()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.ServiceAreas.ElementAt(0);
         var expected = new ServiceAreaDto
@@ -167,7 +166,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationUpdatedServiceAreas()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.ServiceAreas.ElementAt(0);
@@ -197,7 +196,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationAddAndDeleteServiceDeliveries()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.ServiceDeliveries.ElementAt(0);
 
@@ -225,7 +224,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationUpdatedServiceDeliveries()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
@@ -252,7 +251,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationAddAndDeleteLanguages()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Languages.ElementAt(0);
         var expected = new LanguageDto()
@@ -292,7 +291,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationUpdatedLanguages()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Languages.ElementAt(0);
@@ -321,7 +320,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationAddAndDeleteCostOptions()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.CostOptions.ElementAt(0);
         var expected = new CostOptionDto
@@ -364,7 +363,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationUpdatedCostOptions()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.CostOptions.ElementAt(0);
@@ -395,7 +394,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationAddAndDeleteContacts()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Contacts.ElementAt(0);
         var contact = new ContactDto
@@ -435,7 +434,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationWithUpdatedContacts()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var contact = service.Contacts.ElementAt(0);
         contact.Name = "Updated Name";
@@ -465,7 +464,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationAddAndDeleteSchedules()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Schedules.ElementAt(0);
         var expected = new ScheduleDto
@@ -507,7 +506,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationUpdatedSchedules()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Schedules.ElementAt(0);
@@ -537,7 +536,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationAddAndDeleteLocations()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var location = service.Locations.ElementAt(0);
         var expected = new LocationDto
@@ -589,12 +588,16 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationUpdatedLocations()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Locations.ElementAt(0);
         expected.Name = "Updated Name";
         expected.Description = "Updated Description";
+
+        var expectedOtherInstance = TestOrganisation.Locations.First();
+        expectedOtherInstance.Name = "Updated Name";
+        expectedOtherInstance.Description = "Updated Description";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
         var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
@@ -621,8 +624,9 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationAttachExistingLocations()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var expected = TestDataProvider.GetTestCountyCouncilDto2().Services.ElementAt(0).Locations.ElementAt(0) with { Name = "Existing Location already Saved in DB" };
+        expected.OrganisationId = TestOrganisation.Id;
         expected.Id = await CreateLocation(expected);
 
         var service = TestOrganisation.Services.ElementAt(0);
@@ -653,7 +657,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationAddAndDeleteTaxonomies()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
         var taxonomy = service.Taxonomies.ElementAt(0);
         var expected = new TaxonomyDto
@@ -695,7 +699,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationUpdatedTaxonomies()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
         var expected = service.Taxonomies.ElementAt(0);
@@ -724,7 +728,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationAttachExistingTaxonomies()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var expected = new TaxonomyDto
         {
             Name = "New Taxonomy Name",
@@ -758,15 +762,24 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationLocationsAddAndDeleteContacts()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
-        var existingItem = service.Locations.ElementAt(0).Contacts.ElementAt(0);
+        var location = TestOrganisation.Locations.ElementAt(0);
+        var existingItem = location.Contacts.ElementAt(0);
         var contact = new ContactDto
         {
             Id = 0,
             Name = "New Contact",
             Telephone = "New Telephone"
         };
+
+        location.Contacts.Clear();
+        location.Contacts.Add(contact);
+
+        service.Locations.ElementAt(0).Contacts.Clear();
+        service.Locations.ElementAt(0).Contacts.Add(contact);
+
+        existingItem = service.Locations.ElementAt(0).Contacts.ElementAt(0);
         service.Locations.ElementAt(0).Contacts.Clear();
         service.Locations.ElementAt(0).Contacts.Add(contact);
 
@@ -798,12 +811,17 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationLocationsWithUpdatedContacts()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
+        var locationContact = TestOrganisation.Locations.ElementAt(0).Contacts.ElementAt(0);
         var service = TestOrganisation.Services.ElementAt(0);
         var contact = service.Locations.ElementAt(0).Contacts.ElementAt(0);
         contact.Name = "Updated Name";
         contact.Email = "Updated Email";
         contact.Telephone = "Updated Telephone";
+
+        locationContact.Name = "Updated Name";
+        locationContact.Email = "Updated Email";
+        locationContact.Telephone = "Updated Telephone";
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
         var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
@@ -828,7 +846,8 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationLocationsAddAndDeleteSchedules()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
+        var location = TestOrganisation.Locations.ElementAt(0);
         var service = TestOrganisation.Services.ElementAt(0);
         var existingItem = service.Locations.ElementAt(0).Schedules.ElementAt(0);
         var expected = new ScheduleDto
@@ -838,6 +857,9 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
             ByDay = "New ByDay",
             ByMonthDay = "New ByMonthDay"
         };
+
+        location.Schedules.Clear();
+        location.Schedules.Add(expected);
 
         service.Locations.ElementAt(0).Schedules.Clear();
         service.Locations.ElementAt(0).Schedules.Add(expected);
@@ -870,10 +892,15 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisationLocationsUpdatedSchedules()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var service = TestOrganisation.Services.ElementAt(0);
 
-        var expected = service.Locations.ElementAt(0).Schedules.ElementAt(0);
+        // we have to ensure that each instance of the same schedule is updated
+        var expected = TestOrganisation.Locations.First().Schedules.First();
+        expected.ByDay = "Updated ByDay";
+        expected.ByMonthDay = "Updated ByMonthDay";
+
+        expected = service.Locations.ElementAt(0).Schedules.ElementAt(0);
         expected.ByDay = "Updated ByDay";
         expected.ByMonthDay = "Updated ByMonthDay";
 
@@ -900,7 +927,7 @@ public class WhenUsingUpdateLocationCommand : DataIntegrationTestBase
     public async Task ThenUpdateOrganisation_ThrowsForbiddenException()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
         var mockHttpContextAccessor = GetMockHttpContextAccessor(50, RoleTypes.LaManager);
 
         var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);

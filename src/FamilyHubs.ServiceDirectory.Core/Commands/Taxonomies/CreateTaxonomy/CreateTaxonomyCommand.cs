@@ -39,7 +39,7 @@ public class CreateTaxonomyCommandHandler : IRequestHandler<CreateTaxonomyComman
                 .FirstOrDefaultAsync(x => x.Name == request.Taxonomy.Name, cancellationToken);
 
             if (entity is not null)
-                throw new ArgumentException($"Duplicate Location with Id:{request.Taxonomy.Id} Name:{request.Taxonomy.Name} Already Exists, Please use Update Command");
+                throw new ArgumentException($"Duplicate Taxonomy with Id:{request.Taxonomy.Id} Name:{request.Taxonomy.Name} Already Exists, Please use Update Command");
 
             var taxonomy = _mapper.Map<Taxonomy>(request.Taxonomy);
 

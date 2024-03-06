@@ -84,7 +84,7 @@ public class MinimalLocationEndPoints
         }).WithMetadata(new SwaggerOperationAttribute("Get Locations by service Id", "Get Location by Service Id") { Tags = new[] { "Locations" } });
 
         app.MapPut("api/locations/{id}",
-            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
+            [Authorize(Roles = RoleGroups.AdminRole)] async 
             (long id, 
             [FromBody] LocationDto request, 
             CancellationToken cancellationToken, 

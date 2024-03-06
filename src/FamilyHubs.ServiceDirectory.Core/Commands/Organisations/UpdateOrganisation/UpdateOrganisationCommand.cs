@@ -15,13 +15,13 @@ namespace FamilyHubs.ServiceDirectory.Core.Commands.Organisations.UpdateOrganisa
 
 public class UpdateOrganisationCommand : IRequest<long>
 {
-    public UpdateOrganisationCommand(long id, OrganisationWithServicesDto organisation)
+    public UpdateOrganisationCommand(long id, OrganisationDetailsDto organisation)
     {
         Id = id;
         Organisation = organisation;
     }
 
-    public OrganisationWithServicesDto Organisation { get; }
+    public OrganisationDetailsDto Organisation { get; }
 
     public long Id { get; }
 }
@@ -51,7 +51,7 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
 
         ThrowIfForbidden(request);
 
-        var entity = await _context.Organisations
+        var organisation = await _context.Organisations
                 .Include(o => o.Services)
                 .ThenInclude(s => s.Taxonomies)
                 .Include(o => o.Services)
@@ -59,19 +59,22 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
-        if (entity is null)
+        if (organisation is null)
             throw new NotFoundException(nameof(Organisation), request.Id.ToString());
 
         try
         {
-            entity = _mapper.Map(request.Organisation, entity);
-            
-            foreach (var service in entity.Services)
+            organisation = _mapper.Map(request.Organisation, organisation);
+
+            organisation.Locations = await organisation.Locations.LinkExistingEntities(_context.Locations, _mapper);
+
+            foreach (var service in organisation.Services)
             {
+                service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper);
                 service.AttachExistingManyToMany(_context, _mapper);
             }
 
-            _context.Organisations.Update(entity);
+            _context.Organisations.Update(organisation);
 
             await _context.SaveChangesAsync(cancellationToken);
 
@@ -83,7 +86,7 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
             throw;
         }
 
-        return entity.Id;
+        return organisation.Id;
     }
 
     private void ThrowIfForbidden(UpdateOrganisationCommand request)

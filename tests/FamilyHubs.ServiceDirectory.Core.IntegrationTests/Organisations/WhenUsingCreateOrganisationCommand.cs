@@ -1,16 +1,13 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Commands;
-using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
+﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using MediatR;
-using Moq;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Organisations;
 
-public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
+public class WhenUsingCreateOrganisationCommand : DataIntegrationTestBase
 {
     [Fact]
     public async Task ThenCreateOrganisation()
@@ -30,6 +27,22 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
+
+    // todo: we need to be able to handle this situation
+    //[Fact]
+    //public async Task ThenCreateOrganisationWithNewLocationInObjectGraphTwice()
+    //{
+    //    //Arrange
+    //    TestOrganisation.Locations.Add(TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0));
+    //    var createOrganisationCommand = new CreateOrganisationCommand(TestOrganisation);
+    //    var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
+
+    //    //Act
+    //    var result = await handler.Handle(createOrganisationCommand, new CancellationToken());
+
+    //    //Assert
+    //    // context locations count should be 1
+    //}
 
     [Fact]
     public async Task ThenCreateOrganisationWithoutAnyServices()
@@ -57,12 +70,14 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         unexpectedService.Should().BeNull();
     }
 
+    //todo: do we need this test? what happens if we create an org with locations that are associated with a different organisation? perhaps we should flag that as an error?
     [Fact]
     public async Task ThenCreateOrganisationWithNewServiceAndAttachExistingLocation()
     {
         //Arrange
         var expected = TestDataProvider.GetTestCountyCouncilDto2().Services.ElementAt(0).Locations.ElementAt(0);
         expected.Name = "Existing Location already Saved in DB";
+        expected.OrganisationId = TestDbContext.Organisations.First().Id;
         expected.Id = await CreateLocation(expected);
 
         var service = TestOrganisation.Services.ElementAt(0);
@@ -73,7 +88,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
 
         //Act
         var organisationId = await handler.Handle(createOrganisationCommand, new CancellationToken());
-        
+
         //Assert
         organisationId.Should().NotBe(0);
 
@@ -83,7 +98,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
 
         var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options => 
+        actualEntity.Should().BeEquivalentTo(expected, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
@@ -123,9 +138,9 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     public async Task ThenCreateRelatedOrganisationWithCorrectAdminAreaCode()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
-        var relatedOrganisation = new OrganisationWithServicesDto
+        var relatedOrganisation = new OrganisationDetailsDto
         {
             OrganisationType = OrganisationType.VCFS,
             Name = "Related VCS",
@@ -155,7 +170,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     public async Task ThenCreateDuplicateOrganisation_ShouldThrowException()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var command = new CreateOrganisationCommand(TestOrganisation);
         var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());

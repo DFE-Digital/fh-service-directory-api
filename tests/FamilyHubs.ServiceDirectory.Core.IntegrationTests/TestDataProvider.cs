@@ -8,9 +8,9 @@ namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests;
 
 public static class TestDataProvider
 {
-    public static OrganisationWithServicesDto GetTestCountyCouncilDto(bool updated = false)
+    public static OrganisationDetailsDto GetTestCountyCouncilDto(bool updated = false)
     {
-        var testCountyCouncil = new OrganisationWithServicesDto
+        var testCountyCouncil = new OrganisationDetailsDto
         {
             OrganisationType = OrganisationType.LA,
             Name = updated == false ? "Unit Test County Council" : "Unit Test County Council Updated",
@@ -21,15 +21,17 @@ public static class TestDataProvider
             Services = new List<ServiceDto>
             {
                 GetTestCountyCouncilServicesDto(0, updated)
-            },
+            }
         };
+
+        //testCountyCouncil.Location.Add(testCountyCouncil.Services.First().Locations.First());
 
         return testCountyCouncil;
     }
 
-    public static OrganisationWithServicesDto GetTestCountyCouncilWithFreeServiceDto(bool updated = false)
+    public static OrganisationDetailsDto GetTestCountyCouncilWithFreeServiceDto(bool updated = false)
     {
-        var testCountyCouncil = new OrganisationWithServicesDto
+        var testCountyCouncil = new OrganisationDetailsDto
         {
             OrganisationType = OrganisationType.LA,
             Name = updated == false ? "Unit Test County Council" : "Unit Test County Council Updated",
@@ -46,9 +48,9 @@ public static class TestDataProvider
         return testCountyCouncil;
     }
 
-    public static OrganisationWithServicesDto GetTestCountyCouncilDto2()
+    public static OrganisationDetailsDto GetTestCountyCouncilDto2()
     {
-        var testCountyCouncil = new OrganisationWithServicesDto
+        var testCountyCouncil = new OrganisationDetailsDto
         {
             OrganisationType = OrganisationType.LA,
             Name = "Unit Test County Council 2",
@@ -291,6 +293,7 @@ public static class TestDataProvider
             {
                 new LocationDto
                 {
+                    OrganisationId = organisationId,
                     Name = "Test Location",
                     Description = "",
                     Latitude = 52.6312,
@@ -457,6 +460,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Ordsall Neighbourhood Centre",
                         Description = "2, Robert Hall Street M5 3LT",
@@ -550,6 +554,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Oakwood Academy",
                         Description = "",
@@ -635,6 +640,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "Central Family Hub",
                         Description = "Broughton Hub",
@@ -711,6 +717,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "North Family Hub",
                         Description = "Swinton Gateway",
@@ -794,19 +801,6 @@ public static class TestDataProvider
                         ServiceId = 0
                     }
                 },
-                Reviews = new List<Review>
-                {
-                    new Review
-                    {
-                        ServiceId = 0,
-                        Title = "Test Review",
-                        Description = "Review description",
-                        Date = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        Score = "5 start",
-                        Url = "https://gov.uk",
-                        Widget = "widget"
-                    }
-                },
                 ServiceAreas = new List<ServiceArea>
                 {
                     new ServiceArea
@@ -836,6 +830,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "South Family Hub",
                         Description = "Winton Children’s Centre",
@@ -980,6 +975,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "test",
                         Description = "",
@@ -1049,6 +1045,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "",
                         Description = "",
@@ -1130,6 +1127,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "",
                         Description = "",
@@ -1220,6 +1218,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "",
                         Description = "",

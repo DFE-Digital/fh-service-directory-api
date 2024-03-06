@@ -11,9 +11,9 @@ public static class TestDataProvider
 {
     public static string BearerTokenSigningKey = "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    public static OrganisationWithServicesDto GetTestCountyCouncilRecord()
+    public static OrganisationDetailsDto GetTestCountyCouncilRecord()
     {
-        var bristolCountyCouncil = new OrganisationWithServicesDto
+        var bristolCountyCouncil = new OrganisationDetailsDto
         {
             AdminAreaCode = "E06000023",
             OrganisationType = OrganisationType.LA,
@@ -260,6 +260,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Ordsall Neighbourhood Centre",
                         Description = "2, Robert Hall Street M5 3LT",
@@ -353,6 +354,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Oakwood Academy",
                         Description = "",
@@ -438,6 +440,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "Central Family Hub",
                         Description = "Broughton Hub",
@@ -514,6 +517,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "North Family Hub",
                         Description = "Swinton Gateway",
@@ -597,19 +601,6 @@ public static class TestDataProvider
                         ServiceId = 0
                     }
                 },
-                Reviews = new List<Review>
-                {
-                    new Review
-                    {
-                        ServiceId = 0,
-                        Title = "Test Review",
-                        Description = "Review description",
-                        Date = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        Score = "5 start",
-                        Url = "https://gov.uk",
-                        Widget = "widget"
-                    }
-                },
                 ServiceAreas = new List<ServiceArea>
                 {
                     new ServiceArea
@@ -639,6 +630,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.FamilyHub,
                         Name = "South Family Hub",
                         Description = "Winton Children’s Centre",
@@ -783,6 +775,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Bristol-Service-1-Location",
                         Description = "",
@@ -852,6 +845,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Bristol-Service-2-Location",
                         Description = "",
@@ -933,6 +927,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Bristol-Service-3-Location",
                         Description = "",
@@ -1023,6 +1018,7 @@ public static class TestDataProvider
                 {
                     new Location
                     {
+                        OrganisationId = organisationId,
                         LocationTypeCategory = LocationTypeCategory.NotSet,
                         Name = "Bristol-Service-4-Location",
                         Description = "",

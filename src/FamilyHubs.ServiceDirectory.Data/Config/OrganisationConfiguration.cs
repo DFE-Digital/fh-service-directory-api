@@ -9,9 +9,9 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
 {
     public void Configure(EntityTypeBuilder<Organisation> builder)
     {
-        builder.Navigation(e => e.Reviews).AutoInclude();
         builder.Navigation(e => e.Services).AutoInclude();
-        
+        builder.Navigation(e => e.Locations).AutoInclude();
+
         builder.HasEnumProperty(t => t.OrganisationType, 50);
 
         builder.Property(t => t.Name)
@@ -42,11 +42,17 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
         builder.Property(t => t.LastModifiedBy)
             .HasMaxLength(MaxLength.Email);
 
-        builder.HasMany(s => s.Reviews)
+        builder.HasMany(s => s.Services)
             .WithOne()
-            .HasForeignKey(lc => lc.OrganisationId)
+            .HasForeignKey(s => s.OrganisationId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        //todo: we'll have to revisit all the OnDelete behaviours
+        builder.HasMany(s => s.Locations)
+            .WithOne()
+            .HasForeignKey(l => l.OrganisationId)
             .IsRequired(false)
-            .OnDelete(DeleteBehavior.NoAction)
-            ;
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

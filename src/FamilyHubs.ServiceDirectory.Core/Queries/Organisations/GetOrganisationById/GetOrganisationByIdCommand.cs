@@ -10,12 +10,12 @@ using Microsoft.EntityFrameworkCore;
 namespace FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationById;
 
 
-public class GetOrganisationByIdCommand : IRequest<OrganisationWithServicesDto>
+public class GetOrganisationByIdCommand : IRequest<OrganisationDetailsDto>
 {
     public required long Id { get; set; }
 }
 
-public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCommand, OrganisationWithServicesDto>
+public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCommand, OrganisationDetailsDto>
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCom
         _context = context;
         _mapper = mapper;
     }
-    public async Task<OrganisationWithServicesDto> Handle(GetOrganisationByIdCommand request, CancellationToken cancellationToken)
+    public async Task<OrganisationDetailsDto> Handle(GetOrganisationByIdCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Organisations
             .Include(x => x.Services)
@@ -42,7 +42,7 @@ public class GetOrganisationByIdHandler : IRequestHandler<GetOrganisationByIdCom
             .AsSplitQuery()
             .AsNoTracking()
 
-            .ProjectTo<OrganisationWithServicesDto>(_mapper.ConfigurationProvider)
+            .ProjectTo<OrganisationDetailsDto>(_mapper.ConfigurationProvider)
 
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 

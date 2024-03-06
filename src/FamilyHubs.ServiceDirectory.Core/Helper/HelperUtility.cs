@@ -1,22 +1,51 @@
 ﻿using System.Diagnostics;
 using System.Linq.Expressions;
+using Ardalis.GuardClauses;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.Base;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using GeoCoordinatePortable;
+using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Core.Helper;
 
 public static class HelperUtility
 {
+    //todo: generic for entity
+    public static async Task<List<TEntity>> LinkExistingEntities<TEntity>(
+        this IList<TEntity> entities,
+        DbSet<TEntity> existingEntities,
+        IMapper mapper)
+
+        where TEntity : EntityBase<long>
+    {
+        List<TEntity> linkedEntities = new();
+        foreach (TEntity entity in entities)
+        {
+            TEntity newEntity;
+            //or IsKeySet
+            if (entity.Id != 0)
+            {
+                TEntity existingLocation = await existingEntities.FindAsync(entity.Id)
+                    ?? throw new NotFoundException(nameof(TEntity), entity.Id.ToString());
+
+                mapper.Map(entity, existingLocation);
+                newEntity = existingLocation;
+            }
+            else
+            {
+                newEntity = entity;
+            }
+
+            linkedEntities.Add(newEntity);
+        }
+
+        return linkedEntities;
+    }
+
     public static void AttachExistingManyToMany(this Service service, ApplicationDbContext context, IMapper mapper)
     {
-        var existingLocations = service.Locations.Select(s => $"{s.Name}{s.PostCode}").ToList();
-        service.Locations = service.Locations.AddOrAttachExisting(context, mapper,
-            l => existingLocations.Contains(l.Name + l.PostCode),
-            (s, d) => $"{s.Name}{s.PostCode}" == $"{d.Name}{d.PostCode}");
-
         var existingTaxonomies = service.Taxonomies.Select(s => s.Name).ToList();
         service.Taxonomies = service.Taxonomies.AddOrAttachExisting(context, mapper,
             t => existingTaxonomies.Contains(t.Name),

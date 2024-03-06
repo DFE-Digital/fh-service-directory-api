@@ -57,10 +57,10 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
         if (!response.IsSuccessStatusCode)
             Assert.Fail(!string.IsNullOrWhiteSpace(responseContent) ? responseContent : response.ToString());
 
-        var retVal = JsonSerializer.Deserialize<OrganisationWithServicesDto>(responseContent, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var retVal = JsonSerializer.Deserialize<OrganisationDetailsDto>(responseContent, new JsonSerializerOptions(JsonSerializerDefaults.Web));
         ArgumentNullException.ThrowIfNull(retVal);
 
-        var update = new OrganisationWithServicesDto
+        var update = new OrganisationDetailsDto
         {
             OrganisationType = retVal.OrganisationType,
             Id = retVal.Id,
@@ -109,7 +109,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
         if (!response.IsSuccessStatusCode)
             Assert.Fail(!string.IsNullOrWhiteSpace(responseContent) ? responseContent : response.ToString());
 
-        var retVal = JsonSerializer.Deserialize<OrganisationWithServicesDto>(responseContent, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var retVal = JsonSerializer.Deserialize<OrganisationDetailsDto>(responseContent, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();

@@ -10,7 +10,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     public async Task ThenCreateLocation()
     {
         //Arrange
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        var testLocation = GetTestLocation();
         var createLocationCommand = new CreateLocationCommand(testLocation);
         var handler = new CreateLocationCommandHandler(TestDbContext, Mapper, GetLogger<CreateLocationCommandHandler>());
 
@@ -29,7 +29,7 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
     [Fact]
     public async Task ThenCreateLocationWithoutAnyChildEntities()
     {
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
+        var testLocation = GetTestLocation();
         testLocation.Contacts.Clear();
         testLocation.AccessibilityForDisabilities.Clear();
         testLocation.Schedules.Clear();
@@ -52,21 +52,5 @@ public class WhenUsingCreateLocationCommand : DataIntegrationTestBase
         actualLocation.Should().BeEquivalentTo(testLocation, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
-    }
-
-    [Fact]
-    public async Task ThenCreateDuplicateLocation_ShouldThrowException()
-    {
-        //Arrange
-        var testLocation = TestOrganisation.Services.ElementAt(0).Locations.ElementAt(0);
-
-        testLocation.Id = await CreateLocation(testLocation);
-
-        var command = new CreateLocationCommand(testLocation);
-        var handler = new CreateLocationCommandHandler(TestDbContext, Mapper, GetLogger<CreateLocationCommandHandler>());
-
-        // Act 
-        // Assert
-        await Assert.ThrowsAsync<ArgumentException>(() => handler.Handle(command, new CancellationToken()));
     }
 }

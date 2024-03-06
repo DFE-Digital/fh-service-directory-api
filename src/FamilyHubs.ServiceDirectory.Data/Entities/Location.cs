@@ -5,6 +5,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
 public class Location : EntityBase<long>
 {
+    public long? OrganisationId { get; set; }
     //todo: nullable, rather than notset
     public required LocationTypeCategory LocationTypeCategory { get; set; }
     public string? Name { get; set; }

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using FamilyHubs.ServiceDirectory.Core.Exceptions;
+﻿using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.SharedKernel.Identity;

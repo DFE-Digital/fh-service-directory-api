@@ -15,7 +15,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     public async Task ThenCreateService()
     {
         //Arrange
-        await CreateOrganisationWithoutAnyServices();
+        await CreateOrganisation();
         var newService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id);
 
         var command = new CreateServiceCommand(newService);
@@ -35,11 +35,46 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
 
+    //todo: need to handle the generic case of having the same entity in the object twice
+    //[Fact]
+    //public async Task ThenCreateServiceWithSameContactInGraphTwice()
+    //{
+    //    //Arrange
+    //    await CreateOrganisation();
+    //    var newService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id);
+    //    var location = newService.Locations.ElementAt(0);
+
+    //    var expected = location.Contacts.ElementAt(0);
+
+    //    expected.Name = "Existing contact already Saved in DB";
+    //    expected.Id = await CreateContact(expected);
+    //    location.Contacts.Add(expected);
+        
+    //    var command = new CreateServiceCommand(newService);
+    //    var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, GetLogger<CreateServiceCommandHandler>());
+
+    //    //Act
+    //    var serviceId = await handler.Handle(command, new CancellationToken());
+
+    //    //Assert
+    //    serviceId.Should().NotBe(0);
+
+    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == newService.Name);
+    //    actualService.Should().NotBeNull();
+    //    actualService!.Locations.First().Contacts.Count.Should().Be(2);
+
+    //    //var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
+    //    //actualEntity.Should().NotBeNull();
+    //    //actualEntity.Should().BeEquivalentTo(expected, options =>
+    //    //    options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
+    //    //        .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+    //}
+    
     [Fact]
-    public async Task ThenCreateServiceAndAttachExistingLocation()
+    public async Task ThenCreateServiceUpdateExistingLocationWithSameLocationInGraphTwice()
     {
         //Arrange
-        await CreateOrganisationWithoutAnyServices();
+        await CreateOrganisation();
         var newService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id);
 
         var expected = newService.Locations.ElementAt(0);
@@ -72,7 +107,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     public async Task ThenCreateServiceAndAttachExistingTaxonomy()
     {
         //Arrange
-        await CreateOrganisationWithoutAnyServices();
+        await CreateOrganisation();
         var newService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id);
         
         var expected = new TaxonomyDto
@@ -105,7 +140,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     public async Task ThenCreateDuplicateService_ShouldThrowException()
     {
         //Arrange
-        await CreateOrganisation();
+        await CreateOrganisationDetails();
 
         var command = new CreateOrganisationCommand(TestOrganisation);
         var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
