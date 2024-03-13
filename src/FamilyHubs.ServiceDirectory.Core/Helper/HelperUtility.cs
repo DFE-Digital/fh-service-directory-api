@@ -16,7 +16,8 @@ public static class HelperUtility
     public static async Task<List<TEntity>> LinkExistingEntities<TEntity>(
         this IList<TEntity> entities,
         DbSet<TEntity> existingEntities,
-        IMapper mapper)
+        IMapper mapper,
+        bool mapExistingEntity = true)
 
         where TEntity : EntityBase<long>
     {
@@ -30,7 +31,11 @@ public static class HelperUtility
                 TEntity existingLocation = await existingEntities.FindAsync(entity.Id)
                     ?? throw new NotFoundException(nameof(TEntity), entity.Id.ToString());
 
-                mapper.Map(entity, existingLocation);
+                if (mapExistingEntity)
+                {
+                    mapper.Map(entity, existingLocation);
+                }
+
                 newEntity = existingLocation;
             }
             else

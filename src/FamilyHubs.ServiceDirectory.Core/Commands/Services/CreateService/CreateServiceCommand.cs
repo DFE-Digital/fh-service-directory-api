@@ -4,7 +4,6 @@ using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.ServiceDirectory.Core.Commands.Services.CreateService;
@@ -42,7 +41,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
 
             var service = _mapper.Map<Service>(request.Service);
 
-            service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper);
+            service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper, false);
             service.AttachExistingManyToMany(_context, _mapper);
 
             _context.Services.Add(service);
