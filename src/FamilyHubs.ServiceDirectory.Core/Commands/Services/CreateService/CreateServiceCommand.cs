@@ -2,7 +2,7 @@
 using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
-using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -36,11 +36,13 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
     {
         try
         {
-            if (request.Service.Id != 0)
-                throw new ArgumentException("Service ID should be 0 when creating a service");
+            //should be handled by validator
+            //if (request.Service.Id != 0)
+            //    throw new ArgumentException("Service ID should be 0 when creating a service");
 
             var service = _mapper.Map<Service>(request.Service);
 
+            service.Locations = request.Service.LocationIds.GetEntities(_context.Locations);
             service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper, false);
             service.AttachExistingManyToMany(_context, _mapper);
 

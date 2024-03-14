@@ -17,6 +17,8 @@ public class AutoMappingProfiles : Profile
         CreateMap<FundingDto, Funding>().ReverseMap();
         CreateMap<LanguageDto, Language>().ReverseMap();
         CreateMap<ServiceDto, Service>().ReverseMap();
+        //todo: just give it a different name, rather than just in a different namespace
+        CreateMap<Shared.CreateUpdateDto.ServiceDto, Service>().ReverseMap();
         CreateMap<ServiceNameDto, Service>().ReverseMap();
         CreateMap<ServiceAreaDto, ServiceArea>().ReverseMap();
         CreateMap<ServiceDeliveryDto, ServiceDelivery>().ReverseMap();

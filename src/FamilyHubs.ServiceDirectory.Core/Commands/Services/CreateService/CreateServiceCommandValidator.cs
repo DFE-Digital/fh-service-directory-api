@@ -36,18 +36,18 @@ public class CreateServiceCommandValidator : AbstractValidator<CreateServiceComm
             }
         });
 
-        RuleFor(v => v.Service.Locations).Custom((list, context) =>
-        {
-            if (list is null) return;
+        //RuleFor(v => v.Service.Locations).Custom((list, context) =>
+        //{
+        //    if (list is null) return;
 
-            foreach (var item in list.Select(x => x.Contacts))
-            {
-                var hasInvalidUrl = item.Any(x => x.Url is not null && !HelperUtility.IsValidUrl(x.Url));
-                if (hasInvalidUrl)
-                {
-                    context.AddFailure("Contact Url must be valid");
-                }
-            }
-        });
+        //    foreach (var item in list.Select(x => x.Contacts))
+        //    {
+        //        var hasInvalidUrl = item.Any(x => x.Url is not null && !HelperUtility.IsValidUrl(x.Url));
+        //        if (hasInvalidUrl)
+        //        {
+        //            context.AddFailure("Contact Url must be valid");
+        //        }
+        //    }
+        //});
     }
 }

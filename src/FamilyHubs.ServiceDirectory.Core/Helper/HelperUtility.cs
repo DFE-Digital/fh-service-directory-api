@@ -12,13 +12,23 @@ namespace FamilyHubs.ServiceDirectory.Core.Helper;
 
 public static class HelperUtility
 {
+    public static async Task<List<TEntity>> GetEntities<TEntity>(
+        this ICollection<long> ids,
+        DbSet<TEntity> existingEntities)
+        where TEntity : EntityBase<long>
+    {
+        var findTasks = ids.Select(id => existingEntities.FindAsync(id)
+                                      ?? throw new NotFoundException(nameof(TEntity), id.ToString()));
+
+        await Task.WhenAll(findTasks);
+    }
+
     //todo: generic for entity
     public static async Task<List<TEntity>> LinkExistingEntities<TEntity>(
         this IList<TEntity> entities,
         DbSet<TEntity> existingEntities,
         IMapper mapper,
         bool mapExistingEntity = true)
-
         where TEntity : EntityBase<long>
     {
         List<TEntity> linkedEntities = new();
