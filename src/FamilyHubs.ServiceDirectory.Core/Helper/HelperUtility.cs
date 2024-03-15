@@ -12,6 +12,20 @@ namespace FamilyHubs.ServiceDirectory.Core.Helper;
 
 public static class HelperUtility
 {
+    //public static async Task<TEntity> GetEntity<TEntity>(
+    //    this long id,
+    //    DbSet<TEntity> existingEntities)
+    //    where TEntity : EntityBase<long>
+    //{
+    //    var foundEntity = await existingEntities.FindAsync(id);
+    //    if (foundEntity == null)
+    //    {
+    //        throw new NotFoundException(id.ToString(), nameof(TEntity));
+    //    }
+
+    //    return foundEntity;
+    //}
+
     public static async Task<List<TEntity>> GetEntities<TEntity>(
         this ICollection<long> ids,
         DbSet<TEntity> existingEntities)

@@ -35,6 +35,42 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
 
+    [Fact]
+    public async Task ThenCreateServiceWithLocation()
+    {
+        const string serviceName = "New Service with Location";
+
+        //Arrange
+        var organisation = await CreateOrganisationDetails();
+        var newService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, organisation.Id);
+
+        newService.Name = serviceName;
+        newService.LocationIds.Add(organisation.Locations.First().Id);
+
+        var command = new CreateServiceCommand(newService);
+
+        var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, new Mock<ILogger<CreateServiceCommandHandler>>().Object);
+
+        //Act
+        var result = await handler.Handle(command, new CancellationToken());
+
+        //Assert
+        result.Should().NotBe(0);
+
+        //todo: ServiceChange doesn't need distance, any others?
+
+
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == serviceName);
+        actualService.Should().NotBeNull();
+        //todo: why isn't it complaining about locationids vs location??
+        actualService.Should().BeEquivalentTo(newService, options =>
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+        actualService.Locations.Count.Should().Be(1);
+        actualService.Locations.First().Should().BeEquivalentTo(organisation.Locations.First(), options =>
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+    }
+
     //todo: need to handle the generic case of having the same entity in the object twice
     //[Fact]
     //public async Task ThenCreateServiceWithSameContactInGraphTwice()
@@ -70,6 +106,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     //    //        .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     //}
 
+    // we don't support updating the location at create time any more, just referencing existing locations
     //[Fact]
     //public async Task ThenCreateServiceUpdateExistingLocationWithSameLocationInGraphTwice()
     //{
@@ -77,11 +114,12 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     //    await CreateOrganisation();
     //    var newService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, TestOrganisationWithoutAnyServices.Id);
 
-    //    var expected = newService.Locations.ElementAt(0);
+    //    var expectedLocation = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id)
+    //        .Locations.ElementAt(0);
 
     //    expected.Name = "Existing Location already Saved in DB";
     //    expected.Id = await CreateLocation(expected);
-    //    newService.Locations.Add(expected);
+    //    newService.LocationIds.Add(expectedLocation.Id);
 
     //    var command = new CreateServiceCommand(newService);
     //    var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, GetLogger<CreateServiceCommandHandler>());
@@ -103,6 +141,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     //            .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     //}
 
+    //todo: do same for taxonomy
     //[Fact]
     //public async Task ThenCreateServiceAndAttachExistingTaxonomy()
     //{
@@ -136,17 +175,17 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     //    actualEntity.Should().BeEquivalentTo(expected);
     //}
 
-    //[Fact]
-    //public async Task ThenCreateDuplicateService_ShouldThrowException()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
+    [Fact]
+    public async Task ThenCreateDuplicateService_ShouldThrowException()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
 
-    //    var command = new CreateOrganisationCommand(TestOrganisation);
-    //    var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
+        var command = new CreateOrganisationCommand(TestOrganisation);
+        var handler = new CreateOrganisationCommandHandler(TestDbContext, Mapper, GetLogger<CreateOrganisationCommandHandler>());
 
-    //    // Act 
-    //    // Assert
-    //    await Assert.ThrowsAsync<AlreadyExistsException>(() => handler.Handle(command, new CancellationToken()));
-    //}
+        // Act 
+        // Assert
+        await Assert.ThrowsAsync<AlreadyExistsException>(() => handler.Handle(command, new CancellationToken()));
+    }
 }
