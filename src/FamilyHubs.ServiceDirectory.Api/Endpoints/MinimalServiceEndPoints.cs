@@ -5,6 +5,7 @@ using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServiceById;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServiceByOwnerReferenceIdCommand;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganisationId;
+using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel.Identity;
@@ -145,7 +146,7 @@ public class MinimalServiceEndPoints
         
         app.MapPost("api/services",
             [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
-            ([FromBody] ServiceDto request, 
+            ([FromBody] ServiceChangeDto request, 
             CancellationToken cancellationToken, 
             ISender mediator, 
             ILogger<MinimalOrganisationEndPoints> logger) =>

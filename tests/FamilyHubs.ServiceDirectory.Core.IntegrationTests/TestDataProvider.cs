@@ -1,4 +1,6 @@
-﻿using FamilyHubs.ServiceDirectory.Data.Entities;
+﻿using AutoMapper;
+using FamilyHubs.ServiceDirectory.Data.Entities;
+using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 
@@ -223,6 +225,15 @@ public static class TestDataProvider
         };
 
         return service;
+    }
+
+    public static ServiceChangeDto GetTestCountyCouncilServicesChangeDto2(IMapper mapper, long organisationId,
+        string serviceId = "5059a0b2-ad5d-4288-b7c1-e30d35345b0e")
+    {
+        var service = GetTestCountyCouncilServicesDto2(organisationId, serviceId);
+        var serviceChange = mapper.Map<ServiceChangeDto>(service);
+
+        return serviceChange;
     }
 
     public static ServiceDto GetTestCountyCouncilServicesDto2(long organisationId, string serviceId = "5059a0b2-ad5d-4288-b7c1-e30d35345b0e")

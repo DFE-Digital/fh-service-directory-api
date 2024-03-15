@@ -10,12 +10,12 @@ namespace FamilyHubs.ServiceDirectory.Core.Commands.Services.CreateService;
 
 public class CreateServiceCommand : IRequest<long>
 {
-    public CreateServiceCommand(ServiceDto service)
+    public CreateServiceCommand(ServiceChangeDto service)
     {
         Service = service;
     }
 
-    public ServiceDto Service { get; }
+    public ServiceChangeDto Service { get; }
 }
 
 public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand, long>
@@ -36,14 +36,10 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
     {
         try
         {
-            //should be handled by validator
-            //if (request.Service.Id != 0)
-            //    throw new ArgumentException("Service ID should be 0 when creating a service");
-
             var service = _mapper.Map<Service>(request.Service);
 
-            service.Locations = request.Service.LocationIds.GetEntities(_context.Locations);
-            service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper, false);
+            service.Locations = await request.Service.LocationIds.GetEntities(_context.Locations);
+            //service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper, false);
             service.AttachExistingManyToMany(_context, _mapper);
 
             _context.Services.Add(service);

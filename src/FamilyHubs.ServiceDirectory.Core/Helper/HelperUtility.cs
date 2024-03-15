@@ -1,12 +1,12 @@
-﻿using System.Diagnostics;
-using System.Linq.Expressions;
-using Ardalis.GuardClauses;
+﻿using Ardalis.GuardClauses;
 using AutoMapper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.Base;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace FamilyHubs.ServiceDirectory.Core.Helper;
 
@@ -17,10 +17,18 @@ public static class HelperUtility
         DbSet<TEntity> existingEntities)
         where TEntity : EntityBase<long>
     {
-        var findTasks = ids.Select(id => existingEntities.FindAsync(id)
-                                      ?? throw new NotFoundException(nameof(TEntity), id.ToString()));
+        var findTasks = ids.Select(id => existingEntities.FindAsync(id).AsTask());
 
-        await Task.WhenAll(findTasks);
+        var foundEntities = await Task.WhenAll(findTasks);
+
+        if (foundEntities.Any(e => e == null))
+        {
+            //todo: this Ardalis exception doesn't seem to support multiple objects
+            //todo: NotFoundException in other commands use either Ardalis or a custom exception
+            //todo: the other Ardalis throws seem to have the params the wrong way round
+            throw new NotFoundException("Many", nameof(Location));
+        }
+        return foundEntities.ToList()!;
     }
 
     //todo: generic for entity

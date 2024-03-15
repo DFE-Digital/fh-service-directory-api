@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
+using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 
 using DoNotRemove = AutoMapper.EntityFrameworkCore.Extensions;
@@ -17,8 +18,8 @@ public class AutoMappingProfiles : Profile
         CreateMap<FundingDto, Funding>().ReverseMap();
         CreateMap<LanguageDto, Language>().ReverseMap();
         CreateMap<ServiceDto, Service>().ReverseMap();
-        //todo: just give it a different name, rather than just in a different namespace
-        CreateMap<Shared.CreateUpdateDto.ServiceDto, Service>().ReverseMap();
+        CreateMap<ServiceChangeDto, Service>().ReverseMap();
+        CreateMap<ServiceChangeDto, ServiceDto>().ReverseMap();
         CreateMap<ServiceNameDto, Service>().ReverseMap();
         CreateMap<ServiceAreaDto, ServiceArea>().ReverseMap();
         CreateMap<ServiceDeliveryDto, ServiceDelivery>().ReverseMap();
