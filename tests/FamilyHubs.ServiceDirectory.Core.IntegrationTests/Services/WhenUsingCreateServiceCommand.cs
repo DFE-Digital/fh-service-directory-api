@@ -1,7 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.CreateService;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
-using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.Extensions.Logging;
@@ -57,9 +56,6 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
         //Assert
         result.Should().NotBe(0);
 
-        //todo: ServiceChange doesn't need distance, any others?
-
-
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == serviceName);
         actualService.Should().NotBeNull();
         //todo: why isn't it complaining about locationids vs location??
@@ -72,6 +68,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     }
 
     //todo: need to handle the generic case of having the same entity in the object twice
+    // ^^ is this still the case now we have change dtos?
     //[Fact]
     //public async Task ThenCreateServiceWithSameContactInGraphTwice()
     //{
@@ -104,41 +101,6 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     //    //actualEntity.Should().BeEquivalentTo(expected, options =>
     //    //    options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
     //    //        .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
-    //}
-
-    // we don't support updating the location at create time any more, just referencing existing locations
-    //[Fact]
-    //public async Task ThenCreateServiceUpdateExistingLocationWithSameLocationInGraphTwice()
-    //{
-    //    //Arrange
-    //    await CreateOrganisation();
-    //    var newService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, TestOrganisationWithoutAnyServices.Id);
-
-    //    var expectedLocation = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id)
-    //        .Locations.ElementAt(0);
-
-    //    expected.Name = "Existing Location already Saved in DB";
-    //    expected.Id = await CreateLocation(expected);
-    //    newService.LocationIds.Add(expectedLocation.Id);
-
-    //    var command = new CreateServiceCommand(newService);
-    //    var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, GetLogger<CreateServiceCommandHandler>());
-
-    //    //Act
-    //    var serviceId = await handler.Handle(command, new CancellationToken());
-
-    //    //Assert
-    //    serviceId.Should().NotBe(0);
-
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == newService.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Locations.Count.Should().Be(2);
-
-    //    var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected, options =>
-    //        options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
-    //            .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     //}
 
     //todo: do same for taxonomy
