@@ -39,8 +39,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
             var service = _mapper.Map<Service>(request.Service);
 
             service.Locations = await request.Service.LocationIds.GetEntities(_context.Locations);
-            //service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper, false);
-            service.AttachExistingManyToMany(_context, _mapper);
+            service.Taxonomies = await request.Service.TaxonomyIds.GetEntities(_context.Taxonomies);
 
             _context.Services.Add(service);
 

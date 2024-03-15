@@ -103,39 +103,33 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
     //    //        .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     //}
 
-    //todo: do same for taxonomy
-    //[Fact]
-    //public async Task ThenCreateServiceAndAttachExistingTaxonomy()
-    //{
-    //    //Arrange
-    //    await CreateOrganisation();
-    //    var newService = TestDataProvider.GetTestCountyCouncilServicesDto2(TestOrganisationWithoutAnyServices.Id);
+    [Fact]
+    public async Task ThenCreateServiceAndAttachExistingTaxonomy()
+    {
+        const string serviceName = "New Service with Location";
 
-    //    var expected = new TaxonomyDto
-    //    {
-    //        Name = "Existing Taxonomy already Saved in DB"
-    //    };
-    //    expected.Id = await CreateTaxonomy(expected);
+        //Arrange
+        var organisation = await CreateOrganisation();
 
-    //    newService.Taxonomies.Add(expected);
+        var newService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, organisation.Id);
 
-    //    var createServiceCommand = new CreateServiceCommand(newService);
-    //    var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, GetLogger<CreateServiceCommandHandler>());
+        newService.Name = serviceName;
+        newService.TaxonomyIds.Add(TestDbContext.Taxonomies.First().Id);
 
-    //    //Act
-    //    var organisationId = await handler.Handle(createServiceCommand, new CancellationToken());
+        var createServiceCommand = new CreateServiceCommand(newService);
+        var handler = new CreateServiceCommandHandler(TestDbContext, Mapper, GetLogger<CreateServiceCommandHandler>());
 
-    //    //Assert
-    //    organisationId.Should().NotBe(0);
+        //Act
+        var result = await handler.Handle(createServiceCommand, new CancellationToken());
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == newService.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Taxonomies.Count.Should().Be(5);
+        //Assert
+        result.Should().NotBe(0);
 
-    //    var actualEntity = TestDbContext.Taxonomies.SingleOrDefault(s => s.Name == expected.Name);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected);
-    //}
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == newService.Name);
+        actualService.Should().NotBeNull();
+        actualService!.Taxonomies.Count.Should().Be(1);
+        actualService.Taxonomies.First().Should().BeEquivalentTo(TestDbContext.Taxonomies.First());
+    }
 
     [Fact]
     public async Task ThenCreateDuplicateService_ShouldThrowException()
