@@ -12,12 +12,6 @@ public class CreateServiceCommandValidator : AbstractValidator<CreateServiceComm
 
         RuleFor(v => v.Service.Id)
             .Equal(0);
-        
-        RuleFor(v => v.Service.ServiceOwnerReferenceId)
-            .MinimumLength(1)
-            .MaximumLength(50)
-            .NotNull()
-            .NotEmpty();
 
         RuleFor(v => v.Service.Name)
             .MinimumLength(1)
