@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FamilyHubs.ServiceDirectory.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240318155356_SchedulesOffServiceAtLocation")]
+    [Migration("20240318160157_SchedulesOffServiceAtLocation")]
     partial class SchedulesOffServiceAtLocation
     {
         /// <inheritdoc />
@@ -967,7 +967,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.ServiceAtLocation", null)
                         .WithMany("Schedules")
                         .HasForeignKey("ServiceAtLocationId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
                         .WithMany("Schedules")

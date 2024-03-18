@@ -83,8 +83,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                 table: "Schedules",
                 column: "ServiceAtLocationId",
                 principalTable: "ServiceAtLocations",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />

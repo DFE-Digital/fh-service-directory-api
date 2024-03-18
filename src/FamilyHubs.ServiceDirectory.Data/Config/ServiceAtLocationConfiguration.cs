@@ -16,7 +16,7 @@ public class ServiceAtLocationConfiguration : IEntityTypeConfiguration<ServiceAt
             .WithOne()
             .IsRequired(false)
             .HasForeignKey(lc => lc.ServiceAtLocationId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.NoAction)
             ;
 
         //builder.HasOne(sal => sal.Schedule)
