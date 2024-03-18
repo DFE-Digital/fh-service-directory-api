@@ -7,11 +7,18 @@ using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace FamilyHubs.ServiceDirectory.Core.Helper;
 
+//todo: move code out of this generic helper class
 public static class HelperUtility
 {
+    // this matches the validation we have in the frontend
+    private static readonly Regex IsValidUrlRegEx = new(
+        @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     //public static async Task<TEntity> GetEntity<TEntity>(
     //    this long id,
     //    DbSet<TEntity> existingEntities)
@@ -124,7 +131,7 @@ public static class HelperUtility
 
     public static bool IsValidUrl(string url)
     {
-        return string.IsNullOrEmpty(url) || Uri.IsWellFormedUriString(url, UriKind.Absolute);
+        return IsValidUrlRegEx.IsMatch(url);
     }
 
     //return distance in meters https://stackoverflow.com/questions/6366408/calculating-distance-between-two-latitude-and-longitude-geocoordinates
