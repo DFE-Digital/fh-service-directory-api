@@ -580,6 +580,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(600)");
 
+                    b.Property<long?>("ServiceAtLocationId")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("ServiceId")
                         .HasColumnType("bigint");
 
@@ -605,6 +608,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("LocationId");
+
+                    b.HasIndex("ServiceAtLocationId");
 
                     b.HasIndex("ServiceId");
 
@@ -743,6 +748,48 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.ToTable("ServiceAreas");
                 });
 
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.ServiceAtLocation", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime?>("Created")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<long>("LocationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ServiceId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("ServiceAtLocations", (string)null);
+                });
+
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.ServiceDelivery", b =>
                 {
                     b.Property<long>("Id")
@@ -824,21 +871,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Taxonomies");
-                });
-
-            modelBuilder.Entity("ServiceAtLocations", b =>
-                {
-                    b.Property<long>("LocationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ServiceId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("LocationId", "ServiceId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.ToTable("ServiceAtLocations");
                 });
 
             modelBuilder.Entity("ServiceTaxonomies", b =>
@@ -929,6 +961,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.ServiceAtLocation", null)
+                        .WithMany("Schedules")
+                        .HasForeignKey("ServiceAtLocationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
                         .WithMany("Schedules")
                         .HasForeignKey("ServiceId")
@@ -953,25 +990,29 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.ServiceDelivery", b =>
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.ServiceAtLocation", b =>
                 {
-                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
-                        .WithMany("ServiceDeliveries")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ServiceAtLocations", b =>
-                {
-                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Location", null)
+                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Location", "Location")
                         .WithMany()
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", "Service")
+                        .WithMany("ServiceAtLocations")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+
+                    b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.ServiceDelivery", b =>
+                {
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
-                        .WithMany()
+                        .WithMany("ServiceDeliveries")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1023,7 +1064,14 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Navigation("ServiceAreas");
 
+                    b.Navigation("ServiceAtLocations");
+
                     b.Navigation("ServiceDeliveries");
+                });
+
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Entities.ServiceAtLocation", b =>
+                {
+                    b.Navigation("Schedules");
                 });
 #pragma warning restore 612, 618
         }

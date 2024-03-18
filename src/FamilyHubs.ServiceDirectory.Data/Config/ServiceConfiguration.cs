@@ -19,6 +19,7 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Navigation(e => e.Locations).AutoInclude();
         builder.Navigation(e => e.Contacts).AutoInclude();
         builder.Navigation(e => e.Schedules).AutoInclude();
+        //builder.Navigation(e => e.ServiceAtLocations).AutoInclude();
 
         builder.Property(t => t.Name)
             .HasMaxLength(255);
@@ -96,18 +97,25 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
             ;
 
         builder.HasMany(p => p.Locations)
+            //.WithMany(e => e.Services)
             .WithMany()
-            .UsingEntity<ServiceAtLocation>("ServiceAtLocations",
-                lt => lt
-                    .HasOne<Location>()
-                    .WithMany()
-                    .HasForeignKey(s => s.LocationId)
-                    .OnDelete(DeleteBehavior.Cascade),
-                rt => rt
-                    .HasOne<Service>()
-                    .WithMany()
-                    .HasForeignKey(s => s.ServiceId)
-                    .OnDelete(DeleteBehavior.Cascade));
+            .UsingEntity<ServiceAtLocation>();
+        //"ServiceAtLocations",
+        //        lt => lt
+        //            .HasOne<Location>()
+        //            .WithMany()
+        //            .HasForeignKey(s => s.LocationId)
+        //            .OnDelete(DeleteBehavior.Cascade),
+        //        rt => rt
+        //            .HasOne<Service>()
+        //            .WithMany()
+        //            .HasForeignKey(s => s.ServiceId)
+        //            .OnDelete(DeleteBehavior.Cascade));
+
+        //builder.HasMany(s => s.ServiceAtLocations)
+        //    .WithOne(sal => sal.Service)
+        //    .HasForeignKey(sal => sal.ServiceId)
+        //    .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(p => p.Taxonomies)
             .WithMany()

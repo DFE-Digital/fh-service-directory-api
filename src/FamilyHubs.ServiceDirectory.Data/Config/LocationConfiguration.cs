@@ -10,6 +10,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
     {
         builder.Navigation(e => e.Contacts).AutoInclude();
         builder.Navigation(e => e.Schedules).AutoInclude();
+        //builder.Navigation(e => e.Services).AutoInclude();
+        //builder.Navigation(e => e.ServiceAtLocations).AutoInclude();
 
         builder.HasEnumProperty(t => t.LocationTypeCategory);
 
@@ -63,15 +65,10 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(t => t.ExternalIdentifierType)
             .HasMaxLength(500);
 
-    builder.Property(t => t.Created)
-            .IsRequired();
-
-        builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.Email)
-            .IsRequired();
-
-        builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.Email);
+        //builder.HasMany(s => s.ServiceAtLocations)
+        //    .WithOne(sal => sal.Location)
+        //    .HasForeignKey(sal => sal.LocationId)
+        //    .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(s => s.AccessibilityForDisabilities)
             .WithOne()
@@ -93,5 +90,15 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .IsRequired(false)
             .OnDelete(DeleteBehavior.Cascade)
             ;
+
+        builder.Property(t => t.Created)
+            .IsRequired();
+
+        builder.Property(t => t.CreatedBy)
+            .HasMaxLength(MaxLength.Email)
+            .IsRequired();
+
+        builder.Property(t => t.LastModifiedBy)
+            .HasMaxLength(MaxLength.Email);
     }
 }

@@ -28,6 +28,8 @@ public class Location : EntityBase<long>
     public string? ExternalIdentifier { get; set; }
     public string? ExternalIdentifierType { get; set; }
 
+    //public IList<Service> Services { get; set; } = new List<Service>();
+    //public IList<ServiceAtLocation> ServiceAtLocations { get; set; } = new List<ServiceAtLocation>();
     public IList<AccessibilityForDisabilities> AccessibilityForDisabilities { get; set; } = new List<AccessibilityForDisabilities>();
     public IList<Schedule> Schedules { get; set; } = new List<Schedule>();
     public IList<Contact> Contacts { get; set; } = new List<Contact>();

@@ -43,6 +43,11 @@ public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
             .HasMaxLength(600)
             .IsUnicode(false);
 
+        //builder.HasOne(s => s.ServiceAtLocation)
+        //    .WithOne(sal => sal.Schedule)
+        //    .HasForeignKey<ServiceAtLocation>(sal => sal.ScheduleId)
+        //    .OnDelete(DeleteBehavior.Cascade);
+
         builder.Property(t => t.Created)
             .IsRequired();
 
