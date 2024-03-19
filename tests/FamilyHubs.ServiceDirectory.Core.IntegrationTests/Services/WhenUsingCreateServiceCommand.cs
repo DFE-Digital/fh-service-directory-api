@@ -1,7 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.CreateService;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
-using FamilyHubs.ServiceDirectory.Data.Migrations;
 using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
@@ -75,15 +74,24 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == serviceName);
         actualService.Should().NotBeNull();
-        //todo: why isn't it complaining about locationids vs location??
+
         actualService.Should().BeEquivalentTo(newService, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
-        actualService.Locations.Count.Should().Be(1);
+
+        //todo: fluent assertions should be able to do collection equivalency
+
+        actualService!.Locations.Count.Should().Be(1);
         actualService.Locations.First().Should().BeEquivalentTo(organisation.Locations.First(), options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
 
-        //todo: check serviceatlocation (add as dbset)
+        actualService.ServiceAtLocations.Should().NotBeNull();
+        actualService.ServiceAtLocations.Count.Should().Be(1);
+
+        var serviceAtLocation = actualService.ServiceAtLocations.First();
+        serviceAtLocation.Should().BeEquivalentTo(newService.ServiceAtLocations.First(), options =>
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Id")));
+        serviceAtLocation.ServiceId.Should().Be(actualService.Id);
     }
 
     //todo: need to handle the generic case of having the same entity in the object twice
