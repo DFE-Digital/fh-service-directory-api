@@ -1,6 +1,10 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.CreateService;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
+using FamilyHubs.ServiceDirectory.Data.Migrations;
+using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
 using Microsoft.Extensions.Logging;
@@ -44,7 +48,20 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
         var newService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, organisation.Id);
 
         newService.Name = serviceName;
-        newService.LocationIds.Add(organisation.Locations.First().Id);
+        newService.ServiceAtLocations.Add(new ServiceAtLocationChangeDto
+        {
+            LocationId = organisation.Locations.First().Id,
+            Description = "description",
+            Schedules = new List<ScheduleDto>
+            {
+                new ScheduleDto
+                {
+                    AttendingType = "Online",
+                    ByDay = "MO",
+                    Freq = FrequencyType.WEEKLY
+                }
+            }
+        });
 
         var command = new CreateServiceCommand(newService);
 
@@ -65,6 +82,8 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
         actualService.Locations.Count.Should().Be(1);
         actualService.Locations.First().Should().BeEquivalentTo(organisation.Locations.First(), options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+
+        //todo: check serviceatlocation (add as dbset)
     }
 
     //todo: need to handle the generic case of having the same entity in the object twice
