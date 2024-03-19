@@ -1,4 +1,5 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Entities.Base;
+using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.ServiceDirectory.Data.Entities;
@@ -25,7 +26,6 @@ public class Service : EntityBase<long>
     public IList<CostOption> CostOptions { get; set; } = new List<CostOption>();
     public IList<Language> Languages { get; set; } = new List<Language>();
     public IList<ServiceArea> ServiceAreas { get; set; } = new List<ServiceArea>();
-    //public IList<Location> Locations { get; set; } = new List<Location>();
     public IList<Taxonomy> Taxonomies { get; set; } = new List<Taxonomy>();
     public IList<Schedule> Schedules { get; set; } = new List<Schedule>();
     public IList<Contact> Contacts { get; set; } = new List<Contact>();

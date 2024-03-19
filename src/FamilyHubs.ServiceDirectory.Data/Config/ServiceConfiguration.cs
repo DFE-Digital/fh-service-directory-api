@@ -97,25 +97,8 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
             ;
 
         builder.HasMany(p => p.Locations)
-            //.WithMany(e => e.Services)
             .WithMany()
             .UsingEntity<ServiceAtLocation>();
-        //"ServiceAtLocations",
-        //        lt => lt
-        //            .HasOne<Location>()
-        //            .WithMany()
-        //            .HasForeignKey(s => s.LocationId)
-        //            .OnDelete(DeleteBehavior.Cascade),
-        //        rt => rt
-        //            .HasOne<Service>()
-        //            .WithMany()
-        //            .HasForeignKey(s => s.ServiceId)
-        //            .OnDelete(DeleteBehavior.Cascade));
-
-        //builder.HasMany(s => s.ServiceAtLocations)
-        //    .WithOne(sal => sal.Service)
-        //    .HasForeignKey(sal => sal.ServiceId)
-        //    .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(p => p.Taxonomies)
             .WithMany()

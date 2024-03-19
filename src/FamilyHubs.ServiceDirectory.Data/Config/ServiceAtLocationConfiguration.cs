@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using FamilyHubs.ServiceDirectory.Data.Entities;
+using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
@@ -10,19 +10,12 @@ public class ServiceAtLocationConfiguration : IEntityTypeConfiguration<ServiceAt
     {
         builder.ToTable("ServiceAtLocations");
 
-        //builder.HasKey(sal => new { sal.ServiceId, sal.LocationId });
-
         builder.HasMany(s => s.Schedules)
             .WithOne()
             .IsRequired(false)
             .HasForeignKey(lc => lc.ServiceAtLocationId)
             .OnDelete(DeleteBehavior.NoAction)
             ;
-
-        //builder.HasOne(sal => sal.Schedule)
-        //    .WithOne(s => s.ServiceAtLocation)
-        //    .HasForeignKey<ServiceAtLocation>(sal => sal.ScheduleId)
-        //    .OnDelete(DeleteBehavior.NoAction);
 
         builder.Property(t => t.Created)
             .IsRequired();
