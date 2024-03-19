@@ -38,18 +38,22 @@ public static class HelperUtility
         DbSet<TEntity> existingEntities)
         where TEntity : EntityBase<long>
     {
-        var findTasks = ids.Select(id => existingEntities.FindAsync(id).AsTask());
+        List<TEntity> foundEntities = new();
 
-        var foundEntities = await Task.WhenAll(findTasks);
-
-        if (foundEntities.Any(e => e == null))
+        foreach (var id in ids)
         {
-            //todo: this Ardalis exception doesn't seem to support multiple objects
-            //todo: NotFoundException in other commands use either Ardalis or a custom exception
-            //todo: the other Ardalis throws seem to have the params the wrong way round
-            throw new NotFoundException("Many", nameof(Location));
+            var existingEntity = await existingEntities.FindAsync(id);
+            if (existingEntity == null)
+            {
+                //todo: this Ardalis exception doesn't seem to support multiple objects
+                //todo: NotFoundException in other commands use either Ardalis or a custom exception
+                //todo: the other Ardalis throws seem to have the params the wrong way round
+                throw new NotFoundException(id.ToString(), nameof(Location));
+            }
+            foundEntities.Add(existingEntity);
         }
-        return foundEntities.ToList()!;
+
+        return foundEntities;
     }
 
     //todo: generic for entity
