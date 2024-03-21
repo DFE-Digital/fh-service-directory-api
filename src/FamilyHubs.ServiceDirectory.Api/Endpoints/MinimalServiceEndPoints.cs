@@ -125,7 +125,7 @@ public class MinimalServiceEndPoints
         //todo: check with rider's ef core analyzer
         app.MapPut("api/services/{id}", [Authorize(Roles = RoleGroups.AdminRole)] async 
             (long id, 
-            [FromBody] ServiceDto request, 
+            [FromBody] ServiceChangeDto request, 
             CancellationToken cancellationToken, 
             ISender mediator, 
             ILogger<MinimalOrganisationEndPoints> logger) =>

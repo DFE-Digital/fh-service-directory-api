@@ -3,7 +3,7 @@ using AutoMapper;
 using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
-using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,13 +12,13 @@ namespace FamilyHubs.ServiceDirectory.Core.Commands.Services.UpdateService;
 
 public class UpdateServiceCommand : IRequest<long>
 {
-    public UpdateServiceCommand(long id, ServiceDto service)
+    public UpdateServiceCommand(long id, ServiceChangeDto service)
     {
         Id = id;
         Service = service;
     }
 
-    public ServiceDto Service { get; }
+    public ServiceChangeDto Service { get; }
 
     public long Id { get; }
 }
