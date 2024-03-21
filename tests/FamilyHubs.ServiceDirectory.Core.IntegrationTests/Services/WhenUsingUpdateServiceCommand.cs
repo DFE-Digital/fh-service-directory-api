@@ -217,32 +217,35 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         unexpectedEntity.Should().HaveCount(0);
     }
 
-    //[Fact]
-    //public async Task ThenUpdateServiceUpdatedServiceDeliveries()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
+    [Fact]
+    public async Task ThenUpdateServiceUpdatedServiceDeliveries()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var expected = serviceChange.ServiceDeliveries.ElementAt(0);
+        expected.Name = AttendingType.InPerson;
 
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.ServiceDeliveries.Count.Should().Be(1);
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
 
-    //    //todo:
-    //    //var actualEntity = TestDbContext.ServiceDeliveries.SingleOrDefault(s => s.Name == expected.Name);
-    //    //actualEntity.Should().NotBeNull();
-    //    //actualEntity.Should().BeEquivalentTo(expected);
-    //}
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
+        actualService.Should().NotBeNull();
+        actualService!.ServiceDeliveries.Count.Should().Be(1);
+
+        var actualEntity = TestDbContext.ServiceDeliveries.SingleOrDefault(s => s.Name == expected.Name);
+        actualEntity.Should().NotBeNull();
+        actualEntity.Should().BeEquivalentTo(expected);
+    }
 
     //[Fact]
     //public async Task ThenUpdateServiceAddAndDeleteLanguages()
