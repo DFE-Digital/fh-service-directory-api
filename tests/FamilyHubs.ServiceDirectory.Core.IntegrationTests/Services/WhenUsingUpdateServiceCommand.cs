@@ -439,35 +439,37 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         unexpectedEntity.Should().HaveCount(0);
     }
 
-    //[Fact]
-    //public async Task ThenUpdateServiceWithUpdatedContacts()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-    //    var contact = service.Contacts.ElementAt(0);
-    //    contact.Name = "Updated Name";
-    //    contact.Email = "Updated Email";
-    //    contact.Telephone = "Updated Telephone";
+    [Fact]
+    public async Task ThenUpdateServiceWithUpdatedContacts()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var contact = serviceChange.Contacts.ElementAt(0);
+        contact.Name = "Updated Name";
+        contact.Email = "Updated Email";
+        contact.Telephone = "Updated Telephone";
 
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Contacts.Count.Should().Be(1);
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
 
-    //    var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
-    //    actualContact.Should().NotBeNull();
-    //    actualContact.Should().BeEquivalentTo(contact);
-    //}
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == serviceChange.Name);
+        actualService.Should().NotBeNull();
+        actualService!.Contacts.Count.Should().Be(1);
+
+        var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
+        actualContact.Should().NotBeNull();
+        actualContact.Should().BeEquivalentTo(contact);
+    }
 
     //[Fact]
     //public async Task ThenUpdateServiceAddAndDeleteSchedules()
