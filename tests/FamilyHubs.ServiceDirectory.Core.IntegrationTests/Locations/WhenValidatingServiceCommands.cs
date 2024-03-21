@@ -155,7 +155,6 @@ public class WhenValidatingLocationCommands
 
     [Theory]
     [InlineData(default)]
-    [InlineData("")]
     [InlineData("http://wwww.google.co.uk")]
     [InlineData("http://wwww.google.com")]
     [InlineData("https://wwww.google.com")]
@@ -181,6 +180,7 @@ public class WhenValidatingLocationCommands
     }
 
     [Theory]
+    [InlineData("")]
     [InlineData("someurl")]
     [InlineData("http:/someurl")]
     [InlineData("https//someurl")]
