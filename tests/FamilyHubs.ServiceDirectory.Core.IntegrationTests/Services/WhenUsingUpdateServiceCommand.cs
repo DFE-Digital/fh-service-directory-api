@@ -320,48 +320,50 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         actualEntity.Should().BeEquivalentTo(expected);
     }
 
-    //[Fact]
-    //public async Task ThenUpdateServiceAddAndDeleteCostOptions()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-    //    var existingItem = service.CostOptions.ElementAt(0);
-    //    var expected = new CostOptionDto
-    //    {
-    //        ValidFrom = DateTime.UtcNow,
-    //        ValidTo = DateTime.UtcNow,
-    //        Option = "new Option",
-    //        Amount = 123,
-    //        AmountDescription = "Amount Description"
-    //    };
+    [Fact]
+    public async Task ThenUpdateServiceAddAndDeleteCostOptions()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
-    //    service.CostOptions.Clear();
-    //    service.CostOptions.Add(expected);
+        var existingItem = serviceChange.CostOptions.ElementAt(0);
+        var expected = new CostOptionDto
+        {
+            ValidFrom = DateTime.UtcNow,
+            ValidTo = DateTime.UtcNow,
+            Option = "new Option",
+            Amount = 123,
+            AmountDescription = "Amount Description"
+        };
 
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        serviceChange.CostOptions.Clear();
+        serviceChange.CostOptions.Add(expected);
 
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.CostOptions.Count.Should().Be(1);
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
 
-    //    var actualEntity = TestDbContext.CostOptions.SingleOrDefault(s => s.Option == expected.Option);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected, options =>
-    //        options.Excluding(info => info.Name.Contains("Id"))
-    //            .Excluding(info => info.Name.Contains("Distance")));
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == serviceChange.Name);
+        actualService.Should().NotBeNull();
+        actualService!.CostOptions.Count.Should().Be(1);
 
-    //    var unexpectedEntity = TestDbContext.CostOptions.Where(lc => lc.Id == existingItem.Id).ToList();
-    //    unexpectedEntity.Should().HaveCount(0);
-    //}
+        var actualEntity = TestDbContext.CostOptions.SingleOrDefault(s => s.Option == expected.Option);
+        actualEntity.Should().NotBeNull();
+        actualEntity.Should().BeEquivalentTo(expected, options =>
+            options.Excluding(info => info.Name.Contains("Id"))
+                .Excluding(info => info.Name.Contains("Distance")));
+
+        var unexpectedEntity = TestDbContext.CostOptions.Where(lc => lc.Id == existingItem.Id).ToList();
+        unexpectedEntity.Should().HaveCount(0);
+    }
 
     //[Fact]
     //public async Task ThenUpdateServiceUpdatedCostOptions()
