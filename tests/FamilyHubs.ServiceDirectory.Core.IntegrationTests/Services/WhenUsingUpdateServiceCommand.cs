@@ -83,35 +83,37 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         unexpectedEntity.Should().HaveCount(0);
     }
 
-    //[Fact]
-    //public async Task ThenUpdateServiceUpdatedEligibilities()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
+    [Fact]
+    public async Task ThenUpdateServiceUpdatedEligibilities()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
 
-    //    var expected = service.Eligibilities.ElementAt(0);
-    //    expected.MinimumAge = 500;
-    //    expected.MaximumAge = 5000;
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var expected = serviceChange.Eligibilities.ElementAt(0);
+        expected.MinimumAge = 500;
+        expected.MaximumAge = 5000;
 
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Eligibilities.Count.Should().Be(1);
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
 
-    //    var actualEntity = TestDbContext.Eligibilities.SingleOrDefault(s => s.EligibilityType == expected.EligibilityType);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected);
-    //}
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
+        actualService.Should().NotBeNull();
+        actualService!.Eligibilities.Count.Should().Be(1);
+
+        var actualEntity = TestDbContext.Eligibilities.SingleOrDefault(s => s.EligibilityType == expected.EligibilityType);
+        actualEntity.Should().NotBeNull();
+        actualEntity.Should().BeEquivalentTo(expected);
+    }
 
     //[Fact]
     //public async Task ThenUpdateServiceAddAndDeleteServiceAreas()
