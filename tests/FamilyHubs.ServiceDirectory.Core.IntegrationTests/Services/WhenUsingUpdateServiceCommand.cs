@@ -187,33 +187,35 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         actualEntity.Should().BeEquivalentTo(expected);
     }
 
-    //[Fact]
-    //public async Task ThenUpdateServiceAddAndDeleteServiceDeliveries()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-    //    var existingItem = service.ServiceDeliveries.ElementAt(0);
+    [Fact]
+    public async Task ThenUpdateServiceDeleteServiceDeliveries()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
-    //    service.ServiceDeliveries.Clear();
+        var existingItem = serviceChange.ServiceDeliveries.ElementAt(0);
 
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        serviceChange.ServiceDeliveries.Clear();
 
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.ServiceDeliveries.Count.Should().Be(0);
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
 
-    //    var unexpectedEntity = TestDbContext.ServiceDeliveries.Where(lc => lc.Id == existingItem.Id).ToList();
-    //    unexpectedEntity.Should().HaveCount(0);
-    //}
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
+        actualService.Should().NotBeNull();
+        actualService!.ServiceDeliveries.Count.Should().Be(0);
+
+        var unexpectedEntity = TestDbContext.ServiceDeliveries.Where(lc => lc.Id == existingItem.Id).ToList();
+        unexpectedEntity.Should().HaveCount(0);
+    }
 
     //[Fact]
     //public async Task ThenUpdateServiceUpdatedServiceDeliveries()
