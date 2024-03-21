@@ -247,74 +247,78 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         actualEntity.Should().BeEquivalentTo(expected);
     }
 
-    //[Fact]
-    //public async Task ThenUpdateServiceAddAndDeleteLanguages()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-    //    var existingItem = service.Languages.ElementAt(0);
-    //    var expected = new LanguageDto()
-    //    {
-    //        Name = "New Language",
-    //        Code = "xx"
-    //    };
+    [Fact]
+    public async Task ThenUpdateServiceAddAndDeleteLanguages()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
-    //    service.Languages.Clear();
-    //    service.Languages.Add(expected);
+        var existingItem = serviceChange.Languages.ElementAt(0);
+        var expected = new LanguageDto()
+        {
+            Name = "New Language",
+            Code = "xx"
+        };
 
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        serviceChange.Languages.Clear();
+        serviceChange.Languages.Add(expected);
 
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Languages.Count.Should().Be(1);
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
 
-    //    var actualEntity = TestDbContext.Languages.SingleOrDefault(s => s.Name == expected.Name);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected, options =>
-    //        options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
-    //            .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
+        actualService.Should().NotBeNull();
+        actualService!.Languages.Count.Should().Be(1);
 
-    //    var unexpectedEntity = TestDbContext.Languages.Where(lc => lc.Id == existingItem.Id).ToList();
-    //    unexpectedEntity.Should().HaveCount(0);
-    //}
+        var actualEntity = TestDbContext.Languages.SingleOrDefault(s => s.Name == expected.Name);
+        actualEntity.Should().NotBeNull();
+        actualEntity.Should().BeEquivalentTo(expected, options =>
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
 
-    //[Fact]
-    //public async Task ThenUpdateServiceUpdatedLanguages()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
+        var unexpectedEntity = TestDbContext.Languages.Where(lc => lc.Id == existingItem.Id).ToList();
+        unexpectedEntity.Should().HaveCount(0);
+    }
 
-    //    var expected = service.Languages.ElementAt(0);
-    //    expected.Name = "Updated Language";
+    [Fact]
+    public async Task ThenUpdateServiceUpdatedLanguages()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var expected = serviceChange.Languages.ElementAt(0);
+        expected.Name = "Updated Language";
+        expected.Code = "UL";
 
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Languages.Count.Should().Be(1);
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
 
-    //    var actualEntity = TestDbContext.Languages.SingleOrDefault(s => s.Name == expected.Name);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected);
-    //}
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == serviceChange.Name);
+        actualService.Should().NotBeNull();
+        actualService!.Languages.Count.Should().Be(1);
+
+        var actualEntity = TestDbContext.Languages.SingleOrDefault(s => s.Name == expected.Name);
+        actualEntity.Should().NotBeNull();
+        actualEntity.Should().BeEquivalentTo(expected);
+    }
 
     //[Fact]
     //public async Task ThenUpdateServiceAddAndDeleteCostOptions()
