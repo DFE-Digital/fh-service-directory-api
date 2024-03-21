@@ -156,35 +156,36 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         unexpectedEntity.Should().HaveCount(0);
     }
 
-    //[Fact]
-    //public async Task ThenUpdateServiceUpdatedServiceAreas()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
+    [Fact]
+    public async Task ThenUpdateServiceUpdatedServiceAreas()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
-    //    var expected = service.ServiceAreas.ElementAt(0);
-    //    expected.ServiceAreaName = "Updated ServiceAreaName";
-    //    expected.Extent = "Updated Extent";
+        var expected = serviceChange.ServiceAreas.ElementAt(0);
+        expected.ServiceAreaName = "Updated ServiceAreaName";
+        expected.Extent = "Updated Extent";
 
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.ServiceAreas.Count.Should().Be(1);
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
+        actualService.Should().NotBeNull();
+        actualService!.ServiceAreas.Count.Should().Be(1);
 
-    //    var actualEntity = TestDbContext.ServiceAreas.SingleOrDefault(s => s.ServiceAreaName == expected.ServiceAreaName);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected);
-    //}
+        var actualEntity = TestDbContext.ServiceAreas.SingleOrDefault(s => s.ServiceAreaName == expected.ServiceAreaName);
+        actualEntity.Should().NotBeNull();
+        actualEntity.Should().BeEquivalentTo(expected);
+    }
 
     //[Fact]
     //public async Task ThenUpdateServiceAddAndDeleteServiceDeliveries()
