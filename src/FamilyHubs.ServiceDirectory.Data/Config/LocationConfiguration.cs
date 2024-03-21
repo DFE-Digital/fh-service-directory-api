@@ -72,8 +72,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
 
         builder.HasMany(s => s.Schedules)
             .WithOne()
-            .IsRequired(false)
             .HasForeignKey(lc => lc.LocationId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Cascade)
             ;
 

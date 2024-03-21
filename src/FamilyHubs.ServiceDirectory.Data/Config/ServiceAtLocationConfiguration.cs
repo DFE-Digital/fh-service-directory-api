@@ -12,9 +12,9 @@ public class ServiceAtLocationConfiguration : IEntityTypeConfiguration<ServiceAt
 
         builder.HasMany(s => s.Schedules)
             .WithOne()
-            .IsRequired(false)
             .HasForeignKey(lc => lc.ServiceAtLocationId)
-            .OnDelete(DeleteBehavior.NoAction)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade)
             ;
 
         builder.Property(t => t.Created)

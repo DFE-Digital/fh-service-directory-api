@@ -91,8 +91,8 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
 
         builder.HasMany(s => s.Schedules)
             .WithOne()
-            .IsRequired(false)
             .HasForeignKey(lc => lc.ServiceId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Cascade)
             ;
 
