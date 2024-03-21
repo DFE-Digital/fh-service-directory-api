@@ -38,47 +38,50 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         actualService!.Description.Should().Be(service.Description);
     }
 
-    //[Fact]
-    //public async Task ThenUpdateServiceAddAndDeleteEligibilities()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-    //    var existingItem = service.Eligibilities.ElementAt(0);
+    [Fact]
+    public async Task ThenUpdateServiceAddAndDeleteEligibilities()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
 
-    //    var expected = new EligibilityDto
-    //    {
-    //        //ServiceId = service.Id,
-    //        MaximumAge = 2,
-    //        MinimumAge = 0,
-    //        EligibilityType = null
-    //    };
-    //    service.Eligibilities.Clear();
-    //    service.Eligibilities.Add(expected);
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var existingItem = serviceChange.Eligibilities.ElementAt(0);
 
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+        var expected = new EligibilityDto
+        {
+            //ServiceId = service.Id,
+            MaximumAge = 2,
+            MinimumAge = 0,
+            EligibilityType = null
+        };
+        serviceChange.Eligibilities.Clear();
+        serviceChange.Eligibilities.Add(expected);
 
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Eligibilities.Count.Should().Be(1);
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
-    //    var actualEntity = TestDbContext.Eligibilities.SingleOrDefault(s => s.EligibilityType == expected.EligibilityType);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected, options =>
-    //        options.Excluding(info => info.Name.Contains("Id"))
-    //            .Excluding(info => info.Name.Contains("Distance")));
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
 
-    //    var unexpectedEntity = TestDbContext.Eligibilities.Where(lc => lc.Id == existingItem.Id).ToList();
-    //    unexpectedEntity.Should().HaveCount(0);
-    //}
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
+        actualService.Should().NotBeNull();
+        actualService!.Eligibilities.Count.Should().Be(1);
+
+        var actualEntity = TestDbContext.Eligibilities.SingleOrDefault(s => s.EligibilityType == expected.EligibilityType);
+        actualEntity.Should().NotBeNull();
+        actualEntity.Should().BeEquivalentTo(expected, options =>
+            options.Excluding(info => info.Name.Contains("Id"))
+                .Excluding(info => info.Name.Contains("Distance")));
+
+        var unexpectedEntity = TestDbContext.Eligibilities.Where(lc => lc.Id == existingItem.Id).ToList();
+        unexpectedEntity.Should().HaveCount(0);
+    }
 
     //[Fact]
     //public async Task ThenUpdateServiceUpdatedEligibilities()
