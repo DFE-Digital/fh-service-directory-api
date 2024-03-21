@@ -365,76 +365,79 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         unexpectedEntity.Should().HaveCount(0);
     }
 
-    //[Fact]
-    //public async Task ThenUpdateServiceUpdatedCostOptions()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
+    [Fact]
+    public async Task ThenUpdateServiceUpdatedCostOptions()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
-    //    var expected = service.CostOptions.ElementAt(0);
-    //    expected.Amount = 987;
-    //    expected.Option = "Updated Option";
-    //    expected.AmountDescription = "Updated Amount Description";
+        var expected = serviceChange.CostOptions.ElementAt(0);
+        expected.Amount = 987;
+        expected.Option = "Updated Option";
+        expected.AmountDescription = "Updated Amount Description";
 
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.CostOptions.Count.Should().Be(1);
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == serviceChange.Name);
+        actualService.Should().NotBeNull();
+        actualService!.CostOptions.Count.Should().Be(1);
 
-    //    var actualEntity = TestDbContext.CostOptions.SingleOrDefault(s => s.Option == expected.Option);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected);
-    //}
+        var actualEntity = TestDbContext.CostOptions.SingleOrDefault(s => s.Option == expected.Option);
+        actualEntity.Should().NotBeNull();
+        actualEntity.Should().BeEquivalentTo(expected);
+    }
 
-    //[Fact]
-    //public async Task ThenUpdateServiceAddAndDeleteContacts()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-    //    var existingItem = service.Contacts.ElementAt(0);
-    //    var contact = new ContactDto
-    //    {
-    //        Id = 0,
-    //        Name = "New Contact",
-    //        Telephone = "New Telephone"
-    //    };
-    //    service.Contacts.Clear();
-    //    service.Contacts.Add(contact);
+    [Fact]
+    public async Task ThenUpdateServiceAddAndDeleteContacts()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var existingItem = serviceChange.Contacts.ElementAt(0);
+        var contact = new ContactDto
+        {
+            Id = 0,
+            Name = "New Contact",
+            Telephone = "New Telephone"
+        };
+        serviceChange.Contacts.Clear();
+        serviceChange.Contacts.Add(contact);
 
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Contacts.Count.Should().Be(1);
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
 
-    //    var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
-    //    actualContact.Should().NotBeNull();
-    //    actualContact.Should().BeEquivalentTo(contact, options =>
-    //        options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
-    //            .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == serviceChange.Name);
+        actualService.Should().NotBeNull();
+        actualService!.Contacts.Count.Should().Be(1);
 
-    //    var unexpectedEntity = TestDbContext.Contacts.Where(lc => lc.Id == existingItem.Id).ToList();
-    //    unexpectedEntity.Should().HaveCount(0);
-    //}
+        var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
+        actualContact.Should().NotBeNull();
+        actualContact.Should().BeEquivalentTo(contact, options =>
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+
+        var unexpectedEntity = TestDbContext.Contacts.Where(lc => lc.Id == existingItem.Id).ToList();
+        unexpectedEntity.Should().HaveCount(0);
+    }
 
     //[Fact]
     //public async Task ThenUpdateServiceWithUpdatedContacts()
