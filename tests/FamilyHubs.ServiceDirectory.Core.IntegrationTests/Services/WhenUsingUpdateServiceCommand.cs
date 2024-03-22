@@ -606,77 +606,42 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
 
-    //todo: we're going to change how we handle taxonomies, so we'll update the test after that
-    //[Fact]
-    //public async Task ThenUpdateServiceAddAndDeleteTaxonomies()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-    //    var taxonomy = service.Taxonomies.ElementAt(0);
-    //    var expected = new TaxonomyDto
-    //    {
-    //        Name = "New Taxonomy"
-    //    };
-    //    service.Taxonomies.Clear();
-    //    service.Taxonomies.Add(expected);
+    [Fact]
+    public async Task ThenUpdateServiceAddAndDeleteTaxonomies()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var newTaxonomy = TestDbContext.Taxonomies.First(t => t.Name == "Sports and recreation");
 
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+        var taxonomy = service.Taxonomies.ElementAt(0);
+        serviceChange.TaxonomyIds.Clear();
+        serviceChange.TaxonomyIds.Add(newTaxonomy.Id);
 
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
 
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Taxonomies.Count.Should().Be(1);
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
 
-    //    var actualEntity = TestDbContext.Taxonomies.SingleOrDefault(s => s.Name == expected.Name);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected, options =>
-    //        options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
-    //            .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
 
-    //    //Delete wont cascade delete Taxonomies, so existing will be left behind
-    //    var detachedEntity = TestDbContext.Taxonomies.SingleOrDefault(s => s.Name == taxonomy.Name);
-    //    detachedEntity.Should().NotBeNull();
-    //    detachedEntity.Should().BeEquivalentTo(taxonomy, options =>
-    //        options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
-    //            .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
-    //}
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == serviceChange.Name);
+        actualService.Should().NotBeNull();
+        actualService!.Taxonomies.Count.Should().Be(1);
+        actualService!.Taxonomies.Select(t => t.Id).Should().BeEquivalentTo(new[] { newTaxonomy.Id });
 
-    //[Fact]
-    //public async Task ThenUpdateServiceUpdatedTaxonomies()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-
-    //    var expected = service.Taxonomies.ElementAt(0);
-    //    expected.Name = "Updated Name";
-
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
-
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Taxonomies.Count.Should().Be(4);
-
-    //    var actualEntity = TestDbContext.Taxonomies.SingleOrDefault(s => s.Name == expected.Name);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected);
-    //}
+        // Delete wont cascade delete Taxonomies, so existing will be left behind
+        var detachedEntity = TestDbContext.Taxonomies.SingleOrDefault(s => s.Name == taxonomy.Name);
+        detachedEntity.Should().NotBeNull();
+        detachedEntity.Should().BeEquivalentTo(taxonomy, options =>
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+    }
 
     //[Fact]
     //public async Task ThenUpdateServiceAttachExistingTaxonomies()
