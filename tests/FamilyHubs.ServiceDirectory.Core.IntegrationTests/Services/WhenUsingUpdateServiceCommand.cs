@@ -644,40 +644,6 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     }
 
     //[Fact]
-    //public async Task ThenUpdateServiceAttachExistingTaxonomies()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var expected = new TaxonomyDto
-    //    {
-    //        Name = "New Taxonomy Name",
-    //        TaxonomyType = TaxonomyType.ServiceCategory
-    //    };
-    //    expected.Id = await CreateTaxonomy(expected);
-
-    //    var service = TestOrganisation.Services.ElementAt(0);
-    //    service.Taxonomies.Add(expected);
-
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
-
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Taxonomies.Count.Should().Be(5);
-
-    //    var actualEntity = TestDbContext.Taxonomies.SingleOrDefault(s => s.Name == expected.Name);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected);
-    //}
-
-    //[Fact]
     //public async Task ThenUpdateServiceLocationsAddAndDeleteContacts()
     //{
     //    //Arrange
