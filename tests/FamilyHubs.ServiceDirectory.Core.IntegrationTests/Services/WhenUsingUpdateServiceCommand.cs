@@ -546,6 +546,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         actualEntity.Should().BeEquivalentTo(expected);
     }
 
+    //todo: ideally we'd have one test for add, one for delete (and this one for add and delete
     [Fact]
     public async Task ThenUpdateServiceAddAndDeleteLocations()
     {
@@ -604,39 +605,6 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
-
-    ////todo: this is now basically the same as ThenUpdateServiceUpdatedLocations
-    //// what was it trying to do, having 2 locations on the service with the same id, but different properties? didn't make sense
-    //[Fact]
-    //public async Task ThenUpdateServiceAttachExistingLocations()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-
-    //    var service = TestOrganisation.Services.First();
-    //    var expected = service.Locations.First();
-    //    expected.Name = "Existing Location already Saved in DB";
-
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
-
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Locations.Count.Should().Be(1);
-
-    //    var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected, options =>
-    //        options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
-    //            .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
-    //}
 
     //[Fact]
     //public async Task ThenUpdateServiceAddAndDeleteTaxonomies()
