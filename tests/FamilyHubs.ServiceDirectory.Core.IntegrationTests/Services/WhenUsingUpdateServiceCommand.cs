@@ -644,46 +644,6 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     }
 
     //[Fact]
-    //public async Task ThenUpdateServiceLocationsAddAndDeleteContacts()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-    //    var existingItem = service.Locations.ElementAt(0).Contacts.ElementAt(0);
-    //    var contact = new ContactDto
-    //    {
-    //        Id = 0,
-    //        Name = "New Contact",
-    //        Telephone = "New Telephone"
-    //    };
-    //    service.Locations.ElementAt(0).Contacts.Clear();
-    //    service.Locations.ElementAt(0).Contacts.Add(contact);
-
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
-
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Locations.Count.Should().Be(1);
-
-    //    var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
-    //    actualContact.Should().NotBeNull();
-    //    actualContact.Should().BeEquivalentTo(contact, options =>
-    //        options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
-    //            .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
-
-    //    var unexpectedEntity = TestDbContext.Contacts.Where(lc => lc.Id == existingItem.Id).ToList();
-    //    unexpectedEntity.Should().HaveCount(0);
-    //}
-
-    //[Fact]
     //public async Task ThenUpdateServiceLocationsWithUpdatedContacts()
     //{
     //    //Arrange
