@@ -606,6 +606,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
 
+    //todo: we're going to change how we handle taxonomies, so we'll update the test after that
     //[Fact]
     //public async Task ThenUpdateServiceAddAndDeleteTaxonomies()
     //{

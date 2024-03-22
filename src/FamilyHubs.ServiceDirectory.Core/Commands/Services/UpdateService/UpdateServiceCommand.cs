@@ -54,8 +54,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         {
             service = _mapper.Map(request.Service, service);
 
-            service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper);
-            service.AttachExistingManyToMany(_context, _mapper);
+            service.Taxonomies = await request.Service.TaxonomyIds.GetEntities(_context.Taxonomies);
 
             _context.Services.Update(service);
 
