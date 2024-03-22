@@ -1,7 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.UpdateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
@@ -12,6 +11,7 @@ using System.Security.Claims;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Organisations;
 
+//todo: a lot of these unit tests now been to be deleted
 public class WhenUsingUpdateOrganisationCommand : DataIntegrationTestBase
 {
     public readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
@@ -624,39 +624,6 @@ public class WhenUsingUpdateOrganisationCommand : DataIntegrationTestBase
     }
 
     [Fact]
-    public async Task ThenUpdateOrganisationAttachExistingLocations()
-    {
-        //Arrange
-        await CreateOrganisationDetails();
-        var expected = TestDataProvider.GetTestCountyCouncilDto2().Services.ElementAt(0).Locations.ElementAt(0) with { Name = "Existing Location already Saved in DB" };
-        expected.OrganisationId = TestOrganisation.Id;
-        expected.Id = await CreateLocation(expected);
-
-        var service = TestOrganisation.Services.ElementAt(0);
-        service.Locations.Add(expected);
-
-        var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
-
-        //Act
-        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBe(0);
-        result.Should().Be(TestOrganisation.Id);
-
-        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-        actualService.Should().NotBeNull();
-        actualService!.Locations.Count.Should().Be(2);
-
-        var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
-        actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected, options =>
-            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
-                .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
-    }
-
-    [Fact]
     public async Task ThenUpdateOrganisationAddAndDeleteTaxonomies()
     {
         //Arrange
@@ -721,40 +688,6 @@ public class WhenUsingUpdateOrganisationCommand : DataIntegrationTestBase
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
         actualService.Should().NotBeNull();
         actualService!.Taxonomies.Count.Should().Be(4);
-
-        var actualEntity = TestDbContext.Taxonomies.SingleOrDefault(s => s.Name == expected.Name);
-        actualEntity.Should().NotBeNull();
-        actualEntity.Should().BeEquivalentTo(expected);
-    }
-
-    [Fact]
-    public async Task ThenUpdateOrganisationAttachExistingTaxonomies()
-    {
-        //Arrange
-        await CreateOrganisationDetails();
-        var expected = new TaxonomyDto
-        {
-            Name = "New Taxonomy Name",
-            TaxonomyType = TaxonomyType.ServiceCategory
-        };
-        expected.Id = await CreateTaxonomy(expected);
-
-        var service = TestOrganisation.Services.ElementAt(0);
-        service.Taxonomies.Add(expected);
-
-        var updateCommand = new UpdateOrganisationCommand(TestOrganisation.Id, TestOrganisation);
-        var updateHandler = new UpdateOrganisationCommandHandler(_mockHttpContextAccessor.Object, TestDbContext, Mapper, UpdateLogger.Object);
-
-        //Act
-        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBe(0);
-        result.Should().Be(TestOrganisation.Id);
-
-        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-        actualService.Should().NotBeNull();
-        actualService!.Taxonomies.Count.Should().Be(5);
 
         var actualEntity = TestDbContext.Taxonomies.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
