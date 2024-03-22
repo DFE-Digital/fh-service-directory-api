@@ -605,38 +605,6 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
 
-    //[Fact]
-    //public async Task ThenUpdateServiceUpdatedLocations()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-
-    //    var expected = service.Locations.ElementAt(0);
-    //    expected.Name = "Updated Name";
-    //    expected.Description = "Updated Description";
-
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
-
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Locations.Count.Should().Be(1);
-
-    //    var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected, options =>
-    //        options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
-    //            .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
-    //}
-
     ////todo: this is now basically the same as ThenUpdateServiceUpdatedLocations
     //// what was it trying to do, having 2 locations on the service with the same id, but different properties? didn't make sense
     //[Fact]
