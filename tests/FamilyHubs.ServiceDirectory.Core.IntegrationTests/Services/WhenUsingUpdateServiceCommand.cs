@@ -644,36 +644,6 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     }
 
     //[Fact]
-    //public async Task ThenUpdateServiceLocationsWithUpdatedContacts()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-    //    var contact = service.Locations.ElementAt(0).Contacts.ElementAt(0);
-    //    contact.Name = "Updated Name";
-    //    contact.Email = "Updated Email";
-    //    contact.Telephone = "Updated Telephone";
-
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
-
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Locations.ElementAt(0).Contacts.Count.Should().Be(1);
-
-    //    var actualContact = TestDbContext.Contacts.SingleOrDefault(s => s.Name == contact.Name);
-    //    actualContact.Should().NotBeNull();
-    //    actualContact.Should().BeEquivalentTo(contact);
-    //}
-
-    //[Fact]
     //public async Task ThenUpdateServiceLocationsAddAndDeleteSchedules()
     //{
     //    //Arrange
