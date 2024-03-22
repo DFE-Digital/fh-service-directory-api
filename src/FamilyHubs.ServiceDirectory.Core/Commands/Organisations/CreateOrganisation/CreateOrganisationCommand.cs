@@ -12,12 +12,12 @@ namespace FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisa
 
 public class CreateOrganisationCommand : IRequest<long>
 {
-    public CreateOrganisationCommand(OrganisationDetailsDto organisation)
+    public CreateOrganisationCommand(OrganisationDto organisation)
     {
         Organisation = organisation;
     }
 
-    public OrganisationDetailsDto Organisation { get; }
+    public OrganisationDto Organisation { get; }
 }
 
 public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisationCommand, long>
@@ -40,6 +40,7 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
     {
         try
         {
+            //todo: just throw if id is not 0
             await ThrowIfOrganisationIdExists(request, cancellationToken);
             await ThrowIfOrganisationNameExists(request, cancellationToken);
 
@@ -53,16 +54,6 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
             }
 
             var organisation = _mapper.Map<Organisation>(request.Organisation);
-
-            //todo: we need to have an OrganisationChangeDto with LocationChangeDtos and Service ids
-            // then all this can go and most of the unit tests too
-            organisation.Locations = await organisation.Locations.LinkExistingEntities(_context.Locations, _mapper);
-
-            foreach (var service in organisation.Services)
-            {
-                service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper);
-                service.AttachExistingManyToMany(_context, _mapper);
-            }
 
             _context.Organisations.Add(organisation);
 

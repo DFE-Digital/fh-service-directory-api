@@ -15,13 +15,13 @@ namespace FamilyHubs.ServiceDirectory.Core.Commands.Organisations.UpdateOrganisa
 
 public class UpdateOrganisationCommand : IRequest<long>
 {
-    public UpdateOrganisationCommand(long id, OrganisationDetailsDto organisation)
+    public UpdateOrganisationCommand(long id, OrganisationDto organisation)
     {
         Id = id;
         Organisation = organisation;
     }
 
-    public OrganisationDetailsDto Organisation { get; }
+    public OrganisationDto Organisation { get; }
 
     public long Id { get; }
 }
@@ -65,16 +65,6 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         try
         {
             organisation = _mapper.Map(request.Organisation, organisation);
-
-            //todo: we need to have an OrganisationChangeDto with LocationChangeDtos and Service ids
-            // then all this can go and most of the unit tests too
-            organisation.Locations = await organisation.Locations.LinkExistingEntities(_context.Locations, _mapper);
-
-            foreach (var service in organisation.Services)
-            {
-                service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper);
-                service.AttachExistingManyToMany(_context, _mapper);
-            }
 
             _context.Organisations.Update(organisation);
 
