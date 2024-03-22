@@ -20,8 +20,11 @@ public class AutoMappingProfiles : Profile
         CreateMap<ServiceNameDto, Service>().ReverseMap();
         CreateMap<ServiceAreaDto, ServiceArea>().ReverseMap();
         CreateMap<ServiceDeliveryDto, ServiceDelivery>().ReverseMap();
+
         CreateMap<OrganisationDto, Organisation>().ReverseMap();
         CreateMap<OrganisationDetailsDto, Organisation>().ReverseMap();
+        //todo: some of these maps are purely for unit testing purposes. we should separate them out into a test profile
+        CreateMap<OrganisationDetailsDto, OrganisationDto>().ReverseMap();
 
         CreateMap<ServiceDto, Service>().ReverseMap();
         CreateMap<ServiceChangeDto, Service>().ReverseMap();
