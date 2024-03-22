@@ -642,34 +642,4 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
-
-    //[Fact]
-    //public async Task ThenUpdateServiceLocationsUpdatedSchedules()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-
-    //    var expected = service.Locations.ElementAt(0).Schedules.ElementAt(0);
-    //    expected.ByDay = "Updated ByDay";
-    //    expected.ByMonthDay = "Updated ByMonthDay";
-
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
-
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Locations.ElementAt(0).Schedules.Count.Should().Be(1);
-
-    //    var actualEntity = TestDbContext.Schedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected);
-    //}
 }
