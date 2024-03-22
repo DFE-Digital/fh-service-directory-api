@@ -54,6 +54,8 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
 
             var organisation = _mapper.Map<Organisation>(request.Organisation);
 
+            //todo: we need to have an OrganisationChangeDto with LocationChangeDtos and Service ids
+            // then all this can go and most of the unit tests too
             organisation.Locations = await organisation.Locations.LinkExistingEntities(_context.Locations, _mapper);
 
             foreach (var service in organisation.Services)

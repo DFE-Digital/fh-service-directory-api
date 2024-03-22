@@ -66,6 +66,8 @@ public class UpdateOrganisationCommandHandler : IRequestHandler<UpdateOrganisati
         {
             organisation = _mapper.Map(request.Organisation, organisation);
 
+            //todo: we need to have an OrganisationChangeDto with LocationChangeDtos and Service ids
+            // then all this can go and most of the unit tests too
             organisation.Locations = await organisation.Locations.LinkExistingEntities(_context.Locations, _mapper);
 
             foreach (var service in organisation.Services)
