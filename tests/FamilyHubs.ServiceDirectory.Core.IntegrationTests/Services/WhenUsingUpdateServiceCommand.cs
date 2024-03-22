@@ -644,48 +644,6 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     }
 
     //[Fact]
-    //public async Task ThenUpdateServiceLocationsAddAndDeleteSchedules()
-    //{
-    //    //Arrange
-    //    await CreateOrganisationDetails();
-    //    var service = TestOrganisation.Services.ElementAt(0);
-    //    var existingItem = service.Locations.ElementAt(0).Schedules.ElementAt(0);
-    //    var expected = new ScheduleDto
-    //    {
-    //        ValidFrom = DateTime.UtcNow,
-    //        ValidTo = DateTime.UtcNow,
-    //        ByDay = "New ByDay",
-    //        ByMonthDay = "New ByMonthDay"
-    //    };
-
-    //    service.Locations.ElementAt(0).Schedules.Clear();
-    //    service.Locations.ElementAt(0).Schedules.Add(expected);
-
-    //    var updateCommand = new UpdateServiceCommand(service.Id, service);
-    //    var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
-
-    //    //Act
-    //    var result = await updateHandler.Handle(updateCommand, new CancellationToken());
-
-    //    //Assert
-    //    result.Should().NotBe(0);
-    //    result.Should().Be(service.Id);
-
-    //    var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == service.Name);
-    //    actualService.Should().NotBeNull();
-    //    actualService!.Locations.ElementAt(0).Schedules.Count.Should().Be(1);
-
-    //    var actualEntity = TestDbContext.Schedules.SingleOrDefault(s => s.ByDay == expected.ByDay);
-    //    actualEntity.Should().NotBeNull();
-    //    actualEntity.Should().BeEquivalentTo(expected, options =>
-    //        options.Excluding(info => info.Name.Contains("Id"))
-    //            .Excluding(info => info.Name.Contains("Distance")));
-
-    //    var unexpectedEntity = TestDbContext.Schedules.Where(lc => lc.Id == existingItem.Id).ToList();
-    //    unexpectedEntity.Should().HaveCount(0);
-    //}
-
-    //[Fact]
     //public async Task ThenUpdateServiceLocationsUpdatedSchedules()
     //{
     //    //Arrange
