@@ -780,6 +780,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
+                    b.HasIndex("Name", "ServiceId", "Id")
+                        .HasDatabaseName("IX_ServiceDeliveryNonClustered");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Name", "ServiceId", "Id"), false);
+
                     b.ToTable("ServiceDeliveries");
                 });
 
