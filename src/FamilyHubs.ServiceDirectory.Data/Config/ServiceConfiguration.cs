@@ -5,6 +5,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
+//todo: we need to revisit the cascade delete behaviours
+// we have that set on optional relationships and more crucially on entities
+// that can be optionally referenced by more than one different parent entity
+// we don't want to delete the referenced entity if it is still being referenced by another entity
 public class ServiceConfiguration : IEntityTypeConfiguration<Service>
 {
     public void Configure(EntityTypeBuilder<Service> builder)
