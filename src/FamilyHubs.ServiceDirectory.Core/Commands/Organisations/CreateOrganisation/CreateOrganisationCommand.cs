@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
-using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -40,8 +39,11 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
     {
         try
         {
-            //todo: just throw if id is not 0
-            await ThrowIfOrganisationIdExists(request, cancellationToken);
+            if (request.Organisation.Id != 0)
+            {
+                throw new AlreadyExistsException("Organisation Id must be 0 to create an organisation");
+
+            }
             await ThrowIfOrganisationNameExists(request, cancellationToken);
 
             if (request.Organisation.AssociatedOrganisationId is not null)
@@ -67,16 +69,6 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
             _logger.LogError(ex, "An error occurred creating organisation with Name:{name}.", request.Organisation.Name);
             throw;
         }
-    }
-
-    private async Task ThrowIfOrganisationIdExists(CreateOrganisationCommand request, CancellationToken cancellationToken)
-    {
-        var entity = await _context.Organisations
-        .IgnoreAutoIncludes()
-        .FirstOrDefaultAsync(x => x.Id == request.Organisation.Id, cancellationToken);
-
-        if (entity is not null)
-            throw new AlreadyExistsException("Duplicate Id");
     }
 
     private async Task ThrowIfOrganisationNameExists(CreateOrganisationCommand request, CancellationToken cancellationToken)
