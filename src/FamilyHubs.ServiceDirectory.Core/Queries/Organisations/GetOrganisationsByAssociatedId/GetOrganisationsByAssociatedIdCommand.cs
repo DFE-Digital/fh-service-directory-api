@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +31,7 @@ public class GetOrganisationsByAssociatedIdCommandHandler : IRequestHandler<GetO
     public async Task<List<OrganisationDto>> Handle(GetOrganisationsByAssociatedIdCommand request, CancellationToken cancellationToken)
     {
         var organisationsQuery = _context.Organisations
+            .IgnoreAutoIncludes()
             .AsNoTracking()
             .Where(x => x.Id == request.OrganisationId || x.AssociatedOrganisationId == request.OrganisationId);
 
