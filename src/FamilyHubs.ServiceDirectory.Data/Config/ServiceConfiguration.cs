@@ -28,6 +28,10 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Property(t => t.Name)
             .HasMaxLength(255);
 
+        // 200 is smaller than an acceptable name (which is 255)!
+        builder.Property(t => t.Summary)
+            .HasMaxLength(200);
+
         builder.HasEnumProperty(s => s.DeliverableType, 50);
         builder.HasEnumProperty(s => s.ServiceType);
         builder.HasEnumProperty(s => s.Status, 50);

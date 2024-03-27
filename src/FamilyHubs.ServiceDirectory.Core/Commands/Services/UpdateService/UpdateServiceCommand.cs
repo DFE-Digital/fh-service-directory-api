@@ -60,11 +60,8 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            //todo: we need to ensure that schedules (which can be referenced by location, service and serviceatlocations) are deleted when they're no longer referenced
-            // first try to get it to work with the ondelete actions (whilst avoiding cyclic issues!)
-            // if not we could in theory remove any after savechanges where all 3 optional foreign keys are null, but that feels like a hack
-
-            //todo: need to investigate if this should be necessary, or if orphaned schedules should be removed by EF - there could be a performance hit if we have to do this manually
+            // ensure that schedules (which can be referenced by location, service and serviceatlocations) are deleted when they're no longer referenced
+            // we need to do this, as we can't specify cascade delete on the ServiceAtLocation schedules relationship as it would cause a cyclic reference
             var schedulesToRemove = _context.Schedules
                 .Where(s => s.ServiceId == null && s.LocationId == null && s.ServiceAtLocationId == null)
                 .ToList();
