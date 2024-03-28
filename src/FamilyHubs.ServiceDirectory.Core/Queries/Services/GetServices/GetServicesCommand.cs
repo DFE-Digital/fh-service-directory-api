@@ -84,6 +84,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             request.Status = ServiceStatusType.Active;
 
         //todo: gets all services and then sorts in the api - not going to scale!
+        // looks like we can calculate the distance in the db, see https://learn.microsoft.com/en-us/ef/core/modeling/spatial
         var dbServices = await GetServices(request, cancellationToken);
 
         var filteredServices = _mapper.Map<List<ServiceDto>>(dbServices);

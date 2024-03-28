@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Core.Exceptions;
-using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -12,12 +11,12 @@ namespace FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisa
 
 public class CreateOrganisationCommand : IRequest<long>
 {
-    public CreateOrganisationCommand(OrganisationDetailsDto organisation)
+    public CreateOrganisationCommand(OrganisationDto organisation)
     {
         Organisation = organisation;
     }
 
-    public OrganisationDetailsDto Organisation { get; }
+    public OrganisationDto Organisation { get; }
 }
 
 public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisationCommand, long>
@@ -40,7 +39,11 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
     {
         try
         {
-            await ThrowIfOrganisationIdExists(request, cancellationToken);
+            if (request.Organisation.Id != 0)
+            {
+                throw new AlreadyExistsException("Organisation Id must be 0 to create an organisation");
+
+            }
             await ThrowIfOrganisationNameExists(request, cancellationToken);
 
             if (request.Organisation.AssociatedOrganisationId is not null)
@@ -55,14 +58,6 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
 
             var organisation = _mapper.Map<Organisation>(request.Organisation);
 
-            organisation.Locations = await organisation.Locations.LinkExistingEntities(_context.Locations, _mapper);
-
-            foreach (var service in organisation.Services)
-            {
-                service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper);
-                service.AttachExistingManyToMany(_context, _mapper);
-            }
-
             _context.Organisations.Add(organisation);
 
             await _context.SaveChangesAsync(cancellationToken);
@@ -75,16 +70,6 @@ public class CreateOrganisationCommandHandler : IRequestHandler<CreateOrganisati
             _logger.LogError(ex, "An error occurred creating organisation with Name:{name}.", request.Organisation.Name);
             throw;
         }
-    }
-
-    private async Task ThrowIfOrganisationIdExists(CreateOrganisationCommand request, CancellationToken cancellationToken)
-    {
-        var entity = await _context.Organisations
-        .IgnoreAutoIncludes()
-        .FirstOrDefaultAsync(x => x.Id == request.Organisation.Id, cancellationToken);
-
-        if (entity is not null)
-            throw new AlreadyExistsException("Duplicate Id");
     }
 
     private async Task ThrowIfOrganisationNameExists(CreateOrganisationCommand request, CancellationToken cancellationToken)

@@ -2,21 +2,20 @@
 using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
-using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.ServiceDirectory.Core.Commands.Services.CreateService;
 
 public class CreateServiceCommand : IRequest<long>
 {
-    public CreateServiceCommand(ServiceDto service)
+    public CreateServiceCommand(ServiceChangeDto service)
     {
         Service = service;
     }
 
-    public ServiceDto Service { get; }
+    public ServiceChangeDto Service { get; }
 }
 
 public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand, long>
@@ -25,7 +24,9 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
     private readonly IMapper _mapper;
     private readonly ILogger<CreateServiceCommandHandler> _logger;
 
-    public CreateServiceCommandHandler(ApplicationDbContext context, IMapper mapper,
+    public CreateServiceCommandHandler(
+        ApplicationDbContext context,
+        IMapper mapper,
         ILogger<CreateServiceCommandHandler> logger)
     {
         _context = context;
@@ -37,13 +38,9 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
     {
         try
         {
-            if (request.Service.Id != 0)
-                throw new ArgumentException("Service ID should be 0 when creating a service");
-
             var service = _mapper.Map<Service>(request.Service);
 
-            service.Locations = await service.Locations.LinkExistingEntities(_context.Locations, _mapper);
-            service.AttachExistingManyToMany(_context, _mapper);
+            service.Taxonomies = await request.Service.TaxonomyIds.GetEntities(_context.Taxonomies);
 
             _context.Services.Add(service);
 
@@ -53,7 +50,8 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred creating Service with Id:{ServiceRef}.", request.Service.ServiceOwnerReferenceId);
+            //todo: do we need this exception handler? as long as there's a global exception handler it's not adding much
+            _logger.LogError(ex, "An error occurred creating service");
             throw;
         }
     }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
+using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
+using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 
 using DoNotRemove = AutoMapper.EntityFrameworkCore.Extensions;
@@ -10,18 +12,25 @@ public class AutoMappingProfiles : Profile
 {
     public AutoMappingProfiles()
     {
-        //todo: is entity and dto's are identical, why bother having dto's?
         CreateMap<AccessibilityForDisabilitiesDto, AccessibilityForDisabilities>().ReverseMap();
         CreateMap<CostOptionDto, CostOption>().ReverseMap();
         CreateMap<EligibilityDto, Eligibility>().ReverseMap();
         CreateMap<FundingDto, Funding>().ReverseMap();
         CreateMap<LanguageDto, Language>().ReverseMap();
-        CreateMap<ServiceDto, Service>().ReverseMap();
         CreateMap<ServiceNameDto, Service>().ReverseMap();
         CreateMap<ServiceAreaDto, ServiceArea>().ReverseMap();
         CreateMap<ServiceDeliveryDto, ServiceDelivery>().ReverseMap();
+
         CreateMap<OrganisationDto, Organisation>().ReverseMap();
         CreateMap<OrganisationDetailsDto, Organisation>().ReverseMap();
+        //todo: some of these maps are purely for unit testing purposes. we should separate them out into a test profile
+        CreateMap<OrganisationDetailsDto, OrganisationDto>().ReverseMap();
+
+        CreateMap<ServiceDto, Service>().ReverseMap();
+        CreateMap<ServiceChangeDto, Service>().ReverseMap();
+        CreateMap<ServiceChangeDto, ServiceDto>().ReverseMap();
+
+        CreateMap<ServiceAtLocationChangeDto, ServiceAtLocation>().ReverseMap();
 
         CreateMap<LocationDto, Location>().ReverseMap();
         CreateMap<Location, Location>();

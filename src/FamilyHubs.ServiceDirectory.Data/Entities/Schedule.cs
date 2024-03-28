@@ -3,8 +3,13 @@ using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
-public class Schedule : ServiceLocationSharedEntityBase
-{    
+public class Schedule : EntityBase<long> //ServiceLocationSharedEntityBase
+{
+    public long? ServiceId { get; set; }
+    public long? LocationId { get; set; }
+    public long? ServiceAtLocationId { get; set; }
+    //public ServiceAtLocation? ServiceAtLocation { get; set; }
+
     public DateTime? OpensAt { get; set; }
     public DateTime? ClosesAt { get; set; }
     public DateTime? ValidFrom { get; set; }
