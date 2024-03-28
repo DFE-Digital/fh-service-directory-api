@@ -6,7 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<RootNamespace>FamilyHubs.ServiceDirectory.Api</RootNamespace>
 		<UserSecretsId>26d99b98-f8d3-4ce4-ab2e-2042a23ac6eb</UserSecretsId>
-		<NoWarn>S1135</NoWarn>
+		<NoWarn>S1135;S125</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
