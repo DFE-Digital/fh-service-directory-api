@@ -6,6 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<RootNamespace>FamilyHubs.ServiceDirectory.Api</RootNamespace>
 		<UserSecretsId>26d99b98-f8d3-4ce4-ab2e-2042a23ac6eb</UserSecretsId>
+		<NoWarn>S1135</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -27,6 +28,10 @@
 		<PackageReference Include="Serilog.Enrichers.AspNetCore" Version="1.0.0" />
 		<PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.23.0.88079">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />

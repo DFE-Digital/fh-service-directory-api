@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.ServiceDirectory.Data.Repository;
 
+#pragma warning disable S1075
 public class OrganisationSeedData
 {
     private readonly ApplicationDbContext _dbContext;
@@ -156,3 +157,4 @@ public class OrganisationSeedData
         await _dbContext.SaveChangesAsync();
     }
 }
+#pragma warning restore S1075
