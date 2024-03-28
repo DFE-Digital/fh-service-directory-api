@@ -63,16 +63,6 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(t => t.ExternalIdentifierType)
             .HasMaxLength(500);
 
-    builder.Property(t => t.Created)
-            .IsRequired();
-
-        builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.Email)
-            .IsRequired();
-
-        builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.Email);
-
         builder.HasMany(s => s.AccessibilityForDisabilities)
             .WithOne()
             .HasForeignKey(lc => lc.LocationId)
@@ -82,8 +72,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
 
         builder.HasMany(s => s.Schedules)
             .WithOne()
-            .IsRequired(false)
             .HasForeignKey(lc => lc.LocationId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Cascade)
             ;
 
@@ -93,5 +83,15 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .IsRequired(false)
             .OnDelete(DeleteBehavior.Cascade)
             ;
+
+        builder.Property(t => t.Created)
+            .IsRequired();
+
+        builder.Property(t => t.CreatedBy)
+            .HasMaxLength(MaxLength.Email)
+            .IsRequired();
+
+        builder.Property(t => t.LastModifiedBy)
+            .HasMaxLength(MaxLength.Email);
     }
 }
