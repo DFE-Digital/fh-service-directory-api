@@ -40,4 +40,3 @@ open powershell at ..\fh-service-directory-api\tests\cypress
 ```
  npx cypress open 
 ```
-
