@@ -38,6 +38,16 @@ public static class HelperUtility
 
         return foundEntities;
     }
+    
+    public static IOrderedQueryable<TSource> OrderBy<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, bool ascending)
+    {
+        return ascending ? source.OrderBy(keySelector) : source.OrderByDescending(keySelector);
+    }
+    
+    public static IOrderedQueryable<TSource> ThenBy<TSource,TKey>(this IOrderedQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, bool ascending)
+    {
+        return ascending ? source.ThenBy(keySelector) : source.ThenByDescending(keySelector);
+    }
 
     public static bool IsValidUrl(string url)
     {

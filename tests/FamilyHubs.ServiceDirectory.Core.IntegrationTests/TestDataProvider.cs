@@ -1,10 +1,12 @@
-﻿using System.Net;
 using AutoMapper;
+using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
+using NetTopologySuite.Geometries;
+using Location = FamilyHubs.ServiceDirectory.Data.Entities.Location;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests;
 
@@ -482,8 +484,9 @@ public static class TestDataProvider
                             LocationTypeCategory = LocationTypeCategory.NotSet,
                             Name = "Ordsall Neighbourhood Centre",
                             Description = "2, Robert Hall Street M5 3LT",
-                            Longitude = 53.474103227856105D,
-                            Latitude = -2.2721559641660787D,
+                            Latitude = 53.474103227856105D,
+                            Longitude = -2.2721559641660787D,
+                            GeoPoint = new Point(-2.2721559641660787D, 53.474103227856105D) { SRID = GeoPoint.WGS84 },
                             Address1 = "2, Robert Hall Street",
                             City = "Ordsall",
                             PostCode = "M5 3LT",
@@ -582,8 +585,9 @@ public static class TestDataProvider
                             LocationTypeCategory = LocationTypeCategory.NotSet,
                             Name = "Oakwood Academy",
                             Description = "",
-                            Longitude = 53.493505779578605D,
-                            Latitude = -2.336084327089324D,
+                            Latitude = 53.493505779578605D,
+                            Longitude = -2.336084327089324D,
+                            GeoPoint = new Point(-2.2721559641660787D, 53.474103227856105D) { SRID = GeoPoint.WGS84 },
                             Address1 = "Chatsworth Road",
                             City = "Eccles",
                             PostCode = "M30 9DY",
@@ -674,8 +678,9 @@ public static class TestDataProvider
                             LocationTypeCategory = LocationTypeCategory.FamilyHub,
                             Name = "Central Family Hub",
                             Description = "Broughton Hub",
-                            Longitude = .507025D,
-                            Latitude = -2.259764D,
+                            Latitude = 53.507025D,
+                            Longitude = -2.259764D,
+                            GeoPoint = new Point(-2.259764D, 53.507025D) { SRID = GeoPoint.WGS84 },
                             Address1 = "50 Rigby Street",
                             City = "Manchester",
                             PostCode = "M7 4BQ",
@@ -757,8 +762,9 @@ public static class TestDataProvider
                             LocationTypeCategory = LocationTypeCategory.FamilyHub,
                             Name = "North Family Hub",
                             Description = "Swinton Gateway",
-                            Longitude = .5124278D,
+                            Longitude = 53.5124278D,
                             Latitude = -2.342044D,
+                            GeoPoint = new Point(-2.342044D, 53.5124278D) { SRID = GeoPoint.WGS84 },
                             Address1 = "100 Chorley Road",
                             City = "Manchester",
                             PostCode = "M27 6BP",
@@ -876,8 +882,9 @@ public static class TestDataProvider
                             LocationTypeCategory = LocationTypeCategory.FamilyHub,
                             Name = "South Family Hub",
                             Description = "Winton Children’s Centre",
-                            Longitude = .48801070060149D,
-                            Latitude = -2.368140748303118D,
+                            Latitude = 53.48801070060149D,
+                            Longitude = -2.368140748303118D,
+                            GeoPoint = new Point(-2.368140748303118D, 53.48801070060149D) { SRID = GeoPoint.WGS84 },
                             Address1 = "Brindley Street",
                             City = "Manchester",
                             PostCode = "M30 8AB",
@@ -1027,8 +1034,9 @@ public static class TestDataProvider
                             LocationTypeCategory = LocationTypeCategory.NotSet,
                             Name = "test",
                             Description = "",
-                            Longitude = .48801070060149D,
-                            Latitude = -1.66526,
+                            Latitude = 51.48801070060149D,
+                            Longitude = -1.66526,
+                            GeoPoint = new Point(-1.66526, 51.48801070060149D) { SRID = GeoPoint.WGS84 },
                             Address1 = "7A Boyce's Ave, Clifton",
                             City = "Bristol",
                             PostCode = "BS8 4AA",
@@ -1121,8 +1129,9 @@ public static class TestDataProvider
                             LocationTypeCategory = LocationTypeCategory.NotSet,
                             Name = "",
                             Description = "",
-                            Longitude = .6312,
-                            Latitude = -1.66526,
+                            Latitude = 51.6312,
+                            Longitude = -1.66526,
+                            GeoPoint = new Point(-1.66526, 51.6312) { SRID = GeoPoint.WGS84 },
                             Address1 = "7A Boyce's Ave, Clifton",
                             City = "Bristol",
                             PostCode = "BS8 4AA",
@@ -1209,8 +1218,9 @@ public static class TestDataProvider
                             LocationTypeCategory = LocationTypeCategory.NotSet,
                             Name = "",
                             Description = "",
-                            Longitude = .63123,
+                            Longitude = 51.63123,
                             Latitude = -1.66519,
+                            GeoPoint = new Point(-1.66519, 51.63123) { SRID = GeoPoint.WGS84 },
                             Address1 = "7A Boyce's Ave, Clifton",
                             City = "Bristol",
                             PostCode = "BS8 4AA",
@@ -1306,8 +1316,9 @@ public static class TestDataProvider
                             LocationTypeCategory = LocationTypeCategory.NotSet,
                             Name = "",
                             Description = "",
-                            Longitude = .63123,
+                            Longitude = 51.63123,
                             Latitude = -1.66519,
+                            GeoPoint = new Point(-1.66519, 51.63123) { SRID = GeoPoint.WGS84 },
                             Address1 = "7A Boyce's Ave, Clifton",
                             City = "Bristol",
                             PostCode = "BS8 4AA",

@@ -123,33 +123,6 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
 
         return request;
     }
-
-    protected bool IsRunningLocally()
-    {
-
-        if (!_initSuccessful || _configuration == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            string localMachineName = _configuration["LocalSettings:MachineName"] ?? string.Empty;
-
-            if (!string.IsNullOrEmpty(localMachineName))
-            {
-                return Environment.MachineName.Equals(localMachineName, StringComparison.OrdinalIgnoreCase);
-            }
-        }
-        catch
-        {
-            return false;
-        }
-
-        // Fallback to a default check if User Secrets file or machine name is not specified
-        // For example, you can add additional checks or default behavior here
-        return false;
-    }
 }
 
 #pragma warning restore S3881

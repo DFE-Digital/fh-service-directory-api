@@ -1,12 +1,14 @@
 ﻿using AutoFixture;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
+using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -20,6 +22,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     public OrganisationDetailsDto TestOrganisationFreeService { get; set; }
     public OrganisationDto TestOrganisationWithoutAnyServices { get; set; }
     public IMapper Mapper { get; }
+    public IConfiguration Configuration { get; }
     public ApplicationDbContext TestDbContext { get; }
     public static NullLogger<T> GetLogger<T>() => new NullLogger<T>();
     protected IHttpContextAccessor _httpContextAccessor;
@@ -39,6 +42,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         TestDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
         Mapper = serviceProvider.GetRequiredService<IMapper>();
+        Configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
         _httpContextAccessor = Mock.Of<IHttpContextAccessor>();
 
@@ -135,6 +139,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     {
         TestDbContext.Database.EnsureDeleted();
         TestDbContext.Database.EnsureCreated();
+        TestDbContext.Database.ExecuteSqlRaw($"UPDATE geometry_columns SET srid = {GeoPoint.WGS84} WHERE f_table_name = 'locations';");
 
         var organisationSeedData = new OrganisationSeedData(TestDbContext);
 
@@ -151,15 +156,21 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         
         var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(_httpContextAccessor);
 
+        var inMemorySettings = new Dictionary<string, string?> {
+            {"UseSqlite", "true"},
+        };
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings).Build();
+
         return new ServiceCollection().AddEntityFrameworkSqlite()
             .AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder =>
             {
                 dbContextOptionsBuilder.UseLoggerFactory(TestLoggerFactory);
                 dbContextOptionsBuilder.UseSqlite(serviceDirectoryConnection, opt =>
                 {
-                    opt.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());
+                    opt.UseNetTopologySuite().MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());
                 });
             })
+            .AddSingleton<IConfiguration>(configuration)
             .AddSingleton(auditableEntitySaveChangesInterceptor)
             .AddAutoMapper((serviceProvider, cfg) =>
             {
