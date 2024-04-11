@@ -44,7 +44,7 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
         //Arrange
         await CreateOrganisationDetails();
 
-        var getCommand = new ListOrganisationsCommand();
+        var getCommand = new ListOrganisationsCommand(new List<long>(), null);
         var getHandler = new ListOrganisationCommandHandler(TestDbContext, Mapper);
 
         //Act

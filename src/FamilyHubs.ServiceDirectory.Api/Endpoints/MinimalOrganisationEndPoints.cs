@@ -56,11 +56,11 @@ public class MinimalOrganisationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Organisation Code By Organisation Id", "Get Organisation Code By Organisation Id") { Tags = new[] { "Organisations" } });
 
-        app.MapGet("api/organisations", async (CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapGet("api/organisations", async ([FromQuery] long[] ids, [FromQuery] string? name, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
-                var request = new ListOrganisationsCommand();
+                var request = new ListOrganisationsCommand(ids.ToList(), name);
                 var result = await mediator.Send(request, cancellationToken);
                 return result;
             }
