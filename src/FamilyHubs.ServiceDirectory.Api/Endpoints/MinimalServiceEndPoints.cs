@@ -145,7 +145,7 @@ public class MinimalServiceEndPoints
         }).WithMetadata(new SwaggerOperationAttribute("Update a Service", "Update a Service") { Tags = new[] { "Services" } });
 
         app.MapPost("api/services",
-            [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleGroups.LaOrVcsProfessionalOrDualRole}")] async 
+            [Authorize(Roles = RoleGroups.AdminRole)] async 
             ([FromBody] ServiceChangeDto request, 
             CancellationToken cancellationToken, 
             ISender mediator, 
