@@ -28,9 +28,10 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Property(t => t.Name)
             .HasMaxLength(255);
 
-        // 200 is smaller than an acceptable name (which is 255)!
+        // 200 char limit in the front end, but line endings are allowed, and they take 2 chars
+        // so we make it big enough to accomodate 200 line endings as the max length
         builder.Property(t => t.Summary)
-            .HasMaxLength(200);
+            .HasMaxLength(200*2);
 
         builder.HasEnumProperty(s => s.DeliverableType, 50);
         builder.HasEnumProperty(s => s.ServiceType);

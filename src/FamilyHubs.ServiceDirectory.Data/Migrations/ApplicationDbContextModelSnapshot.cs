@@ -360,8 +360,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("ExternalIdentifier")
                         .HasMaxLength(500)
@@ -732,8 +732,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Summary")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
 
                     b.HasKey("Id");
 
