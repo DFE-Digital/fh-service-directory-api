@@ -27,9 +27,6 @@ public class ContactConfiguration : IEntityTypeConfiguration<Contact>
             .HasMaxLength(50);
 
         builder.Property(t => t.Url)
-            .HasMaxLength(320);
-
-        builder.Property(t => t.Url)
             .HasMaxLength(2083);
 
         builder.Property(t => t.Created)
