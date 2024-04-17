@@ -17,7 +17,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .HasMaxLength(255);
 
         builder.Property(t => t.Description)
-            .HasMaxLength(500);
+            .HasMaxLength(500*2);
 
         builder.Property(t => t.Address1)
             .HasMaxLength(100);
