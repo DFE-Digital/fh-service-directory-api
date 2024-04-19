@@ -1,4 +1,8 @@
-﻿using FamilyHubs.ServiceDirectory.Data.Entities;
+﻿using System.Net;
+using AutoMapper;
+using FamilyHubs.ServiceDirectory.Data.Entities;
+using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
+using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 
@@ -223,6 +227,15 @@ public static class TestDataProvider
         };
 
         return service;
+    }
+
+    public static ServiceChangeDto GetTestCountyCouncilServicesChangeDto2(IMapper mapper, long organisationId,
+        string serviceId = "5059a0b2-ad5d-4288-b7c1-e30d35345b0e")
+    {
+        var service = GetTestCountyCouncilServicesDto2(organisationId, serviceId);
+        var serviceChange = mapper.Map<ServiceChangeDto>(service);
+
+        return serviceChange;
     }
 
     public static ServiceDto GetTestCountyCouncilServicesDto2(long organisationId, string serviceId = "5059a0b2-ad5d-4288-b7c1-e30d35345b0e")
@@ -456,40 +469,46 @@ public static class TestDataProvider
                         ServiceId = 0
                     }
                 },
-                Locations = new List<Location>
+                ServiceAtLocations = new List<ServiceAtLocation>
                 {
-                    new Location
+                    new ServiceAtLocation
                     {
-                        OrganisationId = organisationId,
-                        LocationTypeCategory = LocationTypeCategory.NotSet,
-                        Name = "Ordsall Neighbourhood Centre",
-                        Description = "2, Robert Hall Street M5 3LT",
-                        Longitude = 53.474103227856105D,
-                        Latitude = -2.2721559641660787D,
-                        Address1 = "2, Robert Hall Street",
-                        City = "Ordsall",
-                        PostCode = "M5 3LT",
-                        Country = "United Kingdom",
-                        StateProvince = "Salford",
-                        LocationType= LocationType.Postal,
-                        Schedules = new List<Schedule>
+                        Id = 0,
+                        LocationId = 0,
+                        ServiceId = 0,
+                        Location = new Location
                         {
-                            new Schedule
+                            OrganisationId = organisationId,
+                            LocationTypeCategory = LocationTypeCategory.NotSet,
+                            Name = "Ordsall Neighbourhood Centre",
+                            Description = "2, Robert Hall Street M5 3LT",
+                            Longitude = 53.474103227856105D,
+                            Latitude = -2.2721559641660787D,
+                            Address1 = "2, Robert Hall Street",
+                            City = "Ordsall",
+                            PostCode = "M5 3LT",
+                            Country = "United Kingdom",
+                            StateProvince = "Salford",
+                            LocationType= LocationType.Postal,
+                            Schedules = new List<Schedule>
                             {
-                                Description = "Friday 1.30pm - 2.30pm",
-                                ByDay = "1.30pm - 2.30pm"
-                            }
-                        },
-                        Contacts = new List<Contact>
-                        {
-                            new Contact
+                                new Schedule
+                                {
+                                    Description = "Friday 1.30pm - 2.30pm",
+                                    ByDay = "1.30pm - 2.30pm"
+                                }
+                            },
+                            Contacts = new List<Contact>
                             {
-                                Title = "",
-                                Name = "Broughton Hub",
-                                Telephone = "0161 778 0601",
-                                TextPhone = "0161 778 0601",
-                                Url = "https://www.gov.uk",
-                                Email = "help@gov.uk"
+                                new Contact
+                                {
+                                    Title = "",
+                                    Name = "Broughton Hub",
+                                    Telephone = "0161 778 0601",
+                                    TextPhone = "0161 778 0601",
+                                    Url = "https://www.gov.uk",
+                                    Email = "help@gov.uk"
+                                }
                             }
                         }
                     }
@@ -550,32 +569,38 @@ public static class TestDataProvider
                         ServiceId = 0
                     }
                 },
-                Locations = new List<Location>
+                ServiceAtLocations = new List<ServiceAtLocation>
                 {
-                    new Location
+                    new ServiceAtLocation
                     {
-                        OrganisationId = organisationId,
-                        LocationTypeCategory = LocationTypeCategory.NotSet,
-                        Name = "Oakwood Academy",
-                        Description = "",
-                        Longitude = 53.493505779578605D,
-                        Latitude = -2.336084327089324D,
-                        Address1 = "Chatsworth Road",
-                        City = "Eccles",
-                        PostCode = "M30 9DY",
-                        Country = "United Kingdom",
-                        StateProvince = "Manchester",
-                        LocationType= LocationType.Postal,
-                        Contacts = new List<Contact>
+                        Id = 0,
+                        LocationId = 0,
+                        ServiceId = 0,
+                        Location = new Location
                         {
-                            new Contact
+                            OrganisationId = organisationId,
+                            LocationTypeCategory = LocationTypeCategory.NotSet,
+                            Name = "Oakwood Academy",
+                            Description = "",
+                            Longitude = 53.493505779578605D,
+                            Latitude = -2.336084327089324D,
+                            Address1 = "Chatsworth Road",
+                            City = "Eccles",
+                            PostCode = "M30 9DY",
+                            Country = "United Kingdom",
+                            StateProvince = "Manchester",
+                            LocationType= LocationType.Postal,
+                            Contacts = new List<Contact>
                             {
-                                Title = "Ms",
-                                Name = "Kate Berry",
-                                Telephone = "01619212880",
-                                TextPhone = "01619212880",
-                                Url = "https://www.gov.uk",
-                                Email = "help@gov.uk"
+                                new Contact
+                                {
+                                    Title = "Ms",
+                                    Name = "Kate Berry",
+                                    Telephone = "01619212880",
+                                    TextPhone = "01619212880",
+                                    Url = "https://www.gov.uk",
+                                    Email = "help@gov.uk"
+                                }
                             }
                         }
                     }
@@ -636,32 +661,38 @@ public static class TestDataProvider
                         ServiceId = 0,
                     }
                 },
-                Locations = new List<Location>
+                ServiceAtLocations = new List<ServiceAtLocation>
                 {
-                    new Location
+                    new ServiceAtLocation
                     {
-                        OrganisationId = organisationId,
-                        LocationTypeCategory = LocationTypeCategory.FamilyHub,
-                        Name = "Central Family Hub",
-                        Description = "Broughton Hub",
-                        Longitude = .507025D,
-                        Latitude = -2.259764D,
-                        Address1 = "50 Rigby Street",
-                        City = "Manchester",
-                        PostCode = "M7 4BQ",
-                        Country = "United Kingdom",
-                        StateProvince = "Salford",
-                        LocationType= LocationType.Postal,
-                        Contacts = new List<Contact>
+                        Id = 0,
+                        LocationId = 0,
+                        ServiceId = 0,
+                        Location = new Location
                         {
-                            new Contact
+                            OrganisationId = organisationId,
+                            LocationTypeCategory = LocationTypeCategory.FamilyHub,
+                            Name = "Central Family Hub",
+                            Description = "Broughton Hub",
+                            Longitude = .507025D,
+                            Latitude = -2.259764D,
+                            Address1 = "50 Rigby Street",
+                            City = "Manchester",
+                            PostCode = "M7 4BQ",
+                            Country = "United Kingdom",
+                            StateProvince = "Salford",
+                            LocationType= LocationType.Postal,
+                            Contacts = new List<Contact>
                             {
-                                Title = "Ms",
-                                Name = "Kate Berry",
-                                Telephone = "0161 778 0601",
-                                TextPhone = "0161 778 0601",
-                                Url = "https://www.gov.uk",
-                                Email = "help@gov.uk"
+                                new Contact
+                                {
+                                    Title = "Ms",
+                                    Name = "Kate Berry",
+                                    Telephone = "0161 778 0601",
+                                    TextPhone = "0161 778 0601",
+                                    Url = "https://www.gov.uk",
+                                    Email = "help@gov.uk"
+                                }
                             }
                         }
                     }
@@ -713,32 +744,38 @@ public static class TestDataProvider
                         ServiceId = 0
                     }
                 },
-                Locations = new List<Location>
+                ServiceAtLocations = new List<ServiceAtLocation>
                 {
-                    new Location
+                    new ServiceAtLocation
                     {
-                        OrganisationId = organisationId,
-                        LocationTypeCategory = LocationTypeCategory.FamilyHub,
-                        Name = "North Family Hub",
-                        Description = "Swinton Gateway",
-                        Longitude = .5124278D,
-                        Latitude = -2.342044D,
-                        Address1 = "100 Chorley Road",
-                        City = "Manchester",
-                        PostCode = "M27 6BP",
-                        Country = "United Kingdom",
-                        StateProvince = "Salford",
-                        LocationType= LocationType.Postal,
-                        Contacts = new List<Contact>
+                        Id = 0,
+                        LocationId = 0,
+                        ServiceId = 0,
+                        Location = new Location
                         {
-                            new Contact
+                            OrganisationId = organisationId,
+                            LocationTypeCategory = LocationTypeCategory.FamilyHub,
+                            Name = "North Family Hub",
+                            Description = "Swinton Gateway",
+                            Longitude = .5124278D,
+                            Latitude = -2.342044D,
+                            Address1 = "100 Chorley Road",
+                            City = "Manchester",
+                            PostCode = "M27 6BP",
+                            Country = "United Kingdom",
+                            StateProvince = "Salford",
+                            LocationType= LocationType.Postal,
+                            Contacts = new List<Contact>
                             {
-                                Title = "Ms",
-                                Name = "Kate Berry",
-                                Telephone = "0161 778 0495",
-                                TextPhone = "0161 778 0495",
-                                Url = "https://www.gov.uk",
-                                Email = "help@gov.uk"
+                                new Contact
+                                {
+                                    Title = "Ms",
+                                    Name = "Kate Berry",
+                                    Telephone = "0161 778 0495",
+                                    TextPhone = "0161 778 0495",
+                                    Url = "https://www.gov.uk",
+                                    Email = "help@gov.uk"
+                                }
                             }
                         }
                     }
@@ -826,55 +863,61 @@ public static class TestDataProvider
                         ServiceId = 0
                     }
                 },
-                Locations = new List<Location>
+                ServiceAtLocations = new List<ServiceAtLocation>
                 {
-                    new Location
+                    new ServiceAtLocation
                     {
-                        OrganisationId = organisationId,
-                        LocationTypeCategory = LocationTypeCategory.FamilyHub,
-                        Name = "South Family Hub",
-                        Description = "Winton Children’s Centre",
-                        Longitude = .48801070060149D,
-                        Latitude = -2.368140748303118D,
-                        Address1 = "Brindley Street",
-                        City = "Manchester",
-                        PostCode = "M30 8AB",
-                        Country = "United Kingdom",
-                        StateProvince = "Salford",
-                        LocationType= LocationType.Postal,
-                        AccessibilityForDisabilities = new List<AccessibilityForDisabilities>
+                        Id = 0,
+                        LocationId = 0,
+                        ServiceId = 0,
+                        Location = new Location
                         {
-                            new AccessibilityForDisabilities
+                            OrganisationId = organisationId,
+                            LocationTypeCategory = LocationTypeCategory.FamilyHub,
+                            Name = "South Family Hub",
+                            Description = "Winton Children’s Centre",
+                            Longitude = .48801070060149D,
+                            Latitude = -2.368140748303118D,
+                            Address1 = "Brindley Street",
+                            City = "Manchester",
+                            PostCode = "M30 8AB",
+                            Country = "United Kingdom",
+                            StateProvince = "Salford",
+                            LocationType= LocationType.Postal,
+                            AccessibilityForDisabilities = new List<AccessibilityForDisabilities>
                             {
-                                Accessibility = "AccessibilityForDisabilities",
-                                LocationId = 0
-                            }
-                        },
-                        Schedules = new List<Schedule>
-                        {
-                            new Schedule
+                                new AccessibilityForDisabilities
+                                {
+                                    Accessibility = "AccessibilityForDisabilities",
+                                    LocationId = 0
+                                }
+                            },
+                            Schedules = new List<Schedule>
                             {
-                                Description = "Schedule",
-                                OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                ByDay = "byDay",
-                                ByMonthDay = "byMonth",
-                                DtStart = "dtStart",
-                                Freq = null,
-                                ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
-                            }
-                        },
-                        Contacts = new List<Contact>
-                        {
-                            new Contact
+                                new Schedule
+                                {
+                                    Description = "Schedule",
+                                    OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
+                                    ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
+                                    ByDay = "byDay",
+                                    ByMonthDay = "byMonth",
+                                    DtStart = "dtStart",
+                                    Freq = null,
+                                    ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
+                                    ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
+                                }
+                            },
+                            Contacts = new List<Contact>
                             {
-                                Title = "Ms",
-                                Name = "Kate Berry",
-                                Telephone = "0161 686 5260",
-                                TextPhone = "0161 686 5260",
-                                Url = "https://www.gov.uk",
-                                Email = "help@gov.uk"
+                                new Contact
+                                {
+                                    Title = "Ms",
+                                    Name = "Kate Berry",
+                                    Telephone = "0161 686 5260",
+                                    TextPhone = "0161 686 5260",
+                                    Url = "https://www.gov.uk",
+                                    Email = "help@gov.uk"
+                                }
                             }
                         }
                     }
@@ -971,24 +1014,48 @@ public static class TestDataProvider
                         Email = "help@gov.uk"
                     }
                 },
-                Locations = new List<Location>
+                ServiceAtLocations = new List<ServiceAtLocation>
                 {
-                    new Location
+                    new ServiceAtLocation
                     {
-                        OrganisationId = organisationId,
-                        LocationTypeCategory = LocationTypeCategory.NotSet,
-                        Name = "test",
-                        Description = "",
-                        Longitude = .48801070060149D,
-                        Latitude = -1.66526,
-                        Address1 = "7A Boyce's Ave, Clifton",
-                        City = "Bristol",
-                        PostCode = "BS8 4AA",
-                        Country = "England",
-                        StateProvince = "Bristol",
-                        LocationType= LocationType.Postal
-                    },
-                }
+                        Id = 0,
+                        LocationId = 0,
+                        ServiceId = 0,
+                        Location = new Location
+                        {
+                            OrganisationId = organisationId,
+                            LocationTypeCategory = LocationTypeCategory.NotSet,
+                            Name = "test",
+                            Description = "",
+                            Longitude = .48801070060149D,
+                            Latitude = -1.66526,
+                            Address1 = "7A Boyce's Ave, Clifton",
+                            City = "Bristol",
+                            PostCode = "BS8 4AA",
+                            Country = "England",
+                            StateProvince = "Bristol",
+                            LocationType= LocationType.Postal
+                        }
+                    }
+                },
+                //Locations = new List<Location>
+                //{
+                //    new Location
+                //    {
+                //        OrganisationId = organisationId,
+                //        LocationTypeCategory = LocationTypeCategory.NotSet,
+                //        Name = "test",
+                //        Description = "",
+                //        Longitude = .48801070060149D,
+                //        Latitude = -1.66526,
+                //        Address1 = "7A Boyce's Ave, Clifton",
+                //        City = "Bristol",
+                //        PostCode = "BS8 4AA",
+                //        Country = "England",
+                //        StateProvince = "Bristol",
+                //        LocationType= LocationType.Postal
+                //    },
+                //}
             },
             new Service
             {
@@ -1041,22 +1108,28 @@ public static class TestDataProvider
                         ParentId = 4
                     }
                 },
-                Locations = new List<Location>
+                ServiceAtLocations = new List<ServiceAtLocation>
                 {
-                    new Location
+                    new ServiceAtLocation
                     {
-                        OrganisationId = organisationId,
-                        LocationTypeCategory = LocationTypeCategory.NotSet,
-                        Name = "",
-                        Description = "",
-                        Longitude = .6312,
-                        Latitude = -1.66526,
-                        Address1 = "7A Boyce's Ave, Clifton",
-                        City = "Bristol",
-                        PostCode = "BS8 4AA",
-                        Country = "England",
-                        StateProvince = "Bristol",
-                        LocationType= LocationType.Postal
+                        Id = 0,
+                        LocationId = 0,
+                        ServiceId = 0,
+                        Location = new Location
+                        {
+                            OrganisationId = organisationId,
+                            LocationTypeCategory = LocationTypeCategory.NotSet,
+                            Name = "",
+                            Description = "",
+                            Longitude = .6312,
+                            Latitude = -1.66526,
+                            Address1 = "7A Boyce's Ave, Clifton",
+                            City = "Bristol",
+                            PostCode = "BS8 4AA",
+                            Country = "England",
+                            StateProvince = "Bristol",
+                            LocationType= LocationType.Postal
+                        }
                     }
                 },
                 Contacts = new List<Contact>
@@ -1123,23 +1196,29 @@ public static class TestDataProvider
                         Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
                     }
                 },
-                Locations = new List<Location>
+                ServiceAtLocations = new List<ServiceAtLocation>
                 {
-                    new Location
+                    new ServiceAtLocation
                     {
-                        OrganisationId = organisationId,
-                        LocationTypeCategory = LocationTypeCategory.NotSet,
-                        Name = "",
-                        Description = "",
-                        Longitude = .63123,
-                        Latitude = -1.66519,
-                        Address1 = "7A Boyce's Ave, Clifton",
-                        City = "Bristol",
-                        PostCode = "BS8 4AA",
-                        Country = "England",
-                        StateProvince = "Bristol",
-                        LocationType= LocationType.Postal
-                    },
+                        Id = 0,
+                        LocationId = 0,
+                        ServiceId = 0,
+                        Location = new Location
+                        {
+                            OrganisationId = organisationId,
+                            LocationTypeCategory = LocationTypeCategory.NotSet,
+                            Name = "",
+                            Description = "",
+                            Longitude = .63123,
+                            Latitude = -1.66519,
+                            Address1 = "7A Boyce's Ave, Clifton",
+                            City = "Bristol",
+                            PostCode = "BS8 4AA",
+                            Country = "England",
+                            StateProvince = "Bristol",
+                            LocationType= LocationType.Postal
+                        }
+                    }
                 },
                 Taxonomies = new List<Taxonomy>
                 {
@@ -1214,32 +1293,38 @@ public static class TestDataProvider
                         Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
                     }
                 },
-                Locations = new List<Location>
+                ServiceAtLocations = new List<ServiceAtLocation>
                 {
-                    new Location
+                    new ServiceAtLocation
                     {
-                        OrganisationId = organisationId,
-                        LocationTypeCategory = LocationTypeCategory.NotSet,
-                        Name = "",
-                        Description = "",
-                        Longitude = .63123,
-                        Latitude = -1.66519,
-                        Address1 = "7A Boyce's Ave, Clifton",
-                        City = "Bristol",
-                        PostCode = "BS8 4AA",
-                        Country = "England",
-                        StateProvince = "",
-                        LocationType= LocationType.Postal,
-                        Contacts = new List<Contact>
+                        Id = 0,
+                        LocationId = 0,
+                        ServiceId = 0,
+                        Location = new Location
                         {
-                            new Contact
+                            OrganisationId = organisationId,
+                            LocationTypeCategory = LocationTypeCategory.NotSet,
+                            Name = "",
+                            Description = "",
+                            Longitude = .63123,
+                            Latitude = -1.66519,
+                            Address1 = "7A Boyce's Ave, Clifton",
+                            City = "Bristol",
+                            PostCode = "BS8 4AA",
+                            Country = "England",
+                            StateProvince = "",
+                            LocationType= LocationType.Postal,
+                            Contacts = new List<Contact>
                             {
-                                Title = "Mr",
-                                Name = "John Smith",
-                                Telephone = "01827 64328",
-                                TextPhone = "01827 64328",
-                                Url = "https://www.gov.uk",
-                                Email = "help@gov.uk"
+                                new Contact
+                                {
+                                    Title = "Mr",
+                                    Name = "John Smith",
+                                    Telephone = "01827 64328",
+                                    TextPhone = "01827 64328",
+                                    Url = "https://www.gov.uk",
+                                    Email = "help@gov.uk"
+                                }
                             }
                         }
                     }

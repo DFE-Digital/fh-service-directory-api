@@ -35,19 +35,5 @@ public class UpdateServiceCommandValidator : AbstractValidator<UpdateServiceComm
                 context.AddFailure("Contact Url must be valid");
             }
         });
-
-        RuleFor(v => v.Service.Locations).Custom((list, context) =>
-        {
-            if (list is null) return;
-
-            foreach (var item in list.Select(x => x.Contacts))
-            {
-                var hasInvalidUrl = item.Any(x => x.Url is not null && !HelperUtility.IsValidUrl(x.Url));
-                if (hasInvalidUrl)
-                {
-                    context.AddFailure("Contact Url must be valid");
-                }
-            }
-        });
     }
 }

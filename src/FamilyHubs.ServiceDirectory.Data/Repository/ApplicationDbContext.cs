@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using FamilyHubs.ServiceDirectory.Data.Entities;
+using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
@@ -62,6 +63,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
         public DbSet<Organisation> Organisations => Set<Organisation>();
         public DbSet<Schedule> Schedules => Set<Schedule>();
         public DbSet<Service> Services => Set<Service>();
+        public DbSet<ServiceAtLocation> ServiceAtLocations => Set<ServiceAtLocation>();
         public DbSet<ServiceArea> ServiceAreas => Set<ServiceArea>();
         public DbSet<ServiceDelivery> ServiceDeliveries => Set<ServiceDelivery>();
         public DbSet<Taxonomy> Taxonomies => Set<Taxonomy>();

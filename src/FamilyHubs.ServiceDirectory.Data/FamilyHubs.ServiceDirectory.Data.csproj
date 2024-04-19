@@ -5,10 +5,11 @@
     <RootNamespace>FamilyHubs.ServiceDirectory.Data</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <NoWarn>S1135;S125</NoWarn>
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="7.3.0" />
+		<PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="8.1.0" />
 		<PackageReference Include="FamilyHubs.SharedKernel" Version="2.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.14">
@@ -17,6 +18,10 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.14" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.14">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.23.0.88079">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

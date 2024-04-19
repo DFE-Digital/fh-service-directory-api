@@ -23,9 +23,15 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Navigation(e => e.Locations).AutoInclude();
         builder.Navigation(e => e.Contacts).AutoInclude();
         builder.Navigation(e => e.Schedules).AutoInclude();
+        //builder.Navigation(e => e.ServiceAtLocations).AutoInclude();
 
         builder.Property(t => t.Name)
             .HasMaxLength(255);
+
+        // 200 char limit in the front end, but line endings are allowed, and they take 2 chars
+        // so we make it big enough to accomodate 200 line endings as the max length
+        builder.Property(t => t.Summary)
+            .HasMaxLength(200*2);
 
         builder.HasEnumProperty(s => s.DeliverableType, 50);
         builder.HasEnumProperty(s => s.ServiceType);
@@ -94,24 +100,14 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
 
         builder.HasMany(s => s.Schedules)
             .WithOne()
-            .IsRequired(false)
             .HasForeignKey(lc => lc.ServiceId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Cascade)
             ;
 
         builder.HasMany(p => p.Locations)
             .WithMany()
-            .UsingEntity<ServiceAtLocation>("ServiceAtLocations",
-                lt => lt
-                    .HasOne<Location>()
-                    .WithMany()
-                    .HasForeignKey(s => s.LocationId)
-                    .OnDelete(DeleteBehavior.Cascade),
-                rt => rt
-                    .HasOne<Service>()
-                    .WithMany()
-                    .HasForeignKey(s => s.ServiceId)
-                    .OnDelete(DeleteBehavior.Cascade));
+            .UsingEntity<ServiceAtLocation>();
 
         builder.HasMany(p => p.Taxonomies)
             .WithMany()
