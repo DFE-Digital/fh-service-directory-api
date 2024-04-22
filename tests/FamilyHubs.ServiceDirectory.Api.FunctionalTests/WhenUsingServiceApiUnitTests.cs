@@ -66,8 +66,12 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         response.EnsureSuccessStatusCode();
 
-        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(
+            await response.Content.ReadAsStreamAsync(),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        //var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        var item = retVal?.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
+
         ArgumentNullException.ThrowIfNull(item);
 
         var updatedItem = item with {Name = "Updated Service Name", Description = "Updated Service Description"};
@@ -82,7 +86,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         updateResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         stringResult.Should().Be("2");
-
     }
 
     [Fact]
@@ -138,13 +141,12 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        //var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        var item = retVal?.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         item.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(item);
-        item.ServiceOwnerReferenceId.Should().Be("Bristol-Service-2");
     }
 
     [Fact]
@@ -178,13 +180,12 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        //var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        var item = retVal?.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         item.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(item);
-        item.ServiceOwnerReferenceId.Should().Be("Bristol-Service-2");
     }
 
     [Fact]
@@ -217,13 +218,12 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        //var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        var item = retVal?.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         item.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(item);
-        item.ServiceOwnerReferenceId.Should().Be("Bristol-Service-2");
     }
 
     [Fact]
@@ -256,13 +256,12 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        //var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        var item = retVal?.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         item.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(item);
-        item.ServiceOwnerReferenceId.Should().Be("Bristol-Service-2");
     }
 
     [Fact]
@@ -294,13 +293,12 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.EnsureSuccessStatusCode();
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-1");
+        //var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-1");
+        var item = retVal?.Items.Find(x => x.Name == "Aid for Children with Tracheostomies");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         item.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(item);
-        item.ServiceOwnerReferenceId.Should().Be("Bristol-Service-1");
     }
 
     [Fact]
@@ -332,13 +330,12 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.EnsureSuccessStatusCode();
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        //var item = retVal?.Items.Find(x => x.ServiceOwnerReferenceId == "Bristol-Service-2");
+        var item = retVal?.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         item.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(item);
-        item.ServiceOwnerReferenceId.Should().Be("Bristol-Service-2");
     }
 
     [Fact]
@@ -366,7 +363,8 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(retVal);
-        retVal.ServiceOwnerReferenceId.Should().Be("Bristol-Service-1");
+        //retVal.ServiceOwnerReferenceId.Should().Be("Bristol-Service-1");
+        retVal.Name.Should().Be("Aid for Children with Tracheostomies");
     }
 
     [Fact]
@@ -394,7 +392,8 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(retVal);
-        retVal.ServiceOwnerReferenceId.Should().Be("Bristol-Service-1");
+        //retVal.ServiceOwnerReferenceId.Should().Be("Bristol-Service-1");
+        retVal.Name.Should().Be("Aid for Children with Tracheostomies");
     }
 
     [Fact]
@@ -425,7 +424,8 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         retVal.Should().NotBeNull();
         firstService.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(firstService);
-        firstService.ServiceOwnerReferenceId.Should().Be("Bristol-Service-1");
+        //firstService.ServiceOwnerReferenceId.Should().Be("Bristol-Service-1");
+        firstService.Name.Should().Be("Aid for Children with Tracheostomies");
     }
 
     [Fact]
@@ -577,6 +577,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
-        retVal!.ServiceOwnerReferenceId.Should().Be("Bristol-Service-1");
+        //retVal!.ServiceOwnerReferenceId.Should().Be("Bristol-Service-1");
+        retVal!.Name.Should().Be("Aid for Children with Tracheostomies");
     }
 }

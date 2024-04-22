@@ -13,12 +13,6 @@ public class UpdateServiceCommandValidator : AbstractValidator<UpdateServiceComm
         RuleFor(v => v.Service.Id)
             .NotEqual(0);
 
-        RuleFor(v => v.Service.ServiceOwnerReferenceId)
-            .MinimumLength(1)
-            .MaximumLength(50)
-            .NotNull()
-            .NotEmpty();
-
         RuleFor(v => v.Service.Name)
             .MinimumLength(1)
             .MaximumLength(255)

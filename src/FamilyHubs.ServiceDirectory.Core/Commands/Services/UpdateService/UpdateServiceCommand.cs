@@ -50,30 +50,22 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         if (service is null)
             throw new NotFoundException(nameof(Service), request.Id.ToString());
 
-        try
-        {
-            service = _mapper.Map(request.Service, service);
+        service = _mapper.Map(request.Service, service);
 
-            service.Taxonomies = await request.Service.TaxonomyIds.GetEntities(_context.Taxonomies);
+        service.Taxonomies = await request.Service.TaxonomyIds.GetEntities(_context.Taxonomies);
 
-            _context.Services.Update(service);
+        _context.Services.Update(service);
 
-            await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            // ensure that schedules (which can be referenced by location, service and serviceatlocations) are deleted when they're no longer referenced
-            // we need to do this, as we can't specify cascade delete on the ServiceAtLocation schedules relationship as it would cause a cyclic reference
-            var schedulesToRemove = _context.Schedules
-                .Where(s => s.ServiceId == null && s.LocationId == null && s.ServiceAtLocationId == null)
-                .ToList();
+        // ensure that schedules (which can be referenced by location, service and serviceatlocations) are deleted when they're no longer referenced
+        // we need to do this, as we can't specify cascade delete on the ServiceAtLocation schedules relationship as it would cause a cyclic reference
+        var schedulesToRemove = _context.Schedules
+            .Where(s => s.ServiceId == null && s.LocationId == null && s.ServiceAtLocationId == null)
+            .ToList();
 
-            _context.Schedules.RemoveRange(schedulesToRemove);
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred updating Service with Id:{ServiceRef}.", service.ServiceOwnerReferenceId);
-            throw;
-        }
+        _context.Schedules.RemoveRange(schedulesToRemove);
+        await _context.SaveChangesAsync(cancellationToken);
 
         return service.Id;
     }

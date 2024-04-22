@@ -2,11 +2,9 @@
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.DeleteService;
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.UpdateService;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServiceById;
-using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServiceByOwnerReferenceIdCommand;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganisationId;
 using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
-using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel.Identity;
 using MediatR;
@@ -85,25 +83,6 @@ public class MinimalServiceEndPoints
                 throw;
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Service by Id", "Get Service by Id") { Tags = new[] { "Services" } });
-
-        app.MapGet("api/servicesByOwnerReference/{ownerReferenceId}", async (string ownerReferenceId, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
-        {
-            try
-            {
-                var command = new GetServiceByOwnerReferenceIdCommand
-                {
-                    OwnerReferenceId = ownerReferenceId
-                };
-                var result = await mediator.Send(command, cancellationToken);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error occurred getting open referral service by OwnerReferenceId. {exceptionMessage}", ex.Message);
-                
-                throw;
-            }
-        }).WithMetadata(new SwaggerOperationAttribute("Get Service by OwnerReferenceId", "Get Service by OwnerReferenceId") { Tags = new[] { "Services" } });
 
         //todo: provide default for all params?
         app.MapGet("api/services/summary", 
