@@ -27,7 +27,7 @@ public class MinimalLocationEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred listing open referral locations. {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred listing open referral locations. {ExceptionMessage}", ex.Message);
 
                 throw;
             }
@@ -43,7 +43,7 @@ public class MinimalLocationEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred getting open referral location by id. {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred getting open referral location by id. {ExceptionMessage}", ex.Message);
 
                 throw;
             }
@@ -59,7 +59,7 @@ public class MinimalLocationEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred getting open referral location by id. {exceptionMessage}",
+                logger.LogError(ex, "An error occurred getting open referral location by id. {ExceptionMessage}",
                     ex.Message);
 
                 throw;
@@ -76,7 +76,7 @@ public class MinimalLocationEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred getting open referral location by id. {exceptionMessage}",
+                logger.LogError(ex, "An error occurred getting open referral location by id. {ExceptionMessage}",
                     ex.Message);
 
                 throw;
@@ -99,7 +99,7 @@ public class MinimalLocationEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred updating location (api). {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred updating location (api). {ExceptionMessage}", ex.Message);
 
                 throw;
             }
@@ -120,7 +120,7 @@ public class MinimalLocationEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred creating location (api). {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred creating location (api). {ExceptionMessage}", ex.Message);
 
                 throw;
             }

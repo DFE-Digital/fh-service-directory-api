@@ -73,8 +73,6 @@ public static class TestDataProvider
 
     public static ServiceDto GetTestCountyCouncilServicesDto(long organisationId, bool updated = false, bool isServiceFree = false)
     {
-        var serviceId = "3010521b-6e0a-41b0-b610-200edbbeeb14";
-
         var service = new ServiceDto
         {
             OrganisationId = organisationId,

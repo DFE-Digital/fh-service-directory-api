@@ -56,7 +56,7 @@ public class MinimalServiceEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred getting open referral service by id. {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred getting open referral service by id. {ExceptionMessage}", ex.Message);
                 
                 throw;
             }
@@ -78,7 +78,7 @@ public class MinimalServiceEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred getting open referral service by id. {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred getting open referral service by id. {ExceptionMessage}", ex.Message);
 
                 throw;
             }
@@ -117,7 +117,7 @@ public class MinimalServiceEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred updating service (api). {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred updating service (api). {ExceptionMessage}", ex.Message);
                 
                 throw;
             }
@@ -138,7 +138,7 @@ public class MinimalServiceEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred creating service (api). {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred creating service (api). {ExceptionMessage}", ex.Message);
                 
                 throw;
             }
@@ -159,7 +159,7 @@ public class MinimalServiceEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred deleting open referral service by id. {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred deleting open referral service by id. {ExceptionMessage}", ex.Message);
                 
                 throw;
             }

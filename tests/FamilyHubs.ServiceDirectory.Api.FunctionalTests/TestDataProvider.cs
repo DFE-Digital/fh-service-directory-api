@@ -120,8 +120,6 @@ public static class TestDataProvider
 
     public static ServiceDto GetTestCountyCouncilServicesCreateRecord(long parentId)
     {
-        var serviceId = "9066bccb-79cb-401f-818f-86ad23b022cf";
-
         var service = new ServiceDto
         {
             OrganisationId = 1,
