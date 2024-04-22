@@ -715,10 +715,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<long>("OrganisationId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("ServiceOwnerReferenceId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ServiceType")
                         .IsRequired()
                         .HasMaxLength(18)
