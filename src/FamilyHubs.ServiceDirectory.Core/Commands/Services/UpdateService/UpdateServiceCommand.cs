@@ -26,14 +26,11 @@ public class UpdateServiceCommand : IRequest<long>
 public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand, long>
 {
     private readonly ApplicationDbContext _context;
-    private readonly ILogger<UpdateServiceCommandHandler> _logger;
     private readonly IMapper _mapper;
 
-    public UpdateServiceCommandHandler(ApplicationDbContext context, IMapper mapper,
-        ILogger<UpdateServiceCommandHandler> logger)
+    public UpdateServiceCommandHandler(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
-        _logger = logger;
         _mapper = mapper;
     }
 
