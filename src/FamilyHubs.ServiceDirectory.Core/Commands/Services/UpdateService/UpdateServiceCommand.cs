@@ -9,6 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Core.Commands.Services.UpdateService;
 
+//todo: when adding/deleting locations (service at locations), ef complains about the schedule being referenced by the location
+//todo: when editing a service (to add a location), ended up with a duplicate service with a different id
+//todo: set whether ef logs in the config
+
 public class UpdateServiceCommand : IRequest<long>
 {
     public UpdateServiceCommand(long id, ServiceChangeDto service)
@@ -32,6 +36,10 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         _context = context;
         _mapper = mapper;
     }
+
+    //todo: do we need to update modified by and modified date? if so, in front end or back end?
+    // can we do it in the using an aspect/through the base entity/mapper?
+    // data in db has it set, how's it working?
 
     public async Task<long> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
     {
