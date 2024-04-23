@@ -2,7 +2,7 @@ namespace FamilyHubs.ServiceDirectory.Core.Queries.Dsl.Condition;
 
 public class EmptyCondtion : FhQueryCondition
 {
-    public static EmptyCondtion Instance = new();
+    public static readonly EmptyCondtion Instance = new();
     private EmptyCondtion()
     {
     }

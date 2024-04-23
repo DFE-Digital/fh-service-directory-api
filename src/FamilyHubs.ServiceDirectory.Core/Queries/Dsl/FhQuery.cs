@@ -2,7 +2,7 @@ using FamilyHubs.ServiceDirectory.Core.Queries.Dsl.Condition;
 
 namespace FamilyHubs.ServiceDirectory.Core.Queries.Dsl;
 
-public class FhQuery
+public sealed class FhQuery
 {
     private readonly string _table;
     private IEnumerable<string> _fields;
@@ -125,7 +125,7 @@ public class FhQuery
         return this;
     }
 
-    protected bool Equals(FhQuery other)
+    private bool Equals(FhQuery other)
     {
         return _table == other._table && _fields.Equals(other._fields) && _joins.Equals(other._joins) && _condition.Equals(other._condition) &&
                _groupBy.Equals(other._groupBy) && _orderBy.Equals(other._orderBy) && FhQueryLimit.Equals(other.FhQueryLimit);
@@ -141,6 +141,6 @@ public class FhQuery
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_table, _fields, _joins, _condition, _groupBy, _orderBy, FhQueryLimit);
+        throw new NotImplementedException();
     }
 }
