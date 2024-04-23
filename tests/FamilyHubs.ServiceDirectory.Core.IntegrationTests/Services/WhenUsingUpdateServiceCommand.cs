@@ -642,7 +642,16 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         serviceChange.ServiceAtLocations.Clear();
         serviceChange.ServiceAtLocations.Add(new ServiceAtLocationChangeDto
         {
-            LocationId = existingLocationId
+            LocationId = existingLocationId,
+            Schedules = new List<ScheduleDto>
+            {
+                new()
+                {
+                    AttendingType = AttendingType.InPerson.ToString(),
+                    Freq = FrequencyType.WEEKLY,
+                    ByDay = "TU"
+                }
+            }
         });
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
