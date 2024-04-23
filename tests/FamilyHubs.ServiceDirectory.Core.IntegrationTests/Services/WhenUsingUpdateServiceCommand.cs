@@ -651,7 +651,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         });
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());

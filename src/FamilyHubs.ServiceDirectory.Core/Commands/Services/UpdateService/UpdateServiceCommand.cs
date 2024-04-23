@@ -38,6 +38,9 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
     }
 
     //todo: check updated/modified by and modified date (handled by AuditableEntitySaveChangesInterceptor)
+    //todo: still getting the reference issue on delete
+    //todo: creating a new service, instead of updating the existing one
+    //todo: the schedule off service at location is going missing
 
     public async Task<long> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
     {
@@ -53,6 +56,11 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             throw new NotFoundException(nameof(Service), request.Id.ToString());
 
         service = _mapper.Map(request.Service, service);
+
+        foreach (var serviceAtLocation in service.ServiceAtLocations)
+        {
+            serviceAtLocation.ServiceId = service.Id;
+        }
 
         service.Taxonomies = await request.Service.TaxonomyIds.GetEntities(_context.Taxonomies);
 
