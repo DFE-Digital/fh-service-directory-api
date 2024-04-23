@@ -2,6 +2,7 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using FamilyHubs.ServiceDirectory.Data.Entities;
+using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -91,26 +92,39 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         return existingLocation.Id;
     }
 
-    public async Task<long> CreateContact(ContactDto contactDto)
+    public async Task<long> AddServiceAtLocationSchedule(long serviceAtLocationId, ScheduleDto scheduleDto)
     {
-        var existingContact = Mapper.Map<Contact>(contactDto);
+        var schedule = Mapper.Map<Schedule>(scheduleDto);
 
-        TestDbContext.Contacts.Add(existingContact);
+        var serviceAtLocation = TestDbContext.ServiceAtLocations.First(sal => sal.Id == serviceAtLocationId);
+
+        serviceAtLocation.Schedules.Add(schedule);
 
         await TestDbContext.SaveChangesAsync();
 
-        return existingContact.Id;
+        return schedule.Id;
     }
 
-    public async Task<long> CreateTaxonomy(TaxonomyDto taxonomyDto)
-    {
-        var existingLocation = Mapper.Map<Taxonomy>(taxonomyDto);
+    //public async Task<long> CreateContact(ContactDto contactDto)
+    //{
+    //    var existingContact = Mapper.Map<Contact>(contactDto);
 
-        TestDbContext.Taxonomies.Add(existingLocation);
-        await TestDbContext.SaveChangesAsync();
+    //    TestDbContext.Contacts.Add(existingContact);
 
-        return existingLocation.Id;
-    }
+    //    await TestDbContext.SaveChangesAsync();
+
+    //    return existingContact.Id;
+    //}
+
+    //public async Task<long> CreateTaxonomy(TaxonomyDto taxonomyDto)
+    //{
+    //    var existingLocation = Mapper.Map<Taxonomy>(taxonomyDto);
+
+    //    TestDbContext.Taxonomies.Add(existingLocation);
+    //    await TestDbContext.SaveChangesAsync();
+
+    //    return existingLocation.Id;
+    //}
 
     public async Task<List<Service>> CreateManyTestServicesQueryTesting()
     {
