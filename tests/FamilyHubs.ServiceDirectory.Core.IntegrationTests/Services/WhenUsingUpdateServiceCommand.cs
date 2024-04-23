@@ -603,6 +603,82 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
     }
 
     [Fact]
+    public async Task ThenUpdateServiceAddAndDeleteLocationsWithSchedules()
+    {
+        //Arrange
+        await CreateOrganisationDetails();
+        var service = TestOrganisation.Services.ElementAt(0);
+        var serviceChange = Mapper.Map<ServiceChangeDto>(service);
+
+        //todo: don't use hardcoded id?
+        await AddServiceAtLocationSchedule(1, new ScheduleDto
+        {
+            AttendingType = AttendingType.InPerson.ToString(),
+            Freq = FrequencyType.WEEKLY,
+            ByDay = "MO"
+        });
+
+        var location = service.Locations.ElementAt(0);
+        var expected = new LocationDto
+        {
+            Name = "New Location",
+            Description = "new Description",
+            Address1 = "Address1",
+            City = "City",
+            Country = "Country",
+            PostCode = "PostCode",
+            StateProvince = "StateProvince",
+            LocationTypeCategory = LocationTypeCategory.NotSet,
+            Latitude = 0,
+            Longitude = 0,
+            LocationType = LocationType.Postal
+        };
+        var existingLocationId = await CreateLocation(expected);
+
+        serviceChange.ServiceAtLocations.Clear();
+        serviceChange.ServiceAtLocations.Add(new ServiceAtLocationChangeDto
+        {
+            LocationId = existingLocationId,
+            Schedules = new List<ScheduleDto>
+            {
+                new()
+                {
+                    AttendingType = AttendingType.InPerson.ToString(),
+                    Freq = FrequencyType.WEEKLY,
+                    ByDay = "TU"
+                }
+            }
+        });
+
+        var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+
+        //Act
+        var result = await updateHandler.Handle(updateCommand, new CancellationToken());
+
+        //Assert
+        result.Should().NotBe(0);
+        result.Should().Be(serviceChange.Id);
+
+        var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == serviceChange.Name);
+        actualService.Should().NotBeNull();
+        actualService!.Locations.Count.Should().Be(1);
+
+        var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
+        actualEntity.Should().NotBeNull();
+        actualEntity.Should().BeEquivalentTo(expected, options =>
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+
+        //Delete wont cascade delete Locations, so existing will be left behind
+        var detachedEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == location.Name);
+        detachedEntity.Should().NotBeNull();
+        detachedEntity.Should().BeEquivalentTo(location, options =>
+            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
+                .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+    }
+
+    [Fact]
     public async Task ThenUpdateServiceAddAndDeleteTaxonomies()
     {
         //Arrange
