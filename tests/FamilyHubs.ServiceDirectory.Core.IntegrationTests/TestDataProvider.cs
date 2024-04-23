@@ -226,16 +226,15 @@ public static class TestDataProvider
         return service;
     }
 
-    public static ServiceChangeDto GetTestCountyCouncilServicesChangeDto2(IMapper mapper, long organisationId,
-        string serviceId = "5059a0b2-ad5d-4288-b7c1-e30d35345b0e")
+    public static ServiceChangeDto GetTestCountyCouncilServicesChangeDto2(IMapper mapper, long organisationId)
     {
-        var service = GetTestCountyCouncilServicesDto2(organisationId, serviceId);
+        var service = GetTestCountyCouncilServicesDto2(organisationId);
         var serviceChange = mapper.Map<ServiceChangeDto>(service);
 
         return serviceChange;
     }
 
-    public static ServiceDto GetTestCountyCouncilServicesDto2(long organisationId, string serviceId = "5059a0b2-ad5d-4288-b7c1-e30d35345b0e")
+    public static ServiceDto GetTestCountyCouncilServicesDto2(long organisationId)
     {
         var service = new ServiceDto
         {

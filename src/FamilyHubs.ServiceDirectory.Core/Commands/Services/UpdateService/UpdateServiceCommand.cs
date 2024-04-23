@@ -37,9 +37,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         _mapper = mapper;
     }
 
-    //todo: do we need to update modified by and modified date? if so, in front end or back end?
-    // can we do it in the using an aspect/through the base entity/mapper?
-    // data in db has it set, how's it working?
+    //todo: check updated/modified by and modified date (handled by AuditableEntitySaveChangesInterceptor)
 
     public async Task<long> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
     {
