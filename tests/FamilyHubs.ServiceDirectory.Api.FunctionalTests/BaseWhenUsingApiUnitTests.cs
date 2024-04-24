@@ -1,5 +1,4 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Repository;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Text;
@@ -12,18 +11,11 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
     protected readonly HttpClient? Client;
     private readonly CustomWebApplicationFactory? _webAppFactory;
     private readonly bool _initSuccessful;
-    private readonly IConfiguration? _configuration;
 
     protected BaseWhenUsingApiUnitTests()
     {
         try
         {
-            var configuration = new ConfigurationBuilder()
-           .AddUserSecrets<Program>()
-           .Build();
-
-            _configuration = configuration;
-
             _webAppFactory = new CustomWebApplicationFactory();
             _webAppFactory.SetupTestDatabaseAndSeedData();
 

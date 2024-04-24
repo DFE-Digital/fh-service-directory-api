@@ -52,7 +52,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
             if (System.Diagnostics.Debugger.IsAttached) optionsBuilder.EnableSensitiveDataLogging();
 
             optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
-            //optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
         }
 
         public DbSet<AccessibilityForDisabilities> AccessibilityForDisabilities => Set<AccessibilityForDisabilities>();
