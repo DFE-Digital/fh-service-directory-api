@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Data.Entities.Base;
 using GeoCoordinatePortable;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
 namespace FamilyHubs.ServiceDirectory.Core.Helper;
