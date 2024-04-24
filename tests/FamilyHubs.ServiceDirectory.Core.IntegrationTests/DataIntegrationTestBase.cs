@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
+using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
@@ -157,7 +158,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
                 dbContextOptionsBuilder.UseLoggerFactory(TestLoggerFactory);
                 dbContextOptionsBuilder.UseSqlite(serviceDirectoryConnection, opt =>
                 {
-                    opt.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());
+                    opt.UseNetTopologySuite().MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());
                 });
             })
             .AddSingleton(auditableEntitySaveChangesInterceptor)
