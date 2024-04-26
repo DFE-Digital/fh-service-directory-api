@@ -22,7 +22,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
 
         var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
             null, null, null, null, 1, 10, null, null, null, null, null, null, null, null);
-        var handler = new GetServicesCommandHandler(TestDbContext, Mapper);
+        var handler = new GetServicesCommandHandler(Configuration, TestDbContext, Mapper);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
@@ -93,7 +93,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
 
         var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
             null, null, null, null, 1, 10, null, null, true, null, null, null, null, null);
-        var handler = new GetServicesCommandHandler(TestDbContext, Mapper);
+        var handler = new GetServicesCommandHandler(Configuration, TestDbContext, Mapper);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
@@ -111,7 +111,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
 
         var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
             null, null, null, null, 1, 10, null, null, false, null, null, null, null, null);
-        var handler = new GetServicesCommandHandler(TestDbContext, Mapper);
+        var handler = new GetServicesCommandHandler(Configuration, TestDbContext, Mapper);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());

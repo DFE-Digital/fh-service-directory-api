@@ -19,10 +19,15 @@ public class ApplicationDbContextInitialiser
             if (shouldRestDatabaseOnRestart) 
                 await _context.Database.EnsureDeletedAsync();
 
-            if(_context.Database.IsSqlServer())
+            if (_context.Database.IsSqlServer())
+            {
                 await _context.Database.MigrateAsync();
+            }
             else
+            {
                 await _context.Database.EnsureCreatedAsync();
+                await _context.Database.ExecuteSqlRawAsync("UPDATE geometry_columns SET srid = 4326 WHERE f_table_name = 'locations';");
+            }
 
             await SeedAsync();
         }

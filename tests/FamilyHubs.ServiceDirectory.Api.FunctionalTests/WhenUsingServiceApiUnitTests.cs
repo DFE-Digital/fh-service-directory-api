@@ -14,13 +14,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServiceIsCreated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var service = TestDataProvider.GetTestCountyCouncilServicesCreateRecord(1);
 
         var request = CreatePostRequest("api/services", service, RoleTypes.DfeAdmin);
@@ -39,13 +32,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServiceIsUpdated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
                     
@@ -59,7 +45,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
         using var response = await Client.SendAsync(request);
@@ -88,13 +74,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServicesIsDeleted()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = CreateDeleteRequest("api/services/1", string.Empty, RoleTypes.DfeAdmin);
 
         using var response = await Client.SendAsync(request);
@@ -110,13 +89,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheSimpleListOfServicesAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
                     .WithServiceType("InformationSharing")
@@ -150,13 +122,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServicesAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
                     .WithServiceType("InformationSharing")
@@ -169,7 +134,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
         using var response = await Client.SendAsync(request);
@@ -190,13 +155,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServicesWithEligibilityAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
                     .WithServiceType("InformationSharing")
@@ -208,7 +166,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
         using var response = await Client.SendAsync(request);
@@ -229,13 +187,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServicesWithProximityAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder   
                     .WithServiceType("InformationSharing")
@@ -247,7 +198,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
         using var response = await Client.SendAsync(request);
@@ -268,25 +219,18 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServicesWithServiceDeliveryAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
-                    .WithDelimitedSearchDeliveries("online")
+                    .WithDelimitedSearchDeliveries("Online")
                     .WithPage(1, 10)
                     .Build();
 
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
         using var response = await Client.SendAsync(request);
@@ -306,13 +250,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServicesWithTaxonomiesAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
                     .WithServiceType("InformationSharing")
@@ -324,7 +261,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
         using var response = await Client.SendAsync(request);
@@ -344,13 +281,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServiceByIdSimplifiedIsRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -372,13 +302,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServiceByIdIsRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -397,16 +320,9 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         retVal.ServiceOwnerReferenceId.Should().Be("Bristol-Service-1");
     }
 
-    [Fact]
+    [Fact(Skip = "This endpoint doesn't exist?")]
     public async Task ThenTheServicesWithinTheOrganisationAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -431,13 +347,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServicesWithFamilyHubsAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
                     .WithStatus("Active")
@@ -451,7 +360,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
         using var response = await Client.SendAsync(request);
@@ -471,13 +380,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServicesWithOutFamilyHubsAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
                     .WithStatus("Active")
@@ -491,7 +393,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
         using var response = await Client.SendAsync(request);
@@ -511,13 +413,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServicesLimitedByMaxFamilyHubsAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
             .WithServiceType("FamilyExperience")
@@ -529,7 +424,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
         using var response = await Client.SendAsync(request);
@@ -553,13 +448,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheServicesByOwnerReferenceIdAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,

@@ -18,13 +18,6 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheTaxonomiesAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -49,13 +42,6 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheTaxonomyIsCreated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var commandTaxonomy = new TaxonomyDto
         {
             Name = "Test-AddTaxonomy",
@@ -79,13 +65,6 @@ public class WhenUsingTaxonomiesApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheTaxonomyIsUpdated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var commandTaxonomy = new TaxonomyDto
         {
             Name = "Test-UpdateTaxonomy",
