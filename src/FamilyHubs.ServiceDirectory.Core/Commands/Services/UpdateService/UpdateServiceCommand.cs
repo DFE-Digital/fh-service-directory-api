@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 namespace FamilyHubs.ServiceDirectory.Core.Commands.Services.UpdateService;
 
 //todo: when adding/deleting locations (service at locations), ef complains about the schedule being referenced by the location
-//todo: when editing a service (to add a location), ended up with a duplicate service with a different id
 //todo: set whether ef logs in the config
 
 public class UpdateServiceCommand : IRequest<long>
