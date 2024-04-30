@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Core.Commands.Services.UpdateService;
 
-//todo: when adding/deleting locations (service at locations), ef complains about the schedule being referenced by the location
 //todo: set whether ef logs in the config
 
 public class UpdateServiceCommand : IRequest<long>
@@ -42,6 +41,8 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
     public async Task<long> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
     {
+        cancellationToken = default;
+
         ArgumentNullException.ThrowIfNull(request);
 
         //Many to Many needs to be included otherwise EF core does not know how to perform merge on navigation tables
@@ -49,6 +50,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
             .Include(s => s.Taxonomies)
             .Include(s => s.Locations)
             .Include(s => s.ServiceAtLocations)
+            .ThenInclude(s => s.Schedules)
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (service is null)
@@ -56,9 +58,17 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
         service = _mapper.Map(request.Service, service);
 
+        //mark all sat & sat schedules as deleted before Map?
+        // if works, only add if key is not present
         foreach (var serviceAtLocation in service.ServiceAtLocations)
         {
             serviceAtLocation.ServiceId = service.Id;
+            _context.Entry(serviceAtLocation).State = EntityState.Added;
+            foreach (var schedule in serviceAtLocation.Schedules)
+            {
+                schedule.ServiceAtLocationId = serviceAtLocation.Id;
+                _context.Entry(schedule).State = EntityState.Added;
+            }
         }
 
         service.Taxonomies = await request.Service.TaxonomyIds.GetEntities(_context.Taxonomies);
