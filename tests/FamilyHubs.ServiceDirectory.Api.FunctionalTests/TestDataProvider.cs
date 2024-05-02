@@ -13,8 +13,6 @@ namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
 
 public static class TestDataProvider
 {
-    public static string BearerTokenSigningKey = "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
     public static OrganisationDetailsDto GetTestCountyCouncilRecord()
     {
         var bristolCountyCouncil = new OrganisationDetailsDto
@@ -1111,13 +1109,13 @@ public static class TestDataProvider
         };
     }
 
-    public static string CreateBearerToken(string role)
+    public static string CreateBearerToken(string role, string bearerTokenSigningKey)
     {
         var claims = new List<Claim> { new Claim("role", role) };
         var identity = new ClaimsIdentity(claims, "Test");
         var user = new ClaimsPrincipal(identity);
 
-        var key = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(BearerTokenSigningKey));
+        var key = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(bearerTokenSigningKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
         var token = new JwtSecurityToken(
