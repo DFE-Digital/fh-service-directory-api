@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Entities.Base;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
+using NetTopologySuite.Geometries;
 
 namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
@@ -12,6 +13,7 @@ public class Location : EntityBase<long>
     public string? Description { get; set; }
     public required double Latitude { get; set; }
     public required double Longitude { get; set; }
+    public required Point GeoPoint { get; set; }
     public required string Address1 { get; set; }
     public string? Address2 { get; set; }
     public required string City { get; set; }

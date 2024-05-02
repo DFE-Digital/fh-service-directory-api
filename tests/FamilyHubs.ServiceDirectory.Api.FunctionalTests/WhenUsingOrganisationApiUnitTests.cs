@@ -13,12 +13,6 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheOrganisationIsCreated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
         var command = TestDataProvider.GetTestCountyCouncilRecord();
 
         var request = CreatePostRequest("api/organisations", command, RoleTypes.DfeAdmin);
@@ -37,13 +31,6 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheOrganisationIsUpdated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -88,13 +75,6 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheOrganisationIsRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -120,13 +100,6 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenListOrganisationsIsRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -152,13 +125,6 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenOrganisationAdminCodeIsRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,

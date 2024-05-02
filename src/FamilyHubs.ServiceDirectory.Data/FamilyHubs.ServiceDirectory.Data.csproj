@@ -12,6 +12,8 @@
 		<PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="8.7.0" />
 		<PackageReference Include="FamilyHubs.SharedKernel" Version="2.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.NetTopologySuite" Version="7.0.14" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.NetTopologySuite" Version="7.0.14" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.18">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

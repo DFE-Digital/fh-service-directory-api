@@ -1,5 +1,4 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Repository;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Text;
@@ -12,18 +11,11 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
     protected readonly HttpClient? Client;
     private readonly CustomWebApplicationFactory? _webAppFactory;
     private readonly bool _initSuccessful;
-    private readonly IConfiguration? _configuration;
 
     protected BaseWhenUsingApiUnitTests()
     {
         try
         {
-            var configuration = new ConfigurationBuilder()
-           .AddUserSecrets<Program>()
-           .Build();
-
-            _configuration = configuration;
-
             _webAppFactory = new CustomWebApplicationFactory();
             _webAppFactory.SetupTestDatabaseAndSeedData();
 
@@ -122,33 +114,6 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
         }
 
         return request;
-    }
-
-    protected bool IsRunningLocally()
-    {
-
-        if (!_initSuccessful || _configuration == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            string localMachineName = _configuration["LocalSettings:MachineName"] ?? string.Empty;
-
-            if (!string.IsNullOrEmpty(localMachineName))
-            {
-                return Environment.MachineName.Equals(localMachineName, StringComparison.OrdinalIgnoreCase);
-            }
-        }
-        catch
-        {
-            return false;
-        }
-
-        // Fallback to a default check if User Secrets file or machine name is not specified
-        // For example, you can add additional checks or default behavior here
-        return false;
     }
 }
 
