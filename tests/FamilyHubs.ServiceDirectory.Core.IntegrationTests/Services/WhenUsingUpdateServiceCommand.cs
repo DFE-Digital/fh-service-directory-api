@@ -569,7 +569,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var existingLocationId = await CreateLocation(expected);
 
         serviceChange.ServiceAtLocations.Clear();
-        serviceChange.ServiceAtLocations.Add(new ServiceAtLocationChangeDto
+        serviceChange.ServiceAtLocations.Add(new ServiceAtLocationDto
         {
             LocationId = existingLocationId
         });
@@ -636,7 +636,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var existingLocationId = await CreateLocation(expected);
 
         serviceChange.ServiceAtLocations.Clear();
-        serviceChange.ServiceAtLocations.Add(new ServiceAtLocationChangeDto
+        serviceChange.ServiceAtLocations.Add(new ServiceAtLocationDto
         {
             LocationId = existingLocationId,
             Schedules = new List<ScheduleDto>

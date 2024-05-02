@@ -33,8 +33,7 @@ public class AutoMappingProfiles : Profile
         CreateMap<ServiceChangeDto, ServiceDto>().ReverseMap();
 
         CreateMap<ServiceAtLocationDto, ServiceAtLocation>().ReverseMap();
-        CreateMap<ServiceAtLocationChangeDto, ServiceAtLocation>().ReverseMap();
-        CreateMap<ServiceAtLocationChangeDto, ServiceAtLocationDto>().ReverseMap();
+        CreateMap<ServiceAtLocationDto, ServiceAtLocationDto>().ReverseMap();
 
         CreateMap<LocationDto, Location>()
             .ForMember(dest => dest.GeoPoint, opt => opt.MapFrom<GeoPoint.Resolver>())
