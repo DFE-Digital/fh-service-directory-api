@@ -22,8 +22,6 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
                 .AddUserSecrets<Program>()
                 .Build();
 
-            BearerTokenSigningKey = configuration["GovUkOidcConfiguration:BearerTokenSigningKey"];
-
             _webAppFactory = new CustomWebApplicationFactory();
             _webAppFactory.SetupTestDatabaseAndSeedData();
 
@@ -31,11 +29,40 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
             Client.BaseAddress = new Uri("https://localhost:7128/");
 
             _initSuccessful = true;
+
+            BearerTokenSigningKey = IsRunningLocally(configuration)
+                ? configuration["GovUkOidcConfiguration:BearerTokenSigningKey"] : "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         }
         catch
         {
             _initSuccessful = false;
         }
+    }
+
+    private bool IsRunningLocally(IConfiguration? configuration)
+    {
+        if (configuration == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            string localMachineName = configuration["LocalSettings:MachineName"] ?? string.Empty;
+
+            if (!string.IsNullOrEmpty(localMachineName))
+            {
+                return Environment.MachineName.Equals(localMachineName, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+        catch
+        {
+            return false;
+        }
+
+// Fallback to a default check if User Secrets file or machine name is not specified
+// For example, you can add additional checks or default behavior here
+        return false;
     }
 
     public void Dispose()
