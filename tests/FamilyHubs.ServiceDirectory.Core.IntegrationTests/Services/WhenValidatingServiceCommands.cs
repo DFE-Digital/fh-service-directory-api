@@ -37,7 +37,7 @@ public class WhenValidatingServiceCommands
                 //dbContextOptionsBuilder.UseLoggerFactory(TestLoggerFactory);
                 dbContextOptionsBuilder.UseSqlite(serviceDirectoryConnection, opt =>
                 {
-                    opt.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());
+                    opt.UseNetTopologySuite().MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());
                 });
             })
             .AddSingleton(auditableEntitySaveChangesInterceptor)
