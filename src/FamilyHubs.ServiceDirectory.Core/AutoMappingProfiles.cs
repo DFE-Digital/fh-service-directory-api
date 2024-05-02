@@ -32,6 +32,7 @@ public class AutoMappingProfiles : Profile
 
         CreateMap<ServiceAtLocationDto, ServiceAtLocation>().ReverseMap();
         CreateMap<ServiceAtLocationChangeDto, ServiceAtLocation>().ReverseMap();
+        CreateMap<ServiceAtLocationChangeDto, ServiceAtLocationDto>().ReverseMap();
 
         CreateMap<LocationDto, Location>().ReverseMap();
         CreateMap<Location, Location>();
