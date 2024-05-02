@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NetTopologySuite.Geometries;
 
 #nullable disable
 
@@ -17,7 +18,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.15")
+                .HasAnnotation("ProductVersion", "7.0.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -370,6 +371,10 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<string>("ExternalIdentifierType")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<Point>("GeoPoint")
+                        .IsRequired()
+                        .HasColumnType("geography");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -826,6 +831,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ServiceId");
+
+                    b.HasIndex("Name", "ServiceId", "Id")
+                        .HasDatabaseName("IX_ServiceDeliveryNonClustered");
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Name", "ServiceId", "Id"), false);
 
                     b.ToTable("ServiceDeliveries");
                 });
