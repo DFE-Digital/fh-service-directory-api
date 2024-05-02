@@ -29,6 +29,10 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         results.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(TestOrganisation);
         ArgumentNullException.ThrowIfNull(TestOrganisation.Services);
+        //todo: the results has the serviceatlocation with a location with the correct id, but all the other fields are default
+        // the location is already returned through the service
+        // do we want to return the location again?
+        // or do we just return the location id? would save bandwidth - returning the same info twice for each location seems a bit wasteful
         results.Items[0].Should().BeEquivalentTo(TestOrganisation.Services.ElementAt(0));
     }
 
