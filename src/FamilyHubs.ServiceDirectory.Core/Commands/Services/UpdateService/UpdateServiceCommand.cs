@@ -35,10 +35,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         _mapper = mapper;
     }
 
-    //todo: check updated/modified by and modified date (handled by AuditableEntitySaveChangesInterceptor)
-    //todo: still getting the reference issue on delete
-    //todo: the schedule off service at location is going missing
-
     public async Task<long> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
     {
         cancellationToken = default;
