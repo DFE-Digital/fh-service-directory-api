@@ -58,23 +58,13 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
 
         service = _mapper.Map(request.Service, service);
 
-        //mark all sat & sat schedules as deleted before Map?
-        // if works, only add if key is not present
         foreach (var serviceAtLocation in service.ServiceAtLocations)
         {
             serviceAtLocation.ServiceId = service.Id;
-            if (serviceAtLocation.Id == 0)
-            {
-                _context.Entry(serviceAtLocation).State = EntityState.Added;
-            }
 
             foreach (var schedule in serviceAtLocation.Schedules)
             {
                 schedule.ServiceAtLocationId = serviceAtLocation.Id;
-                if (schedule.Id == 0)
-                {
-                    _context.Entry(schedule).State = EntityState.Added;
-                }
             }
         }
 

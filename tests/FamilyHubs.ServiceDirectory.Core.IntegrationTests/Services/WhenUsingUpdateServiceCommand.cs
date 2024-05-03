@@ -7,6 +7,8 @@ using FluentAssertions.Equivalency;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Services;
 
+//todo: it would be so much better if these tests only tested a single thing, i.e. the tests are broken down into multiple tests that check something was added, the old was deleted etc, to make maintenance easier
+
 public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 {
     [Fact]
@@ -602,6 +604,8 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
 
+    //todo: test that old service at locations / schedules are deleted
+
     [Fact]
     public async Task ThenUpdateServiceAddAndDeleteLocationsWithSchedules()
     {
@@ -635,8 +639,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         };
         var existingLocationId = await CreateLocation(expected);
 
-        serviceChange.ServiceAtLocations.Clear();
-        serviceChange.ServiceAtLocations.Add(new ServiceAtLocationDto
+        var expectedServiceAtLocation = new ServiceAtLocationDto
         {
             LocationId = existingLocationId,
             Schedules = new List<ScheduleDto>
@@ -648,7 +651,10 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
                     ByDay = "TU"
                 }
             }
-        });
+        };
+
+        serviceChange.ServiceAtLocations.Clear();
+        serviceChange.ServiceAtLocations.Add(expectedServiceAtLocation);
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
         var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
@@ -662,7 +668,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == serviceChange.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.Count.Should().Be(1);
+        actualService!.Locations.Should().HaveCount(1);
 
         var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
@@ -676,6 +682,12 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         detachedEntity.Should().BeEquivalentTo(location, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+
+        TestDbContext.ServiceAtLocations.Should().HaveCount(1);
+        //expectedServiceAtLocation.Id = 2;
+        TestDbContext.ServiceAtLocations.First().Id.Should().Be(2);
+        TestDbContext.ServiceAtLocations.First().Should().BeEquivalentTo(expectedServiceAtLocation, options =>
+            options.Excluding(info => info.Name.Contains("Id")));
     }
 
     [Fact]
