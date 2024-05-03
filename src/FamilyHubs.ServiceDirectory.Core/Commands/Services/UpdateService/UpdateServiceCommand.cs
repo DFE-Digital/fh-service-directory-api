@@ -63,11 +63,18 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand,
         foreach (var serviceAtLocation in service.ServiceAtLocations)
         {
             serviceAtLocation.ServiceId = service.Id;
-            _context.Entry(serviceAtLocation).State = EntityState.Added;
+            if (serviceAtLocation.Id == 0)
+            {
+                _context.Entry(serviceAtLocation).State = EntityState.Added;
+            }
+
             foreach (var schedule in serviceAtLocation.Schedules)
             {
                 schedule.ServiceAtLocationId = serviceAtLocation.Id;
-                _context.Entry(schedule).State = EntityState.Added;
+                if (schedule.Id == 0)
+                {
+                    _context.Entry(schedule).State = EntityState.Added;
+                }
             }
         }
 
