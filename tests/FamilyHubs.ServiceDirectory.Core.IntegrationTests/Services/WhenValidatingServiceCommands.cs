@@ -237,29 +237,28 @@ public class WhenValidatingServiceCommands
         result.Errors.Any().Should().BeFalse();
     }
 
-    //[Theory]
-    //[InlineData("someurl")]
-    //[InlineData("http:/someurl.")]
-    //[InlineData("https//someurl.")]
-    //public void ThenShouldValidateServiceAtLocationContactUrlWhenUpdatingService_ShouldReturnErrors(string url)
-    //{
-    //    //Arrange
-    //    var testService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, Random.Shared.Next());
-    //    testService.Id = 1;
-    //    foreach (var serviceAtLocation in testService.Locations)
-    //    {
-    //        foreach (var item in serviceAtLocation.Contacts)
-    //        {
-    //            item.Url = url;
-    //        }
-    //    }
-    //    var validator = new UpdateServiceCommandValidator();
-    //    var testModel = new UpdateServiceCommand(testService.Id, testService);
+    [Theory]
+    [InlineData("")]
+    [InlineData("someurl")]
+    [InlineData("http:/someurl.")]
+    [InlineData("https//someurl.")]
+    public void ThenShouldValidateContactUrlWhenUpdatingService_ShouldReturnErrors(string url)
+    {
+        //Arrange
+        var testService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, Random.Shared.Next());
+        testService.Id = 1;
+        foreach (var item in testService.Contacts)
+        {
+            item.Url = url;
+        }
 
-    //    //Act
-    //    var result = validator.Validate(testModel);
+        var validator = new UpdateServiceCommandValidator();
+        var testModel = new UpdateServiceCommand(testService.Id, testService);
 
-    //    //Assert
-    //    result.Errors.Any().Should().BeTrue();
-    //}
+        //Act
+        var result = validator.Validate(testModel);
+
+        //Assert
+        result.Errors.Any().Should().BeTrue();
+    }
 }
