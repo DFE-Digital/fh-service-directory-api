@@ -175,34 +175,30 @@ public class WhenValidatingServiceCommands
 
     //todo: reinstate these tests
 
-    //[Theory]
-    //[InlineData(default)]
-    //[InlineData("")]
-    //[InlineData("http://wwww.google.co.uk")]
-    //[InlineData("http://wwww.google.com")]
-    //[InlineData("https://wwww.google.com")]
-    //public void ThenShouldValidateServiceAtLocationContactUrlWhenCreatingService_ShouldReturnNoErrors(string? url)
-    //{
-    //    //Arrange
-    //    var testService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, Random.Shared.Next());
-    //    testService.Id = 0;
-    //    foreach (var serviceAtLocation in testService.Locations)
-    //    {
-    //        foreach (var item in serviceAtLocation.Contacts)
-    //        {
-    //            item.Url = url;
-    //        }
-    //    }
+    [Theory]
+    [InlineData(default)]
+    [InlineData("http://wwww.google.co.uk")]
+    [InlineData("http://wwww.google.com")]
+    [InlineData("https://wwww.google.com")]
+    public void ThenShouldValidateContactUrlWhenCreatingService_ShouldReturnNoErrors(string? url)
+    {
+        //Arrange
+        var testService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, Random.Shared.Next());
+        testService.Id = 0;
+        foreach (var item in testService.Contacts)
+        {
+            item.Url = url;
+        }
 
-    //    var validator = new CreateServiceCommandValidator();
-    //    var testModel = new CreateServiceCommand(testService);
+        var validator = new CreateServiceCommandValidator();
+        var testModel = new CreateServiceCommand(testService);
 
-    //    //Act
-    //    var result = validator.Validate(testModel);
+        //Act
+        var result = validator.Validate(testModel);
 
-    //    //Assert
-    //    result.Errors.Any().Should().BeFalse();
-    //}
+        //Assert
+        result.Errors.Any().Should().BeFalse();
+    }
 
     //[Theory]
     //[InlineData("someurl")]
@@ -231,33 +227,30 @@ public class WhenValidatingServiceCommands
     //    result.Errors.Any().Should().BeTrue();
     //}
 
-    //[Theory]
-    //[InlineData(default)]
-    //[InlineData("")]
-    //[InlineData("http://wwww.google.co.uk")]
-    //[InlineData("http://wwww.google.com")]
-    //[InlineData("https://wwww.google.com")]
-    //public void ThenShouldValidateServiceAtLocationContactUrlWhenUpdatingService_ShouldReturnNoErrors(string? url)
-    //{
-    //    //Arrange
-    //    var testService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, Random.Shared.Next());
-    //    testService.Id = 1;
-    //    foreach (var serviceAtLocation in testService.Locations)
-    //    {
-    //        foreach (var item in serviceAtLocation.Contacts)
-    //        {
-    //            item.Url = url;
-    //        }
-    //    }
-    //    var validator = new UpdateServiceCommandValidator();
-    //    var testModel = new UpdateServiceCommand(testService.Id, testService);
+    [Theory]
+    [InlineData(default)]
+    [InlineData("http://wwww.google.co.uk")]
+    [InlineData("http://wwww.google.com")]
+    [InlineData("https://wwww.google.com")]
+    public void ThenShouldValidateContactUrlWhenUpdatingService_ShouldReturnNoErrors(string? url)
+    {
+        //Arrange
+        var testService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, Random.Shared.Next());
+        testService.Id = 1;
+        foreach (var item in testService.Contacts)
+        {
+            item.Url = url;
+        }
 
-    //    //Act
-    //    var result = validator.Validate(testModel);
+        var validator = new UpdateServiceCommandValidator();
+        var testModel = new UpdateServiceCommand(testService.Id, testService);
 
-    //    //Assert
-    //    result.Errors.Any().Should().BeFalse();
-    //}
+        //Act
+        var result = validator.Validate(testModel);
+
+        //Assert
+        result.Errors.Any().Should().BeFalse();
+    }
 
     //[Theory]
     //[InlineData("someurl")]
