@@ -639,17 +639,19 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         };
         var existingLocationId = await CreateLocation(expected);
 
+        var expectedSchedule = new ScheduleDto()
+        {
+            AttendingType = AttendingType.InPerson.ToString(),
+            Freq = FrequencyType.WEEKLY,
+            ByDay = "TU"
+        };
+
         var expectedServiceAtLocation = new ServiceAtLocationDto
         {
             LocationId = existingLocationId,
             Schedules = new List<ScheduleDto>
             {
-                new()
-                {
-                    AttendingType = AttendingType.InPerson.ToString(),
-                    Freq = FrequencyType.WEEKLY,
-                    ByDay = "TU"
-                }
+                expectedSchedule
             }
         };
 
@@ -683,10 +685,17 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
 
+        // check old serviceatlocation is deleted and the new one is saved correctly
         TestDbContext.ServiceAtLocations.Should().HaveCount(1);
         //expectedServiceAtLocation.Id = 2;
         TestDbContext.ServiceAtLocations.First().Id.Should().Be(2);
         TestDbContext.ServiceAtLocations.First().Should().BeEquivalentTo(expectedServiceAtLocation, options =>
+            options.Excluding(info => info.Name.Contains("Id")));
+
+        // check the old schedule is deleted and the new one is saved correctly
+        TestDbContext.Schedules.Where(s => s.ServiceAtLocationId != null).Should().HaveCount(1);
+        TestDbContext.Schedules.Single(s => s.ServiceAtLocationId != null).Id.Should().Be(4);
+        TestDbContext.Schedules.Single(s => s.ServiceAtLocationId != null).Should().BeEquivalentTo(expectedSchedule, options =>
             options.Excluding(info => info.Name.Contains("Id")));
     }
 
