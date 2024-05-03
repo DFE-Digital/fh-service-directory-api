@@ -50,17 +50,6 @@ public class WhenValidatingServiceCommands
                 cfg.ShouldMapProperty = pi => !auditProperties.Contains(pi.Name);
             }, typeof(AutoMappingProfiles))
             .BuildServiceProvider();
-
-        //return new ServiceCollection()
-        //    .AddAutoMapper((serviceProvider, cfg) =>
-        //    {
-        //        var auditProperties = new[] { "CreatedBy", "Created", "LastModified", "LastModified" };
-        //        cfg.AddProfile<AutoMappingProfiles>();
-        //        cfg.AddCollectionMappers();
-        //        cfg.UseEntityFrameworkCoreModel<ApplicationDbContext>(serviceProvider);
-        //        cfg.ShouldMapProperty = pi => !auditProperties.Contains(pi.Name);
-        //    }, typeof(AutoMappingProfiles))
-        //    .BuildServiceProvider();
     }
 
     [Fact]
@@ -173,8 +162,6 @@ public class WhenValidatingServiceCommands
         result.Errors.Any().Should().BeFalse();
     }
 
-    //todo: reinstate these tests
-
     [Theory]
     [InlineData(default)]
     [InlineData("http://wwww.google.co.uk")]
@@ -200,32 +187,30 @@ public class WhenValidatingServiceCommands
         result.Errors.Any().Should().BeFalse();
     }
 
-    //[Theory]
-    //[InlineData("someurl")]
-    //[InlineData("http://someurl")]
-    //[InlineData("https://someurl")]
-    //public void ThenShouldValidateServiceAtLocationContactUrlWhenCreatingService_ShouldReturnErrors(string url)
-    //{
-    //    //Arrange
-    //    var testService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, Random.Shared.Next());
-    //    testService.Id = 1;
-    //    foreach (var serviceAtLocation in testService.Locations)
-    //    {
-    //        foreach (var item in serviceAtLocation.Contacts)
-    //        {
-    //            item.Url = url;
-    //        }
-    //    }
+    [Theory]
+    [InlineData("")]
+    [InlineData("someurl")]
+    [InlineData("http://someurl")]
+    [InlineData("https://someurl")]
+    public void ThenShouldValidateContactUrlWhenCreatingService_ShouldReturnErrors(string url)
+    {
+        //Arrange
+        var testService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, Random.Shared.Next());
+        testService.Id = 1;
+        foreach (var item in testService.Contacts)
+        {
+            item.Url = url;
+        }
 
-    //    var validator = new CreateServiceCommandValidator();
-    //    var testModel = new CreateServiceCommand(testService);
+        var validator = new CreateServiceCommandValidator();
+        var testModel = new CreateServiceCommand(testService);
 
-    //    //Act
-    //    var result = validator.Validate(testModel);
+        //Act
+        var result = validator.Validate(testModel);
 
-    //    //Assert
-    //    result.Errors.Any().Should().BeTrue();
-    //}
+        //Assert
+        result.Errors.Any().Should().BeTrue();
+    }
 
     [Theory]
     [InlineData(default)]
