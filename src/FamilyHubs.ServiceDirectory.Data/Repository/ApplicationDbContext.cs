@@ -44,6 +44,18 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
                     .IsClustered(false);
             });
 
+            modelBuilder.Entity<ServiceSearch>()
+                .ToTable("ServiceSearches")
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<ServiceSearchResult>()
+                .ToTable("ServiceSearchResults")
+                .HasKey(e => e.Id);
+                
+            modelBuilder.Entity<Event>()
+                .ToTable("Events")
+                .HasKey(e => e.Id);
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -67,5 +79,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
         public DbSet<ServiceArea> ServiceAreas => Set<ServiceArea>();
         public DbSet<ServiceDelivery> ServiceDeliveries => Set<ServiceDelivery>();
         public DbSet<Taxonomy> Taxonomies => Set<Taxonomy>();
+        public DbSet<ServiceSearch> ServiceSearches => Set<ServiceSearch>();
+        public DbSet<Event> Events => Set<Event>();
+        public DbSet<ServiceSearchResult> ServiceSearchResult => Set<ServiceSearchResult>();
     }
 }

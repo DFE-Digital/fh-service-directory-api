@@ -4,7 +4,7 @@ namespace FamilyHubs.ServiceDirectory.Api.Endpoints;
 
 public class MinimalGeneralEndPoints
 {
-    public void RegisterMinimalGeneralEndPoints(WebApplication app)
+    public void RegisterGeneralEndPoints(WebApplication app)
     {
         app.MapGet("api/info", (IConfiguration configuration, ILogger < MinimalGeneralEndPoints> logger) =>
         {
