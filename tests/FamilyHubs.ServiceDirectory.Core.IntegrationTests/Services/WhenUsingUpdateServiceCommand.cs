@@ -604,8 +604,6 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
     }
 
-    //todo: test that old service at locations / schedules are deleted
-
     [Fact]
     public async Task ThenUpdateServiceAddAndDeleteLocationsWithSchedules()
     {
@@ -687,7 +685,6 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         // check old serviceatlocation is deleted and the new one is saved correctly
         TestDbContext.ServiceAtLocations.Should().HaveCount(1);
-        //expectedServiceAtLocation.Id = 2;
         TestDbContext.ServiceAtLocations.First().Id.Should().Be(2);
         TestDbContext.ServiceAtLocations.First().Should().BeEquivalentTo(expectedServiceAtLocation, options =>
             options.Excluding(info => info.Name.Contains("Id")));
