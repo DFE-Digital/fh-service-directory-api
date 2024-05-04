@@ -51,10 +51,26 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
             modelBuilder.Entity<ServiceSearchResult>()
                 .ToTable("ServiceSearchResults")
                 .HasKey(e => e.Id);
-                
+
             modelBuilder.Entity<Event>()
                 .ToTable("Events")
                 .HasKey(e => e.Id);
+
+            modelBuilder.Entity<Event>()
+                .HasData(
+                    new()
+                    {
+                        Id = 1,
+                        Name = "initial",
+                        Description = "Describes an initial, unfiltered search by a user."
+                    },
+                    new()
+                    {
+                        Id = 2,
+                        Name = "filter",
+                        Description = "Describes a filtered search by a user."
+                    }
+                );
 
             base.OnModelCreating(modelBuilder);
         }

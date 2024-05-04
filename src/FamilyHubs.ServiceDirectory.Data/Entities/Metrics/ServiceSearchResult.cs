@@ -4,5 +4,5 @@ public class ServiceSearchResult
 {
     public long Id { get; set; }
     public long ServiceId { get; set; }
-    public long ServiceSearchesId { get; set; }
+    public long ServiceSearchId { get; set; }
 }

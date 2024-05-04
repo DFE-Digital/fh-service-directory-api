@@ -12,4 +12,5 @@ public class ServiceSearch
     public DateTime RequestTimestamp { get; set; }
     public DateTime? ResponseTimestamp { get; set; }
     public string? CorrelationId { get; set; }
+    public ICollection<ServiceSearchResult> ServiceSearchResults { get; } = new List<ServiceSearchResult>();
 }
