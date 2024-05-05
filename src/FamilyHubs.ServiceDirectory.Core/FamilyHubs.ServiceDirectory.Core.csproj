@@ -5,7 +5,7 @@
         <RootNamespace>FamilyHubs.ServiceDirectory.Core</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-	    <NoWarn>S1135;S125</NoWarn>
+	    <NoWarn>S1135;S125;S2139;S6678</NoWarn>
 	</PropertyGroup>
 
     <ItemGroup>
