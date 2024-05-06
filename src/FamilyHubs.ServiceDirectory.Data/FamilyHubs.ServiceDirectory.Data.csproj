@@ -9,7 +9,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="8.3.0-pre9" />
+		<PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="8.3.0-pre10" />
 		<PackageReference Include="FamilyHubs.SharedKernel" Version="2.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.14">
