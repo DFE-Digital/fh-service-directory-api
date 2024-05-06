@@ -46,6 +46,8 @@ public class RecordServiceSearchCommandHandler : IRequestHandler<RecordServiceSe
             // saving non-existant services
             ServiceSearch serviceSearch = _mapper.Map<ServiceSearch>(request.ServiceSearch);
 
+            serviceSearch.SearchTriggerEvent = null; // Don't insert SearchTriggerEvent
+
             _context.ServiceSearches.Add(serviceSearch);
             
             await _context.SaveChangesAsync(cancellationToken);

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace FamilyHubs.ServiceDirectory.Data.Migrations
 {
     /// <inheritdoc />
@@ -15,8 +17,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                 name: "Events",
                 columns: table => new
                 {
-                    Id = table.Column<short>(type: "smallint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<short>(type: "smallint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -69,6 +70,15 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         principalTable: "ServiceSearches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Events",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { (short)1, "Describes an initial, unfiltered search by a user.", "ServiceDirectoryInitialSearch" },
+                    { (short)2, "Describes a filtered search by a user.", "ServiceDirectorySearchFilter" }
                 });
 
             migrationBuilder.CreateIndex(

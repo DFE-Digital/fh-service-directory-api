@@ -30,4 +30,5 @@ public class Service : EntityBase<long>
     public IList<Taxonomy> Taxonomies { get; set; } = new List<Taxonomy>();
     public IList<Schedule> Schedules { get; set; } = new List<Schedule>();
     public IList<Contact> Contacts { get; set; } = new List<Contact>();
+    public IList<ServiceSearchResult> ServiceSearchResults { get; } = new List<ServiceSearchResult>();
 }

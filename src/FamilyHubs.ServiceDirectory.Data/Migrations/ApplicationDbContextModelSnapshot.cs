@@ -885,10 +885,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Event", b =>
                 {
                     b.Property<short>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("smallint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<short>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -907,13 +904,13 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         {
                             Id = (short)1,
                             Description = "Describes an initial, unfiltered search by a user.",
-                            Name = "initial"
+                            Name = "ServiceDirectoryInitialSearch"
                         },
                         new
                         {
                             Id = (short)2,
                             Description = "Describes a filtered search by a user.",
-                            Name = "filter"
+                            Name = "ServiceDirectorySearchFilter"
                         });
                 });
 
@@ -976,6 +973,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
 
                     b.HasIndex("ServiceSearchId");
 
@@ -1130,7 +1129,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearch", b =>
                 {
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Event", "SearchTriggerEvent")
-                        .WithMany()
+                        .WithMany("ServiceSearches")
                         .HasForeignKey("SearchTriggerEventId");
 
                     b.Navigation("SearchTriggerEvent");
@@ -1138,11 +1137,19 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearchResult", b =>
                 {
+                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", "Service")
+                        .WithMany("ServiceSearchResults")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.ServiceSearch", null)
                         .WithMany("ServiceSearchResults")
                         .HasForeignKey("ServiceSearchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("ServiceTaxonomies", b =>
@@ -1199,6 +1206,13 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Navigation("ServiceAtLocations");
 
                     b.Navigation("ServiceDeliveries");
+
+                    b.Navigation("ServiceSearchResults");
+                });
+
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Event", b =>
+                {
+                    b.Navigation("ServiceSearches");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearch", b =>

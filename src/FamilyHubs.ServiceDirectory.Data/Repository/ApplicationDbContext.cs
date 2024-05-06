@@ -2,6 +2,7 @@
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Data.Repository
@@ -48,26 +49,47 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
                 .ToTable("ServiceSearches")
                 .HasKey(e => e.Id);
 
+            modelBuilder.Entity<ServiceSearch>()
+                .Property(e => e.SearchTriggerEventId)
+                .HasConversion<short>();
+            
+            modelBuilder.Entity<ServiceSearch>()
+                .HasOne(e => e.SearchTriggerEvent)
+                .WithMany(e => e.ServiceSearches)
+                .HasForeignKey(e => e.SearchTriggerEventId)
+                .IsRequired(false);
+
             modelBuilder.Entity<ServiceSearchResult>()
                 .ToTable("ServiceSearchResults")
                 .HasKey(e => e.Id);
+
+            modelBuilder.Entity<ServiceSearchResult>()
+                .HasOne(e => e.Service)
+                .WithMany(e => e.ServiceSearchResults)
+                .HasForeignKey(e => e.ServiceId)
+                // Do not delete metrics if service deleted
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Event>()
                 .ToTable("Events")
                 .HasKey(e => e.Id);
 
             modelBuilder.Entity<Event>()
+                .Property(e => e.Id)
+                .HasConversion<short>();
+
+            modelBuilder.Entity<Event>()
                 .HasData(
                     new()
                     {
-                        Id = 1,
-                        Name = "initial",
+                        Id = ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch,
+                        Name = nameof(ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch),
                         Description = "Describes an initial, unfiltered search by a user."
                     },
                     new()
                     {
-                        Id = 2,
-                        Name = "filter",
+                        Id = ServiceDirectorySearchEventType.ServiceDirectorySearchFilter,
+                        Name = nameof(ServiceDirectorySearchEventType.ServiceDirectorySearchFilter),
                         Description = "Describes a filtered search by a user."
                     }
                 );

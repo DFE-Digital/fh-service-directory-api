@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FamilyHubs.ServiceDirectory.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240504230513_AddMetricEntities")]
+    [Migration("20240506191523_AddMetricEntities")]
     partial class AddMetricEntities
     {
         /// <inheritdoc />
@@ -888,10 +888,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Event", b =>
                 {
                     b.Property<short>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("smallint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<short>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -904,6 +901,20 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Events", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = (short)1,
+                            Description = "Describes an initial, unfiltered search by a user.",
+                            Name = "ServiceDirectoryInitialSearch"
+                        },
+                        new
+                        {
+                            Id = (short)2,
+                            Description = "Describes a filtered search by a user.",
+                            Name = "ServiceDirectorySearchFilter"
+                        });
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearch", b =>
@@ -1119,7 +1130,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearch", b =>
                 {
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Event", "SearchTriggerEvent")
-                        .WithMany()
+                        .WithMany("ServiceSearches")
                         .HasForeignKey("SearchTriggerEventId");
 
                     b.Navigation("SearchTriggerEvent");
@@ -1188,6 +1199,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Navigation("ServiceAtLocations");
 
                     b.Navigation("ServiceDeliveries");
+                });
+
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Event", b =>
+                {
+                    b.Navigation("ServiceSearches");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearch", b =>
