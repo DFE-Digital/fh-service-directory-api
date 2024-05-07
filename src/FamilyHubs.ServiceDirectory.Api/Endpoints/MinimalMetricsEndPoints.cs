@@ -17,7 +17,6 @@ public class MinimalMetricsEndPoints
             ILogger<MinimalMetricsEndPoints> logger
         ) =>
         {
-
             try
             {
                 var command = new RecordServiceSearchCommand(serviceSearch);
