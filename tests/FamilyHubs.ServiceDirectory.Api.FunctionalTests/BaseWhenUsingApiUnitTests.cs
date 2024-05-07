@@ -19,6 +19,11 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
         try
         {
             var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(
+                    new Dictionary<string, string?> {
+                        {"GovUkOidcConfiguration:BearerTokenSigningKey", "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
+                    }
+                )
                 .AddUserSecrets<Program>()
                 .Build();
 
@@ -30,39 +35,12 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
 
             _initSuccessful = true;
 
-            BearerTokenSigningKey = IsRunningLocally(configuration)
-                ? configuration["GovUkOidcConfiguration:BearerTokenSigningKey"] : "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            BearerTokenSigningKey = configuration["GovUkOidcConfiguration:BearerTokenSigningKey"];
         }
         catch
         {
             _initSuccessful = false;
         }
-    }
-
-    private bool IsRunningLocally(IConfiguration? configuration)
-    {
-        if (configuration == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            string localMachineName = configuration["LocalSettings:MachineName"] ?? string.Empty;
-
-            if (!string.IsNullOrEmpty(localMachineName))
-            {
-                return Environment.MachineName.Equals(localMachineName, StringComparison.OrdinalIgnoreCase);
-            }
-        }
-        catch
-        {
-            return false;
-        }
-
-// Fallback to a default check if User Secrets file or machine name is not specified
-// For example, you can add additional checks or default behavior here
-        return false;
     }
 
     public void Dispose()
