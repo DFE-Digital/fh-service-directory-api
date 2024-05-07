@@ -6,9 +6,10 @@ using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.ServiceDirectory.Core.Commands.Services.UpdateService;
+
+//todo: set whether ef logs in the config
 
 public class UpdateServiceCommand : IRequest<long>
 {
@@ -26,54 +27,57 @@ public class UpdateServiceCommand : IRequest<long>
 public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand, long>
 {
     private readonly ApplicationDbContext _context;
-    private readonly ILogger<UpdateServiceCommandHandler> _logger;
     private readonly IMapper _mapper;
 
-    public UpdateServiceCommandHandler(ApplicationDbContext context, IMapper mapper,
-        ILogger<UpdateServiceCommandHandler> logger)
+    public UpdateServiceCommandHandler(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
-        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<long> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
     {
+        cancellationToken = default;
+
         ArgumentNullException.ThrowIfNull(request);
 
         //Many to Many needs to be included otherwise EF core does not know how to perform merge on navigation tables
         var service = await _context.Services
             .Include(s => s.Taxonomies)
             .Include(s => s.Locations)
+            .Include(s => s.ServiceAtLocations)
+            .ThenInclude(s => s.Schedules)
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
         if (service is null)
             throw new NotFoundException(nameof(Service), request.Id.ToString());
 
-        try
+        service = _mapper.Map(request.Service, service);
+
+        foreach (var serviceAtLocation in service.ServiceAtLocations)
         {
-            service = _mapper.Map(request.Service, service);
+            serviceAtLocation.ServiceId = service.Id;
 
-            service.Taxonomies = await request.Service.TaxonomyIds.GetEntities(_context.Taxonomies);
-
-            _context.Services.Update(service);
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            // ensure that schedules (which can be referenced by location, service and serviceatlocations) are deleted when they're no longer referenced
-            // we need to do this, as we can't specify cascade delete on the ServiceAtLocation schedules relationship as it would cause a cyclic reference
-            var schedulesToRemove = _context.Schedules
-                .Where(s => s.ServiceId == null && s.LocationId == null && s.ServiceAtLocationId == null)
-                .ToList();
-
-            _context.Schedules.RemoveRange(schedulesToRemove);
-            await _context.SaveChangesAsync(cancellationToken);
+            foreach (var schedule in serviceAtLocation.Schedules)
+            {
+                schedule.ServiceAtLocationId = serviceAtLocation.Id;
+            }
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred updating Service with Id:{ServiceRef}.", service.ServiceOwnerReferenceId);
-            throw;
-        }
+
+        service.Taxonomies = await request.Service.TaxonomyIds.GetEntities(_context.Taxonomies);
+
+        _context.Services.Update(service);
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        // ensure that schedules (which can be referenced by location, service and serviceatlocations) are deleted when they're no longer referenced
+        // we need to do this, as we can't specify cascade delete on the ServiceAtLocation schedules relationship as it would cause a cyclic reference
+        var schedulesToRemove = _context.Schedules
+            .Where(s => s.ServiceId == null && s.LocationId == null && s.ServiceAtLocationId == null)
+            .ToList();
+
+        _context.Schedules.RemoveRange(schedulesToRemove);
+        await _context.SaveChangesAsync(cancellationToken);
 
         return service.Id;
     }

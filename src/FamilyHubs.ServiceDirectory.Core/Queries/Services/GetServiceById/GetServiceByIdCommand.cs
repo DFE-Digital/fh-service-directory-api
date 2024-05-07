@@ -33,8 +33,13 @@ public class GetServiceByIdCommandHandler : IRequestHandler<GetServiceByIdComman
         {
             entity = await _context.Services
            .Include(x => x.Taxonomies)
+
            .Include(x => x.Locations)
            .ThenInclude(x => x.Contacts)
+
+           .Include(x => x.ServiceAtLocations)
+           .ThenInclude(x => x.Schedules)
+
            .AsSplitQuery()
            .AsNoTracking()
 

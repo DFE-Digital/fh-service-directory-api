@@ -10,6 +10,8 @@ public class ServiceAtLocationConfiguration : IEntityTypeConfiguration<ServiceAt
     {
         builder.ToTable("ServiceAtLocations");
 
+        builder.Navigation(e => e.Schedules).AutoInclude();
+
         builder.HasMany(s => s.Schedules)
             .WithOne()
             .HasForeignKey(lc => lc.ServiceAtLocationId)

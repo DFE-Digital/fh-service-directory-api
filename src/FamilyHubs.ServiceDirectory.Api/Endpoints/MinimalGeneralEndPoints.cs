@@ -24,7 +24,7 @@ public class MinimalGeneralEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred getting info (api). {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred getting info (api). {ExceptionMessage}", ex.Message);
                 
                 throw;
             }

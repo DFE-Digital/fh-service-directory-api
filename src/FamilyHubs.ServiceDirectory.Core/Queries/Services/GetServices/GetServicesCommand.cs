@@ -211,6 +211,8 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             .Include(x => x.Schedules)
             .Include(x => x.Contacts)
             .Include(x => x.CostOptions)
+            .Include(x => x.ServiceAtLocations)
+            .ThenInclude(x => x.Schedules)
             .Include("Locations.Schedules")
             .Include("Locations.Contacts");
 

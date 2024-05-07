@@ -4,15 +4,13 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 using FluentAssertions.Equivalency;
-using Microsoft.Extensions.Logging;
-using Moq;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Services;
 
+//todo: it would be so much better if these tests only tested a single thing, i.e. the tests are broken down into multiple tests that check something was added, the old was deleted etc, to make maintenance easier
+
 public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 {
-    public readonly Mock<ILogger<UpdateServiceCommandHandler>> UpdateLogger = new();
-
     [Fact]
     public async Task ThenUpdateServiceOnly()
     {
@@ -25,7 +23,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var serviceChange = Mapper.Map<ServiceChangeDto>(service);
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -60,7 +58,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         serviceChange.Eligibilities.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -97,7 +95,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.MaximumAge = 5000;
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -133,7 +131,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         serviceChange.ServiceAreas.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -169,7 +167,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.Extent = "Updated Extent";
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -200,7 +198,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         serviceChange.ServiceDeliveries.Clear();
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -229,7 +227,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.Name = AttendingType.InPerson;
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -266,7 +264,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         serviceChange.Languages.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -302,7 +300,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.Code = "UL";
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -342,7 +340,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         serviceChange.CostOptions.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -379,7 +377,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.AmountDescription = "Updated Amount Description";
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -416,7 +414,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         serviceChange.Contacts.Add(contact);
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -453,7 +451,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         contact.Telephone = "Updated Telephone";
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -492,7 +490,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         serviceChange.Schedules.Add(expected);
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -528,7 +526,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         expected.ByMonthDay = "Updated ByMonthDay";
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -573,13 +571,13 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         var existingLocationId = await CreateLocation(expected);
 
         serviceChange.ServiceAtLocations.Clear();
-        serviceChange.ServiceAtLocations.Add(new ServiceAtLocationChangeDto
+        serviceChange.ServiceAtLocations.Add(new ServiceAtLocationDto
         {
             LocationId = existingLocationId
         });
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -639,23 +637,27 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         };
         var existingLocationId = await CreateLocation(expected);
 
-        serviceChange.ServiceAtLocations.Clear();
-        serviceChange.ServiceAtLocations.Add(new ServiceAtLocationChangeDto
+        var expectedSchedule = new ScheduleDto()
+        {
+            AttendingType = AttendingType.InPerson.ToString(),
+            Freq = FrequencyType.WEEKLY,
+            ByDay = "TU"
+        };
+
+        var expectedServiceAtLocation = new ServiceAtLocationDto
         {
             LocationId = existingLocationId,
             Schedules = new List<ScheduleDto>
             {
-                new()
-                {
-                    AttendingType = AttendingType.InPerson.ToString(),
-                    Freq = FrequencyType.WEEKLY,
-                    ByDay = "TU"
-                }
+                expectedSchedule
             }
-        });
+        };
+
+        serviceChange.ServiceAtLocations.Clear();
+        serviceChange.ServiceAtLocations.Add(expectedServiceAtLocation);
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());
@@ -666,7 +668,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
 
         var actualService = TestDbContext.Services.SingleOrDefault(s => s.Name == serviceChange.Name);
         actualService.Should().NotBeNull();
-        actualService!.Locations.Count.Should().Be(1);
+        actualService!.Locations.Should().HaveCount(1);
 
         var actualEntity = TestDbContext.Locations.SingleOrDefault(s => s.Name == expected.Name);
         actualEntity.Should().NotBeNull();
@@ -680,6 +682,18 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         detachedEntity.Should().BeEquivalentTo(location, options =>
             options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
                 .Excluding((IMemberInfo info) => info.Name.Contains("Distance")));
+
+        // check old serviceatlocation is deleted and the new one is saved correctly
+        TestDbContext.ServiceAtLocations.Should().HaveCount(1);
+        TestDbContext.ServiceAtLocations.First().Id.Should().Be(2);
+        TestDbContext.ServiceAtLocations.First().Should().BeEquivalentTo(expectedServiceAtLocation, options =>
+            options.Excluding(info => info.Name.Contains("Id")));
+
+        // check the old schedule is deleted and the new one is saved correctly
+        TestDbContext.Schedules.Where(s => s.ServiceAtLocationId != null).Should().HaveCount(1);
+        TestDbContext.Schedules.Single(s => s.ServiceAtLocationId != null).Id.Should().Be(4);
+        TestDbContext.Schedules.Single(s => s.ServiceAtLocationId != null).Should().BeEquivalentTo(expectedSchedule, options =>
+            options.Excluding(info => info.Name.Contains("Id")));
     }
 
     [Fact]
@@ -697,7 +711,7 @@ public class WhenUsingUpdateServiceCommand : DataIntegrationTestBase
         serviceChange.TaxonomyIds.Add(newTaxonomy.Id);
 
         var updateCommand = new UpdateServiceCommand(service.Id, serviceChange);
-        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper, UpdateLogger.Object);
+        var updateHandler = new UpdateServiceCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await updateHandler.Handle(updateCommand, new CancellationToken());

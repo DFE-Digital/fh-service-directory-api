@@ -75,11 +75,8 @@ public static class TestDataProvider
 
     public static ServiceDto GetTestCountyCouncilServicesDto(long organisationId, bool updated = false, bool isServiceFree = false)
     {
-        var serviceId = "3010521b-6e0a-41b0-b610-200edbbeeb14";
-
         var service = new ServiceDto
         {
-            ServiceOwnerReferenceId = serviceId,
             OrganisationId = organisationId,
             ServiceType = ServiceType.InformationSharing,
             Status = ServiceStatusType.Active,
@@ -231,20 +228,18 @@ public static class TestDataProvider
         return service;
     }
 
-    public static ServiceChangeDto GetTestCountyCouncilServicesChangeDto2(IMapper mapper, long organisationId,
-        string serviceId = "5059a0b2-ad5d-4288-b7c1-e30d35345b0e")
+    public static ServiceChangeDto GetTestCountyCouncilServicesChangeDto2(IMapper mapper, long organisationId)
     {
-        var service = GetTestCountyCouncilServicesDto2(organisationId, serviceId);
+        var service = GetTestCountyCouncilServicesDto2(organisationId);
         var serviceChange = mapper.Map<ServiceChangeDto>(service);
 
         return serviceChange;
     }
 
-    public static ServiceDto GetTestCountyCouncilServicesDto2(long organisationId, string serviceId = "5059a0b2-ad5d-4288-b7c1-e30d35345b0e")
+    public static ServiceDto GetTestCountyCouncilServicesDto2(long organisationId)
     {
         var service = new ServiceDto
         {
-            ServiceOwnerReferenceId = serviceId,
             OrganisationId = organisationId,
             ServiceType = ServiceType.InformationSharing,
             Status = ServiceStatusType.Active,
@@ -418,7 +413,6 @@ public static class TestDataProvider
             new Service
             {
                 OrganisationId = organisationId,
-                ServiceOwnerReferenceId = "Salford-Service-1",
                 ServiceType = ServiceType.FamilyExperience,
                 Name = "Baby Social at Ordsall Neighbourhood Centre",
                 Description = "This session is for babies non mobile aged from birth to twelve months. Each week we will introduce you to one of our five to thrive key messages and a fun activity you can do at home with your baby. It will also give you the opportunity to connect with other parents and share your experiences.",
@@ -529,7 +523,6 @@ public static class TestDataProvider
             new Service
             {
                 OrganisationId = organisationId,
-                ServiceOwnerReferenceId = "Salford-Service-2",
                 ServiceType = ServiceType.FamilyExperience,
                 Name = "Oakwood Academy",
                 Description = "Oakwood Academy is a special school for pupils aged 9-18 years who have a range of moderate and/or complex learning difficulties. The school has Visual Arts, Technology and Sports Specialist status. \r\n\r\nAdmissions to Oakwood Academy are controlled by Salford Local Authority. We are unable to accept direct requests for placement from parents or carers or other local authorities. Pupils who attend Oakwood Academy have an Educational, Health and Care Plan which outlines the area of need and what provision and resources are needed to support the pupil. \r\n\r\nIn rare cases, a child may be admitted on an assessment placement to determine what the pupil's needs are and whether their needs can be met at Oakwood Academy. ",
@@ -622,7 +615,6 @@ public static class TestDataProvider
             new Service
             {
                 OrganisationId = organisationId,
-                ServiceOwnerReferenceId = "Salford-Service-3",
                 ServiceType = ServiceType.FamilyExperience,
                 Name = "Central Family Hub",
                 Description = "Family Hub",
@@ -706,7 +698,6 @@ public static class TestDataProvider
             new Service
             {
                 OrganisationId = organisationId,
-                ServiceOwnerReferenceId = "Salford-Service-4",
                 ServiceType = ServiceType.FamilyExperience,
                 Name = "North Family Hub",
                 Description = "Family Hub",
@@ -790,7 +781,6 @@ public static class TestDataProvider
             new Service
             {
                 OrganisationId = organisationId,
-                ServiceOwnerReferenceId = "Salford-Service-5",
                 ServiceType = ServiceType.FamilyExperience,
                 Name = "South Family Hub",
                 Description = "Family Hub",
@@ -961,7 +951,6 @@ public static class TestDataProvider
             new Service
             {
                 OrganisationId = organisationId,
-                ServiceOwnerReferenceId = "Bristol-Service-1",
                 ServiceType = ServiceType.InformationSharing,
                 Name = "Aid for Children with Tracheostomies",
                 Description = @"Aid for Children with Tracheostomies is a national self help group operating as a registered charity and is run by parents of children with a tracheostomy and by people who sympathise with the needs of such families. ACT as an organisation is non profit making, it links groups and individual members throughout Great Britain and Northern Ireland.",
@@ -1068,7 +1057,6 @@ public static class TestDataProvider
             new Service
             {
                 OrganisationId = organisationId,
-                ServiceOwnerReferenceId = "Bristol-Service-2",
                 ServiceType = ServiceType.InformationSharing,
                 Name = "Test Service - Free - 10 to 15 yrs",
                 Description = @"This is a test service.",
@@ -1157,7 +1145,6 @@ public static class TestDataProvider
             new Service
             {
                 OrganisationId = organisationId,
-                ServiceOwnerReferenceId = "Bristol-Service-3",
                 ServiceType = ServiceType.InformationSharing,
                 Name = "Test Service - Paid - 0 to 13yrs",
                 Description = @"This is a paid test service.",
@@ -1255,7 +1242,6 @@ public static class TestDataProvider
             new Service
             {
                 OrganisationId = organisationId,
-                ServiceOwnerReferenceId = "Bristol-Service-4",
                 ServiceType = ServiceType.InformationSharing,
                 Name = "Test Service - Paid - 15 to 20yrs - Afrikaans",
                 Description = @"This is an Afrikaans test service.",

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
 
@@ -11,11 +12,21 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
     protected readonly HttpClient? Client;
     private readonly CustomWebApplicationFactory? _webAppFactory;
     private readonly bool _initSuccessful;
+    public static string BearerTokenSigningKey;
 
     protected BaseWhenUsingApiUnitTests()
     {
         try
         {
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(
+                    new Dictionary<string, string?> {
+                        {"GovUkOidcConfiguration:BearerTokenSigningKey", "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
+                    }
+                )
+                .AddUserSecrets<Program>()
+                .Build();
+
             _webAppFactory = new CustomWebApplicationFactory();
             _webAppFactory.SetupTestDatabaseAndSeedData();
 
@@ -23,6 +34,8 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
             Client.BaseAddress = new Uri("https://localhost:7128/");
 
             _initSuccessful = true;
+
+            BearerTokenSigningKey = configuration["GovUkOidcConfiguration:BearerTokenSigningKey"];
         }
         catch
         {
@@ -110,7 +123,7 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
 
         if (!string.IsNullOrEmpty(role))
         {
-            request.Headers.Add("Authorization", $"Bearer {TestDataProvider.CreateBearerToken(role)}");
+            request.Headers.Add("Authorization", $"Bearer {TestDataProvider.CreateBearerToken(role, BearerTokenSigningKey)}");
         }
 
         return request;

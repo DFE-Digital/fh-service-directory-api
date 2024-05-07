@@ -189,7 +189,7 @@ public static class StartupExtensions
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
+            Log.Error(ex, "An error occurred seeding the DB. {ExceptionMessage}", ex.Message);
         }
     }
 }
