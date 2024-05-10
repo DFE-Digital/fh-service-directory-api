@@ -167,7 +167,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         else if (request.GivenAge is not null)
         {
             query.And(
-                new StringCondition("e.MinimumAge < @GivenAge", new FhParameter("@GivenAge", request.GivenAge.Value))
+                new StringCondition("e.MinimumAge <= @GivenAge", new FhParameter("@GivenAge", request.GivenAge.Value))
             ).And(
                 new StringCondition("e.MaximumAge >= @GivenAge", new FhParameter("@GivenAge", request.GivenAge.Value))
             );
