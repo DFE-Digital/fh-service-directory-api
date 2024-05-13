@@ -883,6 +883,105 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.ToTable("Taxonomies");
                 });
 
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Event", b =>
+                {
+                    b.Property<short>("Id")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Events", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = (short)1,
+                            Description = "Describes an initial, unfiltered search by a user.",
+                            Name = "ServiceDirectoryInitialSearch"
+                        },
+                        new
+                        {
+                            Id = (short)2,
+                            Description = "Describes a filtered search by a user.",
+                            Name = "ServiceDirectorySearchFilter"
+                        });
+                });
+
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearch", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("CorrelationId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte?>("HttpResponseCode")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime>("RequestTimestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ResponseTimestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SearchPostcode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte>("SearchRadiusMiles")
+                        .HasColumnType("tinyint");
+
+                    b.Property<short>("SearchTriggerEventId")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("ServiceSearchType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SearchTriggerEventId");
+
+                    b.ToTable("ServiceSearches", (string)null);
+                });
+
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearchResult", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ServiceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ServiceSearchId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("ServiceSearchId");
+
+                    b.ToTable("ServiceSearchResults", (string)null);
+                });
+
             modelBuilder.Entity("ServiceTaxonomies", b =>
                 {
                     b.Property<long>("ServiceId")
@@ -1028,6 +1127,32 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearch", b =>
+                {
+                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Event", "SearchTriggerEvent")
+                        .WithMany("ServiceSearches")
+                        .HasForeignKey("SearchTriggerEventId");
+
+                    b.Navigation("SearchTriggerEvent");
+                });
+
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearchResult", b =>
+                {
+                    b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", "Service")
+                        .WithMany("ServiceSearchResults")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("FamilyHubs.ServiceDirectory.Data.ServiceSearch", null)
+                        .WithMany("ServiceSearchResults")
+                        .HasForeignKey("ServiceSearchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Service");
+                });
+
             modelBuilder.Entity("ServiceTaxonomies", b =>
                 {
                     b.HasOne("FamilyHubs.ServiceDirectory.Data.Entities.Service", null)
@@ -1082,6 +1207,18 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Navigation("ServiceAtLocations");
 
                     b.Navigation("ServiceDeliveries");
+
+                    b.Navigation("ServiceSearchResults");
+                });
+
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.Event", b =>
+                {
+                    b.Navigation("ServiceSearches");
+                });
+
+            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearch", b =>
+                {
+                    b.Navigation("ServiceSearchResults");
                 });
 #pragma warning restore 612, 618
         }

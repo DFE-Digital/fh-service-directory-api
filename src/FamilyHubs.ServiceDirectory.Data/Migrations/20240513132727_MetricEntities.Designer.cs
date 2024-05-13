@@ -6,21 +6,22 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NetTopologySuite.Geometries;
 
 #nullable disable
 
 namespace FamilyHubs.ServiceDirectory.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240506195107_ServiceSearchResultFKToService")]
-    partial class ServiceSearchResultFKToService
+    [Migration("20240513132727_MetricEntities")]
+    partial class MetricEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.15")
+                .HasAnnotation("ProductVersion", "7.0.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -374,6 +375,10 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<Point>("GeoPoint")
+                        .IsRequired()
+                        .HasColumnType("geography");
+
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
@@ -718,10 +723,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<long>("OrganisationId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("ServiceOwnerReferenceId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ServiceType")
                         .IsRequired()
                         .HasMaxLength(18)
@@ -944,7 +945,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<byte>("SearchRadiusMiles")
                         .HasColumnType("tinyint");
 
-                    b.Property<short?>("SearchTriggerEventId")
+                    b.Property<short>("SearchTriggerEventId")
                         .HasColumnType("smallint");
 
                     b.Property<string>("ServiceSearchType")

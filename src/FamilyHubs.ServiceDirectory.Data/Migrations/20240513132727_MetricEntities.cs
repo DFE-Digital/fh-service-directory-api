@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FamilyHubs.ServiceDirectory.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddMetricEntities : Migration
+    public partial class MetricEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,7 +32,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SearchTriggerEventId = table.Column<short>(type: "smallint", nullable: true),
+                    SearchTriggerEventId = table.Column<short>(type: "smallint", nullable: false),
                     ServiceSearchType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SearchPostcode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SearchRadiusMiles = table.Column<byte>(type: "tinyint", nullable: false),
@@ -70,6 +70,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         principalTable: "ServiceSearches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ServiceSearchResults_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -85,6 +90,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                 name: "IX_ServiceSearches_SearchTriggerEventId",
                 table: "ServiceSearches",
                 column: "SearchTriggerEventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServiceSearchResults_ServiceId",
+                table: "ServiceSearchResults",
+                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ServiceSearchResults_ServiceSearchId",
