@@ -99,7 +99,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.EnableSensitiveDataLogging();
+            if (System.Diagnostics.Debugger.IsAttached) optionsBuilder.EnableSensitiveDataLogging();
+
             optionsBuilder.AddInterceptors(_auditableEntitySaveChangesInterceptor);
         }
 

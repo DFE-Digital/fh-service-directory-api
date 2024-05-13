@@ -31,7 +31,7 @@ public class MinimalOrganisationEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred getting organisation (api). {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred getting organisation (api). {ExceptionMessage}", ex.Message);
                 
                 throw;
             }
@@ -50,7 +50,7 @@ public class MinimalOrganisationEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred getting organisation admin code (api). {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred getting organisation admin code (api). {ExceptionMessage}", ex.Message);
                 
                 throw;
             }
@@ -66,7 +66,7 @@ public class MinimalOrganisationEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred listing organisation (api). {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred listing organisation (api). {ExceptionMessage}", ex.Message);
                 
                 throw;
             }
@@ -88,7 +88,7 @@ public class MinimalOrganisationEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred updating organisation (api). {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred updating organisation (api). {ExceptionMessage}", ex.Message);
                 
                 throw;
             }
@@ -108,7 +108,7 @@ public class MinimalOrganisationEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred creating organisation (api). {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred creating organisation (api). {ExceptionMessage}", ex.Message);
                 
                 throw;
             }
@@ -124,7 +124,7 @@ public class MinimalOrganisationEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred listing organisation (api). {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred listing organisation (api). {ExceptionMessage}", ex.Message);
 
                 throw;
             }
@@ -149,7 +149,7 @@ public class MinimalOrganisationEndPoints
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "An error occurred deleting organisation (api). {exceptionMessage}", ex.Message);
+                    logger.LogError(ex, "An error occurred deleting organisation (api). {ExceptionMessage}", ex.Message);
 
                     throw;
                 }

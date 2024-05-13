@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -45,9 +46,9 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
 
     public async Task<PaginatedList<LocationDto>> Handle(GetLocationsByOrganisationIdCommand request, CancellationToken cancellationToken)
     {
-        int skip = (request.PageNumber - 1) * request.PageSize;
+        var skip = (request.PageNumber - 1) * request.PageSize;
 
-        IQueryable<Location> locationsQuery = _context.Locations
+        var locationsQuery = _context.Locations
             .Where(l => l.OrganisationId == request.OrganisationId);
 
         locationsQuery = Search(request, locationsQuery);
@@ -71,7 +72,7 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
     private IQueryable<Location> Search(GetLocationsByOrganisationIdCommand request, IQueryable<Location> locationsQuery)
     {
 
-        if (request.SearchName != null && request.SearchName != string.Empty)
+        if (!string.IsNullOrEmpty(request.SearchName))
         {
             locationsQuery = locationsQuery.Where(x => (x.Name != null && x.Name.Contains(request.SearchName))
                 || x.Address1.Contains(request.SearchName)
@@ -80,10 +81,10 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
                 || x.PostCode.Contains(request.SearchName)
                 //allow to search by the the full phrase 
                 || ((x.Name != null && x.Name != "" ? x.Name + ", " : "")
-                    + (x.Address1 != null && x.Address1 != "" ? x.Address1 + ", " : "")
+                    + (x.Address1 != "" ? x.Address1 + ", " : "")
                     + (x.Address2 != null && x.Address2 != "" ? x.Address2 + ", " : "")
-                    + (x.City != null && x.City != "" ? x.City + ", " : "")
-                    + (x.PostCode != null && x.PostCode != "" ? x.PostCode : "")
+                    + (x.City != "" ? x.City + ", " : "")
+                    + (x.PostCode != "" ? x.PostCode : "")
                     ).Contains(request.SearchName));
         }
 
@@ -116,19 +117,13 @@ public class GetLocationsByOrganisationIdCommandHandler : IRequestHandler<GetLoc
         switch (request.OrderByColumn)
         {
             case "Location":
-                {
-                    if (request.IsAscending)
-                    {
-                        locationsQuery = locationsQuery.OrderBy(x => x.Name).ThenBy(x => x.Address1).ThenBy(x => x.Address2)
-                            .ThenBy(x => x.City).ThenBy(x => x.PostCode);
-                    }
-                    else
-                    {
-                        locationsQuery = locationsQuery.OrderByDescending(x => x.Name).ThenByDescending(x => x.Address1).ThenByDescending(x => x.Address2)
-                            .ThenByDescending(x => x.City).ThenByDescending(x => x.PostCode);
-                    }
-                    break;
-                }           
+                locationsQuery = locationsQuery
+                    .OrderBy(x => x.Name, request.IsAscending)
+                    .ThenBy(x => x.Address1, request.IsAscending)
+                    .ThenBy(x => x.Address2, request.IsAscending)
+                    .ThenBy(x => x.City, request.IsAscending)
+                    .ThenBy(x => x.PostCode, request.IsAscending);
+                break;
         }
 
         return locationsQuery;

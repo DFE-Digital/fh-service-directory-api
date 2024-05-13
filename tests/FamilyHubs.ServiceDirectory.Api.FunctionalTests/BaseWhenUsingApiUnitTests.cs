@@ -1,8 +1,8 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Repository;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
 
@@ -12,17 +12,20 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
     protected readonly HttpClient? Client;
     private readonly CustomWebApplicationFactory? _webAppFactory;
     private readonly bool _initSuccessful;
-    private readonly IConfiguration? _configuration;
+    public static string BearerTokenSigningKey;
 
     protected BaseWhenUsingApiUnitTests()
     {
         try
         {
             var configuration = new ConfigurationBuilder()
-           .AddUserSecrets<Program>()
-           .Build();
-
-            _configuration = configuration;
+                .AddInMemoryCollection(
+                    new Dictionary<string, string?> {
+                        {"GovUkOidcConfiguration:BearerTokenSigningKey", "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
+                    }
+                )
+                .AddUserSecrets<Program>()
+                .Build();
 
             _webAppFactory = new CustomWebApplicationFactory();
             _webAppFactory.SetupTestDatabaseAndSeedData();
@@ -31,6 +34,8 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
             Client.BaseAddress = new Uri("https://localhost:7128/");
 
             _initSuccessful = true;
+
+            BearerTokenSigningKey = configuration["GovUkOidcConfiguration:BearerTokenSigningKey"];
         }
         catch
         {
@@ -118,37 +123,10 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
 
         if (!string.IsNullOrEmpty(role))
         {
-            request.Headers.Add("Authorization", $"Bearer {TestDataProvider.CreateBearerToken(role)}");
+            request.Headers.Add("Authorization", $"Bearer {TestDataProvider.CreateBearerToken(role, BearerTokenSigningKey)}");
         }
 
         return request;
-    }
-
-    protected bool IsRunningLocally()
-    {
-
-        if (!_initSuccessful || _configuration == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            string localMachineName = _configuration["LocalSettings:MachineName"] ?? string.Empty;
-
-            if (!string.IsNullOrEmpty(localMachineName))
-            {
-                return Environment.MachineName.Equals(localMachineName, StringComparison.OrdinalIgnoreCase);
-            }
-        }
-        catch
-        {
-            return false;
-        }
-
-        // Fallback to a default check if User Secrets file or machine name is not specified
-        // For example, you can add additional checks or default behavior here
-        return false;
     }
 }
 
