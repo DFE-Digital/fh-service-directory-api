@@ -49,10 +49,7 @@ public class AutoMappingProfiles : Profile
         CreateMap<Schedule, Schedule>();
 
         CreateMap<ServiceSearchDto, ServiceSearch>().ReverseMap();
-        // CreateMap<ServiceSearch, ServiceSearch>();
-        CreateMap<ServiceSearchResult, ServiceSearchResultDto>().ReverseMap();
-        // CreateMap<ServiceSearchResult, ServiceSearchResult>();
-        CreateMap<Event, EventDto>().ReverseMap();
-        // CreateMap<Event, Event>();
+        CreateMap<ServiceSearchResultDto, ServiceSearchResult>().ReverseMap();
+        CreateMap<EventDto, Event>().ReverseMap();
     }
 }
