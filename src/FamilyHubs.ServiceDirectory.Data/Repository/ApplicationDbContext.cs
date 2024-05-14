@@ -2,7 +2,7 @@
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
+using Enums = FamilyHubs.ServiceDirectory.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Data.Repository
@@ -82,15 +82,47 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
                 .HasData(
                     new()
                     {
-                        Id = ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch,
-                        Name = nameof(ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch),
+                        Id = Enums.ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch,
+                        Name = nameof(Enums.ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch),
                         Description = "Describes an initial, unfiltered search by a user."
                     },
                     new()
                     {
-                        Id = ServiceDirectorySearchEventType.ServiceDirectorySearchFilter,
-                        Name = nameof(ServiceDirectorySearchEventType.ServiceDirectorySearchFilter),
+                        Id = Enums.ServiceDirectorySearchEventType.ServiceDirectorySearchFilter,
+                        Name = nameof(Enums.ServiceDirectorySearchEventType.ServiceDirectorySearchFilter),
                         Description = "Describes a filtered search by a user."
+                    }
+                );
+
+            modelBuilder.Entity<ServiceType>()
+                .ToTable("ServiceTypes")
+                .HasKey(e => e. Id);
+
+            modelBuilder.Entity<ServiceType>()
+                .Property(e => e.Id)
+                .HasConversion<byte>();
+            
+            modelBuilder.Entity<ServiceType>()
+                .Property(e => e.Name)
+                .HasColumnType("nvarchar(50)");
+            
+            modelBuilder.Entity<ServiceType>()
+                .Property(e => e.Description)
+                .HasColumnType("nvarchar(255)");
+
+            modelBuilder.Entity<ServiceType>()
+                .HasData(
+                    new ServiceType
+                    {
+                        Id = Enums.ServiceType.FamilyExperience,
+                        Name = nameof(Enums.ServiceType.FamilyExperience),
+                        Description = "Find"
+                    },
+                    new ServiceType 
+                    {
+                        Id = Enums.ServiceType.InformationSharing,
+                        Name = nameof(Enums.ServiceType.InformationSharing),
+                        Description = "Connect"
                     }
                 );
 
@@ -121,5 +153,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
         public DbSet<ServiceSearch> ServiceSearches => Set<ServiceSearch>();
         public DbSet<Event> Events => Set<Event>();
         public DbSet<ServiceSearchResult> ServiceSearchResult => Set<ServiceSearchResult>();
+        public DbSet<ServiceType> ServiceTypes => Set<ServiceType>();
     }
 }

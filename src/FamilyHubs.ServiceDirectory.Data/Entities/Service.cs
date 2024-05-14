@@ -1,21 +1,21 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Entities.Base;
 using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
+using Enums = FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
 public class Service : EntityBase<long>
 {
     public long OrganisationId { get; set; }
-    public required ServiceType ServiceType { get; set; }
+    public required Enums.ServiceType ServiceType { get; set; }
     public required string Name { get; set; }
     public string? Summary { get; set; }
     public string? Description { get; set; }
-    public ServiceStatusType Status { get; set; }
+    public Enums.ServiceStatusType Status { get; set; }
     public string? InterpretationServices { get; set; }
     public string? Fees { get; set; }
     public string? Accreditations { get; set; }
-    public DeliverableType DeliverableType { get; set; }
+    public Enums.DeliverableType DeliverableType { get; set; }
     public DateTime? AssuredDate { get; set; }
     public bool CanFamilyChooseDeliveryLocation { get; set; }
     public IList<Location> Locations { get; set; } = new List<Location>();
