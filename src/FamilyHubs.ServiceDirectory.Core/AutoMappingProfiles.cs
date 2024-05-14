@@ -7,6 +7,7 @@ using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
 using Location = FamilyHubs.ServiceDirectory.Data.Entities.Location;
+using FamilyHubs.ServiceDirectory.Shared;
 namespace FamilyHubs.ServiceDirectory.Core;
 
 public class AutoMappingProfiles : Profile
@@ -51,5 +52,6 @@ public class AutoMappingProfiles : Profile
         CreateMap<ServiceSearchDto, ServiceSearch>().ReverseMap();
         CreateMap<ServiceSearchResultDto, ServiceSearchResult>().ReverseMap();
         CreateMap<EventDto, Event>().ReverseMap();
+        CreateMap<ServiceTypeDto, ServiceType>().ReverseMap();
     }
 }

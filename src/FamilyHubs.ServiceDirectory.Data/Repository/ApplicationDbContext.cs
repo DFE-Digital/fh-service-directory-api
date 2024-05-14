@@ -54,10 +54,20 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
                 .HasConversion<short>();
             
             modelBuilder.Entity<ServiceSearch>()
+                .Property(e => e.ServiceSearchTypeId)
+                .HasConversion<byte>();
+            
+            modelBuilder.Entity<ServiceSearch>()
                 .HasOne(e => e.SearchTriggerEvent)
                 .WithMany(e => e.ServiceSearches)
                 .HasForeignKey(e => e.SearchTriggerEventId)
                 .IsRequired(false);
+            
+            modelBuilder.Entity<ServiceSearch>()
+                .HasOne(e => e.ServiceSearchType)
+                .WithMany(e => e.ServiceSearches)
+                .HasForeignKey(e => e.ServiceSearchTypeId)
+                .IsRequired(true);
 
             modelBuilder.Entity<ServiceSearchResult>()
                 .ToTable("ServiceSearchResults")
@@ -77,6 +87,14 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
             modelBuilder.Entity<Event>()
                 .Property(e => e.Id)
                 .HasConversion<short>();
+            
+            modelBuilder.Entity<Event>()
+                .Property(e => e.Name)
+                .HasColumnType("nvarchar(100)");
+            
+            modelBuilder.Entity<Event>()
+                .Property(e => e.Description)
+                .HasColumnType("nvarchar(500)");
 
             modelBuilder.Entity<Event>()
                 .HasData(

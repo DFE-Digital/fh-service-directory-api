@@ -47,6 +47,7 @@ public class RecordServiceSearchCommandHandler : IRequestHandler<RecordServiceSe
             ServiceSearch serviceSearch = _mapper.Map<ServiceSearch>(request.ServiceSearch);
 
             serviceSearch.SearchTriggerEvent = null!; // Don't insert SearchTriggerEvent
+            serviceSearch.ServiceSearchType = null!; // Don't insert ServiceSearchType
 
             _context.ServiceSearches.Add(serviceSearch);
             
