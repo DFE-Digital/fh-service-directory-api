@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace FamilyHubs.ServiceDirectory.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240513132727_MetricEntities")]
+    partial class MetricEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -889,13 +892,12 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -925,8 +927,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("CorrelationId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte?>("HttpResponseCode")
                         .HasColumnType("tinyint");
@@ -939,8 +940,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("SearchPostcode")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte>("SearchRadiusMiles")
                         .HasColumnType("tinyint");
@@ -948,17 +948,16 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<short>("SearchTriggerEventId")
                         .HasColumnType("smallint");
 
-                    b.Property<byte>("ServiceSearchTypeId")
-                        .HasColumnType("tinyint");
+                    b.Property<string>("ServiceSearchType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("UserId")
+                    b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SearchTriggerEventId");
-
-                    b.HasIndex("ServiceSearchTypeId");
 
                     b.ToTable("ServiceSearches", (string)null);
                 });
@@ -984,39 +983,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasIndex("ServiceSearchId");
 
                     b.ToTable("ServiceSearchResults", (string)null);
-                });
-
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceType", b =>
-                {
-                    b.Property<byte>("Id")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ServiceTypes", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = (byte)2,
-                            Description = "Find",
-                            Name = "FamilyExperience"
-                        },
-                        new
-                        {
-                            Id = (byte)1,
-                            Description = "Connect",
-                            Name = "InformationSharing"
-                        });
                 });
 
             modelBuilder.Entity("ServiceTaxonomies", b =>
@@ -1170,15 +1136,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .WithMany("ServiceSearches")
                         .HasForeignKey("SearchTriggerEventId");
 
-                    b.HasOne("FamilyHubs.ServiceDirectory.Data.ServiceType", "ServiceSearchType")
-                        .WithMany("ServiceSearches")
-                        .HasForeignKey("ServiceSearchTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("SearchTriggerEvent");
-
-                    b.Navigation("ServiceSearchType");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearchResult", b =>
@@ -1264,11 +1222,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearch", b =>
                 {
                     b.Navigation("ServiceSearchResults");
-                });
-
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceType", b =>
-                {
-                    b.Navigation("ServiceSearches");
                 });
 #pragma warning restore 612, 618
         }
