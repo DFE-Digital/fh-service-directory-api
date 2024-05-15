@@ -56,6 +56,10 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
             modelBuilder.Entity<ServiceSearch>()
                 .Property(e => e.ServiceSearchTypeId)
                 .HasConversion<byte>();
+
+            modelBuilder.Entity<ServiceSearch>()
+                .Property(e => e.SearchPostcode)
+                .HasMaxLength(10);
             
             modelBuilder.Entity<ServiceSearch>()
                 .HasOne(e => e.SearchTriggerEvent)
@@ -68,6 +72,10 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
                 .WithMany(e => e.ServiceSearches)
                 .HasForeignKey(e => e.ServiceSearchTypeId)
                 .IsRequired(true);
+            
+            modelBuilder.Entity<ServiceSearch>()
+                .Property(e => e.CorrelationId)
+                .HasMaxLength(50);
 
             modelBuilder.Entity<ServiceSearchResult>()
                 .ToTable("ServiceSearchResults")
@@ -90,11 +98,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
             
             modelBuilder.Entity<Event>()
                 .Property(e => e.Name)
-                .HasColumnType("nvarchar(100)");
+                .HasMaxLength(100);
             
             modelBuilder.Entity<Event>()
                 .Property(e => e.Description)
-                .HasColumnType("nvarchar(500)");
+                .HasMaxLength(500);
 
             modelBuilder.Entity<Event>()
                 .HasData(
@@ -122,11 +130,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
             
             modelBuilder.Entity<ServiceType>()
                 .Property(e => e.Name)
-                .HasColumnType("nvarchar(50)");
+                .HasMaxLength(50);
             
             modelBuilder.Entity<ServiceType>()
                 .Property(e => e.Description)
-                .HasColumnType("nvarchar(255)");
+                .HasMaxLength(255);
 
             modelBuilder.Entity<ServiceType>()
                 .HasData(
