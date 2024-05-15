@@ -53,7 +53,7 @@ public class RecordServiceSearchCommandHandler : IRequestHandler<RecordServiceSe
             
             await _context.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("Service search with ID {ServiceSearchUd} saved to DB.", serviceSearch.Id);
+            _logger.LogInformation("Service search with ID {ServiceSearchId} saved to DB.", serviceSearch.Id);
 
             return serviceSearch.Id;
 
