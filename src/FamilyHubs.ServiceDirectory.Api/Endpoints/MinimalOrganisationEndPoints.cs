@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationById
 using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationsByAssociatedId;
 using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.ListOrganisations;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -56,11 +57,16 @@ public class MinimalOrganisationEndPoints
             }
         }).WithMetadata(new SwaggerOperationAttribute("Get Organisation Code By Organisation Id", "Get Organisation Code By Organisation Id") { Tags = new[] { "Organisations" } });
 
-        app.MapGet("api/organisations", async ([FromQuery] long[] ids, [FromQuery] string? name, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
+        app.MapGet("api/organisations", async (
+            [FromQuery] long[] ids,
+            [FromQuery] string? name,
+            [FromQuery] OrganisationType? organisationType,
+            [FromQuery] long? associatedOrganisationId,
+            CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
             try
             {
-                var request = new ListOrganisationsCommand(ids.ToList(), name);
+                var request = new ListOrganisationsCommand(ids.ToList(), name, organisationType, associatedOrganisationId);
                 var result = await mediator.Send(request, cancellationToken);
                 return result;
             }
