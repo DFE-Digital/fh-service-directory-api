@@ -55,6 +55,16 @@ public class ListOrganisationCommandHandler : IRequestHandler<ListOrganisationsC
             organisationsQuery = organisationsQuery.Where(org => org.Name.ToLower().Contains(request.Name.ToLower()));
         }
 
+        if (request.OrganisationType != null)
+        {
+            organisationsQuery = organisationsQuery.Where(org => org.OrganisationType == request.OrganisationType);
+        }
+
+        if (request.AssociatedOrganisationId != null)
+        {
+            organisationsQuery = organisationsQuery.Where(org => org.AssociatedOrganisationId == request.AssociatedOrganisationId);
+        }
+
         var organisations = await organisationsQuery
             .ProjectTo<OrganisationDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
