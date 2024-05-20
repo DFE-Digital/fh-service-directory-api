@@ -56,4 +56,47 @@ public class WhenUsingListOrganisationsCommand : DataIntegrationTestBase
         result.Should().NotBeNull();
         result.Should().HaveCount(1);
     }
+
+    [Fact]
+    public async Task ThenListOrganisationsFilteredByVcsOrganisationTypeAndLa()
+    {
+        //Arrange
+        TestOrganisation.OrganisationType = OrganisationType.VCFS;
+        long laOrganisationId = TestDbContext.Organisations.First().Id;
+        TestOrganisation.AssociatedOrganisationId = laOrganisationId;
+        await CreateOrganisationDetails();
+
+        var getCommand = new ListOrganisationsCommand(new List<long>(), null,
+            OrganisationType.VCFS,
+            laOrganisationId);
+        var getHandler = new ListOrganisationCommandHandler(TestDbContext, Mapper);
+
+        //Act
+        var result = await getHandler.Handle(getCommand, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public async Task ThenListOrganisationsFilteredByVcsOrganisationTypeAndLaNoResults()
+    {
+        //Arrange
+        TestOrganisation.OrganisationType = OrganisationType.VCFS;
+        TestOrganisation.AssociatedOrganisationId = TestDbContext.Organisations.First().Id;
+        await CreateOrganisationDetails();
+
+        var getCommand = new ListOrganisationsCommand(new List<long>(), null,
+            OrganisationType.VCFS,
+            TestDbContext.Organisations.Skip(1).First().Id);
+        var getHandler = new ListOrganisationCommandHandler(TestDbContext, Mapper);
+
+        //Act
+        var result = await getHandler.Handle(getCommand, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+    }
 }
