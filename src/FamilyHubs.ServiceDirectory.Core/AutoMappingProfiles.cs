@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
-
+using NetTopologySuite.Geometries;
 using DoNotRemove = AutoMapper.EntityFrameworkCore.Extensions;
+using Location = FamilyHubs.ServiceDirectory.Data.Entities.Location;
 
 namespace FamilyHubs.ServiceDirectory.Core;
 
@@ -30,9 +32,12 @@ public class AutoMappingProfiles : Profile
         CreateMap<ServiceChangeDto, Service>().ReverseMap();
         CreateMap<ServiceChangeDto, ServiceDto>().ReverseMap();
 
-        CreateMap<ServiceAtLocationChangeDto, ServiceAtLocation>().ReverseMap();
+        CreateMap<ServiceAtLocationDto, ServiceAtLocation>().ReverseMap();
+        CreateMap<ServiceAtLocationDto, ServiceAtLocationDto>().ReverseMap();
 
-        CreateMap<LocationDto, Location>().ReverseMap();
+        CreateMap<LocationDto, Location>()
+            .ForMember(dest => dest.GeoPoint, opt => opt.MapFrom<GeoPoint.Resolver>())
+            .ReverseMap();
         CreateMap<Location, Location>();
 
         CreateMap<TaxonomyDto, Taxonomy>().ReverseMap();

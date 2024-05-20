@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -26,8 +27,17 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlite(_serviceDirectoryConnection, mg =>
-                    mg.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString()));
+                    mg.UseNetTopologySuite().MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString()));
             });
+        });
+
+        builder.ConfigureAppConfiguration((context, configurationBuilder) =>
+        {
+            configurationBuilder.AddInMemoryCollection(
+                new Dictionary<string, string?> {
+                    {"UseSqlite", "true"},
+                }
+            );
         });
 
         builder.UseEnvironment("Development");

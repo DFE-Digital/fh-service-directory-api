@@ -22,7 +22,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyHubs.ServiceDirectoryApi.UnitTests", "tests\FamilyHubs.ServiceDirectoryApi.UnitTests\FamilyHubs.ServiceDirectoryApi.UnitTests.csproj", "{F0FC8216-7C16-4101-92D3-DE24DBB0FD55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.ServiceDirectoryApi.UnitTests", "tests\FamilyHubs.ServiceDirectoryApi.UnitTests\FamilyHubs.ServiceDirectoryApi.UnitTests.csproj", "{F0FC8216-7C16-4101-92D3-DE24DBB0FD55}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data fixes", "Data fixes", "{85ED8180-26EB-49B0-875D-71044F6361CC}"
+	ProjectSection(SolutionItems) = preProject
+		data fixes\delete all find services for redbridge.sql = data fixes\delete all find services for redbridge.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

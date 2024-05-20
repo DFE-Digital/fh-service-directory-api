@@ -71,7 +71,7 @@ public static class StartupExtensions
             cfg.UseEntityFrameworkCoreModel<ApplicationDbContext>(serviceProvider);
             cfg.ShouldMapProperty = pi => !auditProperties.Contains(pi.Name);
         }, typeof(AutoMappingProfiles));
-    } 
+    }
 
     private static void RegisterAppDbContext(this IServiceCollection services, IConfiguration configuration)
     {
@@ -95,12 +95,12 @@ public static class StartupExtensions
             if (useSqlite == true)
             {
                 options.UseSqlite(connection, mg =>
-                    mg.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString()));
+                    mg.UseNetTopologySuite().MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString()));
             }
             else
             {
                 options.UseSqlServer(connection, mg =>
-                    mg.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString()));
+                    mg.UseNetTopologySuite().MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString()));
             }
         });
     }
@@ -189,7 +189,7 @@ public static class StartupExtensions
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
+            Log.Error(ex, "An error occurred seeding the DB. {ExceptionMessage}", ex.Message);
         }
     }
 }
