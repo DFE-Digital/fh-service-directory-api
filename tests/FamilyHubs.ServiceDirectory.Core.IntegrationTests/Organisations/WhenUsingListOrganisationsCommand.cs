@@ -28,8 +28,6 @@ public class WhenUsingListOrganisationsCommand : DataIntegrationTestBase
     public async Task ThenListOrganisationsFilteredByLaOrganisationType()
     {
         //Arrange
-        await CreateOrganisationDetails();
-
         var getCommand = new ListOrganisationsCommand(new List<long>(), null, OrganisationType.LA);
         var getHandler = new ListOrganisationCommandHandler(TestDbContext, Mapper);
 
@@ -38,7 +36,7 @@ public class WhenUsingListOrganisationsCommand : DataIntegrationTestBase
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().HaveCount(7);
+        result.Should().HaveCount(6);
     }
 
     [Fact]
