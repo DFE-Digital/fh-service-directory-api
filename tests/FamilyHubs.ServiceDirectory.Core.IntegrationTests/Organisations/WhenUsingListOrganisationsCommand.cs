@@ -25,7 +25,7 @@ public class WhenUsingListOrganisationsCommand : DataIntegrationTestBase
     }
 
     [Fact]
-    public async Task ThenListOrganisationsFilteredByOrganisationType()
+    public async Task ThenListOrganisationsFilteredByLaOrganisationType()
     {
         //Arrange
         await CreateOrganisationDetails();
@@ -39,5 +39,23 @@ public class WhenUsingListOrganisationsCommand : DataIntegrationTestBase
         //Assert
         result.Should().NotBeNull();
         result.Should().HaveCount(7);
+    }
+
+    [Fact]
+    public async Task ThenListOrganisationsFilteredByVcsOrganisationType()
+    {
+        //Arrange
+        TestOrganisation.OrganisationType = OrganisationType.VCFS;
+        await CreateOrganisationDetails();
+
+        var getCommand = new ListOrganisationsCommand(new List<long>(), null, OrganisationType.VCFS);
+        var getHandler = new ListOrganisationCommandHandler(TestDbContext, Mapper);
+
+        //Act
+        var result = await getHandler.Handle(getCommand, new CancellationToken());
+
+        //Assert
+        result.Should().NotBeNull();
+        result.Should().HaveCount(1);
     }
 }
