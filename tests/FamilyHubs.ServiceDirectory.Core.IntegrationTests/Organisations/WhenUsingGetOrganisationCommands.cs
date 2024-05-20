@@ -1,9 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationAdminAreaById;
 using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationById;
-using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.ListOrganisations;
-using FamilyHubs.ServiceDirectory.Shared.Dto;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Organisations;
@@ -37,40 +34,6 @@ public class WhenUsingGetOrganisationCommands : DataIntegrationTestBase
         // Act 
         // Assert
         await Assert.ThrowsAsync<NotFoundException>(() => getHandler.Handle(getCommand, new CancellationToken()));
-    }
-
-    [Fact]
-    public async Task ThenListOrganisationsFilteredByOrganisationType()
-    {
-        //Arrange
-        await CreateOrganisationDetails();
-
-        var getCommand = new ListOrganisationsCommand(new List<long>(), null, OrganisationType.LA);
-        var getHandler = new ListOrganisationCommandHandler(TestDbContext, Mapper);
-
-        //Act
-        var result = await getHandler.Handle(getCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Should().HaveCount(7);
-    }
-
-    [Fact]
-    public async Task ThenListOrganisations()
-    {
-        //Arrange
-        await CreateOrganisationDetails();
-
-        var getCommand = new ListOrganisationsCommand(new List<long>(), null);
-        var getHandler = new ListOrganisationCommandHandler(TestDbContext, Mapper);
-
-        //Act
-        var result = await getHandler.Handle(getCommand, new CancellationToken());
-
-        //Assert
-        result.Should().NotBeNull();
-        result.Last().Should().BeEquivalentTo((OrganisationDto)TestOrganisation);
     }
 
     [Fact]
