@@ -10,13 +10,13 @@ The test use the builder pattern and HTTPClient to send requests to the API endp
 ## Prerequistes
 
 1. Install VSCode or your favourite IDE
-2. Install .NET8 SDK and Runtime
+2. Install .NET7 SDK and Runtime
 
 ## Run tests locally
 1. Clone ServiceDirectory API and open the FamilyHubs.ServiceDirectory.Api.AcceptanceTests folder in VS Code
 2. In terminal run dotnet build
 3. To run tests via terminal run dotnet test
-4. To run tests via extension: install C# Dev Kit or .NET Core Test Explorer, naivagte to testing tab and run tests.
+4. To run tests via extension: install C# Dev Kit or .NET Core Test Explorer, naivgate to testing tab and run tests.
 
 ## Run tests in Azure pipeline
 To be setup
