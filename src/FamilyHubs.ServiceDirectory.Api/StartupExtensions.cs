@@ -8,6 +8,7 @@ using FamilyHubs.ServiceDirectory.Data;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
+using FamilyHubs.SharedKernel.Security;
 using FluentValidation;
 using MediatR;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -43,6 +44,10 @@ public static class StartupExtensions
 
     public static void RegisterApplicationComponents(this IServiceCollection services, IConfiguration configuration)
     {
+        //todo: add extension in shared kernel for these
+        services.AddSingleton<IKeyProvider, KeyProvider>();
+        services.AddSingleton<ICrypto, Crypto>();
+
         services.RegisterAppDbContext(configuration);
 
         services.RegisterMinimalEndPoints();

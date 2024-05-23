@@ -6,8 +6,10 @@ using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.SharedKernel.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.DataEncryption.Providers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -171,8 +173,17 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
 
         var inMemorySettings = new Dictionary<string, string?> {
             {"UseSqlite", "true"},
+            {"Crypto:UseKeyVault", "False"},
         };
+
+        var key = AesProvider.GenerateKey(AesKeySize.AES128Bits);
+
+        inMemorySettings.Add("Crypto:DbEncryptionKey", string.Join(",", key.Key));
+        inMemorySettings.Add("Crypto:DbEncryptionIVKey", string.Join(",", key.IV));
+
         var configuration = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings).Build();
+
+        IKeyProvider keyProvider = new KeyProvider(configuration);
 
         return new ServiceCollection().AddEntityFrameworkSqlite()
             .AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder =>
@@ -184,6 +195,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
                 });
             })
             .AddSingleton<IConfiguration>(configuration)
+            .AddSingleton(keyProvider)
             .AddSingleton(auditableEntitySaveChangesInterceptor)
             .AddAutoMapper((serviceProvider, cfg) =>
             {
