@@ -5,9 +5,12 @@ using FamilyHubs.ServiceDirectory.Core.Commands.Services.DeleteService;
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.UpdateService;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
+using FamilyHubs.SharedKernel.Security;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.DataEncryption.Providers;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Services;
@@ -31,6 +34,20 @@ public class WhenValidatingServiceCommands
         //todo: do we need a (mock) _httpContextAccessor?
         var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(_httpContextAccessor);
 
+        var inMemorySettings = new Dictionary<string, string?> {
+            {"UseSqlite", "true"},
+            {"Crypto:UseKeyVault", "False"},
+        };
+
+        var key = AesProvider.GenerateKey(AesKeySize.AES128Bits);
+
+        inMemorySettings.Add("Crypto:DbEncryptionKey", string.Join(",", key.Key));
+        inMemorySettings.Add("Crypto:DbEncryptionIVKey", string.Join(",", key.IV));
+
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings).Build();
+
+        IKeyProvider keyProvider = new KeyProvider(configuration);
+
         return new ServiceCollection().AddEntityFrameworkSqlite()
             .AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder =>
             {
@@ -40,6 +57,8 @@ public class WhenValidatingServiceCommands
                     opt.UseNetTopologySuite().MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());
                 });
             })
+            .AddSingleton<IConfiguration>(configuration)
+            .AddSingleton(keyProvider)
             .AddSingleton(auditableEntitySaveChangesInterceptor)
             .AddAutoMapper((serviceProvider, cfg) =>
             {
