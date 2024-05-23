@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
+using Microsoft.EntityFrameworkCore.DataEncryption;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
@@ -23,10 +24,12 @@ public class ServiceAtLocationConfiguration : IEntityTypeConfiguration<ServiceAt
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.Email)
-            .IsRequired();
+            .HasMaxLength(MaxLength.EncryptedEmail)
+            .IsRequired()
+            .IsEncrypted();
 
         builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.Email);
+            .HasMaxLength(MaxLength.EncryptedEmail)
+            .IsEncrypted();
     }
 }

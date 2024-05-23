@@ -1,16 +1,15 @@
-﻿using FamilyHubs.ServiceDirectory.Data.Entities;
+﻿using FamilyHubs.ServiceDirectory.Data.Entities.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.DataEncryption;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
-public class ServiceDeliveryConfiguration : IEntityTypeConfiguration<ServiceDelivery>
+public class EntityBaseConfiguration<TEntity> : IEntityTypeConfiguration<TEntity>
+    where TEntity : EntityBase<long>
 {
-    public void Configure(EntityTypeBuilder<ServiceDelivery> builder)
+    public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
-        builder.HasEnumProperty(t => t.Name, 50);
-
         builder.Property(t => t.Created)
             .IsRequired();
 

@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.DataEncryption;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
@@ -88,10 +89,12 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .IsRequired();
 
         builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.Email)
-            .IsRequired();
+            .HasMaxLength(MaxLength.EncryptedEmail)
+            .IsRequired()
+            .IsEncrypted();
 
         builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.Email);
+            .HasMaxLength(MaxLength.EncryptedEmail)
+            .IsEncrypted();
     }
 }

@@ -5,8 +5,6 @@ using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganisatio
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
-using Moq;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Services;
 
@@ -107,13 +105,13 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         await CreateOrganisationDetails();
 
         var command = new DeleteServiceByIdCommand(1);
-        var handler = new DeleteServiceByIdCommandHandler(TestDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);
+        var handler = new DeleteServiceByIdCommandHandler(TestDbContext);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        results.Should().Be(true);
+        results.Should().BeTrue();
     }
 
     [Fact]
@@ -121,7 +119,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
     {
         //Arrange
         var command = new DeleteServiceByIdCommand(Random.Shared.Next());
-        var handler = new DeleteServiceByIdCommandHandler(TestDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);
+        var handler = new DeleteServiceByIdCommandHandler(TestDbContext);
 
         // Act 
         // Assert
