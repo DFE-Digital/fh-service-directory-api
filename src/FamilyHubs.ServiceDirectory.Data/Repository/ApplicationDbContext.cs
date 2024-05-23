@@ -26,6 +26,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
             _provider = GetEncryptionProvider(keyProvider).Result;
         }
 
+        //todo: will need to encrypt (or remove) existing data - check how the referral api did it
         //todo: will need secrets added to the sd keyvault
         //todo: this code originated from the referral api - we should probably move it to shared kernel
         private async Task<IEncryptionProvider> GetEncryptionProvider(IKeyProvider keyProvider)
