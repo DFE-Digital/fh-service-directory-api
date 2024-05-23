@@ -2,23 +2,77 @@
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
+using FamilyHubs.SharedKernel.Security;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.DataEncryption;
+using Microsoft.EntityFrameworkCore.DataEncryption.Providers;
 
 namespace FamilyHubs.ServiceDirectory.Data.Repository
 {
     public class ApplicationDbContext : DbContext
     {
         private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
+        private readonly IEncryptionProvider _provider;
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor) : base(options)
+        public ApplicationDbContext(
+            DbContextOptions<ApplicationDbContext> options,
+            AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor,
+            IKeyProvider keyProvider)
+            : base(options)
         {
             _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
+
+            //todo: .Result could deadlock. how do we fix it? (is it really a problem, don't think it's bitten us in the referral api)
+            _provider = GetEncryptionProvider(keyProvider).Result;
+        }
+
+        //todo: will need secrets added to the sd keyvault
+        //todo: this code originated from the referral api - we should probably move it to shared kernel
+        private async Task<IEncryptionProvider> GetEncryptionProvider(IKeyProvider keyProvider)
+        {
+            byte[]? byteencryptionKey;
+            byte[]? byteencryptionIV;
+
+            string? encryptionKey = await keyProvider.GetDbEncryptionKey();
+            if (!string.IsNullOrEmpty(encryptionKey))
+            {
+                byteencryptionKey = ConvertStringToByteArray(encryptionKey);
+            }
+            else
+            {
+                throw new ArgumentException("EncryptionKey is missing");
+            }
+            string? encryptionIV = keyProvider.GetDbEncryptionIVKey().Result;
+            if (!string.IsNullOrEmpty(encryptionIV))
+            {
+                byteencryptionIV = ConvertStringToByteArray(encryptionIV);
+            }
+            else
+            {
+                throw new ArgumentException("EncryptionIV is missing");
+            }
+            return new AesProvider(byteencryptionKey, byteencryptionIV);
+        }
+
+        private byte[] ConvertStringToByteArray(string value)
+        {
+            List<byte> bytes = new List<byte>();
+            string[] parts = value.Split(',');
+            foreach (string part in parts)
+            {
+                if (byte.TryParse(part, out byte b))
+                {
+                    bytes.Add(b);
+                }
+            }
+            return bytes.ToArray();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+            //todo: move these index creators to the <Entity>Configuration classes
             modelBuilder.Entity<Service>()
                 .HasIndex(e => new { e.OrganisationId, e.Id })
                 .IsUnique(false)
@@ -43,6 +97,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
                     .IsUnique(false)
                     .IsClustered(false);
             });
+
+            modelBuilder.UseEncryption(this._provider);
 
             base.OnModelCreating(modelBuilder);
         }
