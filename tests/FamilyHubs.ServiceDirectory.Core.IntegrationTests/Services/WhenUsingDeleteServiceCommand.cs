@@ -15,7 +15,7 @@ public class WhenUsingDeleteServiceCommand : DataIntegrationTestBase
         await CreateOrganisationDetails();
 
         var command = new DeleteServiceByIdCommand(1);
-        var handler = new DeleteServiceByIdCommandHandler(TestDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);
+        var handler = new DeleteServiceByIdCommandHandler(TestDbContext);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
@@ -30,7 +30,7 @@ public class WhenUsingDeleteServiceCommand : DataIntegrationTestBase
     {
         //Arrange
         var command = new DeleteServiceByIdCommand(Random.Shared.Next());
-        var handler = new DeleteServiceByIdCommandHandler(TestDbContext, new Mock<ILogger<DeleteServiceByIdCommandHandler>>().Object);
+        var handler = new DeleteServiceByIdCommandHandler(TestDbContext);
 
         // Act 
         // Assert

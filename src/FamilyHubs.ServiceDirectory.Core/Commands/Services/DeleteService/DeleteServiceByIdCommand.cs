@@ -20,12 +20,10 @@ public class DeleteServiceByIdCommand : IRequest<bool>
 public class DeleteServiceByIdCommandHandler : IRequestHandler<DeleteServiceByIdCommand, bool>
 {
     private readonly ApplicationDbContext _context;
-    private readonly ILogger<DeleteServiceByIdCommandHandler> _logger;
 
-    public DeleteServiceByIdCommandHandler(ApplicationDbContext context, ILogger<DeleteServiceByIdCommandHandler> logger)
+    public DeleteServiceByIdCommandHandler(ApplicationDbContext context)
     {
         _context = context;
-        _logger = logger;
     }
 
     public async Task<bool> Handle(DeleteServiceByIdCommand request, CancellationToken cancellationToken)
