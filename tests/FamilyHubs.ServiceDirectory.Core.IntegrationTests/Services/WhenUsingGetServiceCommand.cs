@@ -5,8 +5,6 @@ using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganisatio
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
-using Moq;
 
 namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Services;
 
@@ -113,7 +111,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         var results = await handler.Handle(command, new CancellationToken());
 
         //Assert
-        results.Should().Be(true);
+        results.Should().BeTrue();
     }
 
     [Fact]
