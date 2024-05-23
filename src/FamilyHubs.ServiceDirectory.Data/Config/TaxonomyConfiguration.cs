@@ -1,29 +1,17 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.DataEncryption;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
-public class TaxonomyConfiguration : IEntityTypeConfiguration<Taxonomy>
+public class TaxonomyConfiguration : EntityBaseConfiguration<Taxonomy>
 {
-    public void Configure(EntityTypeBuilder<Taxonomy> builder)
+    public override void Configure(EntityTypeBuilder<Taxonomy> builder)
     {
+        base.Configure(builder);
+
         builder.Property(t => t.Name)
             .HasMaxLength(255);
 
         builder.HasEnumProperty(t => t.TaxonomyType, 50);
-
-        builder.Property(t => t.Created)
-            .IsRequired();
-
-        builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.EncryptedEmail)
-            .IsRequired()
-            .IsEncrypted();
-
-        builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.EncryptedEmail)
-            .IsEncrypted();
     }
 }
