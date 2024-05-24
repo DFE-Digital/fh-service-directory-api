@@ -48,18 +48,20 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
             entry.State = EntityState.Deleted;
         }
 
+        var now = DateTime.UtcNow;
+
         foreach (var entry in context.ChangeTracker.Entries<EntityBase<long>>())
         {
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedBy = updatedBy;
-                entry.Entity.Created = DateTime.UtcNow;
+                entry.Entity.Created = now;
             }
 
             if (entry.State is EntityState.Added or EntityState.Modified || entry.HasChangedOwnedEntities())
             {
                 entry.Entity.LastModifiedBy = updatedBy;
-                entry.Entity.LastModified = DateTime.UtcNow;
+                entry.Entity.LastModified = now;
             }
         }
     }
