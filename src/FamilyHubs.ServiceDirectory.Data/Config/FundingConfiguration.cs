@@ -1,24 +1,15 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
-public class FundingConfiguration : IEntityTypeConfiguration<Funding>
+public class FundingConfiguration : EntityBaseConfiguration<Funding>
 {
-    public void Configure(EntityTypeBuilder<Funding> builder)
+    public override void Configure(EntityTypeBuilder<Funding> builder)
     {
+        base.Configure(builder);
+
         builder.Property(t => t.Source)
             .HasMaxLength(255);
-
-        builder.Property(t => t.Created)
-            .IsRequired();
-
-        builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.Email)
-            .IsRequired();
-
-        builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.Email);
     }
 }

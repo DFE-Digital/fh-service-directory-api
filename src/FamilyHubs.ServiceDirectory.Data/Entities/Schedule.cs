@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.ServiceDirectory.Data.Entities;
 
+//todo: changing the base mean AuditableEntitySaveChangesInterceptor doesn't delete in some cases - check if the delete in AuditableEntitySaveChangesInterceptor is actually required
 public class Schedule : EntityBase<long> //ServiceLocationSharedEntityBase
 {
     public long? ServiceId { get; set; }

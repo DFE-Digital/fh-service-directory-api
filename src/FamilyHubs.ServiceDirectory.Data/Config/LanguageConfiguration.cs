@@ -1,13 +1,14 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
-public class LanguageConfiguration : IEntityTypeConfiguration<Language>
+public class LanguageConfiguration : EntityBaseConfiguration<Language>
 {
-    public void Configure(EntityTypeBuilder<Language> builder)
+    public override void Configure(EntityTypeBuilder<Language> builder)
     {
+        base.Configure(builder);
+
         builder.Property(t => t.Name)
             .HasMaxLength(100);
 
@@ -17,15 +18,5 @@ public class LanguageConfiguration : IEntityTypeConfiguration<Language>
 
         builder.Property(t => t.Note)
             .HasMaxLength(512);
-
-        builder.Property(t => t.Created)
-            .IsRequired();
-
-        builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.Email)
-            .IsRequired();
-
-        builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.Email);
     }
 }

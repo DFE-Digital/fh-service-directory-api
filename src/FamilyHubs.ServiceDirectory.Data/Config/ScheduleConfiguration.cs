@@ -1,13 +1,14 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
-public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
+public class ScheduleConfiguration : EntityBaseConfiguration<Schedule>
 {
-    public void Configure(EntityTypeBuilder<Schedule> builder)
+    public override void Configure(EntityTypeBuilder<Schedule> builder)
     {
+        base.Configure(builder);
+
         builder.HasEnumProperty(t => t.Freq)
             .IsUnicode(false);
 
@@ -42,15 +43,5 @@ public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
         builder.Property(t => t.ScheduleLink)
             .HasMaxLength(600)
             .IsUnicode(false);
-
-        builder.Property(t => t.Created)
-            .IsRequired();
-
-        builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.Email)
-            .IsRequired();
-
-        builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.Email);
     }
 }

@@ -1,13 +1,14 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
-public class ContactConfiguration : IEntityTypeConfiguration<Contact>
+public class ContactConfiguration : EntityBaseConfiguration<Contact>
 {
-    public void Configure(EntityTypeBuilder<Contact> builder)
+    public override void Configure(EntityTypeBuilder<Contact> builder)
     {
+        base.Configure(builder);
+
         builder.Property(t => t.ServiceId)
             .IsRequired(false);
 
@@ -28,15 +29,5 @@ public class ContactConfiguration : IEntityTypeConfiguration<Contact>
 
         builder.Property(t => t.Url)
             .HasMaxLength(2083);
-
-        builder.Property(t => t.Created)
-            .IsRequired();
-
-        builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.Email)
-            .IsRequired();
-
-        builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.Email);
     }
 }
