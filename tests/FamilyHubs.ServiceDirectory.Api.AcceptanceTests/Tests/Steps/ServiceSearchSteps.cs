@@ -16,64 +16,86 @@ namespace FamilyHubs.ServiceDirectory.Api.AcceptanceTests.Tests.Steps;
 /// </summary>
 public class ServiceSearchSteps
 {
-    readonly ConfigModel config;    
-    private readonly string baseUrl;
-    private ServiceSearchRequest request;
-    private HttpResponseMessage lastResponse;
-    private HttpStatusCode statusCode;
-    private const string serviceSearchPath = "api/metrics/service-search";
-    public ServiceSearchSteps()
-    {
-        config = ConfigAccessor.GetApplicationConfiguration();
-        baseUrl = config.BaseUrl;
-    }
+  readonly ConfigModel config;  
+  private readonly string baseUrl;
+  private ServiceSearchRequest request;
+  private HttpResponseMessage lastResponse;
+  private HttpStatusCode statusCode;
+  private const string serviceSearchPath = "api/metrics/service-search";
+  public ServiceSearchSteps()
+  {
+      config = ConfigAccessor.GetApplicationConfiguration();
+      baseUrl = config.BaseUrl;
+  }
 
-    #region Step Definitions
+  #region Step Definitions
 
-    #region Given
+  #region Given
+ 
 
-    public void GivenIHaveAPostcodeToSearchWithinFind()
-    {
-        DateTime time = DateTime.UtcNow;
+  public void GivenIPostToTheServiceSearchEndpointWithParameters(string radiusValue, string postcodeEntry, string postCodeEndpointResponseEntry,string searchTriggerEventId,string serviceSearchTypeId)
+  {
+      DateTime time = DateTime.UtcNow;
+      var radius = int.Parse(radiusValue);
+      string postcode = postcodeEntry;
+      var postcodeEndpointStatusCode = int.Parse(postCodeEndpointResponseEntry);
+      var searchTriggerEventIdEntry = int.Parse(searchTriggerEventId);
+      var serviceSearchTypeIdEntry = int.Parse(serviceSearchTypeId);
+      Console.WriteLine("Postcode Entry is: {0}", postcode);
+      Console.WriteLine("Radius Entry is: {0}", radius);
+      Console.WriteLine("Postcode Entry is: {0}", postcodeEndpointStatusCode);
+      Console.WriteLine("Trigger Entry is: {0}", searchTriggerEventId);
+      Console.WriteLine("Service Type is: {0}", serviceSearchTypeId);
+      request = new ServiceSearchRequest()
+      {
+          searchPostcode = postcode,
+          searchRadiusMiles = radius,
+          userId = 0,
+          httpResponseCode = postcodeEndpointStatusCode,
+          requestTimestamp = time,
+          responseTimestamp = time,
+          correlationId = "",
+          searchTriggerEventId = searchTriggerEventIdEntry,
+          serviceSearchTypeId = serviceSearchTypeIdEntry,
+          serviceSearchResults = new List<ServiceSearchResults>()
+      };
+  }
 
-        request = new ServiceSearchRequest()
-        {
-            searchPostcode = "E1 2EN",
-            searchRadiusMiles = 15,
-            userId = 0,
-            httpResponseCode = 200,
-            requestTimestamp = time,
-            responseTimestamp = time,
-            correlationId = "",
-            searchTriggerEventId = 1,
-            serviceSearchTypeId = 1,
-            serviceSearchResults = new List<ServiceSearchResults>()
-        };
-    }
+  #endregion Given
 
-    #endregion Given
+  #region When
 
-    #region When
+  public async Task<HttpStatusCode> WhenISendARequest()
+  {
+      lastResponse = await HttpRequestFactory.Post(baseUrl, serviceSearchPath, request);
+      statusCode = lastResponse.StatusCode;
+    
+      return statusCode;
+  }
 
-    public async Task<HttpStatusCode> WhenISendARequest()
-    {
-        lastResponse = await HttpRequestFactory.Post(baseUrl, serviceSearchPath, request);
-        statusCode = lastResponse.StatusCode;  
-        
-        return statusCode; 
-    }
+  #endregion When
 
-    #endregion When
+  #region Then
 
-    #region Then
+  public void Then200StatusCodeReturned()
+  {
+      statusCode.Should().Be(System.Net.HttpStatusCode.OK,
+          $"Response from {lastResponse.RequestMessage.Method} {lastResponse.RequestMessage.RequestUri} {statusCode} was not as expected");
+  }
 
-    public void Then200StatusCodeReturned()
-    {
-        statusCode.Should().Be(System.Net.HttpStatusCode.OK,
-            $"Response from {lastResponse.RequestMessage.Method} {lastResponse.RequestMessage.RequestUri} {statusCode} was not as expected");
-    }
+  public void Then500StatusCodeReturned()
+  {
+      statusCode.Should().Be(System.Net.HttpStatusCode.InternalServerError,
+          $"Response from {lastResponse.RequestMessage.Method} {lastResponse.RequestMessage.RequestUri} {statusCode} was not as expected");
+  }
+ 
+  public void Then400StatusCodeReturned()
+  {
+      statusCode.Should().Be(System.Net.HttpStatusCode.BadRequest,
+          $"Response from {lastResponse.RequestMessage.Method} {lastResponse.RequestMessage.RequestUri} {statusCode} was not as expected");
+  }
 
-    #endregion Then
+  #endregion Then
 
-    #endregion Step Definitions
+  #endregion Step Definitions
 }
