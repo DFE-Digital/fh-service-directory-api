@@ -18,8 +18,7 @@ public class ServiceSearchSteps
   private const string serviceSearchPath = "api/metrics/service-search";
   public ServiceSearchSteps()
   {
-      ConfigModel config = ConfigAccessor.GetApplicationConfiguration();
-      _baseUrl = config.BaseUrl;
+      _baseUrl = ConfigAccessor.GetApplicationConfiguration().BaseUrl;
   }
   private static string ResponseNotExpectedMessage(HttpMethod method, System.Uri requestUri, HttpStatusCode statusCode)
   {
