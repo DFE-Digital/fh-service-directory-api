@@ -1,33 +1,95 @@
 using TestStack.BDDfy;
-using Xunit;
 using FamilyHubs.ServiceDirectory.Api.AcceptanceTests.Tests.Steps;
 
 namespace FamilyHubs.ServiceDirectory.Api.AcceptanceTests.Tests.Stories;
 
 // Define the story/feature being tested
 [Story(
-    AsA = "user of the metrics api",
-    IWant = "to be able to update usage information for postcode searches and filters",
-    SoThat = "I can record how search functionality is being used")]
+   AsA = "user of the metrics api",
+   IWant = "to be able to update usage information for postcode searches and filters",
+   SoThat = "I can record how search functionality is being used")]
 
 [TestClass]
 public class ServiceSearchTests
 {
-    private readonly ServiceSearchSteps steps;
+   private readonly ServiceSearchSteps _steps;
 
-    public ServiceSearchTests()
-    {
-        //Get instances of the steps required for the test
-        steps = new ServiceSearchSteps();
-    }
+   public ServiceSearchTests()
+   {
+       //Get instances of the steps required for the test
+       _steps = new ServiceSearchSteps();
+   }
 
-    //Add all tests that make up the story to this class.
-    [TestMethod]
-    public void Users_Can_Update_Metrics_For_Postcode_Search()
-    {
-        this.Given(s => steps.GivenIHaveAPostcodeToSearchWithinFind())
-            .When(s => steps.WhenISendARequest())
-            .Then(s => steps.Then200StatusCodeReturned())
-            .BDDfy();
-    }
+   //Add all tests that make up the story to this class.
+   [TestMethod]
+   public void Initial_Postcode_Search_As_A_Find_User()
+   {
+       this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","200","1","2"))
+           .When(s => _steps.WhenISendARequest())
+           .Then(s => _steps.Then200StatusCodeReturned())
+           .BDDfy();
+   }
+  
+   [TestMethod]
+   public void Initial_Postcode_Search_As_A_Connect_User()
+   {
+       this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","200","1","1"))
+           .When(s => _steps.WhenISendARequest())
+           .Then(s => _steps.Then200StatusCodeReturned())
+           .BDDfy();
+   }
+   [TestMethod]
+   public void Subsequent_Filter_Postcode_Search_As_A_Find_User()
+   {
+       this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","200","2","2"))
+           .When(s => _steps.WhenISendARequest())
+           .Then(s => _steps.Then200StatusCodeReturned())
+           .BDDfy();
+   }
+   [TestMethod]
+   public void Subsequent_Filter_Postcode_Search_As_A_Connect_User()
+   {
+       this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","200","2","1"))
+           .When(s => _steps.WhenISendARequest())
+           .Then(s => _steps.Then200StatusCodeReturned())
+           .BDDfy();
+   }
+  
+  
+   //Negative Scenarios
+   [TestMethod]
+   public void No_Metrics_Are_Sent_When_A_Non_200_Message_Is_Received_From_Postcode_IO()
+   {
+       this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","400","1","1"))
+           .When(s => _steps.WhenISendARequest())
+           .Then(s => _steps.Then500StatusCodeReturned())
+           .BDDfy();
+   }
+
+   [TestMethod]
+   public void ErrorCode_When_Wrong_SearchTriggerEventType_Is_Sent()
+   {
+       this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","200","3","1"))
+           .When(s => _steps.WhenISendARequest())
+           .Then(s => _steps.Then500StatusCodeReturned())
+           .BDDfy();
+   }
+
+   [TestMethod]
+   public void ErrorCode_Message_When_Wrong_ServiceSearchTypeId_Is_Posted()
+   {
+       this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","200","1","3"))
+           .When(s => _steps.WhenISendARequest())
+           .Then(s => _steps.Then500StatusCodeReturned())
+           .BDDfy();
+   }
+  
+   [TestMethod]
+   public void ErrorCode_Message_When_Wrong_SearchRadiusMiles_Is_Posted()
+   {
+       this.Given(s => _steps.GivenIHaveASearchServiceRequest("500","E1 2EN","200","1","1"))
+           .When(s => _steps.WhenISendARequest())
+           .Then(s => _steps.Then400StatusCodeReturned())
+           .BDDfy();
+   }
 }
