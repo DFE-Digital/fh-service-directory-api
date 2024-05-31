@@ -11,7 +11,6 @@ namespace FamilyHubs.ServiceDirectory.Api.AcceptanceTests.Tests.Steps;
 /// </summary>
 public class ServiceSearchSteps
 {
-  private readonly ConfigModel _config;  
   private readonly string _baseUrl;
   private ServiceSearchRequest _request;
   private HttpResponseMessage _lastResponse;
@@ -19,8 +18,8 @@ public class ServiceSearchSteps
   private const string serviceSearchPath = "api/metrics/service-search";
   public ServiceSearchSteps()
   {
-      _config = ConfigAccessor.GetApplicationConfiguration();
-      _baseUrl = _config.BaseUrl;
+      ConfigModel config = ConfigAccessor.GetApplicationConfiguration();
+      _baseUrl = config.BaseUrl;
   }
   private static string ResponseNotExpectedMessage(HttpMethod method, System.Uri requestUri, HttpStatusCode statusCode)
   {
