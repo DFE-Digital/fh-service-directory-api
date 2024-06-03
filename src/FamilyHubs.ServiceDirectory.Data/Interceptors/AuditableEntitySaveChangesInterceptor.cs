@@ -34,33 +34,34 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     {
         if (context is null) return;
 
-        var updatedBy = "System";
+        long? updatedBy = null;
         var user = _httpContextAccessor?.HttpContext?.GetFamilyHubsUser();
-        if (user != null && !string.IsNullOrEmpty(user.Email))
+        if (user != null && long.TryParse(user.AccountId, out var newUpdatedBy))
         {
-            updatedBy = user.Email;
+            updatedBy = newUpdatedBy;
         }
 
-        foreach (var entry in context.ChangeTracker.Entries<ServiceLocationSharedEntityBase>())
+        //todo: is this needed?
+        foreach (var entry in context.ChangeTracker.Entries<ServiceLocationSharedEntityBase>()
+                     .Where(e => e is { State: EntityState.Modified, Entity: { ServiceId: null, LocationId: null } }))
         {
-            if (entry is { State: EntityState.Modified, Entity: { ServiceId: null, LocationId: null } })
-            {
-                entry.State = EntityState.Deleted;
-            }
+            entry.State = EntityState.Deleted;
         }
+
+        var now = DateTime.UtcNow;
 
         foreach (var entry in context.ChangeTracker.Entries<EntityBase<long>>())
         {
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedBy = updatedBy;
-                entry.Entity.Created = DateTime.UtcNow;
+                entry.Entity.Created = now;
             }
 
             if (entry.State is EntityState.Added or EntityState.Modified || entry.HasChangedOwnedEntities())
             {
                 entry.Entity.LastModifiedBy = updatedBy;
-                entry.Entity.LastModified = DateTime.UtcNow;
+                entry.Entity.LastModified = now;
             }
         }
     }
@@ -72,5 +73,5 @@ public static class Extensions
         entry.References.Any(r =>
             r.TargetEntry is not null &&
             r.TargetEntry.Metadata.IsOwned() &&
-            (r.TargetEntry.State == EntityState.Added || r.TargetEntry.State == EntityState.Modified));
+            r.TargetEntry.State is EntityState.Added or EntityState.Modified);
 }

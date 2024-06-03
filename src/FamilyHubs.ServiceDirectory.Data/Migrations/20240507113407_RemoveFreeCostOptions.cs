@@ -16,7 +16,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            // no need to rollback
         }
     }
 }
