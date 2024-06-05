@@ -3,7 +3,6 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
-using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -25,9 +24,9 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     public IMapper Mapper { get; }
     public IConfiguration Configuration { get; }
     public ApplicationDbContext TestDbContext { get; }
-    public static NullLogger<T> GetLogger<T>() => new NullLogger<T>();
-    protected IHttpContextAccessor _httpContextAccessor;
-    public Fixture FixtureObjectGenerator;
+    public static NullLogger<T> GetLogger<T>() => new();
+    protected readonly IHttpContextAccessor HttpContextAccessor;
+    public readonly Fixture FixtureObjectGenerator;
     public static readonly ILoggerFactory TestLoggerFactory
         = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
@@ -45,7 +44,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         Mapper = serviceProvider.GetRequiredService<IMapper>();
         Configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-        _httpContextAccessor = Mock.Of<IHttpContextAccessor>();
+        HttpContextAccessor = Mock.Of<IHttpContextAccessor>();
 
         InitialiseDatabase();
     }
@@ -168,7 +167,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     {
         var serviceDirectoryConnection = $"Data Source=sd-{Random.Shared.Next().ToString()}.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;Recursive Triggers=True;Default Timeout=30;Pooling=True";
         
-        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(_httpContextAccessor);
+        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(HttpContextAccessor);
 
         var inMemorySettings = new Dictionary<string, string?> {
             {"UseSqlite", "true"},

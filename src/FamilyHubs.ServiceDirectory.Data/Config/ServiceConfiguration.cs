@@ -9,10 +9,12 @@ namespace FamilyHubs.ServiceDirectory.Data.Config;
 // we have that set on optional relationships and more crucially on entities
 // that can be optionally referenced by more than one different parent entity
 // we don't want to delete the referenced entity if it is still being referenced by another entity
-public class ServiceConfiguration : IEntityTypeConfiguration<Service>
+public class ServiceConfiguration : EntityBaseConfiguration<Service>
 {
-    public void Configure(EntityTypeBuilder<Service> builder)
+    public override void Configure(EntityTypeBuilder<Service> builder)
     {
+        base.Configure(builder);
+
         builder.Navigation(e => e.ServiceDeliveries).AutoInclude();
         builder.Navigation(e => e.CostOptions).AutoInclude();
         builder.Navigation(e => e.Eligibilities).AutoInclude();
@@ -39,16 +41,6 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
 
         builder.Property(t => t.InterpretationServices)
             .HasMaxLength(512);
-
-        builder.Property(t => t.Created)
-            .IsRequired();
-
-        builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.Email)
-            .IsRequired();
-
-        builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.Email);
 
         builder.HasMany(s => s.Fundings)
             .WithOne()

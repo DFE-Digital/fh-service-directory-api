@@ -4,8 +4,9 @@
     <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>FamilyHubs.ServiceDirectory.Data</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <Nullable>enable</Nullable>
-	  <NoWarn>S1135;S125</NoWarn>
+    <NoWarn>S1135;S125</NoWarn>
   </PropertyGroup>
 
 	<ItemGroup>

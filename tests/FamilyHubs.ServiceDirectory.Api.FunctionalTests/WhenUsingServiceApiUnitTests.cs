@@ -310,30 +310,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         retVal.Name.Should().Be("Aid for Children with Tracheostomies");
     }
 
-    [Fact(Skip = "This endpoint doesn't exist?")]
-    public async Task ThenTheServicesWithinTheOrganisationAreRetrieved()
-    {
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + "api/organisationservices/1"),
-        };
-
-        using var response = await Client.SendAsync(request);
-
-        response.EnsureSuccessStatusCode();
-
-
-        var retVal = await JsonSerializer.DeserializeAsync<List<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        var firstService = retVal?.FirstOrDefault();
-
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        retVal.Should().NotBeNull();
-        firstService.Should().NotBeNull();
-        ArgumentNullException.ThrowIfNull(firstService);
-        firstService.Name.Should().Be("Aid for Children with Tracheostomies");
-    }
-
     [Fact]
     public async Task ThenTheServicesWithFamilyHubsAreRetrieved()
     {
