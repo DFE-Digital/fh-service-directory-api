@@ -32,7 +32,7 @@ WHERE Id IN (
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            // no need to rollback
         }
     }
 }

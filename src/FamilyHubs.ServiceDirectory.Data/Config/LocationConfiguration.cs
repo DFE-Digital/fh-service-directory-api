@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
-public class LocationConfiguration : IEntityTypeConfiguration<Location>
+public class LocationConfiguration : EntityBaseConfiguration<Location>
 {
-    public void Configure(EntityTypeBuilder<Location> builder)
+    public override void Configure(EntityTypeBuilder<Location> builder)
     {
+        base.Configure(builder);
+
         builder.Navigation(e => e.Contacts).AutoInclude();
         builder.Navigation(e => e.Schedules).AutoInclude();
 
@@ -83,15 +85,5 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .IsRequired(false)
             .OnDelete(DeleteBehavior.Cascade)
             ;
-
-        builder.Property(t => t.Created)
-            .IsRequired();
-
-        builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.Email)
-            .IsRequired();
-
-        builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.Email);
     }
 }

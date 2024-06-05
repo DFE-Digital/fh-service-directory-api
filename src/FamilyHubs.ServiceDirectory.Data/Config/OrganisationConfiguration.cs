@@ -5,10 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
 
-public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
+public class OrganisationConfiguration : EntityBaseConfiguration<Organisation>
 {
-    public void Configure(EntityTypeBuilder<Organisation> builder)
+    public override void Configure(EntityTypeBuilder<Organisation> builder)
     {
+        base.Configure(builder);
+
         builder.Navigation(e => e.Services).AutoInclude();
         builder.Navigation(e => e.Locations).AutoInclude();
 
@@ -31,16 +33,6 @@ public class OrganisationConfiguration : IEntityTypeConfiguration<Organisation>
 
         builder.Property(t => t.Uri)
             .HasMaxLength(2083);
-
-        builder.Property(t => t.Created)
-            .IsRequired();
-
-        builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.Email)
-            .IsRequired();
-
-        builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.Email);
 
         builder.HasMany(s => s.Services)
             .WithOne()
