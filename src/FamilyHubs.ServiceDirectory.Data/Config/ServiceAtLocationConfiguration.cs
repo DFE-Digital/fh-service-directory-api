@@ -4,11 +4,15 @@ using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 
 namespace FamilyHubs.ServiceDirectory.Data.Config;
 
-public class ServiceAtLocationConfiguration : IEntityTypeConfiguration<ServiceAtLocation>
+public class ServiceAtLocationConfiguration : EntityBaseConfiguration<ServiceAtLocation>
 {
-    public void Configure(EntityTypeBuilder<ServiceAtLocation> builder)
+    public override void Configure(EntityTypeBuilder<ServiceAtLocation> builder)
     {
+        base.Configure(builder);
+
         builder.ToTable("ServiceAtLocations");
+
+        builder.Navigation(e => e.Schedules).AutoInclude();
 
         builder.HasMany(s => s.Schedules)
             .WithOne()
@@ -16,15 +20,5 @@ public class ServiceAtLocationConfiguration : IEntityTypeConfiguration<ServiceAt
             .IsRequired(false)
             .OnDelete(DeleteBehavior.NoAction)
             ;
-
-        builder.Property(t => t.Created)
-            .IsRequired();
-
-        builder.Property(t => t.CreatedBy)
-            .HasMaxLength(MaxLength.Email)
-            .IsRequired();
-
-        builder.Property(t => t.LastModifiedBy)
-            .HasMaxLength(MaxLength.Email);
     }
 }

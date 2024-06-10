@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +12,19 @@ public class ListOrganisationsCommand : IRequest<List<OrganisationDto>>
 {
     public string? Name { get; set; }
     public List<long> Ids { get; set; }
-    
-    public ListOrganisationsCommand(List<long> ids, string? name)
+    public OrganisationType? OrganisationType { get; set; }
+    public long? AssociatedOrganisationId { get; set; }
+
+    public ListOrganisationsCommand(
+        List<long> ids,
+        string? name,
+        OrganisationType? organisationType = null,
+        long? associatedOrganisationId = null)
     {
         Ids = ids;
         Name = name;
+        OrganisationType = organisationType;
+        AssociatedOrganisationId = associatedOrganisationId;
     }
 }
 
@@ -44,6 +53,16 @@ public class ListOrganisationCommandHandler : IRequestHandler<ListOrganisationsC
         if (!string.IsNullOrEmpty(request.Name))
         {
             organisationsQuery = organisationsQuery.Where(org => org.Name.ToLower().Contains(request.Name.ToLower()));
+        }
+
+        if (request.OrganisationType != null)
+        {
+            organisationsQuery = organisationsQuery.Where(org => org.OrganisationType == request.OrganisationType);
+        }
+
+        if (request.AssociatedOrganisationId != null)
+        {
+            organisationsQuery = organisationsQuery.Where(org => org.AssociatedOrganisationId == request.AssociatedOrganisationId);
         }
 
         var organisations = await organisationsQuery

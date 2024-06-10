@@ -47,7 +47,7 @@ public class WhenUsingCreateServiceCommand : DataIntegrationTestBase
         var newService = TestDataProvider.GetTestCountyCouncilServicesChangeDto2(Mapper, organisation.Id);
 
         newService.Name = serviceName;
-        newService.ServiceAtLocations.Add(new ServiceAtLocationChangeDto
+        newService.ServiceAtLocations.Add(new ServiceAtLocationDto
         {
             LocationId = organisation.Locations.First().Id,
             Description = "description",

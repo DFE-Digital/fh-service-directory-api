@@ -1,12 +1,14 @@
 ﻿using AutoFixture;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
+using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -20,10 +22,11 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     public OrganisationDetailsDto TestOrganisationFreeService { get; set; }
     public OrganisationDto TestOrganisationWithoutAnyServices { get; set; }
     public IMapper Mapper { get; }
+    public IConfiguration Configuration { get; }
     public ApplicationDbContext TestDbContext { get; }
-    public static NullLogger<T> GetLogger<T>() => new NullLogger<T>();
-    protected IHttpContextAccessor _httpContextAccessor;
-    public Fixture FixtureObjectGenerator;
+    public static NullLogger<T> GetLogger<T>() => new();
+    protected readonly IHttpContextAccessor HttpContextAccessor;
+    public readonly Fixture FixtureObjectGenerator;
     public static readonly ILoggerFactory TestLoggerFactory
         = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
@@ -39,8 +42,9 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         TestDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
         Mapper = serviceProvider.GetRequiredService<IMapper>();
+        Configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-        _httpContextAccessor = Mock.Of<IHttpContextAccessor>();
+        HttpContextAccessor = Mock.Of<IHttpContextAccessor>();
 
         InitialiseDatabase();
     }
@@ -91,26 +95,39 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         return existingLocation.Id;
     }
 
-    public async Task<long> CreateContact(ContactDto contactDto)
+    public async Task<long> AddServiceAtLocationSchedule(long serviceAtLocationId, ScheduleDto scheduleDto)
     {
-        var existingContact = Mapper.Map<Contact>(contactDto);
+        var schedule = Mapper.Map<Schedule>(scheduleDto);
 
-        TestDbContext.Contacts.Add(existingContact);
+        var serviceAtLocation = TestDbContext.ServiceAtLocations.First(sal => sal.Id == serviceAtLocationId);
+
+        serviceAtLocation.Schedules.Add(schedule);
 
         await TestDbContext.SaveChangesAsync();
 
-        return existingContact.Id;
+        return schedule.Id;
     }
 
-    public async Task<long> CreateTaxonomy(TaxonomyDto taxonomyDto)
-    {
-        var existingLocation = Mapper.Map<Taxonomy>(taxonomyDto);
+    //public async Task<long> CreateContact(ContactDto contactDto)
+    //{
+    //    var existingContact = Mapper.Map<Contact>(contactDto);
 
-        TestDbContext.Taxonomies.Add(existingLocation);
-        await TestDbContext.SaveChangesAsync();
+    //    TestDbContext.Contacts.Add(existingContact);
 
-        return existingLocation.Id;
-    }
+    //    await TestDbContext.SaveChangesAsync();
+
+    //    return existingContact.Id;
+    //}
+
+    //public async Task<long> CreateTaxonomy(TaxonomyDto taxonomyDto)
+    //{
+    //    var existingLocation = Mapper.Map<Taxonomy>(taxonomyDto);
+
+    //    TestDbContext.Taxonomies.Add(existingLocation);
+    //    await TestDbContext.SaveChangesAsync();
+
+    //    return existingLocation.Id;
+    //}
 
     public async Task<List<Service>> CreateManyTestServicesQueryTesting()
     {
@@ -135,6 +152,7 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     {
         TestDbContext.Database.EnsureDeleted();
         TestDbContext.Database.EnsureCreated();
+        TestDbContext.Database.ExecuteSqlRaw($"UPDATE geometry_columns SET srid = {GeoPoint.WGS84} WHERE f_table_name = 'locations';");
 
         var organisationSeedData = new OrganisationSeedData(TestDbContext);
 
@@ -149,7 +167,12 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     {
         var serviceDirectoryConnection = $"Data Source=sd-{Random.Shared.Next().ToString()}.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;Recursive Triggers=True;Default Timeout=30;Pooling=True";
         
-        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(_httpContextAccessor);
+        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(HttpContextAccessor);
+
+        var inMemorySettings = new Dictionary<string, string?> {
+            {"UseSqlite", "true"},
+        };
+        var configuration = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings).Build();
 
         return new ServiceCollection().AddEntityFrameworkSqlite()
             .AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder =>
@@ -157,9 +180,10 @@ public class DataIntegrationTestBase : IDisposable, IAsyncDisposable
                 dbContextOptionsBuilder.UseLoggerFactory(TestLoggerFactory);
                 dbContextOptionsBuilder.UseSqlite(serviceDirectoryConnection, opt =>
                 {
-                    opt.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());
+                    opt.UseNetTopologySuite().MigrationsAssembly(typeof(ApplicationDbContext).Assembly.ToString());
                 });
             })
+            .AddSingleton<IConfiguration>(configuration)
             .AddSingleton(auditableEntitySaveChangesInterceptor)
             .AddAutoMapper((serviceProvider, cfg) =>
             {

@@ -84,13 +84,9 @@ public class WhenUsingGetLocationCommands : DataIntegrationTestBase
 
         //Assert
         result.Should().NotBeNull();
+        var ignoredFields = new List<string> { "Id", "Distance", "Created", "CreatedBy", "LastModified", "LastModifiedBy", "GeoPoint" };
         result.Items.Should().BeEquivalentTo(services.SelectMany(s => s.Locations), options =>
-            options.Excluding((IMemberInfo info) => info.Name.Contains("Id"))
-                .Excluding((IMemberInfo info) => info.Name.Contains("Distance"))
-                .Excluding((IMemberInfo info) => info.Name.Contains("Created"))
-                .Excluding((IMemberInfo info) => info.Name.Contains("CreatedBy"))
-                .Excluding((IMemberInfo info) => info.Name.Contains("LastModified"))
-                .Excluding((IMemberInfo info) => info.Name.Contains("LastModifiedBy")));
+            options.Excluding((IMemberInfo info) => ignoredFields.Any(field => info.Name.Contains(field))));
     }
 
     [Fact]

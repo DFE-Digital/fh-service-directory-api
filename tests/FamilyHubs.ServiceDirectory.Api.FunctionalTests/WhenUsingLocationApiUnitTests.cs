@@ -3,6 +3,7 @@ using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using System.Net;
 using System.Text.Json;
+using FamilyHubs.ServiceDirectory.Shared.Models;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
@@ -13,13 +14,6 @@ public class WhenUsingLocationApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheLocationIsCreated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var location = TestDataProvider.GetTestCountyCouncilRecord()
             .Services.ElementAt(0).Locations.ElementAt(0);
 
@@ -39,13 +33,6 @@ public class WhenUsingLocationApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheLocationIsUpdated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -81,13 +68,6 @@ public class WhenUsingLocationApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheLocationIsRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -113,13 +93,6 @@ public class WhenUsingLocationApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheOrganisationLocationsAreRetrievedByOrganisationId()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -134,24 +107,17 @@ public class WhenUsingLocationApiUnitTests : BaseWhenUsingApiUnitTests
         if (!response.IsSuccessStatusCode)
             Assert.Fail(!string.IsNullOrWhiteSpace(responseContent) ? responseContent : response.ToString());
 
-        var retVal = JsonSerializer.Deserialize<IList<LocationDto>>(responseContent, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var retVal = JsonSerializer.Deserialize<PaginatedList<LocationDto>>(responseContent, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(retVal);
-        retVal.Count.Should().BeGreaterThan(0);
+        retVal.Items.Count.Should().BeGreaterThan(0);
     }
 
     [Fact]
     public async Task ThenTheServiceLocationsAreRetrievedByServiceId()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -177,18 +143,10 @@ public class WhenUsingLocationApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenListLocationsIsRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
             RequestUri = new Uri(Client.BaseAddress + "api/locations"),
-
         };
 
         using var response = await Client.SendAsync(request);
@@ -198,11 +156,11 @@ public class WhenUsingLocationApiUnitTests : BaseWhenUsingApiUnitTests
         if (!response.IsSuccessStatusCode)
             Assert.Fail(responseContent);
 
-        var retVal = JsonSerializer.Deserialize<List<LocationDto>>(responseContent, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var retVal = JsonSerializer.Deserialize<PaginatedList<LocationDto>>(responseContent, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         ArgumentNullException.ThrowIfNull(retVal);
-        retVal.Count.Should().BeGreaterThan(0);
+        retVal.Items.Count.Should().BeGreaterThan(0);
     }
 }

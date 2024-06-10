@@ -30,7 +30,7 @@ public class MinimalTaxonomyEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred creating taxonomy. {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred creating taxonomy. {ExceptionMessage}", ex.Message);
                 
                 throw;
             }
@@ -52,7 +52,7 @@ public class MinimalTaxonomyEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred updating taxonomy. {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred updating taxonomy. {ExceptionMessage}", ex.Message);
                 
                 throw;
             }
@@ -68,7 +68,7 @@ public class MinimalTaxonomyEndPoints
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred getting taxonomies. {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred getting taxonomies. {ExceptionMessage}", ex.Message);
                 
                 throw;
             }

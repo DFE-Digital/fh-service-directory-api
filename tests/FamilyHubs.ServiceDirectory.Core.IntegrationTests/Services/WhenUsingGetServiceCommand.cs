@@ -1,9 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.DeleteService;
-using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServiceByOwnerReferenceIdCommand;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganisationId;
-using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FluentAssertions;
@@ -22,7 +20,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
 
         var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
             null, null, null, null, 1, 10, null, null, null, null, null, null, null, null);
-        var handler = new GetServicesCommandHandler(TestDbContext, Mapper);
+        var handler = new GetServicesCommandHandler(Configuration, TestDbContext, Mapper);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
@@ -32,27 +30,6 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         ArgumentNullException.ThrowIfNull(TestOrganisation);
         ArgumentNullException.ThrowIfNull(TestOrganisation.Services);
         results.Items[0].Should().BeEquivalentTo(TestOrganisation.Services.ElementAt(0));
-    }
-
-    [Fact]
-    public async Task ThenGetServiceByOwnerReferenceId()
-    {
-        //Arrange
-        await CreateOrganisationDetails();
-        const string serviceId = "3010521b-6e0a-41b0-b610-200edbbeeb14";
-
-        var command = new GetServiceByOwnerReferenceIdCommand
-        {
-            OwnerReferenceId = serviceId
-        };
-        var handler = new GetServiceByOwnerReferenceIdCommandHandler(TestDbContext, Mapper);
-
-        //Act
-        var results = await handler.Handle(command, new CancellationToken());
-
-        //Assert
-        results.Should().NotBeNull();
-        results.Should().BeEquivalentTo(TestOrganisation.Services.ElementAt(0));
     }
 
     [Fact]
@@ -93,7 +70,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
 
         var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
             null, null, null, null, 1, 10, null, null, true, null, null, null, null, null);
-        var handler = new GetServicesCommandHandler(TestDbContext, Mapper);
+        var handler = new GetServicesCommandHandler(Configuration, TestDbContext, Mapper);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
@@ -111,7 +88,7 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
 
         var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
             null, null, null, null, 1, 10, null, null, false, null, null, null, null, null);
-        var handler = new GetServicesCommandHandler(TestDbContext, Mapper);
+        var handler = new GetServicesCommandHandler(Configuration, TestDbContext, Mapper);
 
         //Act
         var results = await handler.Handle(command, new CancellationToken());
