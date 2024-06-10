@@ -10,11 +10,14 @@ using FamilyHubs.ServiceDirectory.Shared.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Serilog.Core;
 
 namespace FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 
 public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
 {
+
     public GetServicesCommand(
         ServiceType? serviceType, ServiceStatusType? status,
         string? districtCode,
@@ -28,7 +31,8 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
         string? taxonomyIds,
         string? languages,
         bool? canFamilyChooseLocation,
-        bool? isFamilyHub, int? maxFamilyHubs)
+        bool? isFamilyHub, int? maxFamilyHubs
+    )
     {
         ServiceType = serviceType ?? ServiceType.NotSet;
         Status = status ?? ServiceStatusType.NotSet;
@@ -72,12 +76,19 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
 
 public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, PaginatedList<ServiceDto>>
 {
+    private readonly ILogger<GetServicesCommandHandler> _logger;
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
     private readonly bool _useSqlite;
 
-    public GetServicesCommandHandler(IConfiguration configuration, ApplicationDbContext context, IMapper mapper)
+    public GetServicesCommandHandler(
+        ILogger<GetServicesCommandHandler> logger,
+        IConfiguration configuration,
+        ApplicationDbContext context,
+        IMapper mapper
+    )
     {
+        _logger = logger;
         _context = context;
         _mapper = mapper;
 
@@ -219,7 +230,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         return (total, await joinQuery.ToListAsync(cancellationToken));
     }
 
-    private IEnumerable<long> HandleMaxFamilyHubs(GetServicesCommand request, FhQuery query)
+private IEnumerable<long> HandleMaxFamilyHubs(GetServicesCommand request, FhQuery query)
     {
         IEnumerable<long> ids = new List<long>();
         if (request.IsFamilyHub is not null || request.MaxFamilyHubs is null) return ids;
@@ -264,7 +275,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         return ids;
     }
 
-    private static List<ServiceDto> SortServicesDto(GetServicesCommand request, List<ServiceDto> services)
+    private List<ServiceDto> SortServicesDto(GetServicesCommand request, List<ServiceDto> services)
     {
         if (request.Latitude is not null && request.Longitude is not null)
         {
