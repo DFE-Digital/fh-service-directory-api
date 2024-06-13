@@ -166,7 +166,7 @@ public class OrganisationSeedData
                 Name =                  "North East Lincolnshire Council",
                 Description =           "North East Lincolnshire Council",
                 Uri =                   new Uri("https://www.nelincs.gov.uk/").ToString(),
-                Url =                   "https://https://www.nelincs.gov.uk/",
+                Url =                   "https://www.nelincs.gov.uk/",
                 AdminAreaCode =         "E06000012",
             },
             new Organisation
