@@ -36,7 +36,7 @@ public class WhenUsingListOrganisationsCommand : DataIntegrationTestBase
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().HaveCount(6);
+        result.Should().HaveCount(10);
     }
 
     [Fact]
