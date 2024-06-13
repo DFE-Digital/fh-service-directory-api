@@ -25,7 +25,7 @@ public class WhenUsingOrganisationApiUnitTests : BaseWhenUsingApiUnitTests
             Assert.Fail(!string.IsNullOrWhiteSpace(responseContent) ? responseContent : response.ToString());
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        long.Parse(responseContent).Should().Be(7);
+        long.Parse(responseContent).Should().Be(11);
     }
 
     [Fact]

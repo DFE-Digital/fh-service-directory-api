@@ -150,6 +150,42 @@ public class OrganisationSeedData
                 Uri =                   new Uri("https://www.towerhamlets.gov.uk/").ToString(),
                 Url =                   "https://www.towerhamlets.gov.uk/",
                 AdminAreaCode =         "E09000030",
+            },
+            new Organisation
+            {
+                OrganisationType =      organisationType,
+                Name =                  "Lewisham Council",
+                Description =           "Lewisham Council",
+                Uri =                   new Uri("https://lewisham.gov.uk/").ToString(),
+                Url =                   "https://lewisham.gov.uk/",
+                AdminAreaCode =         "E09000023",
+            },
+            new Organisation
+            {
+                OrganisationType =      organisationType,
+                Name =                  "North East Lincolnshire Council",
+                Description =           "North East Lincolnshire Council",
+                Uri =                   new Uri("https://www.nelincs.gov.uk/").ToString(),
+                Url =                   "https://www.nelincs.gov.uk/",
+                AdminAreaCode =         "E06000012",
+            },
+            new Organisation
+            {
+                OrganisationType =      organisationType,
+                Name =                  "City of Wolverhampton Council",
+                Description =           "City of Wolverhampton Council",
+                Uri =                   new Uri("https://www.wolverhampton.gov.uk/").ToString(),
+                Url =                   "https://www.wolverhampton.gov.uk/",
+                AdminAreaCode =         "E08000031",
+            },
+            new Organisation
+            {
+                OrganisationType =      organisationType,
+                Name =                  "Sheffield City Council",
+                Description =           "Sheffield City Council",
+                Uri =                   new Uri("https://www.sheffield.gov.uk/").ToString(),
+                Url =                   "https://www.sheffield.gov.uk/",
+                AdminAreaCode =         "E08000019",
             }
         };
 
