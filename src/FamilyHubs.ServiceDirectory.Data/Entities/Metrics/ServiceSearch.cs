@@ -12,7 +12,7 @@ public class ServiceSearch
     public required string SearchPostcode { get; set; }
     public byte SearchRadiusMiles { get; set; }
     public long? UserId { get; set; }
-    public byte? HttpResponseCode { get; set; }
+    public short? HttpResponseCode { get; set; }
     public DateTime RequestTimestamp { get; set; }
     public DateTime? ResponseTimestamp { get; set; }
     public string? CorrelationId { get; set; }
