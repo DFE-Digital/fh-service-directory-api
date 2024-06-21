@@ -6,7 +6,7 @@ public class WhenGettingApiInfoUnitTest : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenReturnsVersionAndLastUpdateDate()
     {
-        var response = await Client.GetAsync("info");
+        var response = await Client.GetAsync("api/info");
         response.EnsureSuccessStatusCode();
         var stringResponse = await response.Content.ReadAsStringAsync();
 
