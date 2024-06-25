@@ -8,6 +8,7 @@ using FamilyHubs.ServiceDirectory.Data;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
+using FamilyHubs.SharedKernel.Razor.Health;
 using FluentValidation;
 using MediatR;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -54,7 +55,6 @@ public static class StartupExtensions
 
     private static void RegisterMinimalEndPoints(this IServiceCollection services)
     {
-        services.AddTransient<MinimalGeneralEndPoints>();
         services.AddTransient<MinimalTaxonomyEndPoints>();
         services.AddTransient<MinimalOrganisationEndPoints>();
         services.AddTransient<MinimalServiceEndPoints>();
@@ -142,6 +142,8 @@ public static class StartupExtensions
         });
 
         services.AddBearerAuthentication(configuration);
+
+        services.AddFamilyHubsHealthChecks(configuration);
     }
 
     public static async Task ConfigureWebApplication(this WebApplication webApplication)
@@ -157,6 +159,7 @@ public static class StartupExtensions
         webApplication.UseHttpsRedirection();
 
         webApplication.MapControllers();
+        webApplication.MapFamilyHubsHealthChecks(typeof(StartupExtensions).Assembly);
 
         await RegisterEndPoints(webApplication);
     }
@@ -164,9 +167,6 @@ public static class StartupExtensions
     private static async Task RegisterEndPoints(this WebApplication webApplication)
     {
         using var scope = webApplication.Services.CreateScope();
-
-        var generalEndPoints = scope.ServiceProvider.GetService<MinimalGeneralEndPoints>();
-        generalEndPoints?.RegisterMinimalGeneralEndPoints(webApplication);
 
         var taxonomyEndPoints = scope.ServiceProvider.GetService<MinimalTaxonomyEndPoints>();
         taxonomyEndPoints?.RegisterTaxonomyEndPoints(webApplication);

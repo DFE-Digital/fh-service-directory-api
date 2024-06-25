@@ -11,7 +11,6 @@ public class WhenGettingApiInfoUnitTest : BaseWhenUsingApiUnitTests
         var stringResponse = await response.Content.ReadAsStringAsync();
 
         Assert.Contains("Version", stringResponse);
-        Assert.Contains("Last Updated", stringResponse);
     }
 }
 
