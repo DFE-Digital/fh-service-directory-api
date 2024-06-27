@@ -22,7 +22,7 @@ public class ServiceSearchTests
 
    //Add all tests that make up the story to this class.
    [TestMethod]
-   public void Initial_Postcode_Search_As_A_Find_User()
+   public void Service_Search_Metrics_Endpoint_Returns_A_200_When_Initial_Postcode_Search_Is_Done_As_A_Find_User()
    {
        this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","200","1","2"))
            .When(s => _steps.WhenISendARequest())
@@ -30,7 +30,7 @@ public class ServiceSearchTests
            .BDDfy();
    }
    [TestMethod]
-   public void Initial_Postcode_Search_As_A_Connect_User()
+   public void Service_Search_Metrics_Endpoint_Returns_A_200_When_An_Initial_Postcode_Search_Is_Done_As_A_Connect_User()
    {
        this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","200","1","1"))
            .When(s => _steps.WhenISendARequest())
@@ -38,7 +38,7 @@ public class ServiceSearchTests
            .BDDfy();
    }
    [TestMethod]
-   public void Subsequent_Filter_Postcode_Search_As_A_Find_User()
+   public void Service_Search_Metrics_Endpoint_Returns_A_200_When_A_Subsequent_Filter_Postcode_Search_Is_Done_As_A_Find_User()
    {
        this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","200","2","2"))
            .When(s => _steps.WhenISendARequest())
@@ -46,7 +46,7 @@ public class ServiceSearchTests
            .BDDfy();
    }
    [TestMethod]
-   public void Subsequent_Filter_Postcode_Search_As_A_Connect_User()
+   public void Service_Search_Metrics_Endpoint_Returns_A_200_When_A_Subsequent_Filter_Postcode_Search_Is_Done_As_A_Connect_User()
    {
        this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","200","2","1"))
            .When(s => _steps.WhenISendARequest())
@@ -54,7 +54,7 @@ public class ServiceSearchTests
            .BDDfy();
    }
    [TestMethod]
-   public void Initial_Postcode_Search_As_A_Find_User_When_ServiceSearchAPI_Responds_With_A_Non_200_ResponseCode()
+   public void Service_Search_Metrics_Endpoint_Returns_A_200_For_An_Initial_Postcode_Search_As_A_Find_User_After_the_Service_Search_API_Responds_With_A_Non_200_Response_Code()
    {
        this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","300","1","2"))
            .When(s => _steps.WhenISendARequest())
@@ -62,7 +62,7 @@ public class ServiceSearchTests
            .BDDfy();
    }
    [TestMethod]
-   public void Initial_Postcode_Search_As_A_Connect_User_When_ServiceSearchAPI_Responds_With_A_Non_200_ResponseCode()
+   public void Service_Search_Metrics_Endpoint_Returns_A_200_For_An_Initial_Postcode_Search_As_A_Connect_User_After_Service_Search_API_Responds_With_A_Non_200_Response_Code()
    {
        this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","500","1","1"))
            .When(s => _steps.WhenISendARequest())
@@ -70,7 +70,7 @@ public class ServiceSearchTests
            .BDDfy();
    }
    [TestMethod]
-   public void Subsequent_Filter_Postcode_Search_As_A_Find_User_When_ServiceSearchAPI_Responds_With_A_Non_200_ResponseCode()
+   public void Service_Search_Metrics_Endpoint_Returns_A_200_For_A_Subsequent_Postcode_Search_As_A_Find_User_After_the_Service_Search_API_Responds_With_A_Non_200_Response_Code()
    {
        this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","422","2","2"))
            .When(s => _steps.WhenISendARequest())
@@ -78,7 +78,7 @@ public class ServiceSearchTests
            .BDDfy();
    }
    [TestMethod]
-   public void Subsequent_Filter_Postcode_Search_As_A_Connect_User_When_ServiceSearchAPI_Responds_With_A_Non_200_ResponseCode()
+   public void Service_Search_Metrics_Endpoint_Returns_A_200_For_Subsequent_Postcode_Search_As_A_Connect_User_After_the_Service_Search_API_Responds_With_A_Non_200_Response_Code()
    {
        this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","400","2","1"))
            .When(s => _steps.WhenISendARequest())
