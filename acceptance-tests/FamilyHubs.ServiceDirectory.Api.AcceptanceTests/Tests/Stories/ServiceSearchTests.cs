@@ -29,7 +29,6 @@ public class ServiceSearchTests
            .Then(s => _steps.Then200StatusCodeReturned())
            .BDDfy();
    }
-  
    [TestMethod]
    public void Initial_Postcode_Search_As_A_Connect_User()
    {
@@ -54,18 +53,39 @@ public class ServiceSearchTests
            .Then(s => _steps.Then200StatusCodeReturned())
            .BDDfy();
    }
-  
-  
-   //Negative Scenarios
    [TestMethod]
-   public void No_Metrics_Are_Sent_When_A_Non_200_Message_Is_Received_From_Postcode_IO()
+   public void Initial_Postcode_Search_As_A_Find_User_When_ServiceSearchAPI_Responds_With_A_Non_200_ResponseCode()
    {
-       this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","400","1","1"))
+       this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","300","1","2"))
            .When(s => _steps.WhenISendARequest())
-           .Then(s => _steps.Then500StatusCodeReturned())
+           .Then(s => _steps.Then200StatusCodeReturned())
            .BDDfy();
    }
-
+   [TestMethod]
+   public void Initial_Postcode_Search_As_A_Connect_User_When_ServiceSearchAPI_Responds_With_A_Non_200_ResponseCode()
+   {
+       this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","500","1","1"))
+           .When(s => _steps.WhenISendARequest())
+           .Then(s => _steps.Then200StatusCodeReturned())
+           .BDDfy();
+   }
+   [TestMethod]
+   public void Subsequent_Filter_Postcode_Search_As_A_Find_User_When_ServiceSearchAPI_Responds_With_A_Non_200_ResponseCode()
+   {
+       this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","422","2","2"))
+           .When(s => _steps.WhenISendARequest())
+           .Then(s => _steps.Then200StatusCodeReturned())
+           .BDDfy();
+   }
+   [TestMethod]
+   public void Subsequent_Filter_Postcode_Search_As_A_Connect_User_When_ServiceSearchAPI_Responds_With_A_Non_200_ResponseCode()
+   {
+       this.Given(s => _steps.GivenIHaveASearchServiceRequest("15","E1 2EN","400","2","1"))
+           .When(s => _steps.WhenISendARequest())
+           .Then(s => _steps.Then200StatusCodeReturned())
+           .BDDfy();
+   }
+   //Negative Scenarios
    [TestMethod]
    public void ErrorCode_When_Wrong_SearchTriggerEventType_Is_Sent()
    {
