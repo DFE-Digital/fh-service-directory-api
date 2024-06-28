@@ -66,28 +66,10 @@ public class ServiceSearchSteps
   #endregion When
 
   #region Then
-
-  public void Then200StatusCodeReturned()
+  
+  public void ThenExpectedStatusCodeReturned(HttpStatusCode expectedStatusCode)
   {
-      _statusCode.Should().Be(System.Net.HttpStatusCode.OK,
-          ResponseNotExpectedMessage(
-              _lastResponse.RequestMessage.Method,
-              _lastResponse.RequestMessage.RequestUri,
-              _statusCode));
-  }
-
-  public void Then500StatusCodeReturned()
-  {
-      _statusCode.Should().Be(HttpStatusCode.InternalServerError,
-          ResponseNotExpectedMessage(
-              _lastResponse.RequestMessage.Method,
-              _lastResponse.RequestMessage.RequestUri,
-              _statusCode));
-  }
- 
-  public void Then400StatusCodeReturned()
-  {
-      _statusCode.Should().Be(HttpStatusCode.BadRequest,
+      _statusCode.Should().Be(expectedStatusCode,
           ResponseNotExpectedMessage(
               _lastResponse.RequestMessage.Method,
               _lastResponse.RequestMessage.RequestUri,

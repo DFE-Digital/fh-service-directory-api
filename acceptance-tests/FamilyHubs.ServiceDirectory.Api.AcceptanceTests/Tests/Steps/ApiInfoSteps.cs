@@ -28,7 +28,7 @@ public class ApiInfoSteps
         lastResponse = await HttpRequestFactory.Get(baseUrl, "api/info");
     }
 
-    public async Task AnOkStatusCodeIsReturned()
+    public void AnOkStatusCodeIsReturned()
     {
         lastResponse.StatusCode.Should().Be(HttpStatusCode.OK);
     }
