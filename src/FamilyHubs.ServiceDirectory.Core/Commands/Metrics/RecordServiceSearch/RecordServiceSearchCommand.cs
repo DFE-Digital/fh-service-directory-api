@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FamilyHubs.ServiceDirectory.Data;
+using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.ServiceDirectory.Core.Commands.Metrics.RecordServiceSearch;
@@ -41,10 +43,21 @@ public class RecordServiceSearchCommandHandler : IRequestHandler<RecordServiceSe
     {
         try
         {
+            var orgId = request.ServiceSearch.OrganisationId;
+            var code = request.ServiceSearch.DistrictCode;
+            if (orgId == null && code != null)
+            {
+                var org = await _context.Organisations
+                    .IgnoreAutoIncludes().AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.AdminAreaCode == code, cancellationToken);
+                orgId = org?.Id;
+            }
+
             // TODO: Check if given services exist, OR rely on FK constraint
             // from ServiceSearchResult.ServiceId -> Service.Id to disallow
             // saving non-existant services
             ServiceSearch serviceSearch = _mapper.Map<ServiceSearch>(request.ServiceSearch);
+            serviceSearch.OrganisationId = orgId;
 
             serviceSearch.SearchTriggerEvent = null!; // Don't insert SearchTriggerEvent
             serviceSearch.ServiceSearchType = null!; // Don't insert ServiceSearchType

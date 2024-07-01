@@ -11,6 +11,7 @@ public class ServiceSearch
     public Enums.ServiceType ServiceSearchTypeId { get; set; }
     public required string SearchPostcode { get; set; }
     public byte SearchRadiusMiles { get; set; }
+    public long? OrganisationId { get; set; }
     public long? UserId { get; set; }
     public short? HttpResponseCode { get; set; }
     public DateTime RequestTimestamp { get; set; }
