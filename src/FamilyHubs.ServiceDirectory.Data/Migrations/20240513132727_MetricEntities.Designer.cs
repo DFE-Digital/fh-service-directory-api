@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace FamilyHubs.ServiceDirectory.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240513132727_MetricEntities")]
+    partial class MetricEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,16 +39,20 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<long>("LocationId")
                         .HasColumnType("bigint");
@@ -66,10 +73,13 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -77,8 +87,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<long?>("LocationId")
                         .HasColumnType("bigint");
@@ -135,10 +146,13 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Currency")
                         .HasMaxLength(3)
@@ -147,8 +161,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Option")
                         .HasMaxLength(20)
@@ -179,10 +194,13 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("EligibilityType")
                         .HasMaxLength(50)
@@ -191,8 +209,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<int>("MaximumAge")
                         .HasColumnType("int");
@@ -219,16 +238,20 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<long>("ServiceId")
                         .HasColumnType("bigint");
@@ -258,16 +281,20 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("nvarchar(3)");
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -328,10 +355,13 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("nvarchar(60)");
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
@@ -352,8 +382,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
@@ -418,10 +449,13 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -429,8 +463,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<long>("LocationId")
                         .HasColumnType("bigint");
@@ -464,10 +499,13 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -477,8 +515,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Logo")
                         .HasMaxLength(2083)
@@ -546,10 +585,13 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -570,8 +612,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<long?>("LocationId")
                         .HasColumnType("bigint");
@@ -641,10 +684,13 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("DeliverableType")
                         .IsRequired()
@@ -665,8 +711,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -714,10 +761,13 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Extent")
                         .HasMaxLength(255)
@@ -726,8 +776,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("ServiceAreaName")
                         .HasMaxLength(255)
@@ -756,16 +807,20 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -797,16 +852,20 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("LastModifiedBy")
-                        .HasColumnType("bigint");
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -833,13 +892,12 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -869,14 +927,10 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("CorrelationId")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<short?>("HttpResponseCode")
-                        .HasColumnType("smallint");
-
-                    b.Property<long?>("OrganisationId")
-                        .HasColumnType("bigint");
+                    b.Property<byte?>("HttpResponseCode")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime>("RequestTimestamp")
                         .HasColumnType("datetime2");
@@ -886,8 +940,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.Property<string>("SearchPostcode")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte>("SearchRadiusMiles")
                         .HasColumnType("tinyint");
@@ -895,17 +948,16 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<short>("SearchTriggerEventId")
                         .HasColumnType("smallint");
 
-                    b.Property<byte>("ServiceSearchTypeId")
-                        .HasColumnType("tinyint");
+                    b.Property<string>("ServiceSearchType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("UserId")
+                    b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SearchTriggerEventId");
-
-                    b.HasIndex("ServiceSearchTypeId");
 
                     b.ToTable("ServiceSearches", (string)null);
                 });
@@ -931,39 +983,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.HasIndex("ServiceSearchId");
 
                     b.ToTable("ServiceSearchResults", (string)null);
-                });
-
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceType", b =>
-                {
-                    b.Property<byte>("Id")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ServiceTypes", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = (byte)2,
-                            Description = "Find",
-                            Name = "FamilyExperience"
-                        },
-                        new
-                        {
-                            Id = (byte)1,
-                            Description = "Connect",
-                            Name = "InformationSharing"
-                        });
                 });
 
             modelBuilder.Entity("ServiceTaxonomies", b =>
@@ -1117,15 +1136,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .WithMany("ServiceSearches")
                         .HasForeignKey("SearchTriggerEventId");
 
-                    b.HasOne("FamilyHubs.ServiceDirectory.Data.ServiceType", "ServiceSearchType")
-                        .WithMany("ServiceSearches")
-                        .HasForeignKey("ServiceSearchTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("SearchTriggerEvent");
-
-                    b.Navigation("ServiceSearchType");
                 });
 
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearchResult", b =>
@@ -1211,11 +1222,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
             modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceSearch", b =>
                 {
                     b.Navigation("ServiceSearchResults");
-                });
-
-            modelBuilder.Entity("FamilyHubs.ServiceDirectory.Data.ServiceType", b =>
-                {
-                    b.Navigation("ServiceSearches");
                 });
 #pragma warning restore 612, 618
         }
