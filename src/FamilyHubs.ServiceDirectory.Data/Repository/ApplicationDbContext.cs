@@ -2,6 +2,7 @@
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
+using Enums = FamilyHubs.ServiceDirectory.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.ServiceDirectory.Data.Repository
@@ -44,6 +45,113 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
                     .IsClustered(false);
             });
 
+            modelBuilder.Entity<ServiceSearch>()
+                .ToTable("ServiceSearches")
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<ServiceSearch>()
+                .Property(e => e.SearchTriggerEventId)
+                .HasConversion<short>();
+            
+            modelBuilder.Entity<ServiceSearch>()
+                .Property(e => e.ServiceSearchTypeId)
+                .HasConversion<byte>();
+
+            modelBuilder.Entity<ServiceSearch>()
+                .Property(e => e.SearchPostcode)
+                .HasMaxLength(10);
+            
+            modelBuilder.Entity<ServiceSearch>()
+                .HasOne(e => e.SearchTriggerEvent)
+                .WithMany(e => e.ServiceSearches)
+                .HasForeignKey(e => e.SearchTriggerEventId)
+                .IsRequired(false);
+            
+            modelBuilder.Entity<ServiceSearch>()
+                .HasOne(e => e.ServiceSearchType)
+                .WithMany(e => e.ServiceSearches)
+                .HasForeignKey(e => e.ServiceSearchTypeId)
+                .IsRequired(true);
+            
+            modelBuilder.Entity<ServiceSearch>()
+                .Property(e => e.CorrelationId)
+                .HasMaxLength(50);
+
+            modelBuilder.Entity<ServiceSearchResult>()
+                .ToTable("ServiceSearchResults")
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<ServiceSearchResult>()
+                .HasOne(e => e.Service)
+                .WithMany(e => e.ServiceSearchResults)
+                .HasForeignKey(e => e.ServiceId)
+                // Do not delete metrics if service deleted
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Event>()
+                .ToTable("Events")
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<Event>()
+                .Property(e => e.Id)
+                .HasConversion<short>();
+            
+            modelBuilder.Entity<Event>()
+                .Property(e => e.Name)
+                .HasMaxLength(100);
+            
+            modelBuilder.Entity<Event>()
+                .Property(e => e.Description)
+                .HasMaxLength(500);
+
+            modelBuilder.Entity<Event>()
+                .HasData(
+                    new()
+                    {
+                        Id = Enums.ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch,
+                        Name = nameof(Enums.ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch),
+                        Description = "Describes an initial, unfiltered search by a user."
+                    },
+                    new()
+                    {
+                        Id = Enums.ServiceDirectorySearchEventType.ServiceDirectorySearchFilter,
+                        Name = nameof(Enums.ServiceDirectorySearchEventType.ServiceDirectorySearchFilter),
+                        Description = "Describes a filtered search by a user."
+                    }
+                );
+
+            modelBuilder.Entity<ServiceType>()
+                .ToTable("ServiceTypes")
+                .HasKey(e => e. Id);
+
+            modelBuilder.Entity<ServiceType>()
+                .Property(e => e.Id)
+                .HasConversion<byte>();
+            
+            modelBuilder.Entity<ServiceType>()
+                .Property(e => e.Name)
+                .HasMaxLength(50);
+            
+            modelBuilder.Entity<ServiceType>()
+                .Property(e => e.Description)
+                .HasMaxLength(255);
+
+            modelBuilder.Entity<ServiceType>()
+                .HasData(
+                    new ServiceType
+                    {
+                        Id = Enums.ServiceType.FamilyExperience,
+                        Name = nameof(Enums.ServiceType.FamilyExperience),
+                        Description = "Find"
+                    },
+                    new ServiceType 
+                    {
+                        Id = Enums.ServiceType.InformationSharing,
+                        Name = nameof(Enums.ServiceType.InformationSharing),
+                        Description = "Connect"
+                    }
+                );
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -68,5 +176,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
         public DbSet<ServiceArea> ServiceAreas => Set<ServiceArea>();
         public DbSet<ServiceDelivery> ServiceDeliveries => Set<ServiceDelivery>();
         public DbSet<Taxonomy> Taxonomies => Set<Taxonomy>();
+        public DbSet<ServiceSearch> ServiceSearches => Set<ServiceSearch>();
+        public DbSet<Event> Events => Set<Event>();
+        public DbSet<ServiceSearchResult> ServiceSearchResult => Set<ServiceSearchResult>();
+        public DbSet<ServiceType> ServiceTypes => Set<ServiceType>();
     }
 }

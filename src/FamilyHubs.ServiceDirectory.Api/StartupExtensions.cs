@@ -55,6 +55,7 @@ public static class StartupExtensions
 
     private static void RegisterMinimalEndPoints(this IServiceCollection services)
     {
+        services.AddTransient<MinimalMetricsEndPoints>();
         services.AddTransient<MinimalTaxonomyEndPoints>();
         services.AddTransient<MinimalOrganisationEndPoints>();
         services.AddTransient<MinimalServiceEndPoints>();
@@ -179,6 +180,9 @@ public static class StartupExtensions
 
         var locationEndPoints = scope.ServiceProvider.GetService<MinimalLocationEndPoints>();
         locationEndPoints?.RegisterLocationEndPoints(webApplication);
+
+        var metricsEndPoints = scope.ServiceProvider.GetService<MinimalMetricsEndPoints>();
+        metricsEndPoints?.RegisterMetricsEndPoints(webApplication);
 
         try
         {

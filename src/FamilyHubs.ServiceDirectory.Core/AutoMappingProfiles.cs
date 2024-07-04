@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
+using FamilyHubs.ServiceDirectory.Data;
 using FamilyHubs.ServiceDirectory.Core.Helper;
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
-using NetTopologySuite.Geometries;
-using DoNotRemove = AutoMapper.EntityFrameworkCore.Extensions;
+using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
 using Location = FamilyHubs.ServiceDirectory.Data.Entities.Location;
-
+using FamilyHubs.ServiceDirectory.Shared;
 namespace FamilyHubs.ServiceDirectory.Core;
 
 public class AutoMappingProfiles : Profile
@@ -48,5 +48,10 @@ public class AutoMappingProfiles : Profile
 
         CreateMap<ScheduleDto, Schedule>().ReverseMap();
         CreateMap<Schedule, Schedule>();
+
+        CreateMap<ServiceSearchDto, ServiceSearch>().ReverseMap();
+        CreateMap<ServiceSearchResultDto, ServiceSearchResult>().ReverseMap();
+        CreateMap<EventDto, Event>().ReverseMap();
+        CreateMap<ServiceTypeDto, ServiceType>().ReverseMap();
     }
 }
