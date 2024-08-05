@@ -28,7 +28,7 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
         string? taxonomyIds,
         string? languages,
         bool? canFamilyChooseLocation,
-        bool? isFamilyHub, int? maxFamilyHubs)
+        bool? isFamilyHub)
     {
         ServiceType = serviceType ?? ServiceType.NotSet;
         Status = status ?? ServiceStatusType.NotSet;
@@ -47,7 +47,6 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
         Languages = languages;
         CanFamilyChooseLocation = canFamilyChooseLocation;
         IsFamilyHub = isFamilyHub;
-        MaxFamilyHubs = maxFamilyHubs;
     }
 
     public ServiceType ServiceType { get; }
@@ -67,7 +66,6 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
     public string? Languages { get; }
     public bool? CanFamilyChooseLocation { get; }
     public bool? IsFamilyHub { get; }
-    public int? MaxFamilyHubs { get; }
 }
 
 public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, PaginatedList<ServiceDto>>
@@ -102,7 +100,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
 
     private async Task<(int, List<Service>)> GetServices(GetServicesCommand request, CancellationToken cancellationToken)
     {
-        var query = new FhQuery("[Services] s", "s.Id")
+        var query = new FhQuery("[Services] s", "s.Id Value")
             .Join(FhJoin.Type.Left, "[ServiceAtLocations] sl", "s.Id = sl.ServiceId")
             .Join(FhJoin.Type.Left, "[Locations] l", "sl.LocationId = l.Id")
             .Join(FhJoin.Type.Left, "[Organisations] o", "s.OrganisationId = o.Id")
@@ -190,13 +188,9 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
                 .AddOrderBy("dist");
         }
 
-        var ids = HandleMaxFamilyHubs(request, query);
         var pArr = query.AllParameters(_useSqlite);
         var total = _context.Database.SqlQueryRaw<long>(query.Format(_useSqlite, includeOrderBy: false, includeLimit: false), pArr).Count();
-        if (query.FhQueryLimit.Limit > 0)
-        {
-            ids = ids.Concat(_context.Database.SqlQueryRaw<long>(query.Format(_useSqlite), pArr));
-        }
+        var ids = _context.Database.SqlQueryRaw<long>(query.Format(_useSqlite), pArr);
 
         var joinQuery = _context.Services
             .IgnoreAutoIncludes()
@@ -217,51 +211,6 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             .Include("Locations.Contacts");
 
         return (total, await joinQuery.ToListAsync(cancellationToken));
-    }
-
-    private IEnumerable<long> HandleMaxFamilyHubs(GetServicesCommand request, FhQuery query)
-    {
-        IEnumerable<long> ids = new List<long>();
-        if (request.IsFamilyHub is not null || request.MaxFamilyHubs is null) return ids;
-
-        var onlyHubsCondition = query.Clone().And(
-            new StringCondition(
-                "EXISTS (SELECT L2.Id FROM [ServiceAtLocations] fh INNER JOIN [Locations] L2 on L2.Id = fh.LocationId AND L2.LocationTypeCategory = @LocationTypeCategory WHERE fh.ServiceId = s.Id)",
-                new FhParameter("@LocationTypeCategory", LocationTypeCategory.FamilyHub.ToString())
-            )
-        );
-        query.And(
-            new StringCondition(
-                "NOT EXISTS (SELECT L2.Id FROM [ServiceAtLocations] fh INNER JOIN [Locations] L2 on L2.Id = fh.LocationId AND L2.LocationTypeCategory = @LocationTypeCategory WHERE fh.ServiceId = s.Id)",
-                new FhParameter("@LocationTypeCategory", LocationTypeCategory.FamilyHub.ToString())
-            )
-        );
-
-        var familyHubCount = _context.Database.SqlQueryRaw<long>(
-            onlyHubsCondition.Format(_useSqlite, includeOrderBy: false, includeLimit: false),
-            onlyHubsCondition.AllParameters(_useSqlite)
-        ).Count();
-
-        var offsetByHubs = Math.Min(familyHubCount, request.MaxFamilyHubs.Value);
-        var hubPageSize = Math.Min(offsetByHubs, request.PageNumber * request.PageSize) - query.FhQueryLimit.Offset;
-
-        if (hubPageSize > 0)
-        {
-            onlyHubsCondition.SetLimit(new FhQueryLimit(hubPageSize, query.FhQueryLimit.Offset));
-            ids = _context.Database
-                .SqlQueryRaw<long>(
-                    onlyHubsCondition.Format(_useSqlite),
-                    onlyHubsCondition.AllParameters(_useSqlite)
-                ).ToList();
-
-            query.SetLimit(query.FhQueryLimit.WithSize(request.PageSize - hubPageSize));
-        }
-        else
-        {
-            query.SetLimit(query.FhQueryLimit.Minus(offsetByHubs));
-        }
-
-        return ids;
     }
 
     private static List<ServiceDto> SortServicesDto(GetServicesCommand request, List<ServiceDto> services)

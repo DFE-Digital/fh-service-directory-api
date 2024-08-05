@@ -375,39 +375,4 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         retVal.Should().NotBeNull();
         retVal?.Items.Count.Should().Be(2);
     }
-
-    [Fact]
-    public async Task ThenTheServicesLimitedByMaxFamilyHubsAreRetrieved()
-    {
-        var getServicesUrlBuilder = new GetServicesUrlBuilder();
-        var url = getServicesUrlBuilder
-            .WithServiceType("FamilyExperience")
-            .WithStatus("Active")
-            .WithMaxFamilyHubs(1)
-            .WithPage(1, 10)
-            .Build();
-
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
-        };
-
-        using var response = await Client.SendAsync(request);
-
-        var responseContent = await response.Content.ReadAsStringAsync();
-
-        if (!response.IsSuccessStatusCode)
-            ArgumentException.ThrowIfNullOrEmpty(responseContent);
-
-        var retVal = JsonSerializer.Deserialize<PaginatedList<ServiceDto>>(responseContent, new JsonSerializerOptions(JsonSerializerDefaults.Web));
-
-        var items = retVal?.Items;
-   
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        retVal.Should().NotBeNull();
-        items.Should().NotBeNull();
-
-        items!.Where(i => i.Description == "Family Hub").Should().HaveCount(1);
-    }
 }

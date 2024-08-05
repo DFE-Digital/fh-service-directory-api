@@ -31,13 +31,12 @@ public class MinimalServiceEndPoints
             string? taxonomyIds,
             string? languages,
             bool? canFamilyChooseLocation,
-            bool? isFamilyHub, int? maxFamilyHubs,
+            bool? isFamilyHub,
             CancellationToken cancellationToken, ISender mediator) =>
         {
             var command = new GetServicesCommand(serviceType, status, districtCode,
                 allChildrenYoungPeople, givenAge, latitude, longitude, proximity, pageNumber, pageSize, text,
-                serviceDeliveries, isPaidFor, taxonomyIds, languages, canFamilyChooseLocation, isFamilyHub,
-                maxFamilyHubs);
+                serviceDeliveries, isPaidFor, taxonomyIds, languages, canFamilyChooseLocation, isFamilyHub);
             return mediator.Send(command, cancellationToken);
 
         }).WithMetadata(new SwaggerOperationAttribute("List Services", "List Services") { Tags = new[] { "Services" } });
