@@ -110,7 +110,6 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             .Join(FhJoin.Type.Left, "[CostOptions] co", "s.Id = co.ServiceId")
             .Join(FhJoin.Type.Left, "[ServiceDeliveries] sd", "s.Id = sd.ServiceId")
             .GroupBy("s.Id")
-            .OrderBy("s.Id")
             .SetLimit(FhQueryLimit.FromPage(request.PageNumber, request.PageSize))
             .AndWhen(
                 request.ServiceType != ServiceType.NotSet,
@@ -186,6 +185,10 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             query
                 .AddFields($"MIN(l.GeoPoint.STDistance(geography::Point({request.Latitude.Value}, {request.Longitude.Value}, {GeoPoint.WGS84}))) dist")
                 .AddOrderBy("dist");
+        }
+        else
+        {
+            query.AddOrderBy("s.Id");
         }
 
         var pArr = query.AllParameters(_useSqlite);
